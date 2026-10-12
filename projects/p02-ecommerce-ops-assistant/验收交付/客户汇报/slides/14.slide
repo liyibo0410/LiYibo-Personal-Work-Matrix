@@ -1,0 +1,46 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }} notes={`最后一页，讲清楚交付边界和后续规划。
+
+先说边界。第一，真实的出图和出片效果，需要商业供应商的密钥和配额，离线验收只能验证功能链路和兜底分支是正确的，素材质量本身必须在配好密钥的环境里补做在线验收。第二，本地开发模式用的是进程内队列，没有后台调度器，所以失败的任务不会自动重排，这个能力需要完整的容器链路。第三，前端是课程提供的现成工作台，我这次没有重写它,只做了设计令牌统一。
+
+再说后续规划，按优先级。第一优先级是后端的健壮性:现在还有一些地方是宽泛捕获异常，可能把真实错误吞掉，需要收窄到具体异常类型并记录日志;还有几处外键缺少级联关系，删除路径上可能留下孤儿记录。第二优先级是前端体验:移动端导航、暗色模式、加载与错误的统一状态，以及客户端表单校验。
+
+最后一句话总结。这个项目最重要的不是它能生成内容，而是它证明了:一个会自己产生副作用的 AI 系统，是可以被约束、被审批、被验收的。
+
+模型负责产出，策略负责边界，人负责决定，系统负责记录和恢复。谢谢各位。`}>
+    <Box style={{ position: 'absolute', bottom: -200, left: -140, width: 620, height: 620, background: 'linear-gradient(135deg, #3370FF 0%, rgba(51,112,255,0) 100%)', opacity: 0.15, borderRadius: 310 }} />
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>交付边界与后续规划</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>BOUNDARY · 边界清晰</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'column', gap: 20, paddingTop: 10 }}>
+        <Box style={{ height: 380, flexDirection: 'row', gap: 20 }}>
+            <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 22, flexDirection: 'column', gap: 10 }}>
+                <Text style={{ fontSize: 16, color: '#7B8AA3', fontWeight: '600' }}>边界说明</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8' }}>本次交付的边界说明</Text>
+                <Text style={{ fontSize: 16, color: '#EAF0F8', lineHeight: 1.75 }}>
+                    <>· 真实出图出片需商业密钥与配额，质量需补做在线验收<br /><br />· 本地进程内队列无后台调度，失败任务不自动重排<br /><br />· 界面沿用既有工作台，本次未重做交互设计，仅统一视觉规范<br /><br />· 上述边界均已在验收方案中书面声明，验收时可逐条核对</>
+                </Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', marginTop: 'auto' }}>对应文档：验收方案 · 已知限制与风险表</Text>
+            </Box>
+            <Box style={{ flex: 1, background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 12, padding: 22, flexDirection: 'column', gap: 10 }}>
+                <Text style={{ fontSize: 16, color: '#3370FF', fontWeight: '600' }}>优先级排序</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8' }}>下一步改进计划</Text>
+                <Text style={{ fontSize: 16, color: '#EAF0F8', lineHeight: 1.75 }}>
+                    <>P1 服务端健壮性<br /><span style={{ color: '#7B8AA3' }}>收窄宽泛异常捕获并记录日志；补齐外键级联，清理孤儿记录</span><br /><br />P1 前端体验<br /><span style={{ color: '#7B8AA3' }}>统一加载与错误态、客户端表单校验、操作反馈</span><br /><br />P2 移动端与暗色模式</>
+                </Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', marginTop: 'auto' }}>依据：项目评估结论</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 110, flexDirection: 'row', alignItems: 'center', gap: 28 }}>
+            <Box style={{ width: 6, height: 80, background: '#3370FF', borderRadius: 3 }} />
+            <Box style={{ flex: 1, flexDirection: 'column', gap: 8 }}>
+                <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#EAF0F8', lineHeight: 1.35 }}>模型负责产出，策略负责边界，人负责决定，系统负责记录与恢复。</Text>
+                <Text style={{ fontSize: 18, color: '#7B8AA3' }}>感谢各位领导 · 李奕波 · 欢迎提出意见</Text>
+            </Box>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 项目验收汇报</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>14 / 14</Text>
+    </Box>
+</Slide>

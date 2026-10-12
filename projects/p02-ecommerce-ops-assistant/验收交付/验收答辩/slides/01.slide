@@ -1,0 +1,25 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }} notes={`各位老师好，我是李奕波，我带来的项目是"AI 电商运营助手"。
+
+先说清楚它要解决的问题。电商运营每天要重复做六件事：商品诊断、竞品分析、创意策划、图片视频生成、库存建议、经营复盘。这六件事有一个共同点——都要先看数据，再靠经验判断，最后手工产出内容。做一次不难，天天做就很重。
+
+所以我没有做一个"能聊天的机器人"，而是做了一条完整的运营链路：数据进来，模型生成草稿，进入媒体任务，再由多个 Agent 分工协作，最后由人来审批，通过之后才写进业务系统。
+
+这条链路上每一步都能验收、能追溯、能恢复。今天我会用大概十分钟，把技术选型、三个真正的难点、以及可复现的验收结果讲清楚。`}>
+    <Box style={{ position: 'absolute', top: -160, right: -120, width: 640, height: 640, background: 'linear-gradient(135deg, #3370FF 0%, rgba(51,112,255,0) 100%)', opacity: 0.18, borderRadius: 320 }} />
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 16, color: '#7B8AA3', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>ecommerce-operation-assistant</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>2026 届 · 课程结课答辩</Text>
+    </Box>
+    <Box style={{ height: 560, flexDirection: 'column', justifyContent: 'center', gap: 24 }}>
+        <Text style={{ fontSize: 76, fontWeight: 'bold', color: '#EAF0F8', lineHeight: 1.15 }}>AI 电商运营助手</Text>
+        <Text style={{ fontSize: 28, color: '#EAF0F8', lineHeight: 1.5 }}>
+            <>把 数据 · 模型生成 · 媒体任务 · 多 Agent 审批 · 系统交付<br />串成一条<span style={{ color: '#3370FF', fontWeight: 'bold' }}> 可验收 · 可追溯 · 可恢复 </span>的运营链路</>
+        </Text>
+        <Box style={{ width: 120, height: 4, background: '#3370FF', borderRadius: 2 }} />
+        <Text style={{ fontSize: 18, color: '#7B8AA3' }}>FastAPI · LangGraph · Celery · MySQL / PostgreSQL · Docker Compose</Text>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 20, color: '#EAF0F8', fontWeight: '600' }}>李奕波</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>58 项验收用例 · pytest 117 passed</Text>
+    </Box>
+</Slide>

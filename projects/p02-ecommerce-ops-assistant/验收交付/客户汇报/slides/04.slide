@@ -1,0 +1,42 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`这张图是分层的骨架。我从上往下讲。
+
+最上面是前端工作台，Next.js 写的，本次没有重写，只做联调和视觉统一。它调用的接口统一挂在一个前缀下，所有文档都在一个入口。
+
+第二层是接口层，十一个路由模块，职责是收参数、做鉴权、返回结构化结果。这里有个关键设计：鉴权、租户隔离、权限判断全部收口在依赖层。也就是说，路由和服务代码里不会去信任请求体里传进来的工作区编号，工作区是从登录用户的成员关系里解析出来的。这样越权从结构上就不成立。
+
+第三层是领域服务层，三十四个服务模块，业务规则和事务都在这层，路由里不写业务逻辑。
+
+第四层是数据和持久化。业务库生产用 MySQL，本地开发和自动化测试用 SQLite，模型定义做了兼容，所以同一套代码两边都能跑。Agent 的检查点单独放在 PostgreSQL。
+
+最下面是异步与编排层：Celery 加 Redis 负责异步任务，LangGraph 负责多 Agent 的图编排。本地可以把队列切成"进程内同步执行"，这样没有 Redis 也能把功能链路跑通，这是我把项目做到"任何机器都能复现"的前提。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>技术栈与分层架构</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>HOW · 五层职责</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
+        <Box style={{ height: 82, background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 10, padding: '0 22px', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#EAF0F8' }}>前端工作台</Text>
+            <Text style={{ fontSize: 16, color: '#7B8AA3', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>Next.js / TypeScript · 现成工作台，不重写 · 统一设计令牌</Text>
+        </Box>
+        <Box style={{ height: 82, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: '0 22px', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#EAF0F8' }}>接口层</Text>
+            <Text style={{ fontSize: 16, color: '#7B8AA3', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>FastAPI · 11 个路由模块 · /api/v1 · 鉴权与租户隔离在依赖层收口</Text>
+        </Box>
+        <Box style={{ height: 82, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: '0 22px', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#EAF0F8' }}>领域服务层</Text>
+            <Text style={{ fontSize: 16, color: '#7B8AA3', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>34 个服务 · 业务规则与事务边界 · 供应商适配</Text>
+        </Box>
+        <Box style={{ height: 82, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: '0 22px', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#EAF0F8' }}>数据与持久化</Text>
+            <Text style={{ fontSize: 16, color: '#7B8AA3', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>SQLAlchemy 2.x + Alembic 23 迁移 · MySQL 生产 / SQLite 本地 · PG 检查点</Text>
+        </Box>
+        <Box style={{ height: 82, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: '0 22px', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#EAF0F8' }}>异步与编排</Text>
+            <Text style={{ fontSize: 16, color: '#7B8AA3', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>Celery + Redis · LangGraph 多 Agent 图 · inline 模式免依赖跑通</Text>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 项目验收汇报</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>04 / 14</Text>
+    </Box>
+</Slide>

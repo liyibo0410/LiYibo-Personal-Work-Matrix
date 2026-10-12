@@ -1,0 +1,51 @@
+<Slide style={{ height: 720, width: 1280, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`第三项可控性设计：可靠执行。
+
+异步系统最怕两件事。第一件是消息丢了——任务创建成功，但派发的消息没发出去，业务数据里躺着一条永远不动的任务。第二件是消息重了——同样的消息被投递两次，于是同一条建议被执行两遍，库里的数据就脏了。
+
+我分三层来解。
+
+第一层是任务和执行分离，加上事务性发件箱。创建任务、创建执行记录、写入待派发事件，这三件事在同一个数据库事务里提交。要么都成功，要么都不成功。写进去之后，才是异步去派发。这样就不存在"任务建了但消息没了"的中间态。
+
+第二层是幂等。每次执行都会去申请一个租约，拿到租约的才能干活。如果同一个任务被重复投递，第二个请求发现租约已经被别人拿走了，它什么也不做。数据库层的状态判断再加上租约，重复消息就被吸收了。
+
+第三层是自愈。有一个维护任务每三十秒跑一次，扫描那些租约已经过期但状态还停在运行中的记录——这通常意味着执行它的进程崩了。维护任务会把它放回队列并递增尝试次数。
+
+验收里这两条是对着打的：任务和事件同事务写入，以及重复投递无法认领正在运行的执行。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>可控性设计三 · 消息不丢不重</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>RELIABILITY · 不丢 · 不重</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'column', gap: 20, paddingTop: 6 }}>
+        <Box style={{ height: 340, flexDirection: 'row', gap: 20 }}>
+            <Box style={{ flex: 1, background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 12, padding: 22, flexDirection: 'column', gap: 12 }}>
+                <Text style={{ fontSize: 16, color: '#3370FF', fontWeight: '600' }}>不丢</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.35 }}>事务性发件箱</Text>
+                <Text style={{ fontSize: 16, color: '#EAF0F8', lineHeight: 1.6 }}>任务、执行记录、待派发事件三者在同一个事务里提交。<br /><br />不存在"业务记录建好了、派发消息却没发出去"的中间状态；派发失败由维护任务重投。</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', marginTop: 'auto' }}>对应验收：AGT-05</Text>
+            </Box>
+            <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 22, flexDirection: 'column', gap: 12 }}>
+                <Text style={{ fontSize: 16, color: '#3370FF', fontWeight: '600' }}>不重</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.35 }}>幂等 + 租约隔离</Text>
+                <Text style={{ fontSize: 16, color: '#EAF0F8', lineHeight: 1.6 }}>执行前先申请租约，拿到租约的才能推进。<br /><br />重复消息到达时发现目标已在运行中，直接放弃认领，不产生第二次副作用。</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', marginTop: 'auto' }}>对应验收：重复投递无法认领</Text>
+            </Box>
+            <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 22, flexDirection: 'column', gap: 12 }}>
+                <Text style={{ fontSize: 16, color: '#3370FF', fontWeight: '600' }}>自愈</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.35 }}>过期租约回收</Text>
+                <Text style={{ fontSize: 16, color: '#EAF0F8', lineHeight: 1.6 }}>维护任务每 30 秒扫描一次：租约已过期但状态仍在运行中的记录，判定执行进程已挂。<br /><br />回收后回到队列并递增尝试次数，无需人工介入。</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', marginTop: 'auto' }}>对应验收：过期租约恢复</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 136, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 20, flexDirection: 'row', alignItems: 'center', gap: 28 }}>
+            <Text style={{ fontSize: 56, fontWeight: 'bold', color: '#3370FF', lineHeight: 1.0, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>30s</Text>
+            <Box style={{ flex: 1, flexDirection: 'column', gap: 6 }}>
+                <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>维护任务的调度周期</Text>
+                <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.6 }}>同一时刻只允许一个 worker 预取一个任务，避免耗时素材生成把后续任务长期占住；任务执行成功后才确认消息，worker 崩溃时由队列重投，配合数据库状态避免任务无声丢失。</Text>
+            </Box>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 项目验收汇报</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>08 / 14</Text>
+    </Box>
+</Slide>

@@ -1,0 +1,81 @@
+{
+  "passed": 14,
+  "total": 15,
+  "cases": [
+    {
+      "case": "任务卡要求的 .env→llm 配置映射存在",
+      "pass": false,
+      "note": "若失败：base_url 留空时 LLM 永远不会被启用，Key 白配了"
+    },
+    {
+      "case": "未配 Key 时审查流程正常完成",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "case": "快照 llm_verify.source == rule-only",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "case": "快照 llm_verify.reason 非空",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "case": "审计留痕包含 review.llm_verify",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "case": "未配 Key 时命中数 > 0（违约责任不对等用例应有命中）",
+      "pass": true,
+      "note": "hits=1"
+    },
+    {
+      "case": "结果表持久化 verify 字段",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "case": "Token Plan Key 可读取",
+      "pass": true,
+      "note": "长度 115"
+    },
+    {
+      "case": "LLM 真实调用成功（source=llm）",
+      "pass": true,
+      "note": "reason="
+    },
+    {
+      "case": "复核 stats 字段完整",
+      "pass": true,
+      "note": "stats={'confirm': 1, 'false_positive': 0, 'need_human': 0, 'total': 1}"
+    },
+    {
+      "case": "所有命中都有复核结论",
+      "pass": true,
+      "note": "覆盖 1/1"
+    },
+    {
+      "case": "违约责任不对等用例至少一条 confirm",
+      "pass": true,
+      "note": "confirm=1"
+    },
+    {
+      "case": "非法 JSON → 整体降级 rule-only",
+      "pass": true,
+      "note": "reason=LLM 输出非法 JSON，整体降级"
+    },
+    {
+      "case": "```json 围栏 → 正确解析 source=llm",
+      "pass": true,
+      "note": "stats={'confirm': 1, 'false_positive': 0, 'need_human': 0, 'total': 1}"
+    },
+    {
+      "case": "低置信度 false_positive → need_human",
+      "pass": true,
+      "note": "need_human=1"
+    }
+  ]
+}

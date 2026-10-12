@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/* ============================================================
+   深色设计令牌（Dark Theme）
+   - 强调色：品牌蓝 #3370FF（唯一强调色）
+   - 表面分层：base → surface → elevated → hover
+   - 文字：高对比三级体系
+   - 圆角统一 8px
+   ============================================================ */
+@theme {
+  /* 品牌主色（强调色，保持不变） */
+  --color-brand-50: #0f1a35;
+  --color-brand-100: #142040;
+  --color-brand-200: #1a2a50;
+  --color-brand-300: #254080;
+  --color-brand-400: #3060cc;
+  --color-brand-500: #3370ff;
+  --color-brand-600: #5b8dff;
+  --color-brand-700: #7da8ff;
+  --color-brand-800: #a1c0ff;
+  --color-brand-900: #c6d6ff;
+
+  /* 表面分层（从深到浅） */
+  --color-surface: #141820;
+  --color-elevated: #1a1f2b;
+
+  /* 中性文字体系（高对比度） */
+  --color-ink-1: #e8eaf0;
+  --color-ink-2: #9ba3b0;
+  --color-ink-3: #7c8493;
+  --color-ink-4: #4b5563;
+
+  /* 分割线与填充底色 */
+  --color-line: #2a3040;
+  --color-line-2: #1e2430;
+  --color-fill-1: #0b0e14;
+  --color-fill-2: #1a1f2b;
+  --color-fill-3: #222836;
+
+  /* 状态色（深色底适配，含浅底） */
+  --color-success: #4ade80;
+  --color-success-bg: #0a2e14;
+  --color-warning: #fb923c;
+  --color-warning-bg: #2e1f0a;
+  --color-danger: #f87171;
+  --color-danger-bg: #2e0f0f;
+
+  /* 字体栈：中文优先 PingFang SC / 微软雅黑 */
+  --font-sans: "PingFang SC", "Microsoft YaHei", "Inter", "Segoe UI", system-ui,
+    -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono",
+    monospace;
+
+  /* 阴影（深色下更柔和） */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --shadow-pop: 0 6px 24px rgba(0, 0, 0, 0.5);
+}
+
+:root {
+  --background: var(--color-fill-1);
+  --foreground: var(--color-ink-1);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* 统一滚动条观感（深色：暗轨 + 微亮滑块） */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-fill-3);
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-4);
+}

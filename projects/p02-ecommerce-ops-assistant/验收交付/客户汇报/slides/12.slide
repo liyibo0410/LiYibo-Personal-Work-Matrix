@@ -1,0 +1,55 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`这一页我挑了四条最有说服力的证据，全部是脚本真实跑出来的输出，没有一条是我概括的。
+
+第一条，一条高风险工作流被触发之后，第一次执行停在审批门上，图的下一个节点就是审批门；人批准之后，流程走完，状态是完成，并且业务产物只落库了一次。这条证明的是"停得下来、恢复得回去、而且不重复落库"。
+
+第二条，同样是这条流程，人选择拒绝。结果是流程状态变成已拒绝，落库产物是空的。这条证明的是"拒绝不是装饰，是真的什么都没写进去"。
+
+第三条，人不是直接批准，而是改了文案之后采纳。落库的那条定位文案，是我在审批时手工改的那一句，不是模型原稿。这条证明的是"人有机会真正修正模型输出，而且修正会生效"。
+
+第四条，质量校验不通过。流程状态变成质检失败，落库零次。这条证明的是"质量门是硬门，过不去就不放行"。
+
+我把这四条放在一起，是因为它们构成了一个完整的闭环:能停、能拒、能改、能拦。这四点都成立，才谈得上"把 AI 放进生产流程"。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>关键证据 · 四条实测输出</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>EVIDENCE · 能停 · 能拒 · 能改 · 能拦</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'column', gap: 20, paddingTop: 8 }}>
+        <Table
+            style={{ width: '100%', height: 420 }}
+            defaultTextStyle={{ fontSize: 16, color: '#EAF0F8', textAlign: 'left' }}
+            defaultCellStyle={{ border: { bottom: { width: 1, color: 'rgba(123,138,163,0.24)' } }, padding: 14 }}
+            cells={[
+                [
+                    { text: '用例', textStyle: { bold: true, color: '#3370FF', fontSize: 16 }, cellStyle: { background: { color: 'rgba(51,112,255,0.12)' } } },
+                    { text: '验证场景', textStyle: { bold: true, color: '#3370FF', fontSize: 16 }, cellStyle: { background: { color: 'rgba(51,112,255,0.12)' } } },
+                    { text: '实测结果（脚本原样输出）', textStyle: { bold: true, color: '#3370FF', fontSize: 16 }, cellStyle: { background: { color: 'rgba(51,112,255,0.12)' } } }
+                ],
+                [
+                    { text: 'AGT-11', textStyle: { bold: true, fontFamily: "'JetBrains Mono',Consolas,monospace" } },
+                    'R2 工作流停在审批 → 批准后恢复完成',
+                    '首次 next=(approval_gate)；恢复后 final_status=completed；落库 1 次'
+                ],
+                [
+                    { text: 'AGT-12', textStyle: { bold: true, fontFamily: "'JetBrains Mono',Consolas,monospace" } },
+                    '人工拒绝审批',
+                    'final_status=rejected；落库产物 None'
+                ],
+                [
+                    { text: 'AGT-13', textStyle: { bold: true, fontFamily: "'JetBrains Mono',Consolas,monospace" } },
+                    '采纳人工编辑后的版本',
+                    '落库定位 = “人工调整后的商品定位”'
+                ],
+                [
+                    { text: 'AGT-14', textStyle: { bold: true, fontFamily: "'JetBrains Mono',Consolas,monospace" } },
+                    '质检不通过时放行？',
+                    'final_status=quality_failed；落库 0 次'
+                ]
+            ]}
+        />
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>四条合起来构成闭环：停得下来、拒得掉、改得动、拦得住。任何一条不成立，"把 AI 放进生产流程"都不成立。</Text>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 项目验收汇报</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>12 / 14</Text>
+    </Box>
+</Slide>

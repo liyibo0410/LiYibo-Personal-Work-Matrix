@@ -1,0 +1,64 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`左边这六格，就是电商运营每天真正在重复的事。
+
+我举个具体场景。一个新品要上架，运营要先看自己商品的资料做诊断，再去看竞品在卖什么卖点、卖什么价，然后策划主图方向、写视频脚本，图要走供应商生成，回来还要判断库存够不够、要不要补货，一个周期结束还要做经营复盘。
+
+问题有三个。
+
+第一，这些动作是串行的，但工具是散的，数据在平台后台，结论在人的脑子里，产出在设计软件里，中间全靠人工搬运。
+
+第二，AI 生成的内容不能直接信，更不能直接写进系统。模型可能编造卖点、可能踩合规红线，所以必须有人在中间把关。
+
+第三，也是最容易被忽略的——人是要下班的。审批可能隔天才点，如果中间状态丢了，就得整个重跑一遍模型，成本和时间都浪费。
+
+所以我的目标不是"让 AI 替人写文案"，而是让 AI 把草稿做到八十分，把人的工作从"从零产出"变成"审核与微调"，同时保证系统层面的可控。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>痛点与目标</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>WHY · 六类高频动作</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'row', alignItems: 'center', gap: 24 }}>
+        <Box style={{ width: 660, height: 496, flexDirection: 'column', gap: 16 }}>
+            <Box style={{ height: 154, flexDirection: 'row', gap: 16 }}>
+                <Box style={{ width: 322, height: 154, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 18, flexDirection: 'column', gap: 8 }}>
+                    <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>商品诊断</Text>
+                    <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.5 }}>定位、价格带、人群、痛点、卖点结构，凭经验判断不可复现</Text>
+                </Box>
+                <Box style={{ width: 322, height: 154, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 18, flexDirection: 'column', gap: 8 }}>
+                    <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>竞品分析</Text>
+                    <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.5 }}>对手改价、换主图、上活动，靠人工刷页面很难及时发现</Text>
+                </Box>
+            </Box>
+            <Box style={{ height: 154, flexDirection: 'row', gap: 16 }}>
+                <Box style={{ width: 322, height: 154, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 18, flexDirection: 'column', gap: 8 }}>
+                    <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>创意策划</Text>
+                    <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.5 }}>主图方向、视频脚本、标题、详情页，每次都要重新想一遍</Text>
+                </Box>
+                <Box style={{ width: 322, height: 154, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 18, flexDirection: 'column', gap: 8 }}>
+                    <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>图片 / 视频生成</Text>
+                    <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.5 }}>提交给供应商后要轮询、要落库、要复核，链路长且易漏</Text>
+                </Box>
+            </Box>
+            <Box style={{ height: 154, flexDirection: 'row', gap: 16 }}>
+                <Box style={{ width: 322, height: 154, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 18, flexDirection: 'column', gap: 8 }}>
+                    <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>库存建议</Text>
+                    <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.5 }}>缺货与积压同时存在，补货策略缺少统一口径</Text>
+                </Box>
+                <Box style={{ width: 322, height: 154, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 18, flexDirection: 'column', gap: 8 }}>
+                    <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>经营复盘</Text>
+                    <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.5 }}>数据要手工汇总，结论与下一步动作难以沉淀和复用</Text>
+                </Box>
+            </Box>
+        </Box>
+        <Box style={{ width: 468, height: 496, background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 16, padding: 26, flexDirection: 'column', gap: 18 }}>
+            <Text style={{ fontSize: 16, color: '#3370FF', fontWeight: '600' }}>我们交付的价值</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#EAF0F8', lineHeight: 1.4 }}>让 AI 把草稿做到 80 分，把人的工作从"从零产出"变成"审核与微调"</Text>
+            <Box style={{ height: 1, background: 'rgba(123,138,163,0.24)' }} />
+            <Text style={{ fontSize: 18, color: '#EAF0F8', lineHeight: 1.7 }}>
+                <>① 结构化 JSON 输出，每条结论都可复核<br /><br />② 模型只经受控工具访问数据，越权直接拒绝<br /><br />③ 高风险动作人工审批，审批可跨时间断点恢复<br /><br />④ 结论由可执行验收脚本给出，不靠主观印象</>
+            </Text>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 项目验收汇报</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>03 / 14</Text>
+    </Box>
+</Slide>

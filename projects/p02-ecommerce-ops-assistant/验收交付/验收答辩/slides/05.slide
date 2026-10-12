@@ -1,0 +1,68 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`我想专门花一页讲一次请求是怎么走的，因为这里最能体现工程判断。
+
+请求进来先过跨域中间件，然后进入路由依赖。依赖里做三件事。
+
+第一，解析登录凭证，把令牌换成用户对象，而且每次请求都重新校验账号是否仍然可用——不能因为令牌还没过期，就放过一个已经被停用的账号。
+
+第二，解析租户。注意，工作区编号不是从请求体里读的，而是从用户的成员关系里推出来的。这一步是关键：如果信任请求体，那攻击者改一个数字就能看到别人的数据。
+
+第三，做权限判断。角色分三档，只读、操作、拥有者，全局拥有者另外管用户。
+
+三件事做完，才进入服务层。服务层里跑事务和业务规则，然后走数据访问层落库。
+
+我把这个顺序强调出来，是因为验收里专门有两项在打这里：跨工作区路径不一致返回 403，跨租户的商品上下文返回 422。这两项不是补丁，是结构上就该成立的结果。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>一次请求的生命周期</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>FLOW · 鉴权收口位置</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'column', gap: 24, paddingTop: 4 }}>
+        <Box style={{ height: 160, flexDirection: 'row', gap: 16 }}>
+            <Box style={{ width: 217, height: 160, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', gap: 8 }}>
+                <Text style={{ fontSize: 16, color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>01</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.3 }}>跨域中间件</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>统一处理来源与预检，前端联调不额外开洞</Text>
+            </Box>
+            <Box style={{ width: 217, height: 160, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', gap: 8 }}>
+                <Text style={{ fontSize: 16, color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>02</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.3 }}>解析凭证</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>令牌换用户，且每次重新校验账号可用性</Text>
+            </Box>
+            <Box style={{ width: 217, height: 160, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', gap: 8 }}>
+                <Text style={{ fontSize: 16, color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>03</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.3 }}>解析租户</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>工作区由成员关系决定，不信任请求体字段</Text>
+            </Box>
+            <Box style={{ width: 217, height: 160, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', gap: 8 }}>
+                <Text style={{ fontSize: 16, color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>04</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.3 }}>权限判断</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>只读 / 操作 / 拥有者三档，越权直接 403</Text>
+            </Box>
+            <Box style={{ width: 217, height: 160, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', gap: 8 }}>
+                <Text style={{ fontSize: 16, color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>05</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.3 }}>服务层事务</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>业务规则与事务边界集中，请求结束自动关会话</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 312, flexDirection: 'row', gap: 20 }}>
+            <Box style={{ flex: 1, background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 12, padding: 22, flexDirection: 'column', gap: 10 }}>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8' }}>鉴权收口原则</Text>
+                <Text style={{ fontSize: 17, color: '#EAF0F8', lineHeight: 1.65 }}>路由与服务不直接信任请求体里的工作区编号。<br />越权在结构上不成立，而不是靠每处补校验。</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', marginTop: 'auto' }}>对应验收：AUTH-04 / AUTH-05 / SEC-02</Text>
+            </Box>
+            <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 22, flexDirection: 'column', gap: 10 }}>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8' }}>多租户隔离</Text>
+                <Text style={{ fontSize: 17, color: '#EAF0F8', lineHeight: 1.65 }}>路径工作区与会话工作区不一致 → 403；<br />上下文引用他租户商品 → 422。</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', marginTop: 'auto' }}>对应验收：AGT-07 / AGT-08</Text>
+            </Box>
+            <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 22, flexDirection: 'column', gap: 10 }}>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8' }}>失配即拒绝</Text>
+                <Text style={{ fontSize: 17, color: '#EAF0F8', lineHeight: 1.65 }}>未配置模型时连通性测试返回 400，<br />而不是静默返回一个假的成功。</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', marginTop: 'auto' }}>对应验收：MOD-02</Text>
+            </Box>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 课程结课答辩</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>05 / 14</Text>
+    </Box>
+</Slide>

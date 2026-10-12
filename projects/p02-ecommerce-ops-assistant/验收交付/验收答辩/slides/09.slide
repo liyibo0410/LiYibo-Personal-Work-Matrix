@@ -1,0 +1,44 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`这一页讲我在这套代码之上真正做的增量，而不是课程给的现成部分。
+
+左边这个二十三，是数据库迁移的版本数。二十三个版本全部按依赖关系编排好顺序，生产环境从空库到完整结构可以一条命令走完。
+
+右边三条是我自己补的东西。
+
+第一条是前端的设计体系。原来的界面配色是散落的、每个页面各写各的，我参照飞书的设计规范抽出了一套设计令牌，然后把二十三个文件、大约两千一百处样式类名统一迁移过去。这件事本身不难，难在不能改坏。所以我写了一个前缀感知的迁移脚本，并且给它加了检查模式，可以挂到流水线上防回归。
+
+第二条是店铺删除。原来后端根本没有删除接口。我补了一个，但关键不是"能删"，而是删除的语义：删店铺的时候，把它名下的商品解除绑定，而不是把商品一起删掉。商品是运营资产，不能因为换了个店铺就丢。同时还要处理平台账号的关联记录，避免外键约束报错。
+
+第三条是接口分页补全。原来有几处接口只支持限制条数、不支持偏移量，也就是说翻不了页。我补齐了偏移量参数，和已有的接口对齐。
+
+这三件事都不算"炫技"，但都是让项目从"能跑"变成"能用"的部分。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>工程化与自研增量</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>BEYOND · 从能跑到能用</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'row', alignItems: 'center', gap: 24 }}>
+        <Box style={{ width: 360, height: 496, background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 16, padding: 26, flexDirection: 'column', justifyContent: 'center', gap: 14 }}>
+            <Text style={{ fontSize: 110, fontWeight: 'bold', color: '#3370FF', lineHeight: 1.0, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>23</Text>
+            <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8' }}>个数据库迁移版本</Text>
+            <Box style={{ height: 1, background: 'rgba(51,112,255,0.35)' }} />
+            <Text style={{ fontSize: 16, color: '#EAF0F8', lineHeight: 1.65 }}>顺序按依赖关系编排，<br />生产从空库到完整结构一条命令走完；<br />本地开发与自动化测试共用同一套模型定义。</Text>
+        </Box>
+        <Box style={{ width: 768, height: 496, flexDirection: 'column', gap: 18 }}>
+            <Box style={{ height: 140, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 20, flexDirection: 'row', alignItems: 'center', gap: 24 }}>
+                <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#3370FF', width: 300, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>23 文件 / 2100 处</Text>
+                <Text style={{ flex: 1, fontSize: 16, color: '#EAF0F8', lineHeight: 1.6 }}>前端设计令牌统一迁移<br /><span style={{ color: '#7B8AA3' }}>抽出品牌色、文字层次、线面与状态色令牌，替换散落的旧配色与圆角；配套检查模式防止回归。</span></Text>
+            </Box>
+            <Box style={{ height: 140, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 20, flexDirection: 'row', alignItems: 'center', gap: 24 }}>
+                <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#3370FF', width: 300 }}>店铺删除语义</Text>
+                <Text style={{ flex: 1, fontSize: 16, color: '#EAF0F8', lineHeight: 1.6 }}>自研新增的删除接口<br /><span style={{ color: '#7B8AA3' }}>删店铺时把商品解除绑定保留下来，而不是级联删商品；同时清理平台账号关联记录，规避外键冲突。</span></Text>
+            </Box>
+            <Box style={{ height: 140, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 20, flexDirection: 'row', alignItems: 'center', gap: 24 }}>
+                <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#3370FF', width: 300, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>offset 补全</Text>
+                <Text style={{ flex: 1, fontSize: 16, color: '#EAF0F8', lineHeight: 1.6 }}>列表接口分页对齐<br /><span style={{ color: '#7B8AA3' }}>原来多处只支持条数限制无法深翻页，补齐偏移量参数并与已有接口保持一致。</span></Text>
+            </Box>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 课程结课答辩</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>09 / 14</Text>
+    </Box>
+</Slide>

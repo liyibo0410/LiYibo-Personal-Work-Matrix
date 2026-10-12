@@ -1,0 +1,57 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`我按五段来讲。
+
+第一段讲痛点与目标，说明为什么这六类动作需要系统化，而不是再做一个单点的 AI 工具。
+
+第二段讲技术栈与架构。这里我想强调的不是"用了多少框架"，而是分层的衔接方式——尤其是鉴权和租户隔离收口在哪一层。
+
+第三段是今天最重要的部分，三个真难点：模型不能直接碰数据库的受控工具网关、人工审批加断点恢复、以及重复消息下的可靠执行。这三个点决定了这套系统能不能真的上生产。
+
+第四段讲验收。我把验收写成可执行的脚本，五十八项用例分九组，结论由退出码给出，不靠主观判断。
+
+第五段是边界和下一步。哪些没做、为什么没做，我会如实说。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>五段叙事</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>AGENDA · 10 MIN</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
+        <Box style={{ height: 88, flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+            <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace", width: 64 }}>01</Text>
+            <Box style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>痛点与目标</Text>
+                <Text style={{ fontSize: 16, color: '#7B8AA3' }}>六类高频运营动作，为什么需要一条可验收的链路而不是又一个工具</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 88, flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+            <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace", width: 64 }}>02</Text>
+            <Box style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>技术栈与分层架构</Text>
+                <Text style={{ fontSize: 16, color: '#7B8AA3' }}>FastAPI、LangGraph、Celery 的分层职责，以及鉴权收口的位置</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 88, flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+            <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace", width: 64 }}>03</Text>
+            <Box style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>三个真难点</Text>
+                <Text style={{ fontSize: 16, color: '#7B8AA3' }}>受控工具网关 · 人工审批与断点恢复 · 重复消息下的可靠执行</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 88, flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+            <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace", width: 64 }}>04</Text>
+            <Box style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>验收方法与结果</Text>
+                <Text style={{ fontSize: 16, color: '#7B8AA3' }}>58 项用例分 9 组，退出码判定，pytest 117 条全绿</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 88, flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+            <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#3370FF', fontFamily: "'JetBrains Mono',Consolas,monospace", width: 64 }}>05</Text>
+            <Box style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                <Text style={{ fontSize: 24, fontWeight: '600', color: '#EAF0F8' }}>边界与下一步</Text>
+                <Text style={{ fontSize: 16, color: '#7B8AA3' }}>安全合规约束、已知限制、以及后续改进优先级</Text>
+            </Box>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 课程结课答辩</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>02 / 14</Text>
+    </Box>
+</Slide>

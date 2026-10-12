@@ -1,0 +1,71 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`下面讲验收怎么做的。这是我认为这个项目区别于课程作业的地方。
+
+我没有用"我手动点了几个接口、看起来没问题"这种验收方式，而是把它写成了一个可执行的脚本。脚本拉起来以后，会自动建表、建账号、登录、建店铺商品库存、走完 AI 链路、创建 Agent 任务、把安全边界一条条打一遍，最后再跑一遍全量回归测试。
+
+一共五十八项用例，分九组。横轴这根条的长度就是这一组的用例数量。
+
+数量分布上，最重的是多 Agent 那一组，十四项，因为那是核心技术点。其次是店铺商品库存十项，那是业务主链路。认证七项、模型与素材六项、环境基线五项、竞品经营五项、推广投放四项、安全边界四项、交付回归三项。
+
+判定标准也很硬：只要有任何一项失败，整体就判不通过。脚本的退出码就是结论——零是通过，一是有失败，二是脚本自己坏了。
+
+这套东西的价值在于可复现。因为我把外部依赖全部隔离开了：数据库用临时文件、队列用进程内模式、模型密钥清空，所以任何一台机器上跑出来的结论都一样。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>验收方法</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>58 项 · 9 组 · 退出码判定</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'column', gap: 8, paddingTop: 2 }}>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 17, color: '#3370FF', fontWeight: '600', width: 300 }}>S6 多 Agent 编排</Text>
+            <Box style={{ flex: 1, height: 18, background: 'rgba(255,255,255,0.04)', borderRadius: 9 }}><Box style={{ width: 420, height: 18, background: '#3370FF', borderRadius: 9 }} /></Box>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 60, textAlign: 'right', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>14</Text>
+        </Box>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 300 }}>S2 店铺 · 商品 · 库存</Text>
+            <Box style={{ flex: 1, height: 18, background: 'rgba(255,255,255,0.04)', borderRadius: 9 }}><Box style={{ width: 300, height: 18, background: '#3370FF', borderRadius: 9, opacity: 0.85 }} /></Box>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 60, textAlign: 'right', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>10</Text>
+        </Box>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 300 }}>S1 认证与会话</Text>
+            <Box style={{ flex: 1, height: 18, background: 'rgba(255,255,255,0.04)', borderRadius: 9 }}><Box style={{ width: 210, height: 18, background: '#3370FF', borderRadius: 9, opacity: 0.75 }} /></Box>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 60, textAlign: 'right', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>7</Text>
+        </Box>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 300 }}>S5 模型配置 · AI 素材</Text>
+            <Box style={{ flex: 1, height: 18, background: 'rgba(255,255,255,0.04)', borderRadius: 9 }}><Box style={{ width: 180, height: 18, background: '#3370FF', borderRadius: 9, opacity: 0.7 }} /></Box>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 60, textAlign: 'right', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>6</Text>
+        </Box>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 300 }}>S0 环境与工程基线</Text>
+            <Box style={{ flex: 1, height: 18, background: 'rgba(255,255,255,0.04)', borderRadius: 9 }}><Box style={{ width: 150, height: 18, background: '#3370FF', borderRadius: 9, opacity: 0.65 }} /></Box>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 60, textAlign: 'right', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>5</Text>
+        </Box>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 300 }}>S3 竞品监控 · 经营复盘</Text>
+            <Box style={{ flex: 1, height: 18, background: 'rgba(255,255,255,0.04)', borderRadius: 9 }}><Box style={{ width: 150, height: 18, background: '#3370FF', borderRadius: 9, opacity: 0.65 }} /></Box>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 60, textAlign: 'right', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>5</Text>
+        </Box>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 300 }}>S4 推广链接 · 投放实验</Text>
+            <Box style={{ flex: 1, height: 18, background: 'rgba(255,255,255,0.04)', borderRadius: 9 }}><Box style={{ width: 120, height: 18, background: '#3370FF', borderRadius: 9, opacity: 0.6 }} /></Box>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 60, textAlign: 'right', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>4</Text>
+        </Box>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 300 }}>S7 权限与安全边界</Text>
+            <Box style={{ flex: 1, height: 18, background: 'rgba(255,255,255,0.04)', borderRadius: 9 }}><Box style={{ width: 120, height: 18, background: '#3370FF', borderRadius: 9, opacity: 0.6 }} /></Box>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 60, textAlign: 'right', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>4</Text>
+        </Box>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 300 }}>S8 交付与回归</Text>
+            <Box style={{ flex: 1, height: 18, background: 'rgba(255,255,255,0.04)', borderRadius: 9 }}><Box style={{ width: 90, height: 18, background: '#3370FF', borderRadius: 9, opacity: 0.55 }} /></Box>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', width: 60, textAlign: 'right', fontFamily: "'JetBrains Mono',Consolas,monospace" }}>3</Text>
+        </Box>
+        <Box style={{ height: 44, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Text style={{ fontSize: 16, color: '#7B8AA3', width: 300 }}>通过门槛</Text>
+            <Text style={{ flex: 1, fontSize: 16, color: '#EAF0F8' }}>FAIL 必须为 0；退出码 0 = 通过，1 = 有失败，2 = 脚本异常</Text>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 课程结课答辩</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>10 / 14</Text>
+    </Box>
+</Slide>

@@ -1,0 +1,31 @@
+# Environment
+.env
+.env.local
+.env.sqlite
+
+# Python
+api/.venv/
+**/__pycache__/
+api/.pytest_cache/
+api/.ruff_cache/
+**/*.pyc
+
+# Node
+web/node_modules/
+web/.next/
+
+# Local document rendering and research artifacts
+/tmp/
+web/out/
+web/.env.local
+
+# Uploads
+api/uploads/
+
+# Local runtime logs
+api/.logs/
+web/.logs/
+web/.next-courseware-*.log
+
+# Large offline delivery archives
+deliverables/**/*.tar

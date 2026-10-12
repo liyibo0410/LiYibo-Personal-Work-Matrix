@@ -1,0 +1,27 @@
+# 凭据与本地配置
+.env
+.env.*
+!.env.example
+*.local
+
+# 运行产物
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+.next/
+dist/
+build/
+
+# 证据与数据（体积大）
+_evidence/**/raw/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.log
+
+# 运行时数据库与上传产物（含真实合同内容，不入库）
+projects/*/data/
+!projects/*/data/.gitkeep

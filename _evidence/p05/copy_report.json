@@ -1,0 +1,26 @@
+{
+  "src": "D:\\software\\PycharmProjects\\合同审批系统-李奕波\\05-可运行系统-contract-review-v2.0",
+  "dst": "D:\\software\\PycharmProjects\\面试项目\\projects\\p05-contract-review",
+  "files": 342,
+  "dirs": 21,
+  "bytes": 12822327,
+  "mb": 12.23,
+  "top_level": [
+    "app",
+    "config",
+    "data",
+    "deploy",
+    "docs",
+    "mock",
+    "samples",
+    "tools",
+    "ui",
+    "verify",
+    "CHANGELOG.md",
+    "PRD.md",
+    "README.md",
+    "SPEC.md",
+    "run.py",
+    "selftest.py"
+  ]
+}

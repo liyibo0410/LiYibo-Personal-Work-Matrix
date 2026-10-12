@@ -1,0 +1,62 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`这一页讲安全与合规边界。这块我态度很明确。
+
+第一条，多租户隔离。工作区不是从请求参数里读的，而是从登录用户的成员关系里推出来的。所以改一个数字去看别人数据这条路，在结构上就是堵死的。验收里两条在打这个:路径里的工作区和会话里的不一致，直接返回无权访问;如果上下文里引用了别的租户的商品，返回不可处理的实体。
+
+第二条，权限三档。只读角色连改商品名都做不到。验收里我是把角色临时降成只读，发一个修改请求，拿到拒绝，再把角色恢复，同一个请求就通过了。这说明权限判断是真的在生效，不是前端藏了个按钮。
+
+第三条，密钥脱敏。模型配置的读取接口只返回掩码和"是否已配置"，从来不会把密钥原文吐出来。这一条我在验收里是直接对响应体做断言。
+
+第四条要专门说。电商数据采集有个灰色地带，就是绕过登录、绕过验证码、或者用风控对抗的方式去抓数据。这个项目明确不做。我把授权方式做成了受控枚举:授权对接、官方接口、服务商、手工导出。想走绕登录那条路，接口层面就没有这个选项。
+
+另外，所有破坏性操作都有人工二次确认。左侧那四条，就是这套系统对"数据安全"的回答。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>安全与合规边界</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>BOUNDARY · 结构上成立</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'row', alignItems: 'center', gap: 24 }}>
+        <Box style={{ width: 700, height: 496, flexDirection: 'column', gap: 16 }}>
+            <Box style={{ height: 112, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 18 }}>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#3370FF', width: 56, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>01</Text>
+                <Box style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>多租户从成员关系解析</Text>
+                    <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>路径与会话不一致 → 403；跨租户上下文 → 422。改数字看不到别人的数据。</Text>
+                </Box>
+            </Box>
+            <Box style={{ height: 112, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 18 }}>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#3370FF', width: 56, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>02</Text>
+                <Box style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>只读角色真的只读</Text>
+                    <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>降级为只读后修改请求被拒；恢复角色后同一请求通过。权限在后端生效，不是前端隐藏按钮。</Text>
+                </Box>
+            </Box>
+            <Box style={{ height: 112, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 18 }}>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#3370FF', width: 56, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>03</Text>
+                <Box style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>供应商密钥只出掩码</Text>
+                    <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>模型配置读取接口只返回掩码与"是否已配置"，响应体里不存在密钥原文。</Text>
+                </Box>
+            </Box>
+            <Box style={{ height: 112, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 18 }}>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#3370FF', width: 56, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>04</Text>
+                <Box style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>破坏性操作人工二次确认</Text>
+                    <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>删除类动作在界面上二次确认，接口层校验归属与权限，不做静默批量变更。</Text>
+                </Box>
+            </Box>
+        </Box>
+        <Box style={{ width: 428, height: 496, background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 16, padding: 26, flexDirection: 'column', gap: 16 }}>
+            <Text style={{ fontSize: 16, color: '#3370FF', fontWeight: '600' }}>采集合规声明</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#EAF0F8', lineHeight: 1.4 }}>不提供绕过登录、验证码或风控的采集方式</Text>
+            <Box style={{ height: 1, background: 'rgba(51,112,255,0.35)' }} />
+            <Text style={{ fontSize: 17, color: '#EAF0F8', lineHeight: 1.7 }}>
+                <>平台账号的授权方式做成受控枚举：<br />授权对接 / 官方接口 / 服务商 / 手工导出。<br /><br />想走绕登录那条路，接口层面就没有这个选项。<br /><br />数据来源可追溯，授权状态可登记、可审查。</>
+            </Text>
+            <Box style={{ flex: 1 }} />
+            <Text style={{ fontSize: 15, color: '#7B8AA3' }}>对应验收：SEC-01 ~ SEC-04</Text>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 项目验收汇报</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>13 / 14</Text>
+    </Box>
+</Slide>

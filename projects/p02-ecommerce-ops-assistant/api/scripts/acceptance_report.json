@@ -1,0 +1,477 @@
+{
+  "mode": "离线验收（SQLite + inline，临时库 C:\\Users\\23329\\AppData\\Local\\Temp\\ecommerce_acceptance.db）",
+  "elapsed_seconds": 43.1,
+  "total": 58,
+  "passed": 58,
+  "failed": 0,
+  "skipped": 0,
+  "warned": 0,
+  "pass_rate": 100.0,
+  "verdict": "通过",
+  "cases": [
+    {
+      "id": "ENV-01",
+      "group": "S0 环境与工程基线",
+      "title": "Python 运行时版本",
+      "expected": "≥3.11",
+      "actual": "Python 3.12.9",
+      "status": "PASS"
+    },
+    {
+      "id": "ENV-02",
+      "group": "S0 环境与工程基线",
+      "title": "Alembic 迁移版本数",
+      "expected": "≥1",
+      "actual": "23",
+      "status": "PASS"
+    },
+    {
+      "id": "ENV-03",
+      "group": "S0 环境与工程基线",
+      "title": "测试用例文件数",
+      "expected": "≥20",
+      "actual": "28",
+      "status": "PASS"
+    },
+    {
+      "id": "ENV-04",
+      "group": "S0 环境与工程基线",
+      "title": "API 路由模块数",
+      "expected": "≥10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "id": "ENV-05",
+      "group": "S0 环境与工程基线",
+      "title": "数据库表创建 / 表数量",
+      "expected": "建表成功且 ≥30 张表",
+      "actual": "36",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-00",
+      "group": "S1 认证与会话",
+      "title": "引导创建首个管理员",
+      "expected": "创建成功且角色为 owner",
+      "actual": "{\"email\": \"owner@local.dev\", \"role\": \"owner\"}",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-01",
+      "group": "S1 认证与会话",
+      "title": "健康检查",
+      "expected": "200 + status=ok",
+      "actual": "(200, {'status': 'ok'})",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-02",
+      "group": "S1 认证与会话",
+      "title": "JWT 登录",
+      "expected": "200 且返回非空 access_token",
+      "actual": "{\"code\": 200, \"token_len\": 136}",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-03",
+      "group": "S1 认证与会话",
+      "title": "当前用户",
+      "expected": "200 且 email 与登录账号一致",
+      "actual": "(200, {'email': 'owner@local.dev', 'display_name': '验收 Owner', 'role': 'owner', 'status': 'active', 'id': 1, 'permissions': {'can_read': True, 'can_edit': True, 'can_manage_users': True, 'can_confirm_ad_actions': True...",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-04",
+      "group": "S1 认证与会话",
+      "title": "无凭证访问受保护资源",
+      "expected": "401",
+      "actual": "401",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-05",
+      "group": "S1 认证与会话",
+      "title": "伪造 token 拒绝",
+      "expected": "401",
+      "actual": "401",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-06",
+      "group": "S1 认证与会话",
+      "title": "工作区列表（多租户入口）",
+      "expected": "200 且至少 1 个工作区",
+      "actual": "{\"code\": 200, \"count\": 1, \"workspace_id\": 1}",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-01",
+      "group": "S2 店铺·商品·库存",
+      "title": "创建店铺",
+      "expected": "201 且返回 id",
+      "actual": "{\"code\": 201, \"id\": 1}",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-02",
+      "group": "S2 店铺·商品·库存",
+      "title": "查询店铺详情",
+      "expected": "200 且名称一致",
+      "actual": "(200, {'name': '验收专用店铺', 'platform': 'douyin', 'status': 'active', 'external_store_id': None, 'owner_name': '李奕波', 'note': '一键验收脚本创建', 'id': 1, 'created_at': '2026-10-07T04:57:44', 'updated_at': '2026-10-07T04:57:44',...",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-03",
+      "group": "S2 店铺·商品·库存",
+      "title": "创建商品（关联店铺 + 卖点）",
+      "expected": "201 且卖点完整落库",
+      "actual": "{\"code\": 201, \"id\": 1, \"points\": 3}",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-04",
+      "group": "S2 店铺·商品·库存",
+      "title": "商品详情（结构化字段）",
+      "expected": "200 且含 selling_points / target_audience",
+      "actual": "(200, {'store_id': 1, 'name': '验收商品·控油气垫', 'platform': 'douyin', 'category': '美妆/底妆', 'price': '129.00', 'cost': '49.00', 'target_audience': '25-35 岁通勤人群，注重持妆与轻薄', 'selling_points': ['轻薄不闷痘', '12 小时控油持妆', '妆效自然'], 'pr...",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-05",
+      "group": "S2 店铺·商品·库存",
+      "title": "编辑商品",
+      "expected": "200 且字段已更新",
+      "actual": "(200, {'store_id': 1, 'name': '验收商品·控油气垫', 'platform': 'douyin', 'category': '美妆/底妆（已复核）', 'price': '129.00', 'cost': '49.00', 'target_audience': '25-35 岁通勤人群，注重持妆与轻薄', 'selling_points': ['轻薄不闷痘', '12 小时控油持妆', '妆效自然']...",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-06",
+      "group": "S2 店铺·商品·库存",
+      "title": "创建 SKU 并带初始库存",
+      "expected": "201 且生成库存档案",
+      "actual": "{\"code\": 201, \"id\": 1, \"has_inventory\": true}",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-07",
+      "group": "S2 店铺·商品·库存",
+      "title": "库存流水（入库）",
+      "expected": "201 且数量变更被记账",
+      "actual": "(201, {'id': 2, 'inventory_item_id': 1, 'sku_id': 1, 'movement_type': 'inbound', 'quantity_delta': 8, 'locked_delta': 0, 'before_quantity': 12, 'after_quantity': 20, 'before_locked_quantity': 0, 'after_locked_quantity...",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-08",
+      "group": "S2 店铺·商品·库存",
+      "title": "店铺库存汇总",
+      "expected": "200 且汇总体现 12+8=20 件",
+      "actual": "(200, {'store_id': 1, 'sku_count': 1, 'total_quantity': 20, 'total_locked_quantity': 0, 'total_available_quantity': 20, 'low_stock_count': 1, 'rows': [{'product_id': 1, 'product_name': '验收商品·控油气垫', 'sku_id': 1, 'sku_c...",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-09",
+      "group": "S2 店铺·商品·库存",
+      "title": "库存建议（未配置 LLM 走规则兜底）",
+      "expected": "200 且返回建议条目",
+      "actual": "(200, {'source': 'rules', 'summary': '验收专用店铺 有 1 个 SKU 低于预警线，需要优先处理补货和投放节奏。', 'risks': ['1 个 SKU 可用库存低于或等于预警线。'], 'replenishment_actions': ['优先补货 验收商品·控油气垫 / AC-001-N01，当前可用 20，预警线 30。'], 'operation_actions': ['检查低库存 ...",
+      "status": "PASS"
+    },
+    {
+      "id": "RES-10",
+      "group": "S2 店铺·商品·库存",
+      "title": "删除店铺（自研新增接口）",
+      "expected": "204；关联商品 store_id 置空而非删除",
+      "actual": "{\"delete\": 204, \"get_after\": 404, \"product_store_id\": null}",
+      "status": "PASS"
+    },
+    {
+      "id": "CMP-01",
+      "group": "S3 竞品监控·经营复盘",
+      "title": "录入竞品",
+      "expected": "201 且返回竞品 id",
+      "actual": "{\"code\": 201, \"id\": 1}",
+      "status": "PASS"
+    },
+    {
+      "id": "CMP-02",
+      "group": "S3 竞品监控·经营复盘",
+      "title": "创建竞品监控任务",
+      "expected": "201 且返回监控 id",
+      "actual": "{\"code\": 201, \"id\": 1}",
+      "status": "PASS"
+    },
+    {
+      "id": "CMP-03",
+      "group": "S3 竞品监控·经营复盘",
+      "title": "执行监控生成快照",
+      "expected": "201 且快照带结构化字段",
+      "actual": "(201, {'id': 1, 'monitor_id': 1, 'product_id': 1, 'competitor_id': 1, 'checked_at': '2026-10-07T04:57:45.103396', 'status': 'failed', 'title': None, 'price': None, 'sales_hint': None, 'main_image': None, 'selling_poin...",
+      "status": "PASS"
+    },
+    {
+      "id": "PERF-01",
+      "group": "S3 竞品监控·经营复盘",
+      "title": "批量导入经营数据",
+      "expected": "201 且返回条目数与提交一致",
+      "actual": "{\"code\": 201, \"count\": 3}",
+      "status": "PASS"
+    },
+    {
+      "id": "PERF-02",
+      "group": "S3 竞品监控·经营复盘",
+      "title": "生成经营复盘报告",
+      "expected": "201（未配置 LLM 时走规则/模板兜底）",
+      "actual": "(201, {'period_start': '2026-10-07', 'period_end': '2026-10-07', 'summary': '2026-10-07 至 2026-10-07，商品《验收商品·控油气垫》累计曝光 12000，点击 360，成交 42，ROI 为 6.54。', 'insights': ['本次复盘关联素材：未关联素材。', '点击率 3.00% 处于可测试区间，需要结合转化判断。', '转...",
+      "status": "PASS"
+    },
+    {
+      "id": "GRO-01",
+      "group": "S4 推广链接·投放实验",
+      "title": "批量生成推广链接",
+      "expected": "201 且至少 1 条含 tracking_code",
+      "actual": "{\"code\": 201, \"count\": 3, \"has_tracking\": true}",
+      "status": "PASS"
+    },
+    {
+      "id": "GRO-02",
+      "group": "S4 推广链接·投放实验",
+      "title": "生成投放实验",
+      "expected": "201 且落在 draft 状态待人工确认",
+      "actual": "{\"code\": 201, \"id\": 1, \"status\": \"draft\"}",
+      "status": "PASS"
+    },
+    {
+      "id": "GRO-03",
+      "group": "S4 推广链接·投放实验",
+      "title": "投放看板聚合",
+      "expected": "200 且返回聚合结构",
+      "actual": "(200, {'product_id': 1, 'total_experiments': 1, 'active_experiments': 0, 'measured_experiments': 0, 'total_spend': '0', 'total_revenue': '0', 'overall_roi': None, 'best_experiment': None, 'rows': [{'ad_experiment_id':...",
+      "status": "PASS"
+    },
+    {
+      "id": "GRO-04",
+      "group": "S4 推广链接·投放实验",
+      "title": "生成投放建议（人工确认前不动真金白银）",
+      "expected": "201 且默认未确认",
+      "actual": "{\"code\": 201, \"id\": 1, \"confirmed\": null}",
+      "status": "PASS"
+    },
+    {
+      "id": "MOD-01",
+      "group": "S5 模型配置·AI 素材",
+      "title": "读取模型配置（脱敏）",
+      "expected": "200 且只返回掩码，不含 api_key 明文",
+      "actual": "(200, {'text': {'base_url': '', 'api_key_masked': '', 'has_api_key': False, 'model': ''}, 'image': {'provider': '', 'base_url': '', 'api_key_masked': '', 'has_api_key': False, 'model': '', 'size': '1024*1024', 'worksp...",
+      "status": "PASS"
+    },
+    {
+      "id": "MOD-02",
+      "group": "S5 模型配置·AI 素材",
+      "title": "文本模型连通性测试",
+      "expected": "未配置时 400（fail-fast，而非静默假成功）",
+      "actual": "400",
+      "status": "PASS"
+    },
+    {
+      "id": "MOD-03",
+      "group": "S5 模型配置·AI 素材",
+      "title": "商品诊断生成",
+      "expected": "201 且 source ∈ {llm, rule/rules} 且有定位结论",
+      "actual": "{\"code\": 201, \"source\": \"rules\", \"has_positioning\": true}",
+      "status": "PASS"
+    },
+    {
+      "id": "MOD-04",
+      "group": "S5 模型配置·AI 素材",
+      "title": "生成主图创意策划",
+      "expected": "201 且至少 1 个可编辑方案",
+      "actual": "{\"code\": 201, \"count\": 4, \"plan_id\": 1}",
+      "status": "PASS"
+    },
+    {
+      "id": "MOD-05",
+      "group": "S5 模型配置·AI 素材",
+      "title": "提交图片生成任务（异步任务落库）",
+      "expected": "202 且返回 job_id",
+      "actual": "{\"code\": 202, \"job_id\": 1, \"status\": \"pending\"}",
+      "status": "PASS"
+    },
+    {
+      "id": "MOD-06",
+      "group": "S5 模型配置·AI 素材",
+      "title": "生成任务可取消/可重试（运维闭环）",
+      "expected": "取消端点返回 200/202/409 之一",
+      "actual": "{\"code\": 200, \"status\": \"cancelled\"}",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-01",
+      "group": "S6 多 Agent 编排",
+      "title": "Agent 目录（1 协调者 + 8 专家 + 7 工作流）",
+      "expected": "目录完整且数量吻合",
+      "actual": "{\"code\": 200, \"agents\": 8, \"workflows\": 7, \"coordinator\": \"ecommerce_operations_agent\"}",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-02",
+      "group": "S6 多 Agent 编排",
+      "title": "创建 Agent Task（202 异步受理）",
+      "expected": "202 且返回 task_id",
+      "actual": "{\"code\": 202, \"task_id\": 1, \"workflow_key\": \"inventory_operations\", \"status\": \"queued\"}",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-03",
+      "group": "S6 多 Agent 编排",
+      "title": "查询任务详情",
+      "expected": "200 且回读字段一致",
+      "actual": "(200, {'id': 1, 'workspace_id': 1, 'conversation_id': None, 'requested_by_user_id': 1, 'workflow_key': 'inventory_operations', 'workflow_version': '1.0.0', 'title': '验收·库存运营', 'intent': None, 'status': 'queued', 'risk...",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-04",
+      "group": "S6 多 Agent 编排",
+      "title": "任务关联执行记录（Run）",
+      "expected": "200 且至少 1 条 Run",
+      "actual": "(200, [{'id': 1, 'thread_id': '3993a437-c0be-4158-8b79-53ed2d13795c', 'workspace_id': 1, 'task_id': 1, 'product_id': 1, 'requested_by_user_id': 1, 'workflow_key': 'inventory_operations', 'workflow_version': '1.0.0', '...",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-05",
+      "group": "S6 多 Agent 编排",
+      "title": "任务/执行/Outbox 同事务写入",
+      "expected": "存在 workflow.run.requested 事件",
+      "actual": "{\"count\": 1, \"types\": [\"workflow.run.requested\"]}",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-06",
+      "group": "S6 多 Agent 编排",
+      "title": "审批列表接口（人工审批入口）",
+      "expected": "200 且返回列表",
+      "actual": "(200, [])",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-07",
+      "group": "S6 多 Agent 编排",
+      "title": "跨工作区越权（路径与会话不一致）",
+      "expected": "403",
+      "actual": "403",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-08",
+      "group": "S6 多 Agent 编排",
+      "title": "跨租户商品上下文拒绝",
+      "expected": "422",
+      "actual": "422",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-09",
+      "group": "S6 多 Agent 编排",
+      "title": "Agent 策略：越权工具被拒 / R3 需 owner",
+      "expected": "越权抛错且 R3 需 owner 批准",
+      "actual": "{\"blocked\": true, \"operator_allowed\": false, \"owner_allowed\": true, \"owner_need_approval\": true}",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-10",
+      "group": "S6 多 Agent 编排",
+      "title": "固定评测集（≥6 条 / 每工作流 6 类）",
+      "expected": "用例数与类别覆盖达标",
+      "actual": "{\"fixed\": 7, \"categories\": [\"human_review\", \"policy\", \"quality\", \"workflow\"], \"platform\": 42}",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-11",
+      "group": "S6 多 Agent 编排",
+      "title": "【真实图】R2 工作流停在审批 → 批准后恢复完成",
+      "expected": "首次 next=(approval_gate)，恢复后 final_status=completed",
+      "actual": "{\"paused_at\": [\"approval_gate\"], \"after\": [], \"final_status\": \"completed\", \"finalized\": 1}",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-12",
+      "group": "S6 多 Agent 编排",
+      "title": "【真实图】商品图：人工拒绝则不落库",
+      "expected": "final_status=rejected 且落库产物为 None",
+      "actual": "{\"paused_at\": [\"human_review_gate\"], \"final_status\": \"rejected\", \"decision\": \"reject\", \"persisted_positioning\": null}",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-13",
+      "group": "S6 多 Agent 编排",
+      "title": "【真实图】商品图：草稿→质检→人工审核→采纳人工编辑版",
+      "expected": "resume 后落地的是人工编辑后的输出",
+      "actual": "{\"paused_at\": [\"human_review_gate\"], \"expect_gate\": \"human_review_gate\", \"final_status\": \"completed\", \"persisted_positioning\": \"人工调整后的商品定位\"}",
+      "status": "PASS"
+    },
+    {
+      "id": "AGT-14",
+      "group": "S6 多 Agent 编排",
+      "title": "【真实图】质检不通过则不落库",
+      "expected": "final_status=quality_failed 且无落库",
+      "actual": "{\"final_status\": \"quality_failed\", \"finalized\": 0}",
+      "status": "PASS"
+    },
+    {
+      "id": "SEC-01",
+      "group": "S7 权限与安全边界",
+      "title": "密码不以明文形式返回",
+      "expected": "用户响应不含 password 字段",
+      "actual": "(200, {'email': 'owner@local.dev', 'display_name': '验收 Owner', 'role': 'owner', 'status': 'active', 'id': 1, 'permissions': {'can_read': True, 'can_edit': True, 'can_manage_users': True, 'can_confirm_ad_actions': True...",
+      "status": "PASS"
+    },
+    {
+      "id": "SEC-02",
+      "group": "S7 权限与安全边界",
+      "title": "viewer 只读角色不能编辑",
+      "expected": "403",
+      "actual": "{\"viewer_patch\": 403, \"restored_patch\": 200}",
+      "status": "PASS"
+    },
+    {
+      "id": "SEC-03",
+      "group": "S7 权限与安全边界",
+      "title": "全局管理接口只对 owner 开放",
+      "expected": "用户目录非 owner 时 403 或 200(owner)",
+      "actual": "200",
+      "status": "PASS"
+    },
+    {
+      "id": "SEC-04",
+      "group": "S7 权限与安全边界",
+      "title": "采集合规：拒绝绕登录/验证码的采集方式",
+      "expected": "授权方式枚举受控",
+      "actual": "{\"code\": 201, \"body_type\": \"dict\"}",
+      "status": "PASS"
+    },
+    {
+      "id": "DLV-01",
+      "group": "S8 交付与回归",
+      "title": "Docker Compose 交付编排完整",
+      "expected": "包含 api/web/worker/mysql/redis/postgres",
+      "actual": "{\"found\": [\"api\", \"web\", \"worker\", \"mysql\", \"redis\", \"postgres\", \"agent-checkpoints\"], \"count\": 7}",
+      "status": "PASS"
+    },
+    {
+      "id": "DLV-02",
+      "group": "S8 交付与回归",
+      "title": "环境变量模板齐备",
+      "expected": "存在 .env 模板且含数据库/队列/鉴权/模型四类关键键",
+      "actual": "{\"sources\": [\".env.example\", \"api/.env.example\", \"api/.env.sqlite\"], \"keys\": [\"AUTH_SECRET_KEY\", \"DATABASE_URL\", \"LLM_API_KEY\", \"TASK_QUEUE_BACKEND\"]}",
+      "status": "PASS"
+    },
+    {
+      "id": "REG-01",
+      "group": "S8 交付与回归",
+      "title": "自动化回归测试（pytest 全量）",
+      "expected": "全部用例通过",
+      "actual": "{\"exit\": 0, \"passed\": 117, \"failed\": 0, \"errors\": 0, \"summary\": \"117 passed in 5.92s\"}",
+      "status": "PASS"
+    }
+  ]
+}

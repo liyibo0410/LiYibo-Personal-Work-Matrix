@@ -1,0 +1,36 @@
+{"id":"TC-0001","scene":"商品标题","category":"general","text":"全网最低价，仅此一次，错过不再有！","gold":{"verdict":"block","labels":["全网最低价","仅此一次","错过不再有"]},"difficulty":"easy","tags":["时限类多命中"],"note":"纯时限类叠加，考察多命中合并"}
+{"id":"TC-0002","scene":"商品标题","category":"general","text":"国家级认证，行业第一品牌，100%有效。","gold":{"verdict":"block","labels":["国家级","第一","100%"]},"difficulty":"easy","tags":["绝对化+虚假承诺"],"note":"第一左侧有行业，应升为高风险"}
+{"id":"TC-0003","scene":"详情页","category":"general","text":"顶级品质，史上最低价，错过不再有","gold":{"verdict":"block","labels":["顶级","史上最低价","错过不再有"]},"difficulty":"easy","tags":["绝对化+时限"]}
+{"id":"TC-0004","scene":"详情页","category":"food","text":"本品无任何副作用，一次见效，永久有效","gold":{"verdict":"block","labels":["无任何副作用","一次见效","永久有效"]},"difficulty":"easy","tags":["虚假承诺"],"note":"无任何副作用是断言性否定，不可被否定语境豁免"}
+{"id":"TC-0005","scene":"商品标题","category":"general","text":"权威认证，绝对安全，零风险","gold":{"verdict":"block","labels":["绝对安全","零风险"]},"difficulty":"easy","tags":["安全性断言"]}
+{"id":"TC-0006","scene":"详情页","category":"general","text":"免检产品，特供渠道，政府指定采购","gold":{"verdict":"block","labels":["免检","特供","政府指定"]},"difficulty":"easy","tags":["权威背书"],"note":"国家免检制度2008年已取消，使用即违法"}
+{"id":"TC-0007","scene":"商品标题","category":"cosmetic","text":"这款面膜能快速消炎杀菌，全国销量第一，仅此一次！","gold":{"verdict":"block","labels":["消炎","杀菌","第一","仅此一次"]},"difficulty":"hard","tags":["医疗+绝对化+时限","药品混用"],"note":"化妆品类目禁用医疗功效表述；第一左侧有全国销量，应升high"}
+{"id":"TC-0008","scene":"详情页","category":"general","text":"彻底根治，永不复发，一次见效","gold":{"verdict":"block","labels":["彻底根治","永不复发","一次见效"]},"difficulty":"easy","tags":["医疗功效","虚假承诺"]}
+{"id":"TC-0009","scene":"商品标题","category":"general","text":"中国名牌，部优产品，国家级荣誉","gold":{"verdict":"block","labels":["中国名牌","部优产品","国家级"]},"difficulty":"hard","tags":["已废止评选"],"note":"中国名牌/部优评选均已废止"}
+{"id":"TC-0010","scene":"详情页","category":"finance","text":"稳赚不赔，保本保息，年化收益 15%","gold":{"verdict":"block","labels":["稳赚不赔","保本保息","年化收益 15%"]},"difficulty":"hard","tags":["投资收益承诺","正则规则"],"note":"年化收益+百分比应被正则规则命中"}
+{"id":"TC-0011","scene":"商品标题","category":"general","text":"销量冠军，最佳选择，无与伦比","gold":{"verdict":"block","labels":["销量冠军","最佳","无与伦比"]},"difficulty":"easy","tags":["绝对化用语"]}
+{"id":"TC-0012","scene":"详情页","category":"general","text":"全网首发，仅此一次，错过不再有","gold":{"verdict":"block","labels":["仅此一次","错过不再有"]},"difficulty":"medium","tags":["时限类"],"note":"全网首发为medium，限时类为high，取最高"}
+{"id":"TC-0013","scene":"商品标题","category":"general","text":"全国包邮，偏远地区除外。","gold":{"verdict":"pass","labels":[]},"difficulty":"easy","tags":["负例-范围词"],"note":"全国+包邮是服务覆盖，不是名次主张；且该区间不应给邻近词升权"}
+{"id":"TC-0014","scene":"详情页","category":"digital","text":"最高支持 120W 快充，最大容量 20000mAh。","gold":{"verdict":"pass","labels":[]},"difficulty":"easy","tags":["负例-技术参数"],"note":"最高/最大+量纲名词应白名单豁免"}
+{"id":"TC-0015","scene":"详情页","category":"general","text":"第一次使用建议先做耳后测试。","gold":{"verdict":"pass","labels":[]},"difficulty":"easy","tags":["负例-序数用法"],"note":"第一右邻是次，应被block_suffixes阻断"}
+{"id":"TC-0016","scene":"详情页","category":"cosmetic","text":"本品不含激素，请勿相信快速根治等夸大宣传。","gold":{"verdict":"pass","labels":[]},"difficulty":"hard","tags":["负例-否定语境"],"note":"句内否定应豁免；但\"请勿相信...\"里的根治属引用性否定"}
+{"id":"TC-0017","scene":"详情页","category":"general","text":"唯一序列号可用于官方验真。","gold":{"verdict":"pass","labels":[]},"difficulty":"medium","tags":["负例-技术性唯一"],"note":"唯一+序列号是技术事实，应白名单豁免"}
+{"id":"TC-0018","scene":"商品标题","category":"digital","text":"全网通手机，支持三大运营商。","gold":{"verdict":"pass","labels":[]},"difficulty":"easy","tags":["负例-范围词"]}
+{"id":"TC-0019","scene":"详情页","category":"general","text":"第一款配色为雾霾蓝，第二款为珍珠白。","gold":{"verdict":"pass","labels":[]},"difficulty":"medium","tags":["负例-序数用法"],"note":"第一款/第二款均非名次主张"}
+{"id":"TC-0020","scene":"详情页","category":"general","text":"第一时间联系客服可加急处理。","gold":{"verdict":"pass","labels":[]},"difficulty":"easy","tags":["负例-固定搭配"]}
+{"id":"TC-0021","scene":"详情页","category":"digital","text":"最高温度可达 45℃，注意避免烫伤。","gold":{"verdict":"pass","labels":[]},"difficulty":"medium","tags":["负例-技术参数"]}
+{"id":"TC-0022","scene":"详情页","category":"general","text":"本次活动时间为 10月12日至 10月15日。","gold":{"verdict":"pass","labels":[]},"difficulty":"easy","tags":["负例-真实时限"],"note":"无违规词，且展示了合规的时限表述方式"}
+{"id":"TC-0023","scene":"商品标题","category":"general","text":"最\u200b好用的面膜，全网\u3000最低价。","gold":{"verdict":"block","labels":["最好","全网最低价"]},"difficulty":"adversarial","tags":["对抗-零宽字符","对抗-全角空格"],"note":"零宽字符与全角空格均为绕过手段，须被容错正则捕获"}
+{"id":"TC-0024","scene":"商品标题","category":"general","text":"NO.1 销量，行业苐一。","gold":{"verdict":"block","labels":["第一"]},"difficulty":"adversarial","tags":["对抗-形近字"],"note":"苐为第的形近字，须经variant_map归一化后命中"}
+{"id":"TC-0025","scene":"商品标题","category":"general","text":"最　好　的　选　择","gold":{"verdict":"block","labels":["最好"]},"difficulty":"adversarial","tags":["对抗-全角空格插入"]}
+{"id":"TC-0026","scene":"商品标题","category":"general","text":"最-好-用 的产品，仅-此-一-次","gold":{"verdict":"block","labels":["最好","仅此一次"]},"difficulty":"adversarial","tags":["对抗-符号插入"],"note":"分隔符插入须被SEP容错模式捕获"}
+{"id":"TC-0027","scene":"详情页","category":"general","text":"用户评价：这是我用过最满意的产品，性价比超高。","gold":{"verdict":"review","labels":["最满意"]},"difficulty":"adversarial","tags":["对抗-引述降级"],"note":"引用他人评价不豁免但可降级为medium，且引号内文本仍须扫描"}
+{"id":"TC-0028","scene":"商品标题","category":"general","text":"蕞好用的产品，坠低价促销","gold":{"verdict":"block","labels":["最好","最低价"]},"difficulty":"adversarial","tags":["对抗-谐音形近字"]}
+{"id":"TC-0029","scene":"商品标题","category":"general","text":"顶级*品质*，仅此*一次","gold":{"verdict":"block","labels":["顶级","仅此一次"]},"difficulty":"adversarial","tags":["对抗-符号插入"]}
+{"id":"TC-0030","scene":"详情页","category":"general","text":"【独家】权威认证，行业领先品牌。","gold":{"verdict":"review","labels":["独家","权威","领先品牌"]},"difficulty":"adversarial","tags":["对抗-全medium"],"note":"三个词均为medium，应判review而非block"}
+{"id":"TC-0031","scene":"商品标题","category":"general","text":"限时优惠，先到先得。","gold":{"verdict":"review","labels":["限时"]},"difficulty":"boundary","tags":["边界-缺时间窗"],"note":"限时活动真实且标注起止可放行，未标注则medium"}
+{"id":"TC-0032","scene":"详情页","category":"general","text":"独家专利配方，销量领先，7天无理由退换。","gold":{"verdict":"review","labels":["独家"]},"difficulty":"boundary","tags":["边界-中风险"]}
+{"id":"TC-0033","scene":"详情页","category":"general","text":"无效退款，无效果可申请售后。","gold":{"verdict":"review","labels":["无效退款"]},"difficulty":"boundary","tags":["边界-需核对售后条款"],"note":"若为真实可执行的商业承诺可放行，故为medium"}
+{"id":"TC-0034","scene":"详情页","category":"cosmetic","text":"本品无添加香精和色素，成分简单。","gold":{"verdict":"review","labels":["无添加"]},"difficulty":"boundary","tags":["边界-需与配料表一致"]}
+{"id":"TC-0035","scene":"详情页","category":"general","text":"杀菌湿巾，已取得卫生许可。","gold":{"verdict":"review","labels":["杀菌"]},"difficulty":"boundary","tags":["边界-需资质"],"note":"有卫生许可+检测报告可放行，无则升high"}
+{"id":"TC-0036","scene":"详情页","category":"general","text":"终身免费提供软件更新服务。","gold":{"verdict":"review","labels":["终身免费"]},"difficulty":"boundary","tags":["边界-需合同化承诺"]}

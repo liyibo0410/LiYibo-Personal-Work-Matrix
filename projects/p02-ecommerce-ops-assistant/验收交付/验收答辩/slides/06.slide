@@ -1,0 +1,54 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`第一个难点：怎么保证模型不去乱动数据。
+
+大模型有个天然倾向——你给它一个目标，它会想办法完成，包括去访问它不该访问的数据。如果让模型直接连着数据库，那它生成什么查询、写到哪张表，你都控制不了。
+
+我的做法是加一个受控工具网关。模型能看到的不是数据库，而是一份工具清单。每个 Agent 有自己明确的白名单，白名单之外的工具调用直接拒绝。
+
+举个具体例子。库存运营 Agent 的白名单里允许读取商品、读取店铺、读取库存、生成库存建议草稿，以及一个叫"库存调整"的工具。但前面几个都是只读或草稿级别，风险等级低；只有"库存调整"会真正写流水，所以它被标成最高风险等级，而且限定只有拥有者能触发。
+
+还有一层是脱敏。密钥、令牌这类字段在进入模型上下文之前会被替换掉，截图和日志里也不会出现。
+
+右边这段就是白名单的实际形态。我想强调的是：**这不是提示词层面的约束，是代码层面的拒绝**。提示词可以被绕过，策略拒绝不会。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>难点一 · 受控工具网关</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>CONTROL · 模型不碰数据库</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'row', alignItems: 'center', gap: 24 }}>
+        <Box style={{ width: 604, height: 496, flexDirection: 'column', gap: 20 }}>
+            <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.45 }}>模型看到的不是数据库，而是按 Agent 划分的工具白名单</Text>
+            <Box style={{ flex: 1, flexDirection: 'column', gap: 16 }}>
+                <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', gap: 4 }}>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>白名单外直接拒绝</Text>
+                    <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.45 }}>越权调用抛策略异常。提示词可以被绕过，策略拒绝不会。</Text>
+                </Box>
+                <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', gap: 4 }}>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>风险分级决定谁来批</Text>
+                    <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.45 }}>读操作零风险；草稿类一次审批；写业务数据须拥有者且必须审批。</Text>
+                </Box>
+                <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', gap: 4 }}>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>脱敏 + 幂等</Text>
+                    <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.45 }}>密钥进入上下文前先替换；同一运行的重复调用只执行一次。</Text>
+                </Box>
+            </Box>
+        </Box>
+        <Box style={{ width: 524, height: 496, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 20, flexDirection: 'column', gap: 10 }}>
+            <Text style={{ fontSize: 16, color: '#3370FF', fontWeight: '600' }}>库存运营 Agent 的工具白名单</Text>
+            <Box style={{ height: 1, background: 'rgba(123,138,163,0.24)' }} />
+            <Text style={{ fontSize: 14, color: '#7B8AA3', lineHeight: 1.75, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>
+                <>product.read        R0  读取商品<br />store.read          R0  读取店铺<br />inventory.read      R0  读取 SKU<br />advice.draft        R1  生成建议草稿<br /><span style={{ color: '#3370FF', fontWeight: 'bold' }}>inventory.adjust    R3  写库存流水</span></>
+            </Text>
+            <Box style={{ height: 1, background: 'rgba(123,138,163,0.24)' }} />
+            <Text style={{ fontSize: 14, color: '#7B8AA3', lineHeight: 1.75, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>
+                <># inventory.adjust<br />owner_only = True<br /># 非拥有者 → allowed=False<br /># 拥有者   → 需审批</>
+            </Text>
+            <Box style={{ flex: 1 }} />
+            <Box style={{ background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 10, padding: 14 }}>
+                <Text style={{ fontSize: 15, color: '#EAF0F8', lineHeight: 1.5 }}>提示词可以被绕过，<br />策略层的拒绝不会。</Text>
+            </Box>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 课程结课答辩</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>06 / 14</Text>
+    </Box>
+</Slide>

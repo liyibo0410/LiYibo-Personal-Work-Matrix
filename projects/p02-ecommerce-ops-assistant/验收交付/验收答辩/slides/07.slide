@@ -1,0 +1,56 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`第二个难点，也是这套系统最有价值的部分：人工审批和断点恢复。
+
+一般的做法是，模型生成完，弹个窗问用户"要不要采纳"，用户点了才继续。问题是这个"等一下"是挂在内存里的。用户去开个会、过个夜，进程一重启或者超时，这条流程就没了，只能从头再跑一遍模型，时间成本和调用成本都浪费。
+
+我用的方案是把审批做成图里的一个中断节点。工作流跑到这里会主动停下来，并把当前状态整体持久化到检查点里。这时候内存里什么都不用留。人什么时候回来点都可以。
+
+人点通过之后，用同一个会话标识恢复，图从断点继续往下走，模型不会重新跑一遍。
+
+更关键的是最后一步：只有被批准的产物才会写进业务系统。人如果选择拒绝，或者只做了编辑后采纳，那么落库的是人改过的那一版，不是模型的原稿。
+
+右下角这四条是验收里实际跑出来的结果，不是我的设计意图——拒绝之后落库产物确实是空的，采纳之后落库的定位文案确实是我手工改过的那句。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>难点二 · 人工审批 + 断点恢复</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>CHECKPOINT · 可跨时间恢复</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'column', gap: 20, paddingTop: 6 }}>
+        <Box style={{ height: 200, flexDirection: 'row', alignItems: 'center', gap: 32 }}>
+            <Text style={{ fontSize: 72, fontWeight: 'bold', color: '#3370FF', lineHeight: 1.0, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>interrupt</Text>
+            <Box style={{ flex: 1, flexDirection: 'column', gap: 10 }}>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8', lineHeight: 1.4 }}>审批不是弹窗阻塞内存，而是图里的一个持久化断点</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.6 }}>工作流停在审批门时整体状态写入检查点；隔天再审批也能用同一标识恢复，模型不重跑。</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 150, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Box style={{ flex: 1, height: 96, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
+                <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>① 生成草稿</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>诊断与创意方案以结构化 JSON 产出</Text>
+            </Box>
+            <Text style={{ fontSize: 24, color: '#3370FF', fontWeight: 'bold' }}>→</Text>
+            <Box style={{ flex: 1, height: 96, background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 10, padding: 16, flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
+                <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>② 停在审批门</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>状态落检查点，等待人工决定</Text>
+            </Box>
+            <Text style={{ fontSize: 24, color: '#3370FF', fontWeight: 'bold' }}>→</Text>
+            <Box style={{ flex: 1, height: 96, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
+                <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>③ 同标识恢复</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>从断点继续，不重新调用模型</Text>
+            </Box>
+            <Text style={{ fontSize: 24, color: '#3370FF', fontWeight: 'bold' }}>→</Text>
+            <Box style={{ flex: 1, height: 96, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 10, padding: 16, flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
+                <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>④ 仅落已批准产物</Text>
+                <Text style={{ fontSize: 15, color: '#7B8AA3', lineHeight: 1.5 }}>拒绝则不写库，编辑则写人工版本</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 110, flexDirection: 'column', gap: 8 }}>
+            <Text style={{ fontSize: 16, color: '#3370FF', fontWeight: '600' }}>验收实测（脚本真实跑出的结果）</Text>
+            <Text style={{ fontSize: 14, color: '#EAF0F8', lineHeight: 1.7, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>
+                <>R2 工作流 首次 next=(approval_gate) → 批准后 completed，落库 1 次　|　人工拒绝 rejected，落库 None<br />采纳编辑版 落库定位 = "人工调整后的商品定位"　|　质检不通过 quality_failed，落库 0 次</>
+            </Text>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 课程结课答辩</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>07 / 14</Text>
+    </Box>
+</Slide>

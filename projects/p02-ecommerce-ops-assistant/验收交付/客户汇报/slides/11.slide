@@ -1,0 +1,43 @@
+<Slide style={{ width: 1280, height: 720, background: '#0B1220', padding: '20px 64px', display: 'flex', flexDirection: 'column' }} notes={`这是验收结果页。三个数字。
+
+第一个是五十八——五十八项用例,全部通过,失败零项,跳过零项。通过率百分之百。整个脚本跑完用时四十三秒。
+
+我要强调一下这里的"跳过零项"。因为我在设计脚本的时候留了一个后门:某些项在不具备条件的时候可以标记为跳过,比如在线模式下不方便直接读对端的数据库。但最终跑出来跳过是零,意味着五十八项全部拿到了实际证据,没有一项是靠"跳过"蒙过去的。
+
+第二个数字是回归测试:一百一十七条单元与集成测试全部通过,零失败零错误,用时五秒三。测试文件一共二十八个。
+
+第三个是四十——这是跑完整个验收的耗时,四十三秒左右。也就是说,任何人拿到这个项目,一条命令,四十多秒就能自己复核我的全部结论。
+
+我不想用"功能基本完成"这种话。我想说的是:这些数字是可以被复现的,你可以在自己机器上跑一遍,结果应该完全一样。`}>
+    <Box style={{ height: 100, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(123,138,163,0.24)' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#EAF0F8' }}>验收结果</Text>
+        <Text style={{ fontSize: 16, color: '#7B8AA3' }}>RESULT · 全部通过</Text>
+    </Box>
+    <Box style={{ height: 520, flexDirection: 'column', gap: 20, paddingTop: 10 }}>
+        <Box style={{ height: 300, flexDirection: 'row', gap: 20 }}>
+            <Box style={{ flex: 1, background: 'rgba(51,112,255,0.12)', border: '1px solid rgba(51,112,255,0.35)', borderRadius: 16, padding: 24, flexDirection: 'column', justifyContent: 'center', gap: 10 }}>
+                <Text style={{ fontSize: 96, fontWeight: 'bold', color: '#3370FF', lineHeight: 1.0, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>58</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8' }}>项验收用例全部通过</Text>
+                <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.5 }}>FAIL 0 · SKIP 0 · PASS 58</Text>
+            </Box>
+            <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 16, padding: 24, flexDirection: 'column', justifyContent: 'center', gap: 10 }}>
+                <Text style={{ fontSize: 96, fontWeight: 'bold', color: '#EAF0F8', lineHeight: 1.0, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>117</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8' }}>条回归测试全绿</Text>
+                <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.5 }}>0 failed · 0 error · 5.33s</Text>
+            </Box>
+            <Box style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 16, padding: 24, flexDirection: 'column', justifyContent: 'center', gap: 10 }}>
+                <Text style={{ fontSize: 96, fontWeight: 'bold', color: '#EAF0F8', lineHeight: 1.0, fontFamily: "'JetBrains Mono',Consolas,monospace" }}>100%</Text>
+                <Text style={{ fontSize: 22, fontWeight: '600', color: '#EAF0F8' }}>通过率</Text>
+                <Text style={{ fontSize: 16, color: '#7B8AA3', lineHeight: 1.5 }}>全程耗时 43.1 秒 · 退出码 0</Text>
+            </Box>
+        </Box>
+        <Box style={{ height: 176, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(123,138,163,0.24)', borderRadius: 12, padding: 22, flexDirection: 'column', gap: 10 }}>
+            <Text style={{ fontSize: 20, fontWeight: '600', color: '#EAF0F8' }}>为什么"跳过 0 项"值得说</Text>
+            <Text style={{ fontSize: 17, color: '#EAF0F8', lineHeight: 1.7 }}>脚本允许在条件不满足时标记跳过，但最终没有任何一项走这条退路——<br />58 项全部拿到了实测证据。结论不是"功能基本完成"，而是<Text style={{ color: '#3370FF', fontWeight: 'bold' }}>可复现</Text>：换一台机器跑同一条命令，结果完全一致。</Text>
+        </Box>
+    </Box>
+    <Box style={{ height: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>AI 电商运营助手 · 项目验收汇报</Text>
+        <Text style={{ fontSize: 14, color: '#7B8AA3' }}>11 / 14</Text>
+    </Box>
+</Slide>

@@ -1,0 +1,46 @@
+{
+  "passed": 8,
+  "total": 8,
+  "cases": [
+    {
+      "case": "boot 完成且返回 llm 映射",
+      "pass": true,
+      "note": "source=fallback changed=['base_url', 'OPENAI_API_KEY']"
+    },
+    {
+      "case": "base_url 已被自动填充",
+      "pass": true,
+      "note": "base_url=https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+    },
+    {
+      "case": "OPENAI_API_KEY 已被自动填充",
+      "pass": true,
+      "note": "长度 115"
+    },
+    {
+      "case": "llm.available() 为真（配置通路打通）",
+      "pass": true,
+      "note": "mode=rule+llm reason="
+    },
+    {
+      "case": "审查完成且非去重复用",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "case": "端到端复核真实生效（source=llm）",
+      "pass": true,
+      "note": "reason="
+    },
+    {
+      "case": "至少一条 confirm（违约责任不对等应为真风险）",
+      "pass": true,
+      "note": "stats={'confirm': 2, 'false_positive': 0, 'need_human': 1, 'total': 3}"
+    },
+    {
+      "case": "复核结论已落库（verify_verdict 非空）",
+      "pass": true,
+      "note": ""
+    }
+  ]
+}

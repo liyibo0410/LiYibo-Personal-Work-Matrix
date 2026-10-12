@@ -1,0 +1,5 @@
+[migrate-design-tokens] mode=check
+  替换次数: 0
+  改动文件: 0
+
+[OK] 无旧调色板残留

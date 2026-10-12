@@ -1,0 +1,7 @@
+[migrate-design-tokens] mode=write
+  替换次数: 2
+  改动文件: 2
+    +  1  app\(app)\agent\page.tsx
+    +  1  components\agent-run-panel.tsx
+
+完成。

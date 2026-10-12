@@ -1,0 +1,9 @@
+.ruff_cache
+**/__pycache__
+**/.pytest_cache
+**/.next
+**/node_modules
+api/uploads/generated
+api/uploads/generated-videos
+*.pyc
+.env
