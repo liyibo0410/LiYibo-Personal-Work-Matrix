@@ -1,0 +1,59 @@
+{
+  "results": [
+    {
+      "name": "1 真实配置: backend=local 且模型路径存在",
+      "ok": true,
+      "detail": "backend=local, device=cuda:0, fp16=True, path_exists=True, cloud_key_set=True(len=115)"
+    },
+    {
+      "name": "1b CUDA 自动检测生效（4060 应得 cuda:0）",
+      "ok": true,
+      "detail": "device=cuda:0"
+    },
+    {
+      "name": "2 local 语义排序：高相关全体 > 不相关全体",
+      "ok": true,
+      "detail": "最弱高相关 -1.6885 > 最强不相关 -7.6875"
+    },
+    {
+      "name": "3 local 输出为 logits 量纲（绝对值可 >1）",
+      "ok": true,
+      "detail": "range=[-9.4844, +5.0547]；云端 relevance_score 恒在 0~1"
+    },
+    {
+      "name": "4 全相关场景未被过度截断（期望 >=4 条）",
+      "ok": false,
+      "detail": "6 条全相关 → 保留 3 条"
+    },
+    {
+      "name": "5 单例缓存：首次加载显著慢于后续",
+      "ok": true,
+      "detail": "首次 11.70s（含加载） vs 后续平均 0.0324s，加速 361x"
+    },
+    {
+      "name": "6 降级路径：local 失败 → passthrough，不抛异常",
+      "ok": true,
+      "detail": "backend=passthrough, reason=cloud 也失败（未配置 MCP_API_KEY（DashScope API Key）），降级到 passthroug"
+    },
+    {
+      "name": "7 真实 .env 配置下主入口走 local",
+      "ok": true,
+      "detail": "backend=local, degrade=''"
+    }
+  ],
+  "local_scores_sample": [
+    5.0547,
+    -7.6875,
+    3.2637,
+    -9.4844,
+    -1.8506,
+    -1.6885
+  ],
+  "local_score_range": [
+    -9.4844,
+    5.0547
+  ],
+  "cliff_local_n": 4,
+  "first_call_sec": 11.698,
+  "avg_subsequent_sec": 0.0324
+}

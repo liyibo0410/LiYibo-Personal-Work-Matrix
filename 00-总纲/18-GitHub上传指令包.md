@@ -234,12 +234,21 @@ P02 的 `smoke_local.py` / `verify_llm_real.py` / `test_bootstrap.py` 等含本�
 - [x] 建 GitHub 仓库 `liyibo0410/yunshu-ai-portfolio` ✅ 已完成
 - [x] **转 Private** ✅ 已完成（P1 已复验：未认证 API 返回 404）
 - [ ] 把第三节指令粘给 Qoder 执行首传 ✅ 已完成（807 文件）
-- [ ] **推送 P1 的两个修正 commit**（沙箱无 GitHub 凭据，需 Qoder 或你本地执行）：
-      ```
-      cd "D:\software\PycharmProjects\面试项目"
-      git push
-      git log --oneline -3        # 应见 7f992a4 / 9b9a884 / ac08668
-      ```
+- [x] **推送 P1 的修正 commit** ✅ 已完成（Qoder 执行，P1 复核）
 - [ ] **（建议）更换服务器 SSH 口令** —— 原口令是弱口令且已进入 git 历史
       （Private 仓库风险可控，但换掉更稳妥；换完告诉我，我把新值记进本地凭据文档）
-- [ ] 确认 push 成功后，把 commit hash 告诉 P1（我记进进度文档）
+- [x] push 成功 ✅ —— **P1 已复核确认**
+
+### ✅ 最终同步状态（2026-10-12 19:10，P1 独立核实）
+
+```
+未推送数量            0
+远端 origin/main      08b520f → 7f992a4 → 9b9a884 → ac08668（4 条）
+工作区                干净
+真实 API Key          0 处
+口令字面量            0 处
+真实 .env             0 个
+```
+
+**仓库地址**：https://github.com/liyibo0410/yunshu-ai-portfolio （Private）
+**D4 阶段成果已完整固化。**

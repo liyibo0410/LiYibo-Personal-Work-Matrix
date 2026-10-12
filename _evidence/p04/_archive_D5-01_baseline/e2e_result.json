@@ -1,0 +1,41 @@
+{
+  "import": {
+    "task_id": "3d55a1cf-9be4-4153-9009-bcebd10eaaa4",
+    "chunk_count": 8,
+    "item_name": "Brother HAK 180 烫金机",
+    "file_title": "hak180产品安全手册_new",
+    "elapsed_seconds": 8.4
+  },
+  "query_1": {
+    "answer": "根据参考内容，不建议将 HAK 180 烫金机放在加热器、空调、电风扇或水附近，主要原因如下：\n\n当水（包括由加热、空调或通风设备产生的冷凝水）接触本设备时，可能会产生**短路**或**火灾**的风险。",
+    "sources": [
+      {
+        "rank": 1,
+        "score": 3.900390625,
+        "source": "local",
+        "content_preview": "# HAK 180 烫金机\n\n\n# 产品安全手册（简体中文）\n\n•\t请勿将本设备放在化学品附近，或者将本设备放置在可能会泼溅到化学品的位置。万一化学品接触本设备，则存在火灾或触电的风险。特别是有机溶剂"
+      },
+      {
+        "rank": 2,
+        "score": 1.44921875,
+        "source": "local",
+        "content_preview": "## 警告\n\n不遵守说明和警告可能导致人员死亡或严重受伤。遵守这些指引以避免冒烟、发热、爆炸、火灾或人员受伤的风险。\n\n\n## 设备\n\n•\t请先阅读这本手册，再尝试操作本设备或尝试进行任何维护。不按照"
+      },
+      {
+        "rank": 3,
+        "score": 0.7392578125,
+        "source": "local",
+        "content_preview": "## 设备\n\n•\t将本设备放置在平整、水平且稳定的表面上（如桌面），避免震动和冲击。\n\n•\t将本设备放置在通风良好的环境中。\n\n•\t为了防止人员受伤，请谨慎操作，避免将手指放置在图中所示的区域中。\n\n"
+      }
+    ],
+    "rerank_backend": "local",
+    "elapsed_seconds": 17.9
+  },
+  "query_2": {
+    "answer": "您是想问以下哪个产品：Brother HAK 180 烫金机、华为擎云B530台式机？请明确一下型号。",
+    "sources": [],
+    "rerank_backend": "local",
+    "elapsed_seconds": 9.3
+  },
+  "all_pass": true
+}

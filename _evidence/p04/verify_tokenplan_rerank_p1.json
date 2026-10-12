@@ -1,0 +1,18 @@
+{
+  "1 Token Plan Key 有效性（chat/completions）": {
+    "status": 200,
+    "body_head": "{\"id\":\"chatcmpl-cd4fadb8-a529-43a7-8d8a-c869b83f8793\",\"object\":\"chat.completion\",\"created\":1791806006,\"model\":\"qwen3.7-plus\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"reasoning_content\":\"用户要求回复两个字：“可用”。\\n直接输出“可用”即可。不需要其他多余的解释。\",\"content\":\"可用\"},\"finish_reason\":\"stop\",\"logprobs\":null}],\"usa"
+  },
+  "2 Token Plan 可用模型列表": {
+    "status": 200,
+    "body_head": "{\"first_id\":\"model-id-0\",\"data\":[{\"created\":1779367398,\"owned_by\":\"system\",\"id\":\"qwen3.7-max\",\"object\":\"model\"},{\"created\":1780806507,\"owned_by\":\"system\",\"id\":\"qwen3.7-plus\",\"object\":\"model\"},{\"created\":1779173747,\"owned_by\":\"system\",\"id\":\"qwen3.6-flash\",\"object\":\"model\"},{\"created\":1781605418,\"owne"
+  },
+  "3 兼容端点 /rerank": {
+    "status": 404,
+    "body_head": "{\"code\":\"InvalidParameter\",\"message\":\"Model not exist.\",\"request_id\":\"33377799-53b1-4ca6-beb9-65adb5560529\"}"
+  },
+  "4 DashScope 原生 rerank（当前代码的调用路径）": {
+    "status": null,
+    "error": "502 Bad Gateway"
+  }
+}

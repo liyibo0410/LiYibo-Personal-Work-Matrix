@@ -1,0 +1,32 @@
+{
+  "全相关6条": {
+    "local_raw": [
+      4.3047,
+      2.4746,
+      -0.6636,
+      -0.8687,
+      -5.9648,
+      -1.7979
+    ],
+    "local_keep": 3,
+    "cloud_raw": null,
+    "cloud_keep": null,
+    "local_sigmoid_keep": 4,
+    "total": 6
+  },
+  "混合6条": {
+    "local_raw": [
+      5.0547,
+      -7.6875,
+      3.2637,
+      -9.4844,
+      -1.8506,
+      -1.3184
+    ],
+    "local_keep": 3,
+    "cloud_raw": null,
+    "cloud_keep": null,
+    "local_sigmoid_keep": 3,
+    "total": 6
+  }
+}

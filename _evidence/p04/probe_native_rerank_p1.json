@@ -1,0 +1,18 @@
+{
+  "A 原生 rerank（官方标准端点） | 代理=开": {
+    "status": 200,
+    "head": "{\"output\":{\"results\":[{\"index\":0,\"relevance_score\":0.9155227445360937},{\"index\":2,\"relevance_score\":0.6220676564328348},{\"index\":1,\"relevance_score\":0.001010391441496894}]},\"usage\":{\"prompt_tokens\":283,\"total_tokens\":283},\"request_id\":\"81be21a8-534b-9e3e-8814-7269331b2bc7\"}"
+  },
+  "A 原生 rerank（官方标准端点） | 代理=关": {
+    "status": 200,
+    "head": "{\"output\":{\"results\":[{\"index\":0,\"relevance_score\":0.9155227445360937},{\"index\":2,\"relevance_score\":0.6220676564328348},{\"index\":1,\"relevance_score\":0.001010391441496894}]},\"usage\":{\"prompt_tokens\":283,\"total_tokens\":283},\"request_id\":\"ee3cf068-4f15-97f2-ba54-bfeeef10b001\"}"
+  },
+  "B 兼容端点 /rerank（已确认 404，复现） | 代理=开": {
+    "status": 404,
+    "head": ""
+  },
+  "B 兼容端点 /rerank（已确认 404，复现） | 代理=关": {
+    "status": 404,
+    "head": ""
+  }
+}

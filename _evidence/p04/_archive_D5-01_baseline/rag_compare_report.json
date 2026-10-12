@@ -1,0 +1,75 @@
+{
+  "test_set_size": 3,
+  "local": {
+    "ragas_scores": {
+      "Faithfulness": 0.9778,
+      "Answer Relevancy": 0.5585,
+      "Context Precision": 0.5,
+      "Context Recall": 0.6667,
+      "Answer Correctness": 0.445
+    },
+    "avg_latency_seconds": 20.78,
+    "actual_backend": "local"
+  },
+  "cloud": {
+    "ragas_scores": {
+      "Faithfulness": 0.9722,
+      "Answer Relevancy": 0.543,
+      "Context Precision": 0.4167,
+      "Context Recall": 0.6667,
+      "Answer Correctness": 0.5126
+    },
+    "avg_latency_seconds": 16.3,
+    "actual_backend": "passthrough"
+  },
+  "latency_details": [
+    {
+      "question": "hak 180 烫金机：为什么不建议把设备放在加热器、空调、电风扇或水附近？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 27.33,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要在卡纸或设备内部有纸张散落时继续使用？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 17.61,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：起搏器用户靠近 HAK180 感到异常时怎么办？为什么需要这样做？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 17.4,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不建议把设备放在加热器、空调、电风扇或水附近？",
+      "backend": "cloud",
+      "actual_backend": "passthrough",
+      "elapsed_seconds": 14.41,
+      "source_count": 5,
+      "degrade_reason": "cloud 失败（DashScope rerank 调用失败: Invalid API-key provided.），降级到 passthrough"
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要在卡纸或设备内部有纸张散落时继续使用？",
+      "backend": "cloud",
+      "actual_backend": "passthrough",
+      "elapsed_seconds": 15.93,
+      "source_count": 5,
+      "degrade_reason": "cloud 失败（DashScope rerank 调用失败: Invalid API-key provided.），降级到 passthrough"
+    },
+    {
+      "question": "hak 180 烫金机：起搏器用户靠近 HAK180 感到异常时怎么办？为什么需要这样做？",
+      "backend": "cloud",
+      "actual_backend": "passthrough",
+      "elapsed_seconds": 18.55,
+      "source_count": 5,
+      "degrade_reason": "cloud 失败（DashScope rerank 调用失败: Invalid API-key provided.），降级到 passthrough"
+    }
+  ]
+}

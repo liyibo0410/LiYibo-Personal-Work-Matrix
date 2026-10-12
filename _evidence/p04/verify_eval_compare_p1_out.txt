@@ -1,0 +1,34 @@
+========================================================================
+P1 独立复核 · 第③项 Ragas 36 条对比评测
+========================================================================
+
+测试集规模: 36
+降级记录  : []  (空=两条链路均真实执行)
+
+【1】Ragas 五项指标（cloud - local）
+  指标                         local     cloud        差值   方向
+  Faithfulness              0.9651    0.9777   +0.0126   cloud 优
+  Answer Relevancy          0.8152    0.8178   +0.0026   持平
+  Context Precision         0.6810    0.9190   +0.2380   cloud 优
+  Context Recall            0.8681    0.9583   +0.0902   cloud 优
+  Answer Correctness        0.6900    0.7217   +0.0317   cloud 优
+
+  → cloud 优于 local 的指标数: 4/5
+  上轮症状: Context Precision 说 local 好 / Answer Correctness 说 cloud 好（矛盾）
+  本轮结论: 方向一致，结论可用 ✅
+
+【2】source_count 分布 —— 判断差异是否来自上下文条数
+  [local] n=36  source_count 均值=3.86 (min=3, max=5)  被砍到下限3的条数=13/36
+        延迟 均值=51.37s 中位=17.26s (min=12.46, max=1219.21)
+  [cloud] n=36  source_count 均值=4.28 (min=3, max=5)  被砍到下限3的条数=10/36
+        延迟 均值=18.69s 中位=17.73s (min=12.34, max=38.51)
+
+  source_count 均值差: local=3.86  cloud=4.28  差值=+0.42
+  → 两侧上下文条数量级一致，指标差异可归因于【重排质量】而非条数 ✅
+
+【3】与 D5-01 修复前基线对比
+  Faithfulness           基线local=0.9778 → 现local=0.9651  (-0.0127)
+  Answer Relevancy       基线local=0.5585 → 现local=0.8152  (+0.2567)
+  Context Precision      基线local=0.5000 → 现local=0.6810  (+0.1810)
+  Context Recall         基线local=0.6667 → 现local=0.8681  (+0.2014)
+  Answer Correctness     基线local=0.4450 → 现local=0.6900  (+0.2450)

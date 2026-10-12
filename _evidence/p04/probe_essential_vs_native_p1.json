@@ -1,0 +1,10 @@
+{
+  "A. Essential(sk-sp-) 打原生 rerank": {
+    "status": 401,
+    "head": "{\"code\":\"InvalidApiKey\",\"message\":\"Invalid API-key provided.\",\"request_id\":\"b8b608fd-d12a-9d9e-9be6-1d5ff191bcbe\"}"
+  },
+  "B. Coding(sk-ws-)   打原生 rerank（对照组，已知成功）": {
+    "status": 200,
+    "head": "{\"output\":{\"results\":[{\"index\":0,\"relevance_score\":0.9155227445360937},{\"index\":2,\"relevance_score\":0.6220676564328348},{\"index\":1,\"relevance_score\":0.001010391441496894}]},\"usage\":{\"prompt_tokens\":283,\"total_tokens\":283},\"request_id\":\"5b363ff3-6434-9641-92de-"
+  }
+}

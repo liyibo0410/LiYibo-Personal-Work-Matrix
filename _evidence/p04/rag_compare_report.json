@@ -1,0 +1,604 @@
+{
+  "test_set_size": 36,
+  "local": {
+    "ragas_scores": {
+      "Faithfulness": 0.9651,
+      "Answer Relevancy": 0.8152,
+      "Context Precision": 0.681,
+      "Context Recall": 0.8681,
+      "Answer Correctness": 0.69
+    },
+    "avg_latency_seconds": 51.37,
+    "actual_backend": "local"
+  },
+  "cloud": {
+    "ragas_scores": {
+      "Faithfulness": 0.9777,
+      "Answer Relevancy": 0.8178,
+      "Context Precision": 0.919,
+      "Context Recall": 0.9583,
+      "Answer Correctness": 0.7217
+    },
+    "avg_latency_seconds": 18.69,
+    "actual_backend": "cloud"
+  },
+  "degrade_notes": [],
+  "latency_details": [
+    {
+      "question": "hak 180 烫金机：为什么不建议把设备放在加热器、空调、电风扇或水附近？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 20.26,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要在卡纸或设备内部有纸张散落时继续使用？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 19.21,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：起搏器用户靠近 HAK180 感到异常时怎么办？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 18.83,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备正常工作的环境温度和湿度要求是什么？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 16.57,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备应该放置在什么样的台面上？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 21.39,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备对通风有什么要求？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 15.25,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么设备不能受到阳光直射或接触明火、腐蚀性气体和灰尘？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 17.77,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要把设备放在化学品附近？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 14.06,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：清洁设备内部和外部时禁止使用什么？应该用什么？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 21.35,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：可以使用非 Brother 正品的烫金膜盒吗？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 22.01,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备的供电规格是什么？能否接直流电源或逆变器？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 14.63,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：可以用湿手触摸电源插头吗？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 12.56,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：从插座拔出电源插头时，正确的做法是什么？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 16.39,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：雷暴天气期间可以使用本设备吗？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 1219.21,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：Brother 对使用延长线有什么建议？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 16.55,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么要定期拔出电源插头清洁插脚？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 15.34,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备的接地插头可以插进普通插座或破坏其接地作用吗？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 17.88,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：长时间不使用设备时应如何处理电源线？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 16.06,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备可以连接到受墙壁开关或自动计时器控制的插座吗？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 14.87,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：清洁设备内部之前必须先做什么？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 17.48,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备变得异常高温、冒烟、产生强烈味道，或不慎倒入液体时怎么办？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 20.29,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备跌落或已损坏时应如何处理？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 26.77,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：水或其他液体、金属物体进入设备内部时怎么办？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 15.29,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备工作不正常或发生错误时应如何处理？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 21.04,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：用户可以自行拆解或维修设备吗？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 18.73,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：未去除包装材料就使用设备有什么风险？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 17.01,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：刚用完设备后打开前盖，有什么需要注意的？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 17.04,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：包装用的塑料袋应如何处理？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 16.57,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：搬运设备时应该怎么抓持？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 17.01,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备上的注意/警告标签和序列号标签可以撕掉吗？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 12.46,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要在设备周围堆放物品？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 21.42,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要将手放在纸张边缘？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 13.19,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：操作设备时手指应避免放在哪些位置？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 18.16,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：哪些行为可能导致设备保修失效？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 16.59,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：请综合说明为设备选择安全位置时要满足哪些条件？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 20.72,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：Brother 在哪些情况下不承担任何责任？",
+      "backend": "local",
+      "actual_backend": "local",
+      "elapsed_seconds": 29.49,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不建议把设备放在加热器、空调、电风扇或水附近？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 15.92,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要在卡纸或设备内部有纸张散落时继续使用？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 31.35,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：起搏器用户靠近 HAK180 感到异常时怎么办？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 18.46,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备正常工作的环境温度和湿度要求是什么？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 38.51,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备应该放置在什么样的台面上？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 18.27,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备对通风有什么要求？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 16.33,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么设备不能受到阳光直射或接触明火、腐蚀性气体和灰尘？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 16.22,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要把设备放在化学品附近？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 15.98,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：清洁设备内部和外部时禁止使用什么？应该用什么？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 20.49,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：可以使用非 Brother 正品的烫金膜盒吗？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 18.89,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备的供电规格是什么？能否接直流电源或逆变器？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 16.27,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：可以用湿手触摸电源插头吗？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 12.34,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：从插座拔出电源插头时，正确的做法是什么？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 18.95,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：雷暴天气期间可以使用本设备吗？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 15.01,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：Brother 对使用延长线有什么建议？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 20.01,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么要定期拔出电源插头清洁插脚？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 14.99,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备的接地插头可以插进普通插座或破坏其接地作用吗？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 17.66,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：长时间不使用设备时应如何处理电源线？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 17.79,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备可以连接到受墙壁开关或自动计时器控制的插座吗？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 14.61,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：清洁设备内部之前必须先做什么？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 16.51,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备变得异常高温、冒烟、产生强烈味道，或不慎倒入液体时怎么办？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 19.09,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备跌落或已损坏时应如何处理？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 16.32,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：水或其他液体、金属物体进入设备内部时怎么办？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 16.26,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备工作不正常或发生错误时应如何处理？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 19.75,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：用户可以自行拆解或维修设备吗？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 17.3,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：未去除包装材料就使用设备有什么风险？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 16.77,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：刚用完设备后打开前盖，有什么需要注意的？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 17.82,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：包装用的塑料袋应如何处理？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 16.66,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：搬运设备时应该怎么抓持？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 18.68,
+      "source_count": 3,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：设备上的注意/警告标签和序列号标签可以撕掉吗？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 15.3,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要在设备周围堆放物品？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 18.27,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：为什么不要将手放在纸张边缘？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 14.38,
+      "source_count": 5,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：操作设备时手指应避免放在哪些位置？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 20.23,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：哪些行为可能导致设备保修失效？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 19.58,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：请综合说明为设备选择安全位置时要满足哪些条件？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 29.41,
+      "source_count": 4,
+      "degrade_reason": ""
+    },
+    {
+      "question": "hak 180 烫金机：Brother 在哪些情况下不承担任何责任？",
+      "backend": "cloud",
+      "actual_backend": "cloud",
+      "elapsed_seconds": 22.58,
+      "source_count": 3,
+      "degrade_reason": ""
+    }
+  ]
+}

@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOSS智库 · 统一控制台</title>
+    <!-- Chart.js 统计图表 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Markdown 渲染 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/json.min.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: #eef2ff;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.025);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        /* 布局 */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            width: 240px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 0 20px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sidebar-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sidebar-logo-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+        }
+        .sidebar-logo-text h2 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .sidebar-logo-text p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        
+        .nav-menu {
+            padding: 0 12px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            margin-bottom: 4px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .nav-item:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+        }
+        
+        /* 主内容区 */
+        .main {
+            flex: 1;
+            margin-left: 240px;
+            padding: 32px;
+        }
+        
+        /* 页头 */
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        .page-header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* 卡片 */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        /* Tab 面板 */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        
+        /* 上传区域 */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg);
+        }
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .upload-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--primary);
+        }
+        .upload-area h3 {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        .upload-area p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .file-input { display: none; }
+        
+        /* 文件列表 */
+        .file-list { margin-top: 16px; }
+        .file-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: box-shadow 0.15s;
+        }
+        .file-item:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        .file-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            margin-right: 16px;
+        }
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+        }
+        .file-size {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+        }
+        .status-uploading { background: var(--warning); }
+        .status-processing { background: var(--primary); }
+        .status-completed { background: var(--success); }
+        .status-error { background: var(--danger); }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 3px;
+            background: var(--bg);
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .log-details {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .log-details summary {
+            cursor: pointer;
+        }
+        .log-list {
+            margin: 6px 0 0 16px;
+            padding: 0;
+        }
+        .log-list li {
+            margin: 2px 0;
+        }
+        
+        /* 文档管理表格 */
+        .doc-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .doc-toolbar .note {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 20px 0 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            background: var(--bg);
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: white;
+        }
+        .badge.completed { background: var(--success); }
+        .badge.processing { background: var(--primary); }
+        .badge.pending { background: var(--warning); }
+        .badge.failed { background: var(--danger); }
+        
+        /* 问答界面 */
+        .qa-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 120px);
+        }
+        .qa-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .qa-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .qa-header-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qa-header-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--primary);
+        }
+        .qa-header-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .qa-header-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .qa-clear-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .qa-clear-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .qa-thread {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 8px 0;
+        }
+        .qa-welcome {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-secondary);
+        }
+        .qa-welcome-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            background: var(--primary-light);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qa-welcome-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary);
+        }
+        .qa-welcome h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .qa-welcome p {
+            font-size: 14px;
+        }
+        
+        .qa-msg {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+        }
+        .qa-msg-q {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        .qa-msg-a {
+            align-self: flex-start;
+        }
+        .qa-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .qa-avatar-q {
+            background: var(--primary);
+            color: white;
+        }
+        .qa-avatar-a {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .qa-bubble {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .qa-bubble-q {
+            background: var(--primary);
+            color: white;
+        }
+        .qa-bubble-a {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .qa-input-area {
+            display: flex;
+            gap: 10px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            margin-top: 16px;
+        }
+        .qa-input-area textarea {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            resize: none;
+            height: 42px;
+        }
+        .qa-input-area textarea:focus {
+            border-color: var(--primary);
+        }
+        .qa-input-area .btn {
+            padding: 0 20px;
+            height: 42px;
+        }
+        .qa-input-hint {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layout">
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                </div>
+                <div class="sidebar-logo-text">
+                    <h2>BOSS智库</h2>
+                    <p>智能知识管理平台</p>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="nav-menu">
+            <div class="nav-item active" data-tab="tab-upload">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span>上传导入</span>
+            </div>
+            <div class="nav-item" data-tab="tab-docs">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+                <span>文档管理</span>
+            </div>
+            <div class="nav-item" data-tab="tab-qa">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>检索问答</span>
+            </div>
+            <div class="nav-item" data-tab="tab-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                <span>数据看板</span>
+            </div>
+        </nav>
+    </aside>
+    
+    <!-- 主内容 -->
+    <main class="main">
+        <!-- 上传导入 -->
+        <div class="tab-panel active" id="tab-upload">
+            <div class="page-header">
+                <h1>文件导入</h1>
+                <p>上传 PDF 或 Markdown 文件，自动解析并入库</p>
+            </div>
+            
+            <div class="card">
+                <div class="upload-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <polyline points="9 15 12 12 15 15"/>
+                        </svg>
+                    </div>
+                    <h3>点击或拖拽文件到此处</h3>
+                    <p>支持 PDF / Markdown，多文件批量导入</p>
+                    <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.md">
+                </div>
+                <div id="fileList" class="file-list"></div>
+            </div>
+        </div>
+        
+        <!-- 文档管理 -->
+        <div class="tab-panel" id="tab-docs">
+            <div class="page-header">
+                <h1>文档管理</h1>
+                <p>查看已入库文档和导入任务状态</p>
+            </div>
+            
+            <div class="card">
+                <div class="doc-toolbar">
+                    <div style="display:flex;gap:12px;align-items:center;">
+                        <input type="text" id="docSearchInput" placeholder="搜索文档..." style="padding:6px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:200px;">
+                        <button class="btn" onclick="searchDocuments()" style="padding:6px 12px;">搜索</button>
+                        <button class="btn" onclick="refreshDocs()" style="padding:6px 12px;background:var(--text-secondary);">刷新</button>
+                    </div>
+                    <span class="note" id="docStatsNote">加载中...</span>
+                </div>
+                
+                <div class="section-title">已入库文档</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>文件名</th>
+                            <th>主体名称</th>
+                            <th>创建时间</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="docTableBody"></tbody>
+                </table>
+                
+                <div class="section-title">全部导入任务</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>文件名</th>
+                            <th>Task ID</th>
+                            <th>创建时间</th>
+                            <th>状态</th>
+                            <th>已完成节点</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taskTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 检索问答 -->
+        <div class="tab-panel" id="tab-qa">
+            <div class="page-header">
+                <h1>检索问答</h1>
+                <p>基于 RAG 技术，从知识库中检索并生成答案</p>
+            </div>
+            
+            <div class="card">
+                <div class="qa-container">
+                    <div class="qa-header">
+                        <div class="qa-header-left">
+                            <div class="qa-header-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="qa-header-title">知识库检索问答</div>
+                                <div class="qa-header-desc">基于 RAG 的智能问答，从知识库中检索相关内容</div>
+                            </div>
+                        </div>
+                        <button class="qa-clear-btn" onclick="clearQAThread()">清空对话</button>
+                    </div>
+                    
+                    <div class="qa-thread" id="qaThread">
+                        <div class="qa-welcome" id="qaWelcome">
+                            <div class="qa-welcome-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </div>
+                            <h3>你好，我是 BOSS 智库助手</h3>
+                            <p>输入你的问题，我会从知识库中检索相关内容并给出回答</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="qa-input-area">
+                            <textarea id="qaInput" placeholder="输入问题，Enter 发送，Shift+Enter 换行" rows="1"></textarea>
+                            <button class="btn" onclick="sendQuery()">发送</button>
+                        </div>
+                        <div class="qa-input-hint">Enter 发送 / Shift+Enter 换行</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数据看板 -->
+        <div class="tab-panel" id="tab-dashboard">
+            <div class="page-header">
+                <h1>数据看板</h1>
+                <p>知识库数据统计和可视化分析</p>
+            </div>
+            
+            <!-- 统计卡片 -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-bottom:24px;">
+                <div class="card" style="text-align:center;">
+                    <div style="font-size:32px;font-weight:700;color:var(--primary);" id="statTotalDocs">0</div>
+                    <div style="font-size:14px;color:var(--text-secondary);margin-top:8px;">总文档数</div>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <div style="font-size:32px;font-weight:700;color:var(--success);" id="statTotalChunks">0</div>
+                    <div style="font-size:14px;color:var(--text-secondary);margin-top:8px;">总切片数</div>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <div style="font-size:32px;font-weight:700;color:var(--warning);" id="statTodayUploads">0</div>
+                    <div style="font-size:14px;color:var(--text-secondary);margin-top:8px;">今日上传</div>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <div style="font-size:32px;font-weight:700;color:var(--danger);" id="statTotalQA">0</div>
+                    <div style="font-size:14px;color:var(--text-secondary);margin-top:8px;">问答次数</div>
+                </div>
+            </div>
+            
+            <!-- 图表区域 -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                <div class="card">
+                    <h3 style="margin-bottom:16px;font-size:16px;">文档上传趋势（近7天）</h3>
+                    <canvas id="uploadTrendChart" height="200"></canvas>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom:16px;font-size:16px;">文档状态分布</h3>
+                    <canvas id="docStatusChart" height="200"></canvas>
+                </div>
+            </div>
+            
+            <div style="margin-top:20px;">
+                <div class="card">
+                    <h3 style="margin-bottom:16px;font-size:16px;">热门文档 TOP 10</h3>
+                    <table style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>排名</th>
+                                <th>文档名称</th>
+                                <th>主体名称</th>
+                                <th>切片数</th>
+                                <th>上传时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topDocsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Tab 切换
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            item.classList.add('active');
+            document.getElementById(item.dataset.tab).classList.add('active');
+            if (item.dataset.tab === 'tab-docs') refreshDocs();
+            if (item.dataset.tab === 'tab-dashboard') initDashboard();
+        });
+    });
+    
+    // 数据看板
+    let uploadTrendChart = null;
+    let docStatusChart = null;
+    
+    async function initDashboard() {
+        try {
+            // 获取统计数据
+            const statsRes = await fetch('/statistics');
+            const statsData = await statsRes.json();
+            const stats = statsData.statistics || {};
+            
+            // 更新统计卡片
+            document.getElementById('statTotalDocs').textContent = stats.total_documents || 0;
+            document.getElementById('statTotalChunks').textContent = stats.total_chunks || 0;
+            document.getElementById('statTodayUploads').textContent = stats.today_uploads || 0;
+            document.getElementById('statTotalQA').textContent = stats.total_qa || 0;
+            
+            // 获取文档列表
+            const docsRes = await fetch('/documents?owner=public&limit=100');
+            const docsData = await docsRes.json();
+            const docs = docsData.documents || [];
+            
+            // 渲染图表
+            renderUploadTrendChart(docs);
+            renderDocStatusChart(docs);
+            renderTopDocsTable(docs);
+        } catch (e) {
+            console.error('Init dashboard error', e);
+        }
+    }
+    
+    function renderUploadTrendChart(docs) {
+        const ctx = document.getElementById('uploadTrendChart');
+        if (!ctx) return;
+        
+        // 统计近7天上传数量
+        const today = new Date();
+        const labels = [];
+        const data = [];
+        
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date(today);
+            date.setDate(date.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0];
+            labels.push(`${date.getMonth() + 1}/${date.getDate()}`);
+            
+            const count = docs.filter(d => {
+                const created = d.created_at ? d.created_at.split('T')[0] : '';
+                return created === dateStr;
+            }).length;
+            data.push(count);
+        }
+        
+        if (uploadTrendChart) uploadTrendChart.destroy();
+        uploadTrendChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '上传数量',
+                    data: data,
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99,102,241,0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                }
+            }
+        });
+    }
+    
+    function renderDocStatusChart(docs) {
+        const ctx = document.getElementById('docStatusChart');
+        if (!ctx) return;
+        
+        const statusCount = {
+            completed: docs.filter(d => d.status === 'completed').length,
+            processing: docs.filter(d => d.status === 'processing').length,
+            failed: docs.filter(d => d.status === 'failed').length
+        };
+        
+        if (docStatusChart) docStatusChart.destroy();
+        docStatusChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['已完成', '处理中', '失败'],
+                datasets: [{
+                    data: [statusCount.completed, statusCount.processing, statusCount.failed],
+                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+    
+    function renderTopDocsTable(docs) {
+        const tbody = document.getElementById('topDocsTable');
+        if (!tbody) return;
+        
+        // 按切片数排序，取前10
+        const topDocs = docs
+            .sort((a, b) => (b.chunk_count || 0) - (a.chunk_count || 0))
+            .slice(0, 10);
+        
+        tbody.innerHTML = '';
+        if (topDocs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);padding:24px;">暂无数据</td></tr>';
+            return;
+        }
+        
+        topDocs.forEach((doc, idx) => {
+            const tr = document.createElement('tr');
+            const createdAt = doc.created_at ? new Date(doc.created_at).toLocaleDateString('zh-CN') : '-';
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td>${doc.filename}</td>
+                <td>${doc.item_name || '-'}</td>
+                <td>${doc.chunk_count || 0}</td>
+                <td>${createdAt}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    
+    // 上传功能
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+    dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+    fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); e.target.value = ''; });
+    
+    function handleFiles(files) { Array.from(files).forEach(uploadFile); }
+    
+    function updateProgressBar(bar, pct) {
+        bar.style.width = pct + '%';
+    }
+    
+    function normalizeDoneLog(t) { return (typeof t === 'string' && t.endsWith('已完成')) ? t : `${t}已完成`; }
+    function normalizeRunningLog(t) {
+        if (typeof t !== 'string') return String(t);
+        return t.startsWith('正在进行') ? (t.endsWith('...') ? t : `${t}...`) : `正在进行${t}...`;
+    }
+    
+    async function uploadFile(file) {
+        const id = 'file-' + Math.random().toString(36).substr(2, 9);
+        const html = `
+            <div class="file-item" id="${id}">
+                <div class="file-info">
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">${(file.size / 1024).toFixed(2)} KB</span>
+                    <div class="progress-bar-container"><div class="progress-bar"></div></div>
+                    <details class="log-details"><summary>日志（点击展开）</summary><ul class="log-list"></ul></details>
+                </div>
+                <div class="status-badge status-uploading">上传中...</div>
+            </div>`;
+        fileList.insertAdjacentHTML('afterbegin', html);
+        const itemEl = document.getElementById(id);
+        const statusBadge = itemEl.querySelector('.status-badge');
+        const progressBar = itemEl.querySelector('.progress-bar');
+        const progressContainer = itemEl.querySelector('.progress-bar-container');
+        
+        const formData = new FormData();
+        formData.append('files', file);
+        
+        try {
+            progressContainer.style.display = 'block';
+            updateProgressBar(progressBar, 50);
+            const response = await fetch('/upload', { method: 'POST', body: formData });
+            if (!response.ok) throw new Error('Upload failed');
+            const result = await response.json();
+            const taskId = result.task_ids[0];
+            updateProgressBar(progressBar, 30);
+            statusBadge.textContent = '处理中...';
+            statusBadge.className = 'status-badge status-processing';
+            pollStatus(taskId, itemEl);
+        } catch (error) {
+            console.error(error);
+            statusBadge.textContent = '失败';
+            statusBadge.className = 'status-badge status-error';
+        }
+    }
+    
+    function renderLogs(itemEl, doneList, runningList) {
+        const logSummary = itemEl.querySelector('.log-details summary');
+        const logListEl = itemEl.querySelector('.log-list');
+        const done = Array.isArray(doneList) ? doneList : [];
+        const running = Array.isArray(runningList) ? runningList : [];
+        logSummary.textContent = `日志（已完成${done.length}，进行中${running.length}，点击展开）`;
+        logListEl.innerHTML = '';
+        const lines = [...done.map(normalizeDoneLog), ...running.map(normalizeRunningLog)];
+        if (lines.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = '暂无日志';
+            logListEl.appendChild(li);
+        } else {
+            lines.forEach(line => {
+                const li = document.createElement('li');
+                li.textContent = line;
+                logListEl.appendChild(li);
+            });
+        }
+    }
+    
+    function pollStatus(taskId, itemEl) {
+        const statusBadge = itemEl.querySelector('.status-badge');
+        const progressBar = itemEl.querySelector('.progress-bar');
+        const interval = setInterval(async () => {
+            try {
+                const res = await fetch(`/status/${taskId}`);
+                const data = await res.json();
+                renderLogs(itemEl, data.done_list, data.running_list);
+                if (data.status === 'completed') {
+                    statusBadge.textContent = '已完成';
+                    statusBadge.className = 'status-badge status-completed';
+                    updateProgressBar(progressBar, 100);
+                    clearInterval(interval);
+                } else if (data.status === 'processing') {
+                    statusBadge.textContent = '处理中...';
+                    updateProgressBar(progressBar, 30);
+                } else if (data.status === 'failed') {
+                    statusBadge.textContent = '失败';
+                    statusBadge.className = 'status-badge status-error';
+                    clearInterval(interval);
+                }
+            } catch (e) { console.error('Polling error', e); }
+        }, 2000);
+    }
+    
+    // 文档管理
+    async function refreshDocs() {
+        try {
+            // 获取文档列表
+            const docsRes = await fetch('/documents?owner=public&limit=50');
+            const docsData = await docsRes.json();
+            const docs = docsData.documents || [];
+            
+            // 获取统计信息
+            const statsRes = await fetch('/statistics');
+            const statsData = await statsRes.json();
+            const stats = statsData.statistics || {};
+            
+            // 更新统计显示
+            const statsElement = document.querySelector('.doc-toolbar .note');
+            if (statsElement && stats.total_documents !== undefined) {
+                statsElement.textContent = `共 ${stats.total_documents} 个文档，${stats.total_chunks} 个切片，今日上传 ${stats.today_uploads} 个`;
+            }
+            
+            renderDocTable(docs);
+        } catch (e) { 
+            console.error('Refresh docs error', e);
+            alert('刷新失败：' + e.message);
+        }
+    }
+    
+    function renderDocTable(docs) {
+        const tbody = document.getElementById('docTableBody');
+        tbody.innerHTML = '';
+        if (docs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);padding:24px;">暂无文档</td></tr>';
+            return;
+        }
+        docs.forEach(doc => {
+            const tr = document.createElement('tr');
+            const createdAt = doc.created_at ? new Date(doc.created_at).toLocaleString('zh-CN') : '-';
+            const fileSize = formatFileSize(doc.file_size);
+            tr.innerHTML = `
+                <td>${doc.filename}</td>
+                <td>${doc.item_name || '-'}</td>
+                <td>${createdAt}</td>
+                <td><span class="badge ${doc.status}">${getStatusText(doc.status)}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    
+    function formatFileSize(bytes) {
+        if (!bytes) return '-';
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+    
+    function getStatusText(status) {
+        const statusMap = {
+            'processing': '处理中',
+            'completed': '已完成',
+            'failed': '失败'
+        };
+        return statusMap[status] || status;
+    }
+    
+    function renderTaskTable(tasks) {
+        const tbody = document.getElementById('taskTableBody');
+        tbody.innerHTML = '';
+        if (tasks.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);padding:24px;">暂无任务</td></tr>';
+            return;
+        }
+        tasks.forEach(task => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${task.name}</td>
+                <td>${task.id}</td>
+                <td>${task.created_at || '-'}</td>
+                <td><span class="badge ${task.status}">${task.status}</span></td>
+                <td>${(task.done_list || []).length}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    
+    // 问答功能
+    const qaThread = document.getElementById('qaThread');
+    const qaInput = document.getElementById('qaInput');
+    
+    qaInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendQuery();
+        }
+    });
+    
+    async function sendQuery() {
+        const question = qaInput.value.trim();
+        if (!question) return;
+        
+        // 隐藏欢迎界面
+        const welcome = document.getElementById('qaWelcome');
+        if (welcome) welcome.style.display = 'none';
+        
+        // 添加用户消息
+        addQAMessage(question, 'q');
+        qaInput.value = '';
+        
+        // 添加AI加载消息
+        const aiMsgId = addQAMessage('正在思考...', 'a', true);
+        
+        try {
+            const res = await fetch('/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: question })
+            });
+            const data = await res.json();
+            
+            // 更新AI消息
+            const aiMsg = document.getElementById(aiMsgId);
+            if (aiMsg) {
+                aiMsg.querySelector('.qa-bubble').textContent = data.answer || '抱歉，未能找到答案';
+            }
+        } catch (e) {
+            const aiMsg = document.getElementById(aiMsgId);
+            if (aiMsg) {
+                aiMsg.querySelector('.qa-bubble').textContent = '请求失败，请稍后重试';
+            }
+        }
+    }
+    
+    function addQAMessage(text, type, isLoading = false) {
+        const id = 'msg-' + Math.random().toString(36).substr(2, 9);
+        const html = `
+            <div class="qa-msg qa-msg-${type}" id="${id}">
+                <div class="qa-avatar qa-avatar-${type}">${type === 'q' ? '我' : 'AI'}</div>
+                <div class="qa-bubble qa-bubble-${type}">${isLoading ? '<span style="opacity:0.6;">正在思考...</span>' : text}</div>
+            </div>
+        `;
+        qaThread.insertAdjacentHTML('beforeend', html);
+        qaThread.scrollTop = qaThread.scrollHeight;
+        return id;
+    }
+    
+    function clearQAThread() {
+        qaThread.innerHTML = `
+            <div class="qa-welcome" id="qaWelcome">
+                <div class="qa-welcome-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                <h3>你好，我是 BOSS 智库助手</h3>
+                <p>输入你的问题，我会从知识库中检索相关内容并给出回答</p>
+            </div>
+        `;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+﻿question,backend,actual_backend,elapsed_seconds,source_count,degrade_reason
+hak 180 烫金机：为什么不建议把设备放在加热器、空调、电风扇或水附近？,local,local,27.33,3,
+hak 180 烫金机：为什么不要在卡纸或设备内部有纸张散落时继续使用？,local,local,17.61,3,
+hak 180 烫金机：起搏器用户靠近 HAK180 感到异常时怎么办？为什么需要这样做？,local,local,17.4,3,
+hak 180 烫金机：为什么不建议把设备放在加热器、空调、电风扇或水附近？,cloud,passthrough,14.41,5,cloud 失败（DashScope rerank 调用失败: Invalid API-key provided.），降级到 passthrough
+hak 180 烫金机：为什么不要在卡纸或设备内部有纸张散落时继续使用？,cloud,passthrough,15.93,5,cloud 失败（DashScope rerank 调用失败: Invalid API-key provided.），降级到 passthrough
+hak 180 烫金机：起搏器用户靠近 HAK180 感到异常时怎么办？为什么需要这样做？,cloud,passthrough,18.55,5,cloud 失败（DashScope rerank 调用失败: Invalid API-key provided.），降级到 passthrough

@@ -1,0 +1,14 @@
+# 虚拟环境
+.venv/
+# 向量库持久化文件
+volumes/
+# 真实密钥配置
+.env
+# 缓存文件
+uv.lock
+__pycache__/
+*.log
+# 临时 / 验证脚本（不纳入版本控制）
+_archive/
+temp-files/
+verify_*.py

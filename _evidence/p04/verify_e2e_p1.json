@@ -1,0 +1,39 @@
+{
+  "query_1": {
+    "elapsed": 26.9,
+    "rrf": 5,
+    "web": 0,
+    "before": 5,
+    "after": 3,
+    "cut_count": 2,
+    "backend": "local",
+    "answer_len": 119,
+    "answer_preview": "根据参考内容，不建议将 HAK 180 烫金机放在加热器、空调、电风扇或水附近的原因如下：\n\n当水（包括由加热、空调或通风设备产生的冷凝水）接触本设备时，可能会产生**短路**或**火灾**的风险，从而导致设备损坏和/或导致设备无法运行。",
+    "is_disambiguation": false,
+    "cliff_detail": {
+      "before": 5,
+      "after": 3,
+      "scores": [
+        4.3398,
+        1.9697,
+        0.9482,
+        0.6719,
+        0.0752
+      ],
+      "cut_at": 3
+    }
+  },
+  "query_2": {
+    "elapsed": 8.1,
+    "rrf": 0,
+    "web": 0,
+    "before": 0,
+    "after": 0,
+    "cut_count": 0,
+    "backend": "local",
+    "answer_len": 51,
+    "answer_preview": "您是想问以下哪个产品：华为擎云B530台式机、Brother HAK 180 烫金机？请明确一下型号。",
+    "is_disambiguation": true,
+    "cliff_detail": null
+  }
+}

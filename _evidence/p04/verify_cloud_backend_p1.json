@@ -1,0 +1,22 @@
+{
+  "config": {
+    "backend": "cloud",
+    "model": "qwen3.7-text-rerank",
+    "key_prefix": "sk-ws-H"
+  },
+  "cloud": {
+    "backend": "cloud",
+    "degrade": "",
+    "scores": [
+      0.9219,
+      0.0004,
+      0.4283
+    ]
+  },
+  "cloud_ok": true,
+  "local_ok": true,
+  "gitignore": {
+    "projects/p04-rag-knowledge-base/.env": true,
+    "projects/p04-rag-knowledge-base/.env.p1bak": true
+  }
+}
