@@ -194,9 +194,52 @@ cd "D:\software\PycharmProjects\面试项目"
 
 ---
 
+## 五·五、首传后 P1 复核记录（2026-10-12 19:05）
+
+Qoder 报「6 步完成」后，P1 按红线「不接受口述」做独立复核（读本地 `.git` 元数据，不依赖 Qoder 转述）：
+
+| 复核项 | 结果 |
+|---|---|
+| commit / 远程 | `ac08668` ✓ / `origin` 唯一且地址正确 ✓ |
+| 已提交文件数 | 807 ✓ |
+| **真实 `.env` 是否入库** | **否** —— 仅 3 个 `.env.example` 模板 + `alembic/env.py` + `dotenv_min.py` ✅ |
+| `node_modules` / `.venv` / `data/` / `.next` / `__pycache__` | **全部 0 入库** ✅ |
+| **已提交内容中的真实 API Key**（`sk-[A-Za-z0-9]{20,}`） | **0 命中** ✅ |
+| 已提交内容中的明文口令 | 1 处（见下）⚠️ |
+
+### 复核发现并修复的 2 个问题
+
+**① 文档自身泄露 SSH 口令字面量（P1 自己造成的，已修）**
+`18-GitHub上传指令包.md` 在描述"全库无明文口令"时，把口令本身写进了扫描报告表格 ——
+文档成了全库唯一一处明文口令。典型"反讽式泄露"。已改为不写字面量（commit `9b9a884`）。
+
+> ⚠️ **遗留**：该口令已进入 git 历史（`ac08668`）。仓库为 Private 风险可控，
+> 但这是弱口令且已入历史，**建议换个新口令**（见第六节待办）。
+
+**② `.idea/` 误入库 7 个文件（已修）**
+首次提交把 PyCharm 配置（含本地绝对路径）一起提交了。已 `git rm --cached` 移除、
+`.gitignore` 补 `.idea/` 与 `*.iml`（commit `7f992a4`）。
+
+### 其它判定（可接受，转公开时需处理）
+
+P02 的 `smoke_local.py` / `verify_llm_real.py` / `test_bootstrap.py` 等含本地测试假口令
+（`LocalDev123!`、`Verify123!`、`secret-password`、`CloudPivot@2026`），
+均为**演示项目的本地测试账号**，非生产凭据，Private 仓库下可接受。
+**若将来转 Public，需改为环境变量或占位符。**
+
+---
+
 ## 六、本次待办（P0）
 
 - [x] 建 GitHub 仓库 `liyibo0410/yunshu-ai-portfolio` ✅ 已完成
 - [x] **转 Private** ✅ 已完成（P1 已复验：未认证 API 返回 404）
-- [ ] 把第三节指令粘给 Qoder 执行首传
+- [ ] 把第三节指令粘给 Qoder 执行首传 ✅ 已完成（807 文件）
+- [ ] **推送 P1 的两个修正 commit**（沙箱无 GitHub 凭据，需 Qoder 或你本地执行）：
+      ```
+      cd "D:\software\PycharmProjects\面试项目"
+      git push
+      git log --oneline -3        # 应见 7f992a4 / 9b9a884 / ac08668
+      ```
+- [ ] **（建议）更换服务器 SSH 口令** —— 原口令是弱口令且已进入 git 历史
+      （Private 仓库风险可控，但换掉更稳妥；换完告诉我，我把新值记进本地凭据文档）
 - [ ] 确认 push 成功后，把 commit hash 告诉 P1（我记进进度文档）
