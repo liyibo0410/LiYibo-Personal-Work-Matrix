@@ -116,7 +116,31 @@ class App:
 
     # ---------------------------------------------------------- 静态资源
     def static(self, rel: str):
-        """读取 ui/ 下的静态文件，返回 (数据, MIME, ETag)。
+        """读取 ui/ 下的静态文件，返回 (数据, MIME, ETag)。"""
+        rel = posixpath.normpath(rel).lstrip("/")
+        if rel.startswith("..") or os.path.isabs(rel):
+            return None, None, None
+        return self._read_static(os.path.join(self.cfg.root, STATIC_UI, rel))
+
+    def static_shared(self, rel: str):
+        """只读映射仓库根的 shared/（设计系统单一真源）。
+
+        tokens.css 与 ui-kit.js 全平台一份，P05 不再抄一份本地副本，否则
+        平台改配色这里就会脱节。路径解析后必须仍在 shared/ 内。
+        """
+        base = os.path.normpath(
+            os.path.join(self.cfg.root, os.pardir, os.pardir, "shared"))
+        rel = posixpath.normpath(rel).lstrip("/")
+        if rel.startswith("..") or os.path.isabs(rel):
+            return None, None, None
+        path = os.path.normpath(os.path.join(base, rel))
+        if not path.startswith(base):
+            return None, None, None
+        return self._read_static(path)
+
+    @staticmethod
+    def _read_static(path: str):
+        """读文件并算 ETag。
 
         多返回一个 ETag 是为了让静态资源支持**条件请求**：此前所有响应一律
         `Cache-Control: no-store`，意味着翻页时 app.css / fx.css / app.js /
@@ -124,10 +148,6 @@ class App:
         ETag 用「mtime + 大小」，并标成**弱校验**（W/）：同一文件在 gzip 与
         原样两种编码下字节不同但语义相同，弱校验正合此意。
         """
-        rel = posixpath.normpath(rel).lstrip("/")
-        if rel.startswith("..") or os.path.isabs(rel):
-            return None, None, None
-        path = os.path.join(self.cfg.root, STATIC_UI, rel)
         if not os.path.exists(path) or os.path.isdir(path):
             return None, None, None
         ctype = mimetypes.guess_type(path)[0] or "application/octet-stream"
@@ -869,7 +889,11 @@ def make_handler(app: App):
                                               status=401)
                         nxt = urllib.parse.quote(path + (
                             ("?" + parsed.query) if parsed.query else ""))
-                        return self._redirect("/login?next=" + nxt)
+                        # 外壳用 ?cp-theme= 下发主题初值，重定向会把它丢掉，导致登录页
+                        # 退回默认深色与外壳不一致 —— 这里显式带过去（只认 light/dark）。
+                        theme = (urllib.parse.parse_qs(parsed.query).get("cp-theme") or [None])[0]
+                        extra = ("&cp-theme=" + theme) if theme in ("light", "dark") else ""
+                        return self._redirect("/login?next=" + nxt + extra)
                     if need != "auth" and not auth.has_cap(session["role"], need):
                         detail = auth.denial_detail(session["role"], need, method, path)
                         app.note_denied("forbidden", detail)
@@ -946,6 +970,15 @@ def make_handler(app: App):
                             "/mock": "mock.html"}
                 if path == "/login" and session is not None:
                     return self._redirect("/")
+                if path.startswith("/shared/"):
+                    # 设计系统单一真源（tokens.css / ui-kit.js），只读映射 + 条件请求
+                    data, ctype, etag = app.static_shared(path[len("/shared/"):])
+                    if data is None:
+                        return self._send(404, b"404 Not Found",
+                                          "text/plain; charset=utf-8")
+                    if etag:
+                        return self._send_asset(data, ctype, etag)
+                    return self._send(200, data, ctype)
                 rel = page_map.get(path) or path.lstrip("/")
                 data, ctype, etag = app.static(rel)
                 if data is None:

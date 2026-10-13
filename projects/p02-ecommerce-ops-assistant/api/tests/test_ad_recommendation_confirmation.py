@@ -43,7 +43,7 @@ def test_viewer_cannot_confirm_ad_recommendation() -> None:
     product_id, recommendation_id = _seed_recommendation(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).patch(
             f"/api/v1/products/{product_id}/ad-recommendations/{recommendation_id}/confirmation",

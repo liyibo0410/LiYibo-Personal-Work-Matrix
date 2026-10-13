@@ -32,8 +32,8 @@ def authorize_tool(
         raise AgentPolicyError(f"Tool is not registered: {tool_key}")
     if tool_key not in agent.tool_allowlist:
         raise AgentPolicyError(f"Agent {agent_key} is not allowed to use tool {tool_key}")
-    if workspace_role == UserRole.VIEWER and tool.risk_level != AgentRiskLevel.R0:
-        return PolicyDecision(False, False, tool.risk_level, "Viewer 只能执行只读分析")
+    if workspace_role == UserRole.CS and tool.risk_level != AgentRiskLevel.R0:
+        return PolicyDecision(False, False, tool.risk_level, "客服角色只能执行只读分析")
     if tool.owner_only and workspace_role != UserRole.OWNER:
         return PolicyDecision(False, False, tool.risk_level, "该高风险动作仅 Workspace Owner 可执行")
     requires_approval = tool.risk_level in {AgentRiskLevel.R2, AgentRiskLevel.R3}

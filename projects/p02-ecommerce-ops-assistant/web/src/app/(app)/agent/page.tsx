@@ -101,7 +101,7 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
     return <AgentServiceError />;
   }
   const [catalog, tasks, approvals, memories, products, stores] = resources;
-  const canEdit = workspace.membership.role !== "viewer";
+  const canEdit = workspace.membership.role !== "cs";
   const completedCount = tasks.filter((task) => task.status === "completed").length;
   const activeCount = tasks.filter((task) => ["queued", "running"].includes(task.status)).length;
 
@@ -144,7 +144,7 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
               <Home className="h-4 w-4" aria-hidden="true" />
               业务工作台
             </Link>
-            <span className="inline-flex h-9 items-center rounded-lg bg-ink-1 px-3 text-sm font-medium text-white">
+            <span className="inline-flex h-9 items-center rounded-lg bg-brand-600 px-3 text-sm font-medium text-white">
               {currentUser?.display_name ?? "当前用户"} · {workspace.workspace.name}
             </span>
           </div>
@@ -186,19 +186,19 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
                 className="min-h-28 w-full rounded-lg border border-line bg-surface px-3 py-3 text-sm outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:bg-fill-2"
               />
               <ContextSelectors products={products} stores={stores} disabled={!canEdit} />
-              <button type="submit" disabled={!canEdit} className="inline-flex h-10 items-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-fill-3">
+              <button type="submit" disabled={!canEdit} className="inline-flex h-10 items-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-fill-3 disabled:text-ink-3">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 创建受控任务
               </button>
             </form>
           </div>
 
-          <div className="rounded-lg border border-line bg-ink-1 p-5 text-white">
-            <div className="flex items-center gap-2 text-sm font-medium text-brand-300">
+          <div className="rounded-lg border border-brand-200 bg-brand-50 p-5 text-ink-1">
+            <div className="flex items-center gap-2 text-sm font-medium text-brand-700">
               <ShieldCheck className="h-4 w-4" aria-hidden="true" /> Harness 边界
             </div>
             <h2 className="mt-3 text-xl font-semibold">不是把多个 Prompt 串在一起</h2>
-            <div className="mt-5 grid gap-3 text-sm text-ink-3 sm:grid-cols-2">
+            <div className="mt-5 grid gap-3 text-sm text-ink-2 sm:grid-cols-2">
               {[
                 ["身份与租户", "Workspace 强隔离"],
                 ["工具策略", "Agent allowlist + 风险分级"],
@@ -207,8 +207,8 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
                 ["人工协作", "R2/R3 数据库审批"],
                 ["质量闭环", "事件、评测和版本追踪"],
               ].map(([title, detail]) => (
-                <div key={title} className="rounded-lg border border-border-ink-4 bg-ink-1 p-3">
-                  <p className="font-medium text-white">{title}</p>
+                <div key={title} className="rounded-lg border border-line bg-surface p-3">
+                  <p className="font-medium text-ink-1">{title}</p>
                   <p className="mt-1 text-xs text-ink-3">{detail}</p>
                 </div>
               ))}
@@ -294,7 +294,7 @@ export default async function AgentCenter({ searchParams }: AgentCenterProps) {
               <input name="scope_id" placeholder="范围 ID（工作区可留空）" className="h-10 w-full rounded-lg border border-line px-3 text-sm" />
               <input name="memory_key" required placeholder="键，例如 brand_tone" className="h-10 w-full rounded-lg border border-line px-3 text-sm" />
               <textarea name="memory_value" required placeholder="已确认的事实或偏好" className="min-h-24 w-full rounded-lg border border-line px-3 py-2 text-sm" />
-              <button disabled={!canEdit} className="inline-flex h-9 items-center gap-2 rounded-lg bg-brand-700 px-3 text-sm font-medium text-white disabled:bg-fill-3"><DatabaseZap className="h-4 w-4" aria-hidden="true" />保存记忆</button>
+              <button disabled={!canEdit} className="inline-flex h-9 items-center gap-2 rounded-lg bg-brand-700 px-3 text-sm font-medium text-white disabled:bg-fill-3 disabled:text-ink-3"><DatabaseZap className="h-4 w-4" aria-hidden="true" />保存记忆</button>
             </form>
           </div>
           <div className="rounded-lg border border-line bg-surface p-5">

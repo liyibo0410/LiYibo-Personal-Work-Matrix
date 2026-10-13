@@ -20,7 +20,7 @@ def test_create_competitor_url_import_task_requires_edit_permission() -> None:
     product_id = _seed_product(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).post(
             f"/api/v1/products/{product_id}/competitors/import-url-tasks",

@@ -25,8 +25,13 @@ uv sync
 # 前端
 cd web
 npm install
-npm run dev                                            # http://127.0.0.1:3000
+npm run dev -- -p 3001        # http://127.0.0.1:3001（端口取自 SERVICE_REGISTRY）
 ```
+
+> 用 `127.0.0.1` 访问是必须的：Next 16 的 dev server 默认只放行 `localhost` 来源的
+> `/_next/*`，`next.config.ts` 已把 `127.0.0.1` 加进 `allowedDevOrigins`；
+> 换成别的域名/IP 访问要一并加进去，否则 JS chunk 会被判跨站返回 403，
+> 页面有样式但没有水合 —— 图表一张都不画。
 
 ### 已验证结果（2026-10-12）
 

@@ -108,7 +108,7 @@ export function CsvImportPanel({
             type="button"
             onClick={() => submitImport(true)}
             disabled={loading || !result || result.valid_rows === 0}
-            className="inline-flex h-9 items-center gap-2 rounded-lg bg-ink-1 px-3 text-sm font-medium text-white hover:bg-ink-1 disabled:cursor-not-allowed disabled:bg-fill-3"
+            className="inline-flex h-9 items-center gap-2 rounded-lg bg-brand-600 px-3 text-sm font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-fill-3 disabled:text-ink-3"
           >
             确认导入
           </button>

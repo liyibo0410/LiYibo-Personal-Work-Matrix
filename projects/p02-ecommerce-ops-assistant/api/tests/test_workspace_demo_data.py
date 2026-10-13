@@ -35,7 +35,7 @@ def test_create_demo_workspace_requires_edit_permission() -> None:
     Base.metadata.create_all(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).post(
             "/api/v1/workspace/demo-data",

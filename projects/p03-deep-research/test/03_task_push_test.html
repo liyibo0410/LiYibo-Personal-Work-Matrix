@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Demo3 - HTTP 启动任务 + WS 推进度</title>
+<style>
+  body { font-family: "Microsoft YaHei", sans-serif; max-width: 700px; margin: 40px auto; background: #0B0E14; color: #E8EAF0; }
+  input, button { font-size: 16px; padding: 8px 12px; background: #141820; color: #E8EAF0; border: 1px solid #2A3040; border-radius: 6px; }
+  button { background: #3370FF; color: #fff; border: none; cursor: pointer; }
+  button:hover { background: #2560E0; }
+  #log { background: #141820; border: 1px solid #2A3040; border-radius: 6px; padding: 12px; height: 320px; overflow-y: auto; margin-top: 16px; }
+  .msg { margin: 6px 0; }
+  .step { color: #4CAF50; }
+  .result { color: #3370FF; font-weight: bold; }
+  .status { color: #94A3B8; font-size: 14px; }
+  .badge { display: inline-block; background: #3370FF; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+</style>
+</head>
+<body>
+<h2>Demo3：POST 提交任务 + WebSocket 看进度</h2>
+<div>点击按钮后，服务端会：① 立即返回 thread_id → ② 建立 WebSocket 订阅 → ③ 后台任务每步推一条进度。这就是 Agent 项目"边思考边汇报"的核心交互。</div>
+<div style="margin-top:12px">
+  <input id="q" placeholder="输入任务描述（例如：帮我分析一下最近的销售数据）" style="width: 70%;">
+  <button onclick="start()">提交任务</button>
+</div>
+<div id="log"><div class="status">尚未提交任务</div></div>
+
+<script>
+async function start() {
+  const query = document.getElementById('q').value.trim() || '帮我分析一下最近的销售数据';
+  const logBox = document.getElementById('log');
+  logBox.innerHTML = ''; // 清空
+
+  // 1. POST /api/task：拿 thread_id（HTTP 立即返回）
+  const resp = await fetch('http://127.0.0.1:8000/api/task', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ query })
+  });
+  const { thread_id } = await resp.json();
+  add('log', `[HTTP] 任务已提交，thread_id = <span class="badge">${thread_id}</span>`);
+
+  // 2. 用 thread_id 连 WebSocket 订阅进度
+  const ws = new WebSocket(`ws://127.0.0.1:8000/ws/${thread_id}`);
+  ws.onopen = () => add('log', '[WS] 已连接，开始接收进度…');
+  ws.onmessage = (ev) => {
+    const data = JSON.parse(ev.data);
+    if (data.type === 'monitor_event') {
+      add('log', `[进度] ${data.message}`, 'step');
+    } else if (data.type === 'task_result') {
+      add('log', `[完成] ${data.message}`, 'result');
+    } else if(data.type === 'error'){
+      add('log',`[异常] ${data.msg}`)
+    }
+  };
+  ws.onclose = () => add('log', '[WS] 连接关闭');
+}
+
+function add(id, text, cls = '') {
+  const div = document.createElement('div');
+  div.className = 'msg ' + cls;
+  div.innerHTML = text;
+  document.getElementById(id).appendChild(div);
+}
+</script>
+</body>
+</html>

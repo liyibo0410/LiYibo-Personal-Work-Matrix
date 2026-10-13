@@ -1,0 +1,48 @@
+# ============================================================
+# docker-compose.yml —— MySQL 8.0 + 自动初始化模拟数据
+# 启动：docker compose up -d
+# 停止：docker compose down
+# ============================================================
+services:
+  db:
+    # 官方 MySQL 8.0 镜像（锁定小版本，避免意外升级）
+    image: mysql:8.0
+
+    # 固定容器名，方便连接与排障
+    container_name: mydb
+
+    # 宿主机重启后自动拉起（除非手动 stop），保证数据库常驻
+    restart: unless-stopped
+
+    environment:
+      # root 密码（务必改成你自己的强密码）
+      MYSQL_ROOT_PASSWORD: itwwy123456
+      # 首次启动自动创建的数据库名
+      MYSQL_DATABASE: mydb
+      # 自动创建的普通用户（应用连接建议用它，而非 root）
+      MYSQL_USER: itwwy
+      # 普通用户密码（改成你自己的）
+      MYSQL_PASSWORD: itwwy123
+
+    ports:
+      # 宿主机端口:容器端口，映射后本地客户端/代码可直接连 3306
+      - "3307:3306"
+
+    volumes:
+      # 1) 数据持久化：把数据库文件存到命名卷，容器删了数据不丢
+      - db-data:/var/lib/mysql
+      # 2) 自动初始化：把当前目录的 db.sql 挂进初始化目录
+      #    MySQL 会在【首次初始化】时自动执行该 SQL 一次（加载模拟数据）
+      #    加 :ro 表示容器内只读，避免被意外修改
+      - ./db.sql:/docker-entrypoint-initdb.d/db.sql:ro
+
+    healthcheck:
+      # 用 mysqladmin ping 检测数据库是否就绪
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  # 命名卷：只声明、不指定宿主机路径，由 Docker 自动管理
+  db-data:

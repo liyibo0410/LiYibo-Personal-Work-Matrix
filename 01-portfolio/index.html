@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>云枢智能 CloudPivot · 全栈 AI 作品集</title>
+<meta name="description" content="云枢智能 CloudPivot —— 李奕波的全栈 AI 作品集：十大 AI 能力模块、四层统一架构、数据闭环。" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="../shared/config/services.js"></script>
+<script src="../shared/ui-kit/ui-kit.js"></script>
+<style>
+  /* 唯一真源：共享设计令牌 + 组件库（禁止在页面内硬编码颜色/魔法数字） */
+  @import url('../shared/ui-kit/tokens.css');
+  @import url('../shared/ui-kit/components.css');
+
+  /* ---------- 落地页专属视觉（基于 cp- 令牌，克制使用品牌色）---------- */
+  body.cp-app { overflow-x: hidden; }
+
+  /* 顶栏：纯白实底，不用毛玻璃 */
+  .site-nav {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--cp-surface);
+    border-bottom: 1px solid var(--cp-line);
+  }
+  .nav-link { color: var(--cp-ink2); font-size: var(--cp-fs-base); transition: color var(--cp-dur) var(--cp-ease); }
+  .nav-link:hover { color: var(--cp-ink1); }
+
+  /* Hero：白底，不做品牌辉光与网格装饰 */
+  .hero {
+    position: relative; overflow: hidden;
+    background: var(--cp-surface);
+    border-bottom: 1px solid var(--cp-line);
+  }
+  .hero-inner { position: relative; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: var(--cp-sp-2);
+    padding: var(--cp-sp-1) var(--cp-sp-4);
+    border: 1px solid var(--cp-line); border-radius: var(--cp-radius-pill);
+    background: var(--cp-elevated);
+    font-size: var(--cp-fs-sm); color: var(--cp-ink2);
+  }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cp-success); box-shadow: 0 0 0 3px var(--cp-success-bg); }
+
+  .display {
+    font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.08; letter-spacing: -.02em; font-weight: 800;
+  }
+  .display .accent { color: var(--cp-brand); }
+
+  .cta {
+    display: inline-flex; align-items: center; gap: var(--cp-sp-2);
+    height: 44px; padding: 0 var(--cp-sp-5); border-radius: var(--cp-radius);
+    font-size: var(--cp-fs-md); font-weight: 600; cursor: pointer; text-decoration: none;
+    transition: all var(--cp-dur) var(--cp-ease);
+  }
+  .cta.primary { background: var(--cp-brand); color: var(--cp-on-brand); border: 1px solid var(--cp-brand); }
+  .cta.primary:hover { background: var(--cp-brand-hover); border-color: var(--cp-brand-hover); }
+  .cta.ghost { background: var(--cp-surface); color: var(--cp-ink1); border: 1px solid var(--cp-line); }
+  .cta.ghost:hover { border-color: var(--cp-brand); color: var(--cp-brand); }
+
+  /* 统计条 */
+  .stat-strip { border-top: 1px solid var(--cp-line); border-bottom: 1px solid var(--cp-line); background: var(--cp-surface); }
+  .stat-num { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -.02em; color: var(--cp-brand); font-variant-numeric: tabular-nums; }
+  .stat-lbl { font-size: var(--cp-fs-sm); color: var(--cp-ink3); margin-top: 2px; }
+
+  /* 旗舰 spotlight：纯白卡 + 边框，不做渐变 */
+  .flagship {
+    border: 1px solid var(--cp-line); border-radius: var(--cp-radius-lg);
+    background: var(--cp-surface);
+    box-shadow: var(--cp-shadow-sm);
+    overflow: hidden;
+  }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: var(--cp-radius-pill); background: var(--cp-elevated); border: 1px solid var(--cp-line); font-size: var(--cp-fs-sm); color: var(--cp-ink2); }
+
+  /* 模块卡（复用 cp- 设计语言，hover 微交互） */
+  .mod-card {
+    display: flex; flex-direction: column; gap: var(--cp-sp-2);
+    background: var(--cp-surface); border: 1px solid var(--cp-line);
+    border-radius: var(--cp-radius); padding: var(--cp-sp-4);
+    transition: border-color var(--cp-dur) var(--cp-ease), transform var(--cp-dur) var(--cp-ease), box-shadow var(--cp-dur) var(--cp-ease);
+  }
+  .mod-card:hover { border-color: var(--cp-brand); transform: translateY(-3px); box-shadow: var(--cp-shadow); }
+  .mod-ico { width: 42px; height: 42px; border-radius: var(--cp-radius-sm); background: var(--cp-brand-bg); color: var(--cp-brand); display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .mod-name { font-size: var(--cp-fs-md); font-weight: 600; color: var(--cp-ink1); }
+  .mod-desc { font-size: var(--cp-fs-sm); color: var(--cp-ink3); line-height: 1.55; }
+  .mod-tech { font-size: var(--cp-fs-xs); color: var(--cp-ink3); font-family: var(--cp-font-mono); }
+
+  /* 架构流 */
+  .arch-box { border: 1px solid var(--cp-line); border-radius: var(--cp-radius); background: var(--cp-surface); padding: var(--cp-sp-4); text-align: center; }
+  .arch-arrow { color: var(--cp-ink3); font-size: var(--cp-fs-lg); display: flex; align-items: center; justify-content: center; }
+
+  /* 滚动入场 */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--cp-ease), transform .6s var(--cp-ease); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body class="cp-app" data-cp-brand-src="../shared/config/brand.json">
+
+<!-- 顶栏 -->
+<nav class="site-nav">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6" style="height:var(--cp-topbar-h)">
+    <a href="#top" class="flex items-center gap-3">
+      <span class="cp-logo" data-cp-brand="logo">云</span>
+      <span class="cp-brand-text">
+        <span class="cp-brand-name"><span data-cp-brand="company">云枢智能</span> <span class="text-[var(--cp-brand)]" data-cp-brand="name_en">CloudPivot</span></span>
+        <span class="cp-brand-sub">全栈 AI 作品集</span>
+      </span>
+    </a>
+    <div class="hidden items-center gap-7 md:flex">
+      <a href="#modules" class="nav-link">能力模块</a>
+      <a href="#architecture" class="nav-link">架构</a>
+      <a href="#stack" class="nav-link">技术栈</a>
+      <a href="#about" class="nav-link">关于作者</a>
+    </div>
+    <a href="#about" class="cta primary" style="height:34px;padding:0 16px;font-size:var(--cp-fs-sm)">联系我</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header id="top" class="hero">
+  <div class="hero-inner mx-auto max-w-6xl px-6 py-24 text-center sm:py-28">
+    <div class="eyebrow reveal"><span class="dot"></span>AI 原生 · 全栈工程作品集 · 2026</div>
+    <h1 class="display mt-6 reveal">用 AI 重构<span class="accent">电商运营</span>的每一个环节</h1>
+    <p class="mx-auto mt-5 max-w-2xl reveal" style="font-size:var(--cp-fs-md);color:var(--cp-ink2)">
+      从客服、运营、合同到素材与直播——十大 AI 能力模块，统一架构、数据闭环、可量化验证。
+    </p>
+    <div class="mt-9 flex flex-wrap justify-center gap-3 reveal">
+      <a href="#modules" class="cta primary">探索能力模块 ↓</a>
+      <a href="#flagship" class="cta ghost">查看旗舰项目 P02</a>
+    </div>
+  </div>
+</header>
+
+<!-- 统计条 -->
+<section class="stat-strip">
+  <div class="mx-auto grid max-w-6xl grid-cols-2 gap-px px-6 py-8 sm:grid-cols-4">
+    <div class="px-2 text-center reveal"><div class="stat-num">10</div><div class="stat-lbl">AI 能力模块</div></div>
+    <div class="px-2 text-center reveal"><div class="stat-num">4</div><div class="stat-lbl">层统一架构</div></div>
+    <div class="px-2 text-center reveal"><div class="stat-num">36</div><div class="stat-lbl">P04 评测用例（3→36）</div></div>
+    <div class="px-2 text-center reveal"><div class="stat-num">180</div><div class="stat-lbl">Ragas 评测指标</div></div>
+  </div>
+</section>
+
+<!-- 旗舰 spotlight -->
+<section id="flagship" class="mx-auto max-w-6xl px-6 py-16">
+  <div class="flagship reveal p-6 sm:p-8">
+    <div class="grid gap-8 lg:grid-cols-5">
+      <div class="lg:col-span-3">
+        <div class="flex items-center gap-3">
+          <span class="mod-ico">📊</span>
+          <div>
+            <div class="mod-name" style="font-size:var(--cp-fs-lg)">P02 · 电商运营助手 <span class="cp-tag">★ 旗舰</span></div>
+            <div class="mod-tech mt-1">FastAPI · LangGraph · Next.js</div>
+          </div>
+        </div>
+        <p class="mod-desc mt-4" style="font-size:var(--cp-fs-base)">
+          面向品牌电商与 MCN 的 AI 原生运营中台：商品诊断、创意策划、合规检测、广告实验，
+          四角色 RBAC 权限体系，多智能体编排驱动端到端任务。
+        </p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <span class="chip">🔍 商品诊断</span>
+          <span class="chip">✍️ 创意策划</span>
+          <span class="chip">🛡️ 合规检测</span>
+          <span class="chip">🧪 广告实验</span>
+          <span class="chip">👥 四角色 RBAC</span>
+        </div>
+      </div>
+      <div class="lg:col-span-2 flex flex-col justify-center gap-4 rounded-lg border border-[var(--cp-line)] bg-[var(--cp-bg)] p-5">
+        <div>
+          <div class="stat-num" style="font-size:1.6rem">+25.7%</div>
+          <div class="stat-lbl">D5-01 修复后 Answer Relevancy 提升（P04 RAG）</div>
+        </div>
+        <div>
+          <div class="stat-num" style="font-size:1.6rem">66 项</div>
+          <div class="stat-lbl">P05 合同审批零依赖自检用例</div>
+        </div>
+        <div>
+          <div class="stat-num" style="font-size:1.6rem">99+</div>
+          <div class="stat-lbl">跨模块统一设计令牌 / 组件</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 能力模块 -->
+<section id="modules" class="mx-auto max-w-6xl px-6 py-8">
+  <h2 class="reveal" style="font-size:var(--cp-fs-2xl);font-weight:700">十大能力模块</h2>
+  <p class="reveal" style="color:var(--cp-ink3);margin-top:6px">四层架构 · 数据闭环 · 全链路 AI 赋能</p>
+
+  <!-- L3 -->
+  <h3 class="reveal mt-8 mb-4 flex items-center gap-2" style="font-size:var(--cp-fs-base);color:var(--cp-ink2)"><span class="cp-tag">L3 应用层</span> 直接面向业务的 AI 应用</h3>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">💬</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P01 AI 电商客服</div><div class="mod-desc">意图识别 → 知识检索 → 生成回复 → 负面情绪自动转人工</div><div class="mod-tech mt-auto pt-2">FastAPI · LangChain · Vue 3</div></div>
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">📊</span><span class="cp-tag">★ 旗舰</span></div><div class="mod-name mt-2">P02 电商运营助手</div><div class="mod-desc">商品诊断 · 创意策划 · 合规检测 · 广告实验 · 四角色 RBAC</div><div class="mod-tech mt-auto pt-2">FastAPI · LangGraph · Next.js</div></div>
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">📝</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P05 合同审批</div><div class="mod-desc">规则引擎 + LLM 二阶段语义复核 · 零第三方依赖 · 66 项自检</div><div class="mod-tech mt-auto pt-2">Pure Python · SQLite · 原生 HTML</div></div>
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🏆</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P09 AI 销售考核</div><div class="mod-desc">会话质检 · 多维评分 · 排行榜 · 人工一致性分析</div><div class="mod-tech mt-auto pt-2">FastAPI · ECharts · LLM 结构化</div></div>
+  </div>
+
+  <!-- L2 -->
+  <h3 class="reveal mt-8 mb-4 flex items-center gap-2" style="font-size:var(--cp-fs-base);color:var(--cp-ink2)"><span class="cp-tag">L2 能力层</span> 可复用的 AI 中台能力</h3>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🔍</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P03 NL2SQL 问数</div><div class="mod-desc">自动出 SQL → 执行 → 图表 → 带溯源报告 · 恶意 SQL 拦截</div><div class="mod-tech mt-auto pt-2">DeepAgents · LangChain · Vue 3</div></div>
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">📚</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P04 RAG 知识库</div><div class="mod-desc">HyDE + RRF 多路融合 · BGE-M3 · Reranker · 四指标评测</div><div class="mod-tech mt-auto pt-2">FastAPI · Milvus · LangGraph</div></div>
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🎨</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P07 AI 素材中心</div><div class="mod-desc">素材管理 · 智能打标 · 以文搜图 · AI 生成 · 投放关联</div><div class="mod-tech mt-auto pt-2">FastAPI · SQLite · ECharts</div></div>
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🎬</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P08 直播切片</div><div class="mod-desc">ASR 转写 · 高光打分 · 自动切片 · 批量任务队列</div><div class="mod-tech mt-auto pt-2">FastAPI · ffmpeg · faster-whisper</div></div>
+  </div>
+
+  <!-- L1 + L0 -->
+  <div class="mt-8 grid gap-4 lg:grid-cols-2">
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🧠</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P10 模型微调平台 <span class="cp-tag">L1 模型层</span></div><div class="mod-desc">数据集管理 · LoRA 训练 · 评测对比 · 模型注册 · OpenAI 兼容部署</div><div class="mod-tech mt-auto pt-2">PyTorch · PEFT · FastAPI</div></div>
+    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🗄️</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P06 数据中台 <span class="cp-tag">L0 数据层</span></div><div class="mod-desc">数据接入 · 数仓分层 · 指标口径 · 血缘可视化 · 质量校验</div><div class="mod-tech mt-auto pt-2">FastAPI · DuckDB · ECharts</div></div>
+  </div>
+</section>
+
+<!-- 架构 -->
+<section id="architecture" class="border-t border-[var(--cp-line)] bg-[var(--cp-surface)]">
+  <div class="mx-auto max-w-6xl px-6 py-16">
+    <h2 class="reveal" style="font-size:var(--cp-fs-2xl);font-weight:700">数据闭环架构</h2>
+    <p class="reveal" style="color:var(--cp-ink3);margin-top:6px">底层数据统一口径 → 模型层沉淀能力 → 能力层提供服务 → 应用层组装业务 → 数据回流形成闭环</p>
+    <div class="mt-8 grid items-center gap-4 lg:grid-cols-7">
+      <div class="arch-box reveal"><p style="font-size:var(--cp-fs-xs);color:var(--cp-brand);font-weight:600">L0 数据</p><p class="mt-2" style="font-weight:600">P06 数据中台</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3)">统一口径</p></div>
+      <div class="arch-arrow reveal">→</div>
+      <div class="arch-box reveal"><p style="font-size:var(--cp-fs-xs);color:var(--cp-brand);font-weight:600">L1 模型</p><p class="mt-2" style="font-weight:600">P10 微调平台</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3)">能力沉淀</p></div>
+      <div class="arch-arrow reveal">→</div>
+      <div class="arch-box reveal"><p style="font-size:var(--cp-fs-xs);color:var(--cp-brand);font-weight:600">L2 能力</p><p class="mt-2" style="font-weight:600">P04 / P07 / P08</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3)">RAG · 素材 · 切片</p></div>
+      <div class="arch-arrow reveal">→</div>
+      <div class="arch-box reveal"><p style="font-size:var(--cp-fs-xs);color:var(--cp-brand);font-weight:600">L3 应用</p><p class="mt-2" style="font-weight:600">P01 / P02 / P05 / P09</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3)">客服 · 运营 · 合同 · 考核</p></div>
+    </div>
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-2 reveal" style="font-size:var(--cp-fs-sm);color:var(--cp-ink3)">
+      <span>低分样本回流</span><span style="color:var(--cp-brand);font-weight:600">→ P10 微调 →</span><span>新模型回到 P01 / P02</span>
+    </div>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="arch-box reveal" style="text-align:left"><p style="font-weight:600">shell · 统一外壳</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3);margin-top:4px">微前端整合：登录 + 智能体矩阵 + 分层导航 + iframe 挂载，十模块一套系统</p></div>
+      <div class="arch-box reveal" style="text-align:left"><p style="font-weight:600">shared/llm-gateway</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3);margin-top:4px">统一模型网关 · 多端点故障转移 · 成本统计 · Mock 降级</p></div>
+      <div class="arch-box reveal" style="text-align:left"><p style="font-weight:600">shared/auth + config</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3);margin-top:4px">统一 JWT 认证 · SERVICE_REGISTRY 端口单一真源 · 跨模块真实取数</p></div>
+      <div class="arch-box reveal" style="text-align:left"><p style="font-weight:600">shared/ui-kit</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3);margin-top:4px">统一深色设计令牌 · 组件库（本页即实例）</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 技术栈 -->
+<section id="stack" class="mx-auto max-w-6xl px-6 py-16">
+  <h2 class="reveal" style="font-size:var(--cp-fs-2xl);font-weight:700">技术栈</h2>
+  <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mod-card reveal"><p style="font-weight:600">后端</p><p class="mod-desc mt-1">Python 3.11+ · FastAPI · SQLAlchemy 2.0 · Pydantic v2 · uv</p></div>
+    <div class="mod-card reveal"><p style="font-weight:600">前端</p><p class="mod-desc mt-1">Next.js · React · TypeScript · Tailwind · Vue 3</p></div>
+    <div class="mod-card reveal"><p style="font-weight:600">AI</p><p class="mod-desc mt-1">LangGraph · LangChain · BGE-M3 · Milvus · PEFT/LoRA</p></div>
+    <div class="mod-card reveal"><p style="font-weight:600">基础设施</p><p class="mod-desc mt-1">Docker · DuckDB · SQLite · Redis · ECharts</p></div>
+  </div>
+</section>
+
+<!-- 关于作者 -->
+<section id="about" class="border-t border-[var(--cp-line)] bg-[var(--cp-surface)]">
+  <div class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flagship reveal p-6 sm:p-8">
+      <div class="grid gap-8 md:grid-cols-3">
+        <div class="md:col-span-2">
+          <h2 style="font-size:var(--cp-fs-xl);font-weight:700">关于作者</h2>
+          <p class="mod-desc mt-3" style="font-size:var(--cp-fs-base);color:var(--cp-ink2)">
+            <strong style="color:var(--cp-ink1)">李奕波</strong> · 2026 届 · AI 应用工程师方向。
+            从需求拆解到工程落地全程主导：后端编排、RAG 检索、前端界面与统一设计系统。
+            作品集强调<strong style="color:var(--cp-ink1)">可量化验证</strong>——每个模块都有评测集与指标闭环。
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="chip">🐍 Python / FastAPI</span>
+            <span class="chip">🕸️ LangGraph / RAG</span>
+            <span class="chip">⚛️ React / Next.js</span>
+            <span class="chip">🎨 统一设计系统</span>
+          </div>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#" class="cta primary" style="height:38px;font-size:var(--cp-fs-sm)">GitHub</a>
+            <a href="#" class="cta ghost" style="height:38px;font-size:var(--cp-fs-sm)">下载简历</a>
+          </div>
+        </div>
+        <div class="flex flex-col justify-center gap-4 rounded-lg border border-[var(--cp-line)] bg-[var(--cp-bg)] p-5">
+          <div><div class="stat-num" style="font-size:1.5rem">3→36</div><div class="stat-lbl">P04 评测集扩充（10×）</div></div>
+          <div><div class="stat-num" style="font-size:1.5rem">+24.5%</div><div class="stat-lbl">Answer Correctness 提升（D5-01）</div></div>
+          <div><div class="stat-num" style="font-size:1.5rem">0</div><div class="stat-lbl">P05 第三方依赖</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="border-t border-[var(--cp-line)] bg-[var(--cp-surface)]">
+  <div class="mx-auto max-w-6xl px-6 py-8 text-center" style="font-size:var(--cp-fs-sm);color:var(--cp-ink3)">
+    <p><span data-cp-brand="company">云枢智能</span> <span data-cp-brand="name_en">CloudPivot</span> · 全栈 AI 作品集</p>
+    <p class="mt-1">李奕波 · 2026 · 基于统一设计系统 shared/ui-kit 构建</p>
+  </div>
+</footer>
+
+<script>
+  // 滚动入场（尊重 prefers-reduced-motion）
+  (function () {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(function (e) { e.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+</body>
+</html>

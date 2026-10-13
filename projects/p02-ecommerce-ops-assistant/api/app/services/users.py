@@ -19,7 +19,13 @@ ROLE_PERMISSIONS = {
         "can_manage_users": False,
         "can_confirm_ad_actions": True,
     },
-    UserRole.VIEWER: {
+    UserRole.DESIGNER: {
+        "can_read": True,
+        "can_edit": True,
+        "can_manage_users": False,
+        "can_confirm_ad_actions": False,
+    },
+    UserRole.CS: {
         "can_read": True,
         "can_edit": False,
         "can_manage_users": False,

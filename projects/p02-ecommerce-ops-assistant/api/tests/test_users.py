@@ -6,7 +6,7 @@ def test_user_role_permissions_keep_ad_confirmation_manual() -> None:
     """验证“用户角色permissionskeep投放confirmationmanual”场景，确保重构后仍满足预期业务与安全边界。"""
     owner = User(email="owner@example.com", display_name="Owner", role=UserRole.OWNER)
     operator = User(email="ops@example.com", display_name="Ops", role=UserRole.OPERATOR)
-    viewer = User(email="viewer@example.com", display_name="Viewer", role=UserRole.VIEWER)
+    viewer = User(email="viewer@example.com", display_name="Viewer", role=UserRole.CS)
 
     assert user_permissions(owner)["can_manage_users"]
     assert user_permissions(operator)["can_confirm_ad_actions"]

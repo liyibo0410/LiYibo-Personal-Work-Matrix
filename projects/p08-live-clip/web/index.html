@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-cp-brand-title="P08 直播切片 · {company}">P08 直播切片系统 - 云枢智能</title>
+<!-- 统一设计系统：tokens.css 是配色唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
+<link rel="stylesheet" href="/shared/ui-kit/tokens.css">
+<script src="/shared/config/services.js"></script>
+<script src="/shared/ui-kit/ui-kit.js"></script>
+<style>
+/* ===== Design Tokens（颜色引用 shared/ui-kit/tokens.css 的 --cp-*，改一处全平台生效） ===== */
+:root {
+  --bg: var(--cp-bg);
+  --surface: var(--cp-surface);
+  --surface-2: var(--cp-elevated);
+  --surface-3: #E3E8F0;
+  --border: var(--cp-line);
+  --accent: var(--cp-brand);
+  --accent-dim: var(--cp-brand-bg);
+  --accent-glow: rgba(51,112,255,0.3);
+  --text: var(--cp-ink1);
+  --text-2: var(--cp-ink2);
+  --text-3: var(--cp-ink3);
+  --success: var(--cp-success);
+  --warning: var(--cp-warning);
+  --danger: var(--cp-danger);
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+/* ===== Reset ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: var(--accent); text-decoration: none; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ===== Layout ===== */
+.app { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo h1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+.sidebar-logo .subtitle {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+.sidebar-nav { flex: 1; padding: 12px 8px; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-2);
+  font-size: 13px;
+  transition: all 0.15s;
+  margin-bottom: 2px;
+}
+.nav-item:hover { background: var(--surface-2); color: var(--text); }
+.nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 600; }
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-3);
+}
+.mock-badge {
+  display: inline-block;
+  background: var(--cp-warning-bg);
+  color: var(--warning);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-top: 6px;
+}
+
+.main {
+  flex: 1;
+  margin-left: 220px;
+  padding: 24px 28px;
+  min-height: 100vh;
+}
+
+/* ===== Header ===== */
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+.page-header p {
+  color: var(--text-2);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* ===== Cards ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: border-color 0.15s;
+}
+.stat-card:hover { border-color: var(--accent-glow); }
+.stat-label { font-size: 12px; color: var(--text-3); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--text); }
+.stat-value.accent { color: var(--accent); }
+.stat-sub { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+
+/* ===== Table ===== */
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.table-header h3 { font-size: 15px; font-weight: 600; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+td {
+  padding: 12px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface-2); }
+
+/* ===== Badges ===== */
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-success { background: var(--cp-success-bg); color: var(--success); }
+.badge-warning { background: var(--cp-warning-bg); color: var(--warning); }
+.badge-accent { background: var(--accent-dim); color: var(--accent); }
+.badge-danger { background: var(--cp-danger-bg); color: var(--danger); }
+
+/* ===== Score bar ===== */
+.score-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.score-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--surface-3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.score-num { font-size: 13px; font-weight: 700; min-width: 36px; text-align: right; }
+
+/* ===== Clip cards (waterfall) ===== */
+.clip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+.clip-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.clip-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-dim);
+}
+.clip-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.clip-title { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.4; flex: 1; margin-right: 12px; }
+.clip-score {
+  font-size: 22px;
+  font-weight: 800;
+  min-width: 48px;
+  text-align: center;
+}
+.clip-meta { font-size: 12px; color: var(--text-3); margin-bottom: 10px; }
+.clip-excerpt {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clip-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.clip-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  color: var(--text-2);
+}
+
+/* ===== Score breakdown ===== */
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.breakdown-item { }
+.breakdown-label { font-size: 11px; color: var(--text-3); margin-bottom: 4px; }
+.breakdown-bar {
+  height: 4px;
+  background: var(--surface-3);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 2px;
+}
+.breakdown-bar-fill { height: 100%; border-radius: 2px; }
+.breakdown-val { font-size: 11px; color: var(--text-2); }
+
+/* ===== Detail panel ===== */
+.detail-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(16,24,40,0.45);
+  z-index: 200;
+  justify-content: flex-end;
+}
+.detail-overlay.open { display: flex; }
+.detail-panel {
+  width: 520px;
+  max-width: 90vw;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px;
+}
+.detail-close {
+  background: none;
+  border: none;
+  color: var(--text-2);
+  font-size: 20px;
+  cursor: pointer;
+  float: right;
+}
+.detail-close:hover { color: var(--text); }
+.detail-section { margin-top: 20px; }
+.detail-section h4 { font-size: 13px; font-weight: 600; color: var(--text-3); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.detail-transcript {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text-2);
+  max-height: 300px;
+  overflow-y: auto;
+}
+.detail-transcript .seg {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.detail-transcript .seg:last-child { border-bottom: none; }
+.detail-transcript .seg-time {
+  font-size: 11px;
+  color: var(--accent);
+  margin-right: 8px;
+  font-family: monospace;
+}
+.explanation-box {
+  background: var(--accent-dim);
+  border: 1px solid rgba(51,112,255,0.25);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+}
+.keyword-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.keyword-chip {
+  background: var(--accent-dim);
+  color: var(--accent);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ===== Task progress ===== */
+.task-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 12px;
+}
+.task-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.task-name { font-size: 14px; font-weight: 600; }
+.progress-bar {
+  height: 8px;
+  background: var(--surface-3);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.task-meta { font-size: 12px; color: var(--text-3); display: flex; gap: 16px; }
+
+/* ===== ASR timeline ===== */
+.asr-timeline { margin-top: 12px; }
+.asr-segment {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.asr-time {
+  font-size: 11px;
+  color: var(--accent);
+  font-family: monospace;
+  min-width: 50px;
+  padding-top: 2px;
+}
+.asr-text { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+.asr-speaker {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-left: 4px;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--cp-brand-hover); }
+.btn-ghost { background: transparent; color: var(--text-2); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--surface-2); color: var(--text); }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+
+/* ===== Filters ===== */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.filter-bar select, .filter-bar input {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+.filter-bar select:focus, .filter-bar input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ===== Pagination ===== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 16px 0;
+}
+.page-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+}
+.page-btn:hover { border-color: var(--accent); color: var(--accent); }
+.page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.page-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 16px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .clip-grid { grid-template-columns: 1fr; }
+  .detail-panel { width: 100vw; }
+}
+
+/* ===== Loading ===== */
+.loading { text-align: center; padding: 40px; color: var(--text-3); }
+.spinner {
+  display: inline-block;
+  width: 24px; height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== Color helpers ===== */
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger { color: var(--danger); }
+.text-accent { color: var(--accent); }
+</style>
+</head>
+<body class="cp-app" data-cp-module="p08" data-cp-brand-src="/shared/config/brand.json">
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="cp-brandmark" data-cp-brand="logo">云枢</div>
+      <h1>P08 直播切片</h1>
+      <div class="subtitle"><span data-cp-brand="company">云枢智能</span> <span data-cp-brand="name_en">CloudPivot</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+        <span class="nav-icon">&#9632;</span> 数据概览
+      </div>
+      <div class="nav-item" data-page="streams" onclick="navigate('streams')">
+        <span class="nav-icon">&#9654;</span> 直播列表
+      </div>
+      <div class="nav-item" data-page="clips" onclick="navigate('clips')">
+        <span class="nav-icon">&#9986;</span> 切片库
+      </div>
+      <div class="nav-item" data-page="tasks" onclick="navigate('tasks')">
+        <span class="nav-icon">&#9881;</span> 批量任务
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      v1.0.0 &middot; Mock Mode
+      <br>
+      <span class="mock-badge">ASR / 评分 / 视频 均为模拟</span>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main" id="main-content">
+    <!-- Pages rendered here by JS -->
+  </main>
+</div>
+
+<!-- Detail overlay -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetailIfBg(event)">
+  <div class="detail-panel" id="detail-panel"></div>
+</div>
+
+<script>
+// ===== State =====
+const API = '/api/v1';
+let currentPage = 'dashboard';
+let clipsPage = 1;
+let clipsFilter = { stream_id: '', tag: '', sort_by: 'score', order: 'desc' };
+
+// ===== Navigation =====
+function navigate(page) {
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.page === page);
+  });
+  renderPage();
+}
+
+async function renderPage() {
+  const main = document.getElementById('main-content');
+  main.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  try {
+    switch(currentPage) {
+      case 'dashboard': await renderDashboard(); break;
+      case 'streams': await renderStreams(); break;
+      case 'clips': await renderClips(); break;
+      case 'tasks': await renderTasks(); break;
+    }
+  } catch(e) {
+    main.innerHTML = `<div class="loading" style="color:var(--danger)">加载失败: ${e.message}</div>`;
+  }
+}
+
+// ===== API helpers =====
+async function api(path) {
+  const res = await fetch(API + path);
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
+}
+
+function scoreColor(s) {
+  if (s >= 80) return 'var(--success)';
+  if (s >= 60) return 'var(--accent)';
+  if (s >= 40) return 'var(--warning)';
+  return 'var(--danger)';
+}
+
+function fmtTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function fmtDuration(sec) {
+  const m = Math.floor(sec / 60);
+  return `${m} 分钟`;
+}
+
+// ===== Dashboard =====
+async function renderDashboard() {
+  const stats = await api('/stats');
+  const main = document.getElementById('main-content');
+  main.innerHTML = `
+    <div class="page-header">
+      <h2>数据概览</h2>
+      <p>直播切片系统运行状态总览</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">直播场次</div>
+        <div class="stat-value">${stats.total_streams}</div>
+        <div class="stat-sub">总时长 ${stats.total_duration_minutes} 分钟</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">生成切片</div>
+        <div class="stat-value accent">${stats.total_clips}</div>
+        <div class="stat-sub">自动提取精彩片段</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">平均评分</div>
+        <div class="stat-value" style="color:${scoreColor(stats.avg_score)}">${stats.avg_score}</div>
+        <div class="stat-sub">最高 ${stats.top_score} 分</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">任务队列</div>
+        <div class="stat-value">${stats.processing_tasks}</div>
+        <div class="stat-sub">处理中 &middot; 已完成 ${stats.completed_tasks}</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="table-wrap">
+        <div class="table-header"><h3>热门关键词</h3></div>
+        <table>
+          <thead><tr><th>关键词</th><th>命中次数</th><th>热度</th></tr></thead>
+          <tbody>
+            ${stats.top_keywords.map((kw, i) => `
+              <tr>
+                <td style="color:var(--text)">${kw.keyword}</td>
+                <td>${kw.count}</td>
+                <td>
+                  <div class="score-bar-wrap">
+                    <div class="score-bar"><div class="score-bar-fill" style="width:${(kw.count / (stats.top_keywords[0]?.count || 1)) * 100}%;background:var(--accent)"></div></div>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-header"><h3>最近切片</h3></div>
+        <div id="dash-recent-clips" style="padding:16px;">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Load recent clips
+  const clipsData = await api('/clips?sort_by=score&order=desc&page_size=5');
+  const container = document.getElementById('dash-recent-clips');
+  container.innerHTML = clipsData.items.map(c => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="openClipDetail('${c.id}')">
+      <div>
+        <div style="font-size:13px;color:var(--text);font-weight:500">${c.title}</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:2px">${fmtTime(c.start_time)} - ${fmtTime(c.end_time)} &middot; ${c.duration}秒</div>
+      </div>
+      <div style="font-size:18px;font-weight:700;color:${scoreColor(c.score)}">${c.score}</div>
+    </div>
+  `).join('');
+}
+
+// ===== Streams =====
+async function renderStreams() {
+  const data = await api('/streams');
+  const main = document.getElementById('main-content');
+  main.innerHTML = `
+    <div class="page-header">
+      <h2>直播列表</h2>
+      <p>管理直播录像，查看 ASR 转写结果</p>
+    </div>
+    <div class="clip-grid">
+      ${data.items.map(s => `
+        <div class="clip-card" onclick="openStreamDetail('${s.id}')">
+          <div style="height:8px;border-radius:4px;background:${s.thumbnail_color};margin-bottom:14px;opacity:0.7"></div>
+          <div class="clip-card-header">
+            <div class="clip-title">${s.title}</div>
+            <span class="badge badge-success">${s.status === 'completed' ? '已完成' : s.status}</span>
+          </div>
+          <div class="clip-meta">
+            ${s.platform} &middot; ${s.streamer} &middot; ${fmtDuration(s.duration_seconds)} &middot; 峰值 ${s.viewer_peak.toLocaleString()} 人
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <span style="font-size:12px;color:var(--text-3)">已生成切片</span>
+            <span style="font-size:16px;font-weight:700;color:var(--accent)">${s.clip_count}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+async function openStreamDetail(streamId) {
+  const s = await api(`/streams/${streamId}`);
+  const panel = document.getElementById('detail-panel');
+  panel.innerHTML = `
+    <button class="detail-close" onclick="closeDetail()">&times;</button>
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:4px">${s.title}</h3>
+    <p style="font-size:13px;color:var(--text-2);margin-bottom:16px">${s.description}</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <div class="stat-card" style="padding:14px">
+        <div class="stat-label">平台</div>
+        <div style="font-size:14px;font-weight:600;margin-top:4px">${s.platform}</div>
+      </div>
+      <div class="stat-card" style="padding:14px">
+        <div class="stat-label">主播</div>
+        <div style="font-size:14px;font-weight:600;margin-top:4px">${s.streamer}</div>
+      </div>
+      <div class="stat-card" style="padding:14px">
+        <div class="stat-label">时长</div>
+        <div style="font-size:14px;font-weight:600;margin-top:4px">${fmtDuration(s.duration_seconds)}</div>
+      </div>
+      <div class="stat-card" style="padding:14px">
+        <div class="stat-label">峰值观众</div>
+        <div style="font-size:14px;font-weight:600;margin-top:4px">${s.viewer_peak.toLocaleString()}</div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>ASR 转写结果 <span class="mock-badge" style="vertical-align:middle;margin-left:6px">模拟数据</span></h4>
+      <div class="detail-transcript">
+        ${s.asr_segments.map(seg => `
+          <div class="seg">
+            <span class="seg-time">${fmtTime(seg.start)}</span>
+            <span class="asr-text">${seg.text}</span>
+            <span class="asr-speaker">[${seg.speaker}]</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>生成切片 (${s.clip_count})</h4>
+      <div id="stream-clips-list"></div>
+    </div>
+  `;
+  document.getElementById('detail-overlay').classList.add('open');
+
+  // Load clips for this stream
+  const clipsData = await api(`/clips?stream_id=${streamId}&sort_by=score&order=desc`);
+  const list = document.getElementById('stream-clips-list');
+  list.innerHTML = clipsData.items.map(c => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="openClipDetail('${c.id}')">
+      <div>
+        <div style="font-size:13px;color:var(--text)">${c.title}</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:2px">${fmtTime(c.start_time)} - ${fmtTime(c.end_time)} &middot; ${c.tags.join(', ')}</div>
+      </div>
+      <div style="font-size:18px;font-weight:700;color:${scoreColor(c.score)}">${c.score}</div>
+    </div>
+  `).join('');
+}
+
+// ===== Clips =====
+async function renderClips() {
+  const params = new URLSearchParams();
+  if (clipsFilter.stream_id) params.set('stream_id', clipsFilter.stream_id);
+  if (clipsFilter.tag) params.set('tag', clipsFilter.tag);
+  params.set('sort_by', clipsFilter.sort_by);
+  params.set('order', clipsFilter.order);
+  params.set('page', clipsPage);
+  params.set('page_size', 12);
+
+  const [data, streams] = await Promise.all([
+    api('/clips?' + params.toString()),
+    api('/streams'),
+  ]);
+
+  const main = document.getElementById('main-content');
+  main.innerHTML = `
+    <div class="page-header">
+      <h2>切片库</h2>
+      <p>共 ${data.total} 个切片，按评分瀑布流展示</p>
+    </div>
+
+    <div class="filter-bar">
+      <select onchange="clipsFilter.stream_id=this.value;clipsPage=1;renderClips()">
+        <option value="">全部直播</option>
+        ${streams.items.map(s => `<option value="${s.id}" ${clipsFilter.stream_id===s.id?'selected':''}>${s.title}</option>`).join('')}
+      </select>
+      <select onchange="clipsFilter.tag=this.value;clipsPage=1;renderClips()">
+        <option value="">全部标签</option>
+        <option value="促销转化" ${clipsFilter.tag==='促销转化'?'selected':''}>促销转化</option>
+        <option value="高互动" ${clipsFilter.tag==='高互动'?'selected':''}>高互动</option>
+        <option value="产品卖点" ${clipsFilter.tag==='产品卖点'?'selected':''}>产品卖点</option>
+        <option value="口碑背书" ${clipsFilter.tag==='口碑背书'?'selected':''}>口碑背书</option>
+        <option value="精彩片段" ${clipsFilter.tag==='精彩片段'?'selected':''}>精彩片段</option>
+      </select>
+      <select onchange="clipsFilter.sort_by=this.value;clipsPage=1;renderClips()">
+        <option value="score" ${clipsFilter.sort_by==='score'?'selected':''}>按评分</option>
+        <option value="duration" ${clipsFilter.sort_by==='duration'?'selected':''}>按时长</option>
+        <option value="created_at" ${clipsFilter.sort_by==='created_at'?'selected':''}>按时间</option>
+      </select>
+      <select onchange="clipsFilter.order=this.value;clipsPage=1;renderClips()">
+        <option value="desc" ${clipsFilter.order==='desc'?'selected':''}>降序</option>
+        <option value="asc" ${clipsFilter.order==='asc'?'selected':''}>升序</option>
+      </select>
+    </div>
+
+    <div class="clip-grid">
+      ${data.items.map(c => `
+        <div class="clip-card" onclick="openClipDetail('${c.id}')">
+          <div class="clip-card-header">
+            <div class="clip-title">${c.title}</div>
+            <div class="clip-score" style="color:${scoreColor(c.score)}">${c.score}</div>
+          </div>
+          <div class="clip-meta">${c.stream_title} &middot; ${fmtTime(c.start_time)} - ${fmtTime(c.end_time)} &middot; ${c.duration}秒</div>
+          <div class="clip-excerpt">${c.transcript_excerpt}</div>
+          <div class="breakdown-grid">
+            <div class="breakdown-item">
+              <div class="breakdown-label">关键词密度</div>
+              <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${c.score_breakdown.keyword_density}%;background:var(--accent)"></div></div>
+              <div class="breakdown-val">${c.score_breakdown.keyword_density}</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">能量峰值</div>
+              <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${c.score_breakdown.energy_level}%;background:var(--success)"></div></div>
+              <div class="breakdown-val">${c.score_breakdown.energy_level}</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">语速变化</div>
+              <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${c.score_breakdown.speech_rate}%;background:var(--warning)"></div></div>
+              <div class="breakdown-val">${c.score_breakdown.speech_rate}</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">互动热度</div>
+              <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${c.score_breakdown.interaction}%;background:var(--cp-chart-2)"></div></div>
+              <div class="breakdown-val">${c.score_breakdown.interaction}</div>
+            </div>
+          </div>
+          <div class="clip-tags" style="margin-top:10px">
+            ${c.tags.map(t => `<span class="clip-tag">${t}</span>`).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    ${data.total_pages > 1 ? `
+    <div class="pagination">
+      <button class="page-btn" onclick="clipsPage=Math.max(1,clipsPage-1);renderClips()" ${clipsPage<=1?'disabled':''}>上一页</button>
+      ${Array.from({length: data.total_pages}, (_, i) => `
+        <button class="page-btn ${i+1===clipsPage?'active':''}" onclick="clipsPage=${i+1};renderClips()">${i+1}</button>
+      `).join('')}
+      <button class="page-btn" onclick="clipsPage=Math.min(${data.total_pages},clipsPage+1);renderClips()" ${clipsPage>=data.total_pages?'disabled':''}>下一页</button>
+    </div>
+    ` : ''}
+  `;
+}
+
+// ===== Clip detail =====
+async function openClipDetail(clipId) {
+  const c = await api(`/clips/${clipId}`);
+  const panel = document.getElementById('detail-panel');
+  panel.innerHTML = `
+    <button class="detail-close" onclick="closeDetail()">&times;</button>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div>
+        <h3 style="font-size:18px;font-weight:700">${c.title}</h3>
+        <p style="font-size:13px;color:var(--text-2);margin-top:4px">${c.stream_title} &middot; ${fmtTime(c.start_time)} - ${fmtTime(c.end_time)} &middot; ${c.duration}秒</p>
+      </div>
+      <div style="font-size:36px;font-weight:800;color:${scoreColor(c.score)}">${c.score}</div>
+    </div>
+
+    <div class="detail-section">
+      <h4>评分理由</h4>
+      <div class="explanation-box">${c.score_breakdown.explanation}</div>
+    </div>
+
+    <div class="detail-section">
+      <h4>评分明细</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="stat-card" style="padding:14px">
+          <div class="breakdown-label" style="margin-bottom:6px">关键词密度</div>
+          <div style="font-size:20px;font-weight:700;color:var(--accent)">${c.score_breakdown.keyword_density}</div>
+          <div class="breakdown-bar" style="margin-top:6px"><div class="breakdown-bar-fill" style="width:${c.score_breakdown.keyword_density}%;background:var(--accent)"></div></div>
+        </div>
+        <div class="stat-card" style="padding:14px">
+          <div class="breakdown-label" style="margin-bottom:6px">能量峰值</div>
+          <div style="font-size:20px;font-weight:700;color:var(--success)">${c.score_breakdown.energy_level}</div>
+          <div class="breakdown-bar" style="margin-top:6px"><div class="breakdown-bar-fill" style="width:${c.score_breakdown.energy_level}%;background:var(--success)"></div></div>
+        </div>
+        <div class="stat-card" style="padding:14px">
+          <div class="breakdown-label" style="margin-bottom:6px">语速变化</div>
+          <div style="font-size:20px;font-weight:700;color:var(--warning)">${c.score_breakdown.speech_rate}</div>
+          <div class="breakdown-bar" style="margin-top:6px"><div class="breakdown-bar-fill" style="width:${c.score_breakdown.speech_rate}%;background:var(--warning)"></div></div>
+        </div>
+        <div class="stat-card" style="padding:14px">
+          <div class="breakdown-label" style="margin-bottom:6px">互动热度</div>
+          <div style="font-size:20px;font-weight:700;color:var(--cp-chart-2)">${c.score_breakdown.interaction}</div>
+          <div class="breakdown-bar" style="margin-top:6px"><div class="breakdown-bar-fill" style="width:${c.score_breakdown.interaction}%;background:var(--cp-chart-2)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>命中关键词</h4>
+      <div class="keyword-list">
+        ${c.score_breakdown.keyword_hits.length > 0
+          ? c.score_breakdown.keyword_hits.map(kw => `<span class="keyword-chip">${kw}</span>`).join('')
+          : '<span style="color:var(--text-3);font-size:13px">无命中关键词</span>'
+        }
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>转写内容 <span class="mock-badge" style="vertical-align:middle;margin-left:6px">模拟</span></h4>
+      <div class="detail-transcript">
+        <div style="font-size:13px;color:var(--text-2);line-height:1.8">${c.transcript_excerpt}</div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>标签</h4>
+      <div class="clip-tags">
+        ${c.tags.map(t => `<span class="clip-tag">${t}</span>`).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+// ===== Tasks =====
+async function renderTasks() {
+  const data = await api('/tasks');
+  const streams = await api('/streams');
+  const main = document.getElementById('main-content');
+  main.innerHTML = `
+    <div class="page-header">
+      <h2>批量任务</h2>
+      <p>管理批量切片提取任务，跟踪处理进度</p>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <button class="btn btn-primary" onclick="showNewTaskForm()">+ 新建任务</button>
+    </div>
+
+    <div id="new-task-form" style="display:none;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+      <h4 style="font-size:14px;margin-bottom:12px">新建批量切片任务</h4>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;color:var(--text-3);display:block;margin-bottom:4px">任务名称</label>
+        <input id="task-name-input" type="text" value="批量切片任务" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:var(--radius-sm);font-size:13px;width:100%;max-width:300px">
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;color:var(--text-3);display:block;margin-bottom:4px">选择直播</label>
+        ${streams.items.map(s => `
+          <label style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;color:var(--text-2);cursor:pointer">
+            <input type="checkbox" class="task-stream-cb" value="${s.id}" checked>
+            ${s.title} (${s.platform})
+          </label>
+        `).join('')}
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" onclick="submitTask()">提交任务</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('new-task-form').style.display='none'">取消</button>
+      </div>
+    </div>
+
+    ${data.items.map(t => `
+      <div class="task-card">
+        <div class="task-header">
+          <div>
+            <span class="task-name">${t.name}</span>
+            <span class="badge ${t.status==='completed'?'badge-success':t.status==='processing'?'badge-warning':'badge-accent'}" style="margin-left:8px">
+              ${t.status==='completed'?'已完成':t.status==='processing'?'处理中':'等待中'}
+            </span>
+          </div>
+          <span style="font-size:12px;color:var(--text-3)">${t.id}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${t.progress}%"></div>
+        </div>
+        <div class="task-meta">
+          <span>进度: ${t.progress}%</span>
+          <span>直播: ${t.processed_streams}/${t.total_streams}</span>
+          <span>生成切片: ${t.clips_generated}</span>
+          <span>创建: ${new Date(t.created_at).toLocaleString('zh-CN')}</span>
+          ${t.completed_at ? `<span>完成: ${new Date(t.completed_at).toLocaleString('zh-CN')}</span>` : ''}
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function showNewTaskForm() {
+  document.getElementById('new-task-form').style.display = 'block';
+}
+
+async function submitTask() {
+  const name = document.getElementById('task-name-input').value || '批量切片任务';
+  const streamIds = Array.from(document.querySelectorAll('.task-stream-cb:checked')).map(cb => cb.value);
+  if (streamIds.length === 0) {
+    alert('请至少选择一场直播');
+    return;
+  }
+  const res = await fetch(API + '/process', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ stream_ids: streamIds, name }),
+  });
+  if (!res.ok) { alert('提交失败'); return; }
+  document.getElementById('new-task-form').style.display = 'none';
+  await renderTasks();
+}
+
+// ===== Detail panel helpers =====
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('open');
+}
+function closeDetailIfBg(e) {
+  if (e.target === document.getElementById('detail-overlay')) closeDetail();
+}
+
+// ===== Init =====
+navigate('dashboard');
+</script>
+</body>
+</html>

@@ -113,7 +113,7 @@ def test_viewer_cannot_start_or_review_agent_run(monkeypatch) -> None:
     monkeypatch.setattr(agent_runs, "dispatch_agent_run", lambda *args, **kwargs: None)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(user_id, UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(user_id, UserRole.CS)
     try:
         client = TestClient(app)
         create_response = client.post(

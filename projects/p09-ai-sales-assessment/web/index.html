@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-cp-brand-title="P09 AI 销售考核 · {company}">P09 AI 销售考核 - 云枢智能</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<!-- 统一设计系统：tokens.css 是配色/间距/字体的唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
+<link rel="stylesheet" href="/shared/ui-kit/tokens.css">
+<script src="/shared/config/services.js"></script>
+<script src="/shared/ui-kit/ui-kit.js"></script>
+<style>
+:root {
+  /* 颜色统一引用 shared/ui-kit/tokens.css 的 --cp-* 令牌（改一处，全平台生效） */
+  --bg: var(--cp-bg);
+  --surface: var(--cp-surface);
+  --surface2: var(--cp-elevated);
+  --border: var(--cp-line);
+  --accent: var(--cp-brand);
+  --accent-light: var(--cp-brand-hover);
+  --accent-dim: var(--cp-brand-bg);
+  --text: var(--cp-ink1);
+  --text2: var(--cp-ink2);
+  --text3: var(--cp-ink3);
+  --green: var(--cp-success);
+  --red: var(--cp-danger);
+  --orange: var(--cp-warning);
+  --purple: var(--cp-chart-2);
+  /* --yellow 只作色块/渐变端点（奖牌金），禁止用作文字色 */
+  --yellow: #FABB06;
+  --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; min-height:100vh; }
+a { color:var(--accent); text-decoration:none; }
+
+/* Layout */
+.app { display:flex; min-height:100vh; }
+.sidebar { width:240px; background:var(--surface); border-right:1px solid var(--border); padding:20px 0; flex-shrink:0; position:fixed; top:0; left:0; bottom:0; overflow-y:auto; z-index:100; }
+.sidebar-logo { padding:0 20px 24px; border-bottom:1px solid var(--border); margin-bottom:16px; }
+.sidebar-logo h1 { font-size:16px; font-weight:700; color:var(--text); }
+.sidebar-logo .subtitle { font-size:11px; color:var(--text2); margin-top:4px; }
+.sidebar-logo .badge { display:inline-block; background:var(--accent-dim); color:var(--accent); font-size:10px; padding:2px 8px; border-radius:10px; margin-top:6px; }
+.nav-item { display:flex; align-items:center; padding:10px 20px; cursor:pointer; color:var(--text2); transition:all .2s; font-size:14px; gap:10px; }
+.nav-item:hover { background:var(--surface2); color:var(--text); }
+.nav-item.active { background:var(--accent-dim); color:var(--accent); border-right:3px solid var(--accent); }
+.nav-icon { width:20px; text-align:center; font-size:16px; }
+
+.main { margin-left:240px; flex:1; padding:24px 32px; min-height:100vh; }
+.page { display:none; }
+.page.active { display:block; }
+
+/* Header */
+.page-header { margin-bottom:24px; }
+.page-header h2 { font-size:22px; font-weight:700; }
+.page-header p { color:var(--text2); font-size:13px; margin-top:4px; }
+
+/* Cards */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:16px; }
+.card-title { font-size:14px; color:var(--text2); margin-bottom:12px; font-weight:600; }
+
+/* Stats grid */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:24px; }
+.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
+.stat-value { font-size:28px; font-weight:700; color:var(--text); }
+.stat-label { font-size:12px; color:var(--text2); margin-top:4px; }
+.stat-change { font-size:12px; margin-top:6px; }
+.stat-change.up { color:var(--green); }
+.stat-change.down { color:var(--red); }
+
+/* Charts */
+.chart-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+.chart-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
+.chart-container { width:100%; height:300px; }
+
+/* Table */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { text-align:left; padding:10px 12px; color:var(--text2); font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+td { padding:10px 12px; border-bottom:1px solid var(--border); }
+tr:hover td { background:var(--surface2); }
+
+/* Badges */
+.badge-score { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; }
+.badge-excellent { background:var(--cp-success-bg); color:var(--green); }
+.badge-good { background:var(--cp-brand-bg); color:var(--accent); }
+.badge-average { background:var(--cp-warning-bg); color:var(--orange); }
+.badge-poor { background:var(--cp-danger-bg); color:var(--red); }
+
+/* Rank */
+.rank-num { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; font-weight:700; font-size:13px; }
+.rank-1 { background:linear-gradient(135deg,#FABB06,#B4690E); color:#000; }
+.rank-2 { background:linear-gradient(135deg,#C0C0C0,#A0A0A0); color:#000; }
+.rank-3 { background:linear-gradient(135deg,#CD7F32,#A0522D); color:#fff; }
+.rank-other { background:var(--surface2); color:var(--text2); }
+
+/* Agent avatar */
+.agent-avatar { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; font-weight:700; font-size:13px; color:#fff; margin-right:8px; }
+
+/* Conversation detail */
+.msg-list { max-height:500px; overflow-y:auto; padding:16px; background:var(--bg); border-radius:8px; }
+.msg-item { margin-bottom:12px; display:flex; gap:10px; }
+.msg-item.customer { flex-direction:row; }
+.msg-item.agent { flex-direction:row-reverse; }
+.msg-bubble { max-width:70%; padding:10px 14px; border-radius:12px; font-size:13px; line-height:1.5; }
+.msg-item.customer .msg-bubble { background:var(--surface2); border-top-left-radius:4px; }
+.msg-item.agent .msg-bubble { background:var(--accent-dim); color:var(--accent-light); border-top-right-radius:4px; }
+.msg-role { font-size:11px; color:var(--text3); margin-bottom:2px; }
+.msg-time { font-size:10px; color:var(--text3); margin-top:4px; }
+
+/* Score detail */
+.score-bar { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.score-bar-label { width:100px; font-size:13px; color:var(--text2); }
+.score-bar-track { flex:1; height:8px; background:var(--surface2); border-radius:4px; overflow:hidden; }
+.score-bar-fill { height:100%; border-radius:4px; transition:width .5s; }
+.score-bar-value { width:40px; text-align:right; font-size:13px; font-weight:600; }
+
+/* Rules */
+.rule-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; display:flex; align-items:center; gap:16px; }
+.rule-toggle { position:relative; width:44px; height:24px; cursor:pointer; }
+.rule-toggle input { display:none; }
+.rule-toggle .slider { position:absolute; top:0; left:0; right:0; bottom:0; background:var(--surface2); border-radius:12px; transition:.3s; }
+.rule-toggle .slider:before { content:''; position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.3s; }
+.rule-toggle input:checked + .slider { background:var(--accent); }
+.rule-toggle input:checked + .slider:before { transform:translateX(20px); }
+.rule-info { flex:1; }
+.rule-name { font-size:14px; font-weight:600; }
+.rule-desc { font-size:12px; color:var(--text2); margin-top:2px; }
+.rule-penalty { font-size:13px; color:var(--red); font-weight:600; white-space:nowrap; }
+
+/* Kappa */
+.kappa-value { font-size:48px; font-weight:700; color:var(--accent); }
+.kappa-label { font-size:14px; color:var(--text2); margin-top:4px; }
+.kappa-interp { font-size:16px; font-weight:600; margin-top:8px; }
+
+/* Mock notice */
+.mock-notice { background:var(--cp-warning-bg); border:1px solid rgba(180,105,14,.3); border-radius:8px; padding:10px 16px; font-size:12px; color:var(--orange); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+
+/* Responsive */
+@media(max-width:768px) {
+  .sidebar { display:none; }
+  .main { margin-left:0; padding:16px; }
+  .chart-row { grid-template-columns:1fr; }
+  .stats-grid { grid-template-columns:repeat(2,1fr); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--text3); }
+
+/* Loading */
+.loading { text-align:center; padding:40px; color:var(--text3); }
+.spinner { display:inline-block; width:24px; height:24px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* Conversation list clickable */
+.conv-row { cursor:pointer; }
+.conv-row:hover td { background:var(--accent-dim) !important; }
+
+/* Violation tag */
+.violation-tag { display:inline-block; background:var(--cp-danger-bg); color:var(--red); font-size:11px; padding:2px 8px; border-radius:4px; margin:2px; }
+.highlight-tag { display:inline-block; background:var(--cp-success-bg); color:var(--green); font-size:11px; padding:2px 8px; border-radius:4px; margin:2px; }
+
+/* Tabs */
+.tabs { display:flex; gap:0; margin-bottom:20px; border-bottom:1px solid var(--border); }
+.tab { padding:10px 20px; font-size:13px; color:var(--text2); cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
+.tab:hover { color:var(--text); }
+.tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+/* Confusion matrix */
+.conf-matrix { display:grid; grid-template-columns:auto repeat(4,60px); gap:2px; font-size:12px; align-items:center; }
+.conf-cell { padding:8px; text-align:center; background:var(--surface2); border-radius:4px; }
+.conf-header { font-weight:600; color:var(--text2); font-size:11px; }
+</style>
+</head>
+<body class="cp-app" data-cp-module="p09" data-cp-brand-src="/shared/config/brand.json">
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="cp-brandmark" data-cp-brand="logo">云枢</div>
+      <h1 data-cp-brand="company">云枢智能</h1>
+      <div class="subtitle">AI 销售考核</div>
+      <div class="badge">P09 模块</div>
+    </div>
+    <div class="nav-item active" onclick="navigate('dashboard')">
+      <span class="nav-icon">&#9636;</span> 考核看板
+    </div>
+    <div class="nav-item" onclick="navigate('leaderboard')">
+      <span class="nav-icon">&#9734;</span> 坐席排行榜
+    </div>
+    <div class="nav-item" onclick="navigate('conversations')">
+      <span class="nav-icon">&#9993;</span> 会话列表
+    </div>
+    <div class="nav-item" onclick="navigate('rules')">
+      <span class="nav-icon">&#9881;</span> 质检规则
+    </div>
+    <div class="nav-item" onclick="navigate('agreement')">
+      <span class="nav-icon">&#9878;</span> 人机一致性
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Dashboard -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-header">
+        <h2>考核看板</h2>
+        <p>2025 年 3 月客服质量指标概览</p>
+      </div>
+      <div class="mock-notice">
+        &#9888; 演示说明：LLM 评分使用基于规则的启发式算法，而非真实 LLM 调用。所有数据均为演示数据。
+      </div>
+      <div class="stats-grid" id="stats-cards"></div>
+      <div class="chart-row">
+        <div class="chart-box">
+          <div class="card-title">分数分布</div>
+          <div id="chart-distribution" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+          <div class="card-title">维度均值</div>
+          <div id="chart-dimensions" class="chart-container"></div>
+        </div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-box">
+          <div class="card-title">店铺对比</div>
+          <div id="chart-stores" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+          <div class="card-title">最近会话</div>
+          <div id="recent-convos" class="table-wrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="page-leaderboard" class="page">
+      <div class="page-header">
+        <h2>坐席排行榜</h2>
+        <p>按平均质检评分排名</p>
+      </div>
+      <div class="card">
+        <div id="leaderboard-table"></div>
+      </div>
+    </div>
+
+    <!-- Conversations -->
+    <div id="page-conversations" class="page">
+      <div class="page-header">
+        <h2>会话列表</h2>
+        <p>浏览和筛选已质检的会话</p>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+          <select id="filter-agent" onchange="loadConversations()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:6px;font-size:13px;">
+            <option value="">全部坐席</option>
+          </select>
+          <select id="filter-store" onchange="loadConversations()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:6px;font-size:13px;">
+            <option value="">全部店铺</option>
+            <option>旗舰店 A</option>
+            <option>旗舰店 B</option>
+            <option>海外店</option>
+          </select>
+          <select id="filter-score" onchange="loadConversations()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:6px;font-size:13px;">
+            <option value="">全部评分</option>
+            <option value="high">85+ 优秀</option>
+            <option value="good">70-85 良好</option>
+            <option value="avg">55-70 一般</option>
+            <option value="low">&lt;55 较差</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div id="conversations-table"></div>
+        <div id="convo-pagination" style="margin-top:16px;display:flex;justify-content:center;gap:8px;"></div>
+      </div>
+    </div>
+
+    <!-- Conversation Detail Modal -->
+    <div id="conv-detail-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(16,24,40,.45);z-index:200;overflow-y:auto;padding:40px;">
+      <div style="max-width:900px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h3 id="detail-title" style="font-size:18px;"></h3>
+          <button onclick="closeDetail()" style="background:var(--surface2);border:none;color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;">关闭</button>
+        </div>
+        <div id="detail-content"></div>
+      </div>
+    </div>
+
+    <!-- Agent Report Modal -->
+    <div id="agent-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(16,24,40,.45);z-index:200;overflow-y:auto;padding:40px;">
+      <div style="max-width:1000px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h3 id="agent-modal-title" style="font-size:18px;"></h3>
+          <button onclick="closeAgentModal()" style="background:var(--surface2);border:none;color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;">关闭</button>
+        </div>
+        <div id="agent-modal-content"></div>
+      </div>
+    </div>
+
+    <!-- Rules -->
+    <div id="page-rules" class="page">
+      <div class="page-header">
+        <h2>质检规则</h2>
+        <p>配置会话质检规则</p>
+      </div>
+      <div id="rules-list"></div>
+    </div>
+
+    <!-- Agreement -->
+    <div id="page-agreement" class="page">
+      <div class="page-header">
+        <h2>人机一致性</h2>
+        <p>对比 AI 评分与人工评分</p>
+      </div>
+      <div class="mock-notice">
+        &#9888; 演示说明：Kappa 系数基于演示数据计算，使用模拟人工评分，而非真实评估会话。
+      </div>
+      <div id="agreement-content"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+let currentPage = 1;
+
+// 后端返回的分类是机器可读键（用于索引混淆矩阵），展示文案在此统一映射为中文
+const CATEGORY_LABELS = { excellent:'优秀', good:'良好', average:'一般', poor:'较差' };
+function categoryLabel(cat) { return CATEGORY_LABELS[cat] || cat; }
+
+// --- Navigation ---
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item')[
+    ['dashboard','leaderboard','conversations','rules','agreement'].indexOf(page)
+  ].classList.add('active');
+
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'leaderboard') loadLeaderboard();
+  if (page === 'conversations') { currentPage=1; loadConversations(); }
+  if (page === 'rules') loadRules();
+  if (page === 'agreement') loadAgreement();
+}
+
+// --- API helper ---
+async function api(path) {
+  const r = await fetch(API + path);
+  if (!r.ok) throw new Error(`接口错误：${r.status}`);
+  return r.json();
+}
+
+// --- Score badge ---
+function scoreBadge(score) {
+  const cls = score >= 85 ? 'excellent' : score >= 70 ? 'good' : score >= 55 ? 'average' : 'poor';
+  return `<span class="badge-score badge-${cls}">${score.toFixed(1)}</span>`;
+}
+
+function scoreColor(score) {
+  if (score >= 85) return '#16A34A';
+  if (score >= 70) return '#3370FF';
+  if (score >= 55) return '#B4690E';
+  return '#D92D20';
+}
+
+// --- Dashboard ---
+async function loadDashboard() {
+  const stats = await api('/api/v1/stats');
+
+  // Stat cards
+  document.getElementById('stats-cards').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-value">${stats.total_conversations}</div>
+      <div class="stat-label">总会话数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${stats.total_agents}</div>
+      <div class="stat-label">活跃坐席</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:${scoreColor(stats.average_score)}">${stats.average_score.toFixed(1)}</div>
+      <div class="stat-label">平均评分</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--red)">${stats.total_violations}</div>
+      <div class="stat-label">规则违规</div>
+    </div>
+  `;
+
+  // Distribution chart
+  const distChart = echarts.init(document.getElementById('chart-distribution'));
+  const distData = stats.score_distribution;
+  distChart.setOption({
+    tooltip: { trigger:'axis' },
+    xAxis: { type:'category', data:Object.keys(distData), axisLabel:{color:'#5A6472'}, axisLine:{lineStyle:{color:'#DDE2EA'}} },
+    yAxis: { type:'value', axisLabel:{color:'#5A6472'}, splitLine:{lineStyle:{color:'#DDE2EA'}} },
+    series: [{
+      type:'bar', data:Object.values(distData), barWidth:'50%',
+      itemStyle: { borderRadius:[4,4,0,0], color: function(p) {
+        return ['#D92D20','#B4690E','#FABB06','#3370FF','#16A34A'][p.dataIndex];
+      }}
+    }],
+    grid: { left:40, right:20, top:20, bottom:40 }
+  });
+
+  // Dimension radar
+  const dimChart = echarts.init(document.getElementById('chart-dimensions'));
+  const dims = stats.dimension_averages;
+  dimChart.setOption({
+    tooltip: {},
+    radar: {
+      indicator: Object.keys(dims).map(k => ({name:k, max:100})),
+      shape:'polygon',
+      axisName: { color:'#5A6472', fontSize:11 },
+      splitArea: { areaStyle:{color:['rgba(51,112,255,0.05)','rgba(51,112,255,0.1)']} },
+      splitLine: { lineStyle:{color:'#DDE2EA'} },
+      axisLine: { lineStyle:{color:'#DDE2EA'} }
+    },
+    series: [{
+      type:'radar',
+      data: [{ value:Object.values(dims), name:'均值', areaStyle:{color:'rgba(51,112,255,0.2)'}, lineStyle:{color:'#3370FF'} }],
+      itemStyle: { color:'#3370FF' }
+    }]
+  });
+
+  // Store comparison
+  const storeChart = echarts.init(document.getElementById('chart-stores'));
+  const storeData = stats.store_averages;
+  storeChart.setOption({
+    tooltip: { trigger:'axis' },
+    xAxis: { type:'category', data:Object.keys(storeData), axisLabel:{color:'#5A6472',fontSize:11}, axisLine:{lineStyle:{color:'#DDE2EA'}} },
+    yAxis: { type:'value', min:40, max:100, axisLabel:{color:'#5A6472'}, splitLine:{lineStyle:{color:'#DDE2EA'}} },
+    series: [{
+      type:'bar', data:Object.entries(storeData).map(([k,v])=>({value:v,itemStyle:{color:scoreColor(v)}})),
+      barWidth:'40%', itemStyle:{borderRadius:[4,4,0,0]},
+      label: { show:true, position:'top', color:'#1A1F2B', fontSize:12, formatter:'{c}' }
+    }],
+    grid: { left:50, right:20, top:20, bottom:40 }
+  });
+
+  // 最近会话
+  const convos = await api('/api/v1/conversations?page_size=5');
+  let html = '<table><thead><tr><th>坐席</th><th>议题</th><th>评分</th><th>日期</th></tr></thead><tbody>';
+  for (const c of convos.items) {
+    html += `<tr class="conv-row" onclick="showConvDetail('${c.id}')">
+      <td><span class="agent-avatar" style="background:${getAgentColor(c.agent_id)};width:24px;height:24px;font-size:10px;">${c.agent_name[0]}</span>${c.agent_name}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.topic}</td>
+      <td>${c.score !== null ? scoreBadge(c.score) : '-'}</td>
+      <td style="color:var(--text2)">${c.created_at}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  document.getElementById('recent-convos').innerHTML = html;
+
+  window.addEventListener('resize', () => { distChart.resize(); dimChart.resize(); storeChart.resize(); });
+}
+
+// --- Leaderboard ---
+async function loadLeaderboard() {
+  const data = await api('/api/v1/leaderboard');
+  let html = '<table><thead><tr><th>排名</th><th>坐席</th><th>店铺</th><th>会话</th><th>均分</th><th>最高</th><th>最低</th><th></th></tr></thead><tbody>';
+  for (const r of data.leaderboard) {
+    const rankCls = r.rank <= 3 ? `rank-${r.rank}` : 'rank-other';
+    html += `<tr>
+      <td><span class="rank-num ${rankCls}">${r.rank}</span></td>
+      <td><span class="agent-avatar" style="background:${r.avatar_color}">${r.agent_name[0]}</span>${r.agent_name}</td>
+      <td style="color:var(--text2)">${r.store}</td>
+      <td>${r.conversation_count}</td>
+      <td>${scoreBadge(r.average_score)}</td>
+      <td style="color:var(--green)">${r.max_score}</td>
+      <td style="color:var(--red)">${r.min_score}</td>
+      <td><button onclick="showAgentReport('${r.agent_id}')" style="background:var(--accent-dim);border:none;color:var(--accent);padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px;">报告</button></td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  document.getElementById('leaderboard-table').innerHTML = html;
+}
+
+// --- Conversations ---
+async function loadConversations() {
+  // Populate agent filter
+  const agentSel = document.getElementById('filter-agent');
+  if (agentSel.options.length <= 1) {
+    const lb = await api('/api/v1/leaderboard');
+    for (const a of lb.leaderboard) {
+      const opt = document.createElement('option');
+      opt.value = a.agent_id; opt.textContent = a.agent_name;
+      agentSel.appendChild(opt);
+    }
+  }
+
+  const agentId = agentSel.value;
+  const store = document.getElementById('filter-store').value;
+  const scoreFilter = document.getElementById('filter-score').value;
+
+  let url = `/api/v1/conversations?page=${currentPage}&page_size=10`;
+  if (agentId) url += `&agent_id=${agentId}`;
+  if (store) url += `&store=${encodeURIComponent(store)}`;
+  if (scoreFilter === 'high') url += '&min_score=85';
+  else if (scoreFilter === 'good') { url += '&min_score=70&max_score=84.9'; }
+  else if (scoreFilter === 'avg') { url += '&min_score=55&max_score=69.9'; }
+  else if (scoreFilter === 'low') url += '&max_score=54.9';
+
+  const data = await api(url);
+  let html = '<table><thead><tr><th>会话ID</th><th>坐席</th><th>客户</th><th>议题</th><th>AI 评分</th><th>人工评分</th><th>日期</th></tr></thead><tbody>';
+  for (const c of data.items) {
+    html += `<tr class="conv-row" onclick="showConvDetail('${c.id}')">
+      <td style="color:var(--text3);font-size:11px;">${c.id}</td>
+      <td>${c.agent_name}</td>
+      <td>${c.customer_name}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.topic}</td>
+      <td>${c.score !== null ? scoreBadge(c.score) : '-'}</td>
+      <td>${c.human_score !== null && c.human_score !== undefined ? c.human_score.toFixed(1) : '-'}</td>
+      <td style="color:var(--text2)">${c.created_at}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  document.getElementById('conversations-table').innerHTML = html;
+
+  // Pagination
+  const totalPages = Math.ceil(data.total / 10);
+  let pagHtml = '';
+  for (let i = 1; i <= totalPages; i++) {
+    pagHtml += `<button onclick="currentPage=${i};loadConversations()" style="background:${i===currentPage?'var(--accent)':'var(--surface2)'};border:1px solid var(--border);color:${i===currentPage?'#fff':'var(--text2)'};padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">${i}</button>`;
+  }
+  document.getElementById('convo-pagination').innerHTML = pagHtml;
+}
+
+// --- Conversation Detail ---
+async function showConvDetail(id) {
+  const data = await api(`/api/v1/conversations/${id}`);
+  document.getElementById('detail-title').textContent = `${data.topic} - ${data.customer_name}`;
+
+  let html = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+    <div><span style="color:var(--text2)">坐席：</span> ${data.agent_name}</div>
+    <div><span style="color:var(--text2)">店铺：</span> ${data.store}</div>
+    <div><span style="color:var(--text2)">日期：</span> ${data.created_at?.slice(0,10)}</div>
+    <div><span style="color:var(--text2)">时长：</span> ${data.duration_seconds}秒</div>
+    <div><span style="color:var(--text2)">AI 评分：</span> ${data.score ? scoreBadge(data.score.overall) : '-'}</div>
+    <div><span style="color:var(--text2)">人工评分：</span> ${data.human_score ? data.human_score.toFixed(1) : '-'}</div>
+  </div>`;
+
+  // Score breakdown
+  if (data.score) {
+    html += '<div class="card-title">评分明细</div>';
+    for (const d of data.score.dimensions) {
+      html += `<div class="score-bar">
+        <div class="score-bar-label">${d.dimension}</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:${d.score}%;background:${scoreColor(d.score)}"></div></div>
+        <div class="score-bar-value" style="color:${scoreColor(d.score)}">${d.score}</div>
+      </div>`;
+      if (d.highlights && d.highlights.length) {
+        html += `<div style="margin-left:108px;margin-bottom:4px;">${d.highlights.map(h=>`<span class="highlight-tag">${h}</span>`).join('')}</div>`;
+      }
+      if (d.deduction_reasons && d.deduction_reasons.length) {
+        html += `<div style="margin-left:108px;margin-bottom:8px;">${d.deduction_reasons.map(r=>`<span class="violation-tag">${r}</span>`).join('')}</div>`;
+      }
+    }
+    if (data.score.suggestions.length) {
+      html += `<div style="margin-top:12px;"><span style="color:var(--text2)">改进建议：</span><ul style="margin-top:4px;padding-left:20px;color:var(--text2);font-size:13px;">`;
+      for (const s of data.score.suggestions) html += `<li>${s}</li>`;
+      html += '</ul></div>';
+    }
+  }
+
+  // Messages
+  html += '<div class="card-title" style="margin-top:20px;">对话详情</div>';
+  html += '<div class="msg-list">';
+  for (const m of data.messages) {
+    html += `<div class="msg-item ${m.role}">
+      <div>
+        <div class="msg-role">${m.role === 'agent' ? data.agent_name : data.customer_name}</div>
+        <div class="msg-bubble">${m.content}</div>
+        <div class="msg-time">${m.timestamp ? new Date(m.timestamp).toLocaleTimeString('zh-CN') : ''}</div>
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+
+  document.getElementById('detail-content').innerHTML = html;
+  document.getElementById('conv-detail-modal').style.display = 'block';
+}
+
+function closeDetail() { document.getElementById('conv-detail-modal').style.display = 'none'; }
+
+// --- Agent Report ---
+async function showAgentReport(agentId) {
+  const data = await api(`/api/v1/agents/${agentId}`);
+  document.getElementById('agent-modal-title').textContent = `${data.agent.name} - 绩效报告`;
+
+  let html = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+    <div class="stat-card"><div class="stat-value">${data.summary.total_conversations}</div><div class="stat-label">会话数</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:${scoreColor(data.summary.average_score)}">${data.summary.average_score}</div><div class="stat-label">平均分</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--green)">${data.summary.max_score}</div><div class="stat-label">最高分</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--red)">${data.summary.min_score}</div><div class="stat-label">最低分</div></div>
+  </div>`;
+
+  // Radar chart
+  html += '<div class="chart-row"><div class="chart-box"><div class="card-title">能力雷达图</div><div id="agent-radar" class="chart-container"></div></div>';
+
+  // Score trend
+  html += '<div class="chart-box"><div class="card-title">评分趋势</div><div id="agent-trend" class="chart-container"></div></div></div>';
+
+  // Strengths & Weaknesses
+  html += '<div class="chart-row">';
+  html += '<div class="card"><div class="card-title">优势项</div>';
+  if (data.strengths.length) {
+    html += data.strengths.map(s => `<div class="highlight-tag" style="margin:4px;">${s}</div>`).join('');
+  } else {
+    html += '<div style="color:var(--text3);font-size:13px;">无 80 分以上维度</div>';
+  }
+  html += '</div>';
+  html += '<div class="card"><div class="card-title">待改进项</div>';
+  if (data.weaknesses.length) {
+    html += data.weaknesses.map(w => `<div class="violation-tag" style="margin:4px;">${w}</div>`).join('');
+  } else {
+    html += '<div style="color:var(--text3);font-size:13px;">无明显短板</div>';
+  }
+  html += '</div></div>';
+
+  // Suggestions
+  if (data.improvement_suggestions.length) {
+    html += '<div class="card"><div class="card-title">改进建议</div><ul style="padding-left:20px;color:var(--text2);font-size:13px;">';
+    for (const s of data.improvement_suggestions) html += `<li style="margin-bottom:4px;">${s}</li>`;
+    html += '</ul></div>';
+  }
+
+  // Top violations
+  if (data.top_violations.length) {
+    html += '<div class="card"><div class="card-title">高频违规项</div>';
+    for (const v of data.top_violations) {
+      html += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+        <span class="violation-tag">${v.keyword}</span><span style="color:var(--text2)">${v.count} 次</span>
+      </div>`;
+    }
+    html += '</div>';
+  }
+
+  // Conversation list
+  html += '<div class="card"><div class="card-title">会话列表</div><table><thead><tr><th>日期</th><th>议题</th><th>客户</th><th>评分</th></tr></thead><tbody>';
+  for (const c of data.conversations) {
+    html += `<tr class="conv-row" onclick="closeAgentModal();showConvDetail('${c.id}')">
+      <td style="color:var(--text2)">${c.date}</td>
+      <td>${c.topic}</td><td>${c.customer}</td><td>${scoreBadge(c.score)}</td>
+    </tr>`;
+  }
+  html += '</tbody></table></div>';
+
+  document.getElementById('agent-modal-content').innerHTML = html;
+  document.getElementById('agent-modal').style.display = 'block';
+
+  // Render radar
+  setTimeout(() => {
+    const radarChart = echarts.init(document.getElementById('agent-radar'));
+    radarChart.setOption({
+      radar: {
+        indicator: data.radar.map(r => ({name:r.dimension, max:100})),
+        shape:'polygon',
+        axisName:{color:'#5A6472',fontSize:11},
+        splitArea:{areaStyle:{color:['rgba(51,112,255,0.05)','rgba(51,112,255,0.1)']}},
+        splitLine:{lineStyle:{color:'#DDE2EA'}},
+        axisLine:{lineStyle:{color:'#DDE2EA'}}
+      },
+      series:[{type:'radar',data:[{value:data.radar.map(r=>r.score),areaStyle:{color:'rgba(51,112,255,0.2)'},lineStyle:{color:'#3370FF'}}],itemStyle:{color:'#3370FF'}}]
+    });
+
+    // Trend
+    const trendChart = echarts.init(document.getElementById('agent-trend'));
+    trendChart.setOption({
+      tooltip:{trigger:'axis'},
+      xAxis:{type:'category',data:data.score_trend.map(t=>t.date),axisLabel:{color:'#5A6472',fontSize:10},axisLine:{lineStyle:{color:'#DDE2EA'}}},
+      yAxis:{type:'value',min:30,max:100,axisLabel:{color:'#5A6472'},splitLine:{lineStyle:{color:'#DDE2EA'}}},
+      series:[{type:'line',data:data.score_trend.map(t=>t.score),smooth:true,lineStyle:{color:'#3370FF'},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(51,112,255,0.3)'},{offset:1,color:'rgba(51,112,255,0)'}]}},itemStyle:{color:'#3370FF'}}],
+      grid:{left:40,right:20,top:20,bottom:40}
+    });
+
+    window.addEventListener('resize', () => { radarChart.resize(); trendChart.resize(); });
+  }, 100);
+}
+
+function closeAgentModal() { document.getElementById('agent-modal').style.display = 'none'; }
+
+// --- Rules ---
+async function loadRules() {
+  const data = await api('/api/v1/rules');
+  let html = '';
+  const catIcons = {forbidden_word:'&#10060;',required_script:'&#9989;',response_time:'&#9200;',tone:'&#128172;',compliance:'&#128274;'};
+  for (const r of data.rules) {
+    html += `<div class="rule-card">
+      <label class="rule-toggle">
+        <input type="checkbox" ${r.enabled?'checked':''} onchange="toggleRule('${r.id}',this.checked)">
+        <span class="slider"></span>
+      </label>
+      <div class="rule-info">
+        <div class="rule-name">${catIcons[r.category]||''} ${r.name}</div>
+        <div class="rule-desc">${r.description}</div>
+        ${r.keywords && r.keywords.length ? `<div style="margin-top:4px;">${r.keywords.map(k=>`<span class="violation-tag">${k}</span>`).join('')}</div>` : ''}
+      </div>
+      <div class="rule-penalty">-${r.penalty} 分</div>
+    </div>`;
+  }
+  document.getElementById('rules-list').innerHTML = html;
+}
+
+async function toggleRule(id, enabled) {
+  await fetch(`${API}/api/v1/rules/${id}`, {
+    method:'PUT', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({enabled})
+  });
+}
+
+// --- Agreement ---
+async function loadAgreement() {
+  const data = await api('/api/v1/agreement');
+
+  let html = `<div class="stats-grid">
+    <div class="stat-card" style="text-align:center;">
+      <div class="kappa-value">${data.kappa}</div>
+      <div class="kappa-label">Cohen's Kappa 系数</div>
+      <div class="kappa-interp" style="color:${data.kappa > 0.6 ? 'var(--green)' : data.kappa > 0.4 ? 'var(--orange)' : 'var(--red)'}">${data.kappa_interpretation}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${(data.observed_agreement * 100).toFixed(1)}%</div>
+      <div class="stat-label">实际一致率</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${(data.expected_agreement * 100).toFixed(1)}%</div>
+      <div class="stat-label">期望一致率</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${data.pearson_correlation}</div>
+      <div class="stat-label">皮尔逊相关系数</div>
+    </div>
+  </div>`;
+
+  html += `<div class="stat-card" style="margin-bottom:16px;">
+    <div class="stat-value">${data.mean_absolute_error}</div>
+    <div class="stat-label">平均绝对误差（分）</div>
+    <div style="color:var(--text2);font-size:12px;margin-top:4px;">样本量：${data.sample_size} 条会话</div>
+  </div>`;
+
+  // Confusion matrix
+  const cats = ['excellent','good','average','poor'];
+  html += '<div class="card"><div class="card-title">混淆矩阵（人工 vs AI）</div>';
+  html += '<div class="conf-matrix" style="grid-template-columns:auto repeat(4,80px);">';
+  html += '<div class="conf-header"></div>';
+  for (const c of cats) html += `<div class="conf-header">AI·${categoryLabel(c)}</div>`;
+  for (const h of cats) {
+    html += `<div class="conf-header">人工·${categoryLabel(h)}</div>`;
+    for (const a of cats) {
+      const val = data.confusion_matrix[h]?.[a] || 0;
+      const intensity = Math.min(val / 5, 1);
+      const bg = val > 0 ? `rgba(51,112,255,${0.1 + intensity * 0.4})` : 'var(--surface2)';
+      html += `<div class="conf-cell" style="background:${bg};${h===a?'font-weight:700;color:var(--accent);':''}">${val}</div>`;
+    }
+  }
+  html += '</div></div>';
+
+  // Category breakdown
+  if (data.category_breakdown) {
+    html += '<div class="card"><div class="card-title">分类明细</div><table><thead><tr><th>分类</th><th>样本数</th><th>人工均分</th><th>AI 均分</th><th>平均偏差</th></tr></thead><tbody>';
+    for (const [cat, info] of Object.entries(data.category_breakdown)) {
+      html += `<tr>
+        <td>${scoreBadge(cat === 'excellent' ? 90 : cat === 'good' ? 75 : cat === 'average' ? 62 : 45)} ${categoryLabel(cat)}</td>
+        <td>${info.count}</td>
+        <td>${info.avg_human}</td>
+        <td>${info.avg_ai}</td>
+        <td style="color:${info.avg_diff < 8 ? 'var(--green)' : 'var(--orange)'}">${info.avg_diff}</td>
+      </tr>`;
+    }
+    html += '</tbody></table></div>';
+  }
+
+  // Scatter chart
+  html += '<div class="chart-box" style="margin-top:16px;"><div class="card-title">人工 vs AI 评分散点图</div><div id="chart-scatter" class="chart-container"></div></div>';
+
+  document.getElementById('agreement-content').innerHTML = html;
+
+  // Load scatter data
+  const convos = await api('/api/v1/conversations?page_size=100');
+  const pairs = convos.items.filter(c => c.score !== null && c.human_score !== null && c.human_score !== undefined);
+  setTimeout(() => {
+    const scatter = echarts.init(document.getElementById('chart-scatter'));
+    scatter.setOption({
+      tooltip:{trigger:'item',formatter:p=>`人工评分：${p.data[0]} · AI 评分：${p.data[1]}`},
+      xAxis:{name:'人工评分',nameTextStyle:{color:'#5A6472'},type:'value',min:30,max:100,axisLabel:{color:'#5A6472'},splitLine:{lineStyle:{color:'#DDE2EA'}},axisLine:{lineStyle:{color:'#DDE2EA'}}},
+      yAxis:{name:'AI 评分',nameTextStyle:{color:'#5A6472'},type:'value',min:30,max:100,axisLabel:{color:'#5A6472'},splitLine:{lineStyle:{color:'#DDE2EA'}},axisLine:{lineStyle:{color:'#DDE2EA'}}},
+      series:[
+        {type:'scatter',data:pairs.map(c=>[c.human_score,c.score]),symbolSize:10,itemStyle:{color:'#3370FF',opacity:0.7}},
+        {type:'line',data:[[30,30],[100,100]],lineStyle:{color:'var(--text3)',type:'dashed',width:1},symbol:'none',tooltip:{show:false}}
+      ],
+      grid:{left:60,right:20,top:30,bottom:50}
+    });
+    window.addEventListener('resize', () => scatter.resize());
+  }, 100);
+}
+
+// --- Helpers ---
+function getAgentColor(id) {
+  const map = {'agent-001':'#3370FF','agent-002':'#16A34A','agent-003':'#D92D20','agent-004':'#B4690E','agent-005':'#7B5CFA'};
+  return map[id] || '#3370FF';
+}
+
+// Close modals on backdrop click
+document.getElementById('conv-detail-modal').addEventListener('click', function(e) { if (e.target === this) closeDetail(); });
+document.getElementById('agent-modal').addEventListener('click', function(e) { if (e.target === this) closeAgentModal(); });
+
+// Init
+loadDashboard();
+</script>
+</body>
+</html>

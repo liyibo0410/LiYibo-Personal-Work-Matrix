@@ -25,6 +25,7 @@ def chat_completion_json(
     api_key: str | None,
     model: str | None,
     fallback_base_url: str | None = None,
+    fallback_api_key: str | None = None,
     max_tokens: int = 1800,
     temperature: float = 0.3,
     timeout: float = 60.0,
@@ -41,6 +42,7 @@ def chat_completion_json(
         api_key=api_key,
         model=model,
         fallback_base_url=fallback_base_url,
+        fallback_api_key=fallback_api_key,
         timeout=timeout,
     )
 

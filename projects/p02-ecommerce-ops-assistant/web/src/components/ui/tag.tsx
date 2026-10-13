@@ -8,7 +8,7 @@ const tones: Record<TagTone, string> = {
   green: "bg-success-bg text-success",
   amber: "bg-warning-bg text-warning",
   red: "bg-danger-bg text-danger",
-  purple: "bg-brand-50 text-brand-400",
+  purple: "bg-brand-50 text-brand-700",
 };
 
 /** 状态标签：柔和底色 + 同色文字，用于状态/分类/计数。 */

@@ -3,34 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOSS智库 · 统一控制台</title>
+    <title>RAG 知识库 · 统一控制台</title>
     <!-- Chart.js 统计图表 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Markdown 渲染 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- 代码高亮 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/bash.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/json.min.js"></script>
+    <!-- 统一设计系统：tokens.css 是配色唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
+    <link rel="stylesheet" href="/shared/ui-kit/tokens.css">
+    <script src="/shared/config/services.js"></script>
+    <script src="/shared/ui-kit/ui-kit.js"></script>
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --primary-light: #eef2ff;
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --text-secondary: #64748b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            /* 颜色统一引用 shared/ui-kit/tokens.css 的 --cp-* 令牌（改一处，全平台生效） */
+            --primary: var(--cp-brand);
+            --primary-hover: var(--cp-brand-hover);
+            --primary-light: var(--cp-brand-bg);
+            --bg: var(--cp-bg);
+            --surface: var(--cp-surface);
+            --elevated: var(--cp-elevated);
+            --border: var(--cp-line);
+            --text: var(--cp-ink1);
+            --text-secondary: var(--cp-ink2);
+            --text-muted: var(--cp-ink3);
+            --success: var(--cp-success);
+            --success-bg: var(--cp-success-bg);
+            --warning: var(--cp-warning);
+            --warning-bg: var(--cp-warning-bg);
+            --danger: var(--cp-danger);
+            --danger-bg: var(--cp-danger-bg);
             --radius: 8px;
-            --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.025);
+            --shadow: 0 1px 3px rgba(16,24,40,0.06), 0 0 0 1px rgba(16,24,40,0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(16,24,40,0.08), 0 4px 6px -2px rgba(16,24,40,0.04);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -38,6 +48,20 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
+        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--cp-line); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C0C8D6; }
+        /* Form elements */
+        input[type="text"], select, textarea {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        input[type="text"]::placeholder, textarea::placeholder {
+            color: var(--text-muted);
         }
         
         /* 布局 */
@@ -151,6 +175,9 @@
             padding: 24px;
             box-shadow: var(--shadow);
         }
+
+        /* Chart.js 容器：必须定高 + relative，否则 responsive 模式会一轮轮把画布撑高 */
+        .chart-box { position: relative; height: 260px; width: 100%; }
         
         /* Tab 面板 */
         .tab-panel { display: none; }
@@ -272,6 +299,40 @@
         .log-list li {
             margin: 2px 0;
         }
+
+        /* 上传列表的清理入口：行内 ✕ 移除 + 列表级「清空列表」 */
+        .file-list-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 16px 0 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .file-list-bar[hidden] { display: none; }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .btn-ghost:hover { color: var(--danger); border-color: var(--danger); }
+        .file-remove {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .file-remove:hover { color: var(--danger); background: var(--bg); }
         
         /* 文档管理表格 */
         .doc-toolbar {
@@ -297,6 +358,21 @@
         .btn:hover {
             background: var(--primary-hover);
         }
+        /* 文档行内的删除按钮：比主按钮小一档，危险色 */
+        .btn-danger {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s, color 0.15s;
+        }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+        .btn-danger:disabled { opacity: .45; cursor: not-allowed; }
+        .dup-warn { font-size: 11px; color: var(--warning); margin-top: 2px; }
         .section-title {
             font-size: 14px;
             font-weight: 600;
@@ -471,6 +547,48 @@
             color: var(--text);
             border: 1px solid var(--border);
         }
+        /* 引用与阶段进度需要更宽的bubble，否则一条引用被挤成竖排 */
+        .qa-msg-a { max-width: 92%; }
+        .qa-bubble-a { flex: 1; min-width: 0; }
+        .qa-answer { white-space: pre-wrap; word-break: break-word; }
+        .qa-answer.error { color: var(--danger); }
+        .qa-thinking { color: var(--text-secondary); font-size: 13px; }
+        .qa-progress { margin-bottom: 8px; font-size: 12px; color: var(--text-secondary); }
+        .qa-progress summary { cursor: pointer; }
+        .qa-progress ul { margin: 6px 0 0 16px; padding: 0; }
+        .qa-progress li { margin: 2px 0; }
+        .qa-sources {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .qa-sources-title { font-weight: 600; margin-bottom: 6px; }
+        .qa-source {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+        }
+        .qa-source-head {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+            flex-wrap: wrap;
+            color: var(--text);
+            font-weight: 500;
+        }
+        .qa-source-score { color: var(--primary); font-weight: 600; }
+        .qa-source-preview {
+            margin-top: 4px;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
         
         .qa-input-area {
             display: flex;
@@ -504,22 +622,22 @@
         }
     </style>
 </head>
-<body>
+<body class="cp-app" data-cp-module="p04" data-cp-brand-src="/shared/config/brand.json">
 
 <div class="layout">
     <!-- 侧边栏 -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <div class="sidebar-logo-icon">
+                <div class="sidebar-logo-icon cp-brandmark" data-cp-brand="logo">
                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
                     </svg>
                 </div>
                 <div class="sidebar-logo-text">
-                    <h2>BOSS智库</h2>
-                    <p>智能知识管理平台</p>
+                    <h2>RAG 知识库</h2>
+                    <p>智能知识管理平台 · <span data-cp-brand="company">云枢智能</span></p>
                 </div>
             </div>
         </div>
@@ -582,6 +700,10 @@
                     <p>支持 PDF / Markdown，多文件批量导入</p>
                     <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.md">
                 </div>
+                <div class="file-list-bar" id="fileListBar" hidden>
+                    <span id="fileListCount"></span>
+                    <button class="btn-ghost" type="button" onclick="clearFileList()">清空列表</button>
+                </div>
                 <div id="fileList" class="file-list"></div>
             </div>
         </div>
@@ -611,6 +733,7 @@
                             <th>主体名称</th>
                             <th>创建时间</th>
                             <th>状态</th>
+                            <th style="width:88px;">操作</th>
                         </tr>
                     </thead>
                     <tbody id="docTableBody"></tbody>
@@ -651,7 +774,7 @@
                             </div>
                             <div>
                                 <div class="qa-header-title">知识库检索问答</div>
-                                <div class="qa-header-desc">基于 RAG 的智能问答，从知识库中检索相关内容</div>
+                                <div class="qa-header-desc">流式作答，回答附引用来源可回溯；检索不到相关内容会明确拒答</div>
                             </div>
                         </div>
                         <button class="qa-clear-btn" onclick="clearQAThread()">清空对话</button>
@@ -664,8 +787,8 @@
                                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                                 </svg>
                             </div>
-                            <h3>你好，我是 BOSS 智库助手</h3>
-                            <p>输入你的问题，我会从知识库中检索相关内容并给出回答</p>
+                            <h3>你好，我是 RAG 知识库助手</h3>
+                            <p>输入问题，我从知识库检索后作答，并附上引用来源；检索不到会明确拒答</p>
                         </div>
                     </div>
                     
@@ -707,15 +830,17 @@
                 </div>
             </div>
             
-            <!-- 图表区域 -->
+            <!-- 图表区域：canvas 必须由「定高的相对定位容器」包住。
+                 Chart.js 在 responsive + maintainAspectRatio:false 下按父容器高度 sizing，
+                 只给 canvas 写 height 属性会让它每轮 resize 都长高一点 —— 表现为看板无限向下滚。 -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
                 <div class="card">
                     <h3 style="margin-bottom:16px;font-size:16px;">文档上传趋势（近7天）</h3>
-                    <canvas id="uploadTrendChart" height="200"></canvas>
+                    <div class="chart-box"><canvas id="uploadTrendChart"></canvas></div>
                 </div>
                 <div class="card">
                     <h3 style="margin-bottom:16px;font-size:16px;">文档状态分布</h3>
-                    <canvas id="docStatusChart" height="200"></canvas>
+                    <div class="chart-box"><canvas id="docStatusChart"></canvas></div>
                 </div>
             </div>
             
@@ -742,20 +867,44 @@
 
 <script>
     // Tab 切换
+    function switchTab(tabId) {
+        const item = document.querySelector('.nav-item[data-tab="' + tabId + '"]');
+        if (!item) return false;
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        item.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+        if (tabId === 'tab-docs') refreshDocs();
+        if (tabId === 'tab-dashboard') initDashboard();
+        return true;
+    }
+
     document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            item.classList.add('active');
-            document.getElementById(item.dataset.tab).classList.add('active');
-            if (item.dataset.tab === 'tab-docs') refreshDocs();
-            if (item.dataset.tab === 'tab-dashboard') initDashboard();
-        });
+        item.addEventListener('click', () => switchTab(item.dataset.tab));
     });
+
+    // 深链：/console.html?tab=docs 直接打开「文档管理」。
+    // 之前只能落在默认的「上传导入」，演示脚本没法一步指到要看的地方。
+    (function selectInitialTab() {
+        const wanted = new URLSearchParams(location.search).get('tab');
+        if (!wanted) return;
+        switchTab(wanted.startsWith('tab-') ? wanted : 'tab-' + wanted);
+    })();
     
     // 数据看板
     let uploadTrendChart = null;
     let docStatusChart = null;
+
+    // 图表配色从 --cp-* 令牌读，写死深灰会在浅色主题下糊成一片
+    function chartPalette() {
+        const cs = getComputedStyle(document.documentElement);
+        const v = (n, f) => (cs.getPropertyValue(n) || '').trim() || f;
+        return {
+            ink: v('--cp-ink2', '#5A6472'),
+            grid: v('--cp-line', '#DDE2EA'),
+            surface: v('--cp-surface', '#FFFFFF')
+        };
+    }
     
     async function initDashboard() {
         try {
@@ -807,6 +956,7 @@
         }
         
         if (uploadTrendChart) uploadTrendChart.destroy();
+        const CH = chartPalette();
         uploadTrendChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -814,8 +964,8 @@
                 datasets: [{
                     label: '上传数量',
                     data: data,
-                    borderColor: '#6366f1',
-                    backgroundColor: 'rgba(99,102,241,0.1)',
+                    borderColor: '#3370FF',
+                    backgroundColor: 'rgba(51,112,255,0.15)',
                     tension: 0.4,
                     fill: true
                 }]
@@ -824,10 +974,11 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false, labels: { color: CH.ink } }
                 },
                 scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    y: { beginAtZero: true, ticks: { stepSize: 1, color: CH.ink }, grid: { color: CH.grid }, border: { color: CH.grid } },
+                    x: { ticks: { color: CH.ink }, grid: { color: CH.grid }, border: { color: CH.grid } }
                 }
             }
         });
@@ -850,14 +1001,14 @@
                 labels: ['已完成', '处理中', '失败'],
                 datasets: [{
                     data: [statusCount.completed, statusCount.processing, statusCount.failed],
-                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                    backgroundColor: ['#16A34A', '#B4690E', '#D92D20']
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'bottom' }
+                    legend: { position: 'bottom', labels: { color: chartPalette().ink } }
                 }
             }
         });
@@ -919,18 +1070,21 @@
         const html = `
             <div class="file-item" id="${id}">
                 <div class="file-info">
-                    <span class="file-name">${file.name}</span>
+                    <span class="file-name">${escapeHtml(file.name)}</span>
                     <span class="file-size">${(file.size / 1024).toFixed(2)} KB</span>
                     <div class="progress-bar-container"><div class="progress-bar"></div></div>
                     <details class="log-details"><summary>日志（点击展开）</summary><ul class="log-list"></ul></details>
                 </div>
                 <div class="status-badge status-uploading">上传中...</div>
+                <button class="file-remove" type="button" title="从列表移除">&times;</button>
             </div>`;
         fileList.insertAdjacentHTML('afterbegin', html);
         const itemEl = document.getElementById(id);
         const statusBadge = itemEl.querySelector('.status-badge');
         const progressBar = itemEl.querySelector('.progress-bar');
         const progressContainer = itemEl.querySelector('.progress-bar-container');
+        itemEl.querySelector('.file-remove').addEventListener('click', () => removeFileItem(itemEl));
+        updateFileListBar();
         
         const formData = new FormData();
         formData.append('files', file);
@@ -939,7 +1093,10 @@
             progressContainer.style.display = 'block';
             updateProgressBar(progressBar, 50);
             const response = await fetch('/upload', { method: 'POST', body: formData });
-            if (!response.ok) throw new Error('Upload failed');
+            if (!response.ok) {
+                const detail = await response.text().catch(() => '');
+                throw new Error(detail.slice(0, 200) || ('HTTP ' + response.status));
+            }
             const result = await response.json();
             const taskId = result.task_ids[0];
             updateProgressBar(progressBar, 30);
@@ -948,8 +1105,14 @@
             pollStatus(taskId, itemEl);
         } catch (error) {
             console.error(error);
-            statusBadge.textContent = '失败';
+            statusBadge.textContent = '上传失败';
             statusBadge.className = 'status-badge status-error';
+            const logListEl = itemEl.querySelector('.log-list');
+            logListEl.innerHTML = '';
+            const li = document.createElement('li');
+            li.textContent = '上传失败：' + error.message;
+            logListEl.appendChild(li);
+            itemEl.querySelector('.log-details summary').textContent = '日志（上传失败，点击展开）';
         }
     }
     
@@ -981,6 +1144,7 @@
             try {
                 const res = await fetch(`/status/${taskId}`);
                 const data = await res.json();
+                if (!document.body.contains(itemEl)) { clearInterval(interval); return; }
                 renderLogs(itemEl, data.done_list, data.running_list);
                 if (data.status === 'completed') {
                     statusBadge.textContent = '已完成';
@@ -997,6 +1161,59 @@
                 }
             } catch (e) { console.error('Polling error', e); }
         }, 2000);
+        itemEl.__stopPolling = () => clearInterval(interval);
+        itemEl.dataset.taskId = taskId;
+    }
+
+    // 「移除」只作用于本轮上传的进度列表：既不会中断服务器端正在跑的导入，
+    // 也不会删除已入库文档 —— 删文档要在「文档管理」里做，确认框里把这点讲明白。
+    function isItemRunning(el) {
+        const badge = el.querySelector('.status-badge');
+        if (!badge) return false;
+        return !/已完成|失败|上传失败/.test(badge.textContent);
+    }
+
+    function dropFileItem(el) {
+        if (el.__stopPolling) el.__stopPolling();
+        el.remove();
+        updateFileListBar();
+    }
+
+    function removeFileItem(itemEl) {
+        const name = (itemEl.querySelector('.file-name') || {}).textContent || '该文件';
+        if (isItemRunning(itemEl)) {
+            const lines = [
+                '「' + name + '」仍在处理中。',
+                '',
+                '移除这一行只是去掉进度显示：服务器端的导入不会中断，导入完成后文档仍会出现在「文档管理」里。',
+                '要删除已入库的文档，请到「文档管理」中点「删除」（会连带清理它的向量切片）。',
+                '',
+                '确定从当前列表移除这一条？',
+            ];
+            if (!confirm(lines.join('\n'))) return;
+        }
+        dropFileItem(itemEl);
+    }
+
+    function clearFileList() {
+        const items = Array.from(fileList.querySelectorAll('.file-item'));
+        if (items.length === 0) return;
+        const running = items.filter(isItemRunning).length;
+        const msg = running
+            ? '列表里有 ' + items.length + ' 条记录，其中 ' + running + ' 条仍在处理中。\n'
+              + '清空只去掉本页的进度显示，不会中断服务器端导入，也不会删除已入库文档。\n\n确定清空？'
+            : '确定清空当前列表的 ' + items.length + ' 条上传记录？\n已入库的文档不受影响，可在「文档管理」中查看与删除。';
+        if (!confirm(msg)) return;
+        items.forEach(el => { if (el.__stopPolling) el.__stopPolling(); el.remove(); });
+        updateFileListBar();
+    }
+
+    function updateFileListBar() {
+        const bar = document.getElementById('fileListBar');
+        const count = document.getElementById('fileListCount');
+        const n = fileList.querySelectorAll('.file-item').length;
+        if (count) count.textContent = '本次上传记录 ' + n + ' 条';
+        if (bar) bar.hidden = n === 0;
     }
     
     // 文档管理
@@ -1025,25 +1242,86 @@
         }
     }
     
+    // 文件名等来自上传内容，拼进 DOM 前必须转义
+    function escapeHtml(text) {
+        return String(text === undefined || text === null ? '' : text)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    // 向量库按 file_title（文件名去扩展名）归属切片，与后端 doc_file_title 口径一致
+    function fileTitleOf(filename) {
+        return String(filename || '').replace(/\.[^.]+$/, '');
+    }
+
     function renderDocTable(docs) {
         const tbody = document.getElementById('docTableBody');
         tbody.innerHTML = '';
         if (docs.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);padding:24px;">暂无文档</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);padding:24px;">暂无文档</td></tr>';
             return;
         }
+        // 同名文件共享 file_title，删除会连带清掉对方的向量 —— 先统计出来提示
+        const stemCount = {};
+        docs.forEach(d => {
+            const s = fileTitleOf(d.filename);
+            stemCount[s] = (stemCount[s] || 0) + 1;
+        });
         docs.forEach(doc => {
             const tr = document.createElement('tr');
             const createdAt = doc.created_at ? new Date(doc.created_at).toLocaleString('zh-CN') : '-';
-            const fileSize = formatFileSize(doc.file_size);
+            const title = fileTitleOf(doc.filename);
+            const dup = stemCount[title] > 1;
             tr.innerHTML = `
-                <td>${doc.filename}</td>
-                <td>${doc.item_name || '-'}</td>
-                <td>${createdAt}</td>
-                <td><span class="badge ${doc.status}">${getStatusText(doc.status)}</span></td>
+                <td>${escapeHtml(doc.filename)}
+                    <div style="font-size:11px;color:var(--text-muted);">${formatFileSize(doc.file_size)}</div>
+                    ${dup ? '<div class="dup-warn">与另一份同名，删除会一并清理其向量</div>' : ''}</td>
+                <td>${escapeHtml(doc.item_name || '-')}</td>
+                <td>${escapeHtml(createdAt)}</td>
+                <td><span class="badge ${escapeHtml(doc.status)}">${getStatusText(doc.status)}</span></td>
+                <td></td>
             `;
+            const cell = tr.lastElementChild;
+            const btn = document.createElement('button');
+            btn.className = 'btn-danger';
+            btn.type = 'button';
+            btn.textContent = '删除';
+            btn.addEventListener('click', () => deleteDoc(doc, dup, btn));
+            cell.appendChild(btn);
             tbody.appendChild(tr);
         });
+    }
+
+    async function deleteDoc(doc, hasSameName, btn) {
+        const chunks = (doc.chunk_count === undefined || doc.chunk_count === null)
+            ? '未知' : doc.chunk_count;
+        const lines = [
+            '确定删除「' + doc.filename + '」？',
+            '',
+            '会同时删除它在向量库里的 ' + chunks + ' 条切片，删除后「检索问答」不再命中该文档。',
+        ];
+        if (hasSameName) {
+            lines.push('', '⚠ 列表里还有同名文件：向量按文件名（去扩展名）归属，同名文档的切片会被一并清理。');
+        }
+        lines.push('', '服务器上的原始文件保留，未删除。');
+        if (!confirm(lines.join('\n'))) return;
+
+        btn.disabled = true;
+        btn.textContent = '删除中';
+        try {
+            const res = await fetch('/documents/' + encodeURIComponent(doc.task_id), { method: 'DELETE' });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || data.code !== 200) {
+                throw new Error(data.detail || data.message || ('HTTP ' + res.status));
+            }
+            alert('已删除：清理切片向量 ' + (data.removed_chunks || 0) + ' 条、主体记录 '
+                + (data.removed_item_names || 0) + ' 条');
+            refreshDocs();
+        } catch (e) {
+            alert('删除失败：' + e.message);
+            btn.disabled = false;
+            btn.textContent = '删除';
+        }
     }
     
     function formatFileSize(bytes) {
@@ -1082,79 +1360,237 @@
         });
     }
     
-    // 问答功能
-    const qaThread = document.getElementById('qaThread');
-    const qaInput = document.getElementById('qaInput');
-    
-    qaInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendQuery();
-        }
-    });
-    
-    async function sendQuery() {
-        const question = qaInput.value.trim();
-        if (!question) return;
-        
-        // 隐藏欢迎界面
-        const welcome = document.getElementById('qaWelcome');
-        if (welcome) welcome.style.display = 'none';
-        
-        // 添加用户消息
-        addQAMessage(question, 'q');
-        qaInput.value = '';
-        
-        // 添加AI加载消息
-        const aiMsgId = addQAMessage('正在思考...', 'a', true);
-        
-        try {
-            const res = await fetch('/query', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: question })
-            });
-            const data = await res.json();
-            
-            // 更新AI消息
-            const aiMsg = document.getElementById(aiMsgId);
-            if (aiMsg) {
-                aiMsg.querySelector('.qa-bubble').textContent = data.answer || '抱歉，未能找到答案';
-            }
-        } catch (e) {
-            const aiMsg = document.getElementById(aiMsgId);
-            if (aiMsg) {
-                aiMsg.querySelector('.qa-bubble').textContent = '请求失败，请稍后重试';
-            }
-        }
-    }
-    
-    function addQAMessage(text, type, isLoading = false) {
-        const id = 'msg-' + Math.random().toString(36).substr(2, 9);
-        const html = `
-            <div class="qa-msg qa-msg-${type}" id="${id}">
-                <div class="qa-avatar qa-avatar-${type}">${type === 'q' ? '我' : 'AI'}</div>
-                <div class="qa-bubble qa-bubble-${type}">${isLoading ? '<span style="opacity:0.6;">正在思考...</span>' : text}</div>
-            </div>
-        `;
-        qaThread.insertAdjacentHTML('beforeend', html);
-        qaThread.scrollTop = qaThread.scrollHeight;
-        return id;
-    }
-    
-    function clearQAThread() {
-        qaThread.innerHTML = `
+    const QA_WELCOME_HTML = `
             <div class="qa-welcome" id="qaWelcome">
                 <div class="qa-welcome-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                     </svg>
                 </div>
-                <h3>你好，我是 BOSS 智库助手</h3>
-                <p>输入你的问题，我会从知识库中检索相关内容并给出回答</p>
+                <h3>你好，我是 RAG 知识库助手</h3>
+                <p>输入问题，我从知识库检索后作答，并附上引用来源；检索不到会明确拒答</p>
+            </div>
+    `;
+
+    // ── 检索问答 ──
+    // 必须走 is_stream + /stream/{session_id}：非流式的 /query 要等整条流程图跑完
+    // （实测 30s+），浏览器会先断开连接，表现就是原来那句「请求失败，请稍后重试」。
+    const qaThread = document.getElementById('qaThread');
+    const qaInput = document.getElementById('qaInput');
+    const QA_SESSION_KEY = 'kb_console_session_id';
+    let qaSessionId = localStorage.getItem(QA_SESSION_KEY) || '';
+    if (!qaSessionId) {
+        qaSessionId = 'kb-console-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+        localStorage.setItem(QA_SESSION_KEY, qaSessionId);
+    }
+    let qaBusy = false;
+
+    qaInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendQuery();
+        }
+    });
+
+    function qaSetBusy(busy) {
+        qaBusy = busy;
+        const btn = document.querySelector('.qa-input-area .btn');
+        if (btn) {
+            btn.disabled = busy;
+            btn.textContent = busy ? '生成中' : '发送';
+        }
+    }
+
+    async function sendQuery() {
+        const question = qaInput.value.trim();
+        if (!question || qaBusy) return;
+
+        const welcome = document.getElementById('qaWelcome');
+        if (welcome) welcome.style.display = 'none';
+
+        addQAMessage(question, 'q');
+        qaInput.value = '';
+        const bubble = addQAStreamBubble();
+        qaSetBusy(true);
+
+        const state = { raw: '', es: null, timer: null, settled: false };
+        const settle = () => {
+            if (state.settled) return;
+            state.settled = true;
+            clearTimeout(state.timer);
+            if (state.es) state.es.close();
+            qaSetBusy(false);
+        };
+        // 兜底：后端或模型端点卡住时给出可排查的原因，而不是一直「正在思考」
+        state.timer = setTimeout(() => {
+            failQA(bubble, '等待超过 120 秒仍未收到回答。多为模型端点超时或不可用；'
+                + '具体原因看后端日志 _runtime/logs/p04.log（按 session 检索）。');
+            settle();
+        }, 120000);
+
+        try {
+            const res = await fetch('/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: question, session_id: qaSessionId, is_stream: true })
+            });
+            if (!res.ok) {
+                const detail = await res.text().catch(() => '');
+                throw new Error(detail.slice(0, 300) || ('HTTP ' + res.status));
+            }
+            const data = await res.json();
+            const sid = data.session_id || qaSessionId;
+            const es = new EventSource('/stream/' + encodeURIComponent(sid));
+            state.es = es;
+
+            es.addEventListener('progress', (ev) => {
+                const d = parseQAEvent(ev);
+                if (d) renderQAProgress(bubble, d.done_list, d.running_list);
+            });
+            es.addEventListener('delta', (ev) => {
+                const d = parseQAEvent(ev);
+                if (d && d.delta) {
+                    state.raw += d.delta;
+                    setQAAnswer(bubble, state.raw);
+                }
+            });
+            es.addEventListener('final', (ev) => {
+                const d = parseQAEvent(ev) || {};
+                const text = (typeof d.answer === 'string' && d.answer.trim()) ? d.answer : (state.raw || '');
+                setQAAnswer(bubble, text || '知识库中没有检索到足够相关的内容，已拒答（未编造）。');
+                renderQASources(bubble, d.sources || []);
+                collapseQAProgress(bubble);
+                settle();
+            });
+            es.addEventListener('error', (ev) => {
+                if (!ev.data) return;           // 连接层错误走 onerror
+                const d = parseQAEvent(ev) || {};
+                failQA(bubble, d.error || '后端生成回答时出错');
+                collapseQAProgress(bubble);
+                settle();
+            });
+            es.onerror = () => {
+                if (es.readyState !== EventSource.CLOSED) return;   // 浏览器还会自动重连
+                if (!state.settled) {
+                    failQA(bubble, state.raw
+                        ? '回答流中断，以上为已收到的部分内容。'
+                        : 'SSE 连接已断开，未收到回答。');
+                }
+                settle();
+            };
+        } catch (e) {
+            failQA(bubble, '请求失败：' + (e.message || String(e)));
+            collapseQAProgress(bubble);
+            settle();
+        }
+    }
+
+    function parseQAEvent(ev) {
+        try { return JSON.parse(ev.data || '{}'); } catch (_) { return null; }
+    }
+
+    function addQAMessage(text, type) {
+        const id = 'msg-' + Math.random().toString(36).substr(2, 9);
+        const html = `
+            <div class="qa-msg qa-msg-${type}" id="${id}">
+                <div class="qa-avatar qa-avatar-${type}">${type === 'q' ? '我' : 'AI'}</div>
+                <div class="qa-bubble qa-bubble-${type}">${escapeHtml(text)}</div>
             </div>
         `;
+        qaThread.insertAdjacentHTML('beforeend', html);
+        qaThread.scrollTop = qaThread.scrollHeight;
+        return document.getElementById(id);
     }
+
+    function addQAStreamBubble() {
+        const id = 'msg-' + Math.random().toString(36).substr(2, 9);
+        qaThread.insertAdjacentHTML('beforeend', `
+            <div class="qa-msg qa-msg-a" id="${id}">
+                <div class="qa-avatar qa-avatar-a">AI</div>
+                <div class="qa-bubble qa-bubble-a">
+                    <details class="qa-progress" open>
+                        <summary>阶段进度（等待中）</summary>
+                        <ul><li>已发起检索请求…</li></ul>
+                    </details>
+                    <div class="qa-answer"><span class="qa-thinking">正在检索知识库并生成回答…</span></div>
+                    <div class="qa-sources" hidden></div>
+                </div>
+            </div>
+        `);
+        qaThread.scrollTop = qaThread.scrollHeight;
+        return document.getElementById(id);
+    }
+
+    function setQAAnswer(bubble, text) {
+        const el = bubble.querySelector('.qa-answer');
+        el.classList.remove('error');
+        el.textContent = text;
+        qaThread.scrollTop = qaThread.scrollHeight;
+    }
+
+    function failQA(bubble, message) {
+        const el = bubble.querySelector('.qa-answer');
+        el.classList.add('error');
+        el.textContent = message;
+    }
+
+    function renderQAProgress(bubble, doneList, runningList) {
+        const details = bubble.querySelector('.qa-progress');
+        if (!details) return;
+        const done = Array.isArray(doneList) ? doneList : [];
+        const running = Array.isArray(runningList) ? runningList : [];
+        details.querySelector('summary').textContent =
+            '阶段进度（已完成' + done.length + '，进行中' + running.length + '）';
+        const ul = details.querySelector('ul');
+        ul.innerHTML = '';
+        const lines = [...done.map(normalizeDoneLog), ...running.map(normalizeRunningLog)];
+        if (lines.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = '后端尚未上报节点…';
+            ul.appendChild(li);
+            return;
+        }
+        lines.forEach((line) => {
+            const li = document.createElement('li');
+            li.textContent = line;
+            ul.appendChild(li);
+        });
+    }
+
+    function collapseQAProgress(bubble) {
+        const details = bubble.querySelector('.qa-progress');
+        if (details) details.removeAttribute('open');
+    }
+
+    // 引用来源：门禁要求「检索问答带引用」，回答必须能回溯到具体切片
+    function renderQASources(bubble, sources) {
+        const box = bubble.querySelector('.qa-sources');
+        if (!box) return;
+        if (!Array.isArray(sources) || sources.length === 0) {
+            box.hidden = true;
+            return;
+        }
+        box.hidden = false;
+        box.innerHTML = '<div class="qa-sources-title">引用来源 ' + sources.length + ' 条</div>' + sources.map((s, i) => `
+            <div class="qa-source">
+                <div class="qa-source-head">
+                    <span>[${i + 1}] ${escapeHtml(s.file_title || s.item_name || '未知文档')}</span>
+                    ${s.item_name ? '<span>· ' + escapeHtml(s.item_name) + '</span>' : ''}
+                    <span class="qa-source-score">相关性 ${escapeHtml(s.score === undefined ? '-' : s.score)}</span>
+                </div>
+                <div class="qa-source-preview">${escapeHtml((s.content_preview || '').slice(0, 320))}</div>
+            </div>`).join('');
+        qaThread.scrollTop = qaThread.scrollHeight;
+    }
+
+    async function clearQAThread() {
+        // 只清本页历史不够：会话记忆存在 MongoDB，不清后端会一直带着旧上下文回答
+        try {
+            await fetch('/history/' + encodeURIComponent(qaSessionId), { method: 'DELETE' });
+        } catch (e) { console.warn('清空服务端历史失败', e); }
+        qaThread.innerHTML = QA_WELCOME_HTML;
+    }
+
 </script>
 
 </body>

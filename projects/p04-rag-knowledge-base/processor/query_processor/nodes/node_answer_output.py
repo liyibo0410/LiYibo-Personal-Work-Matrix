@@ -243,7 +243,8 @@ class NodeAnswerOutput(NodeBase):
                 fallback_text = self._build_fallback_answer(state)
                 final_text = final_text or fallback_text
                 push_to_session(session_id, SSEEvent.DELTA, {"delta": fallback_text})
-                push_to_session(session_id, SSEEvent.END, {"answer": fallback_text})
+                # 收敛事件由本节点末尾的 FINAL 统一发出，这里不再补发（SSEEvent 里没有 END，
+                # 之前那行 SSEEvent.END 会在降级路径上抛 AttributeError，把整个流程带崩）
 
             state["answer"] = final_text
         else:

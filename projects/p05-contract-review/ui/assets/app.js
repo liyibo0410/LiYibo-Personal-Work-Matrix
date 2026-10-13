@@ -77,15 +77,21 @@
   }
   function initTheme() {
     let saved = null;
-    try { saved = localStorage.getItem('cr-theme'); } catch (e) { saved = null; }
-    if (saved !== 'light' && saved !== 'dark') saved = 'dark';
+    try {
+      // 外壳挂载时用 ?cp-theme= 传初值；cp_theme 是与平台一致的键，cr-theme 兼容旧值
+      const m = /[?&]cp-theme=(light|dark)/.exec(location.search);
+      saved = m ? m[1] : (localStorage.getItem('cp_theme_v2') || localStorage.getItem('cr-theme'));
+    } catch (e) { saved = null; }
+    if (saved !== 'light' && saved !== 'dark') saved = 'light';
     document.documentElement.setAttribute('data-theme', saved);
     return saved;
   }
   function toggleTheme() {
     const cur = currentTheme() === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', cur);
-    try { localStorage.setItem('cr-theme', cur); } catch (e) { }
+    try { localStorage.setItem('cp_theme_v2', cur); } catch (e) { }
+    // 独立访问时自管；挂进外壳时外壳是主题真源，这里只回传不坚持
+    if (window.CP && typeof CP.postToParent === 'function') { CP.postToParent({ type: 'cp:theme', theme: cur }); }
     paintThemeBtn();
     toast(cur === 'dark' ? '已切换到深色控制台主题' : '已切换到浅色主题（适合长文本阅读与打印）', 'ok');
     return cur;
@@ -298,7 +304,8 @@
     const logoSrc = theme === 'light' ? '/assets/logo-sm-light.png' : '/assets/logo-sm.png';
     const html = [
       '<a class="brand" href="/" title="返回审查大盘">',
-      '<img class="brand-logo" src="' + logoSrc + '" alt="' + BRAND.full + ' 标识" width="30" height="31">',
+      '<img class="brand-logo" src="' + logoSrc + '" data-cp-brand-logo-src="' + logoSrc +
+      '" alt="' + BRAND.full + ' 标识" width="30" height="31">',
       '<span class="brand-txt"><b>' + BRAND.full + '</b>',
       // 副标题只放中文描述（英文全称进 title）：原来把英文一起塞进来，240px 上限下
       // 必然被 ellipsis 截断，而截断处又没有 title 兜底 —— 用户永远看不到全文。
@@ -321,6 +328,8 @@
     paintThemeBtn();
     mountFooter();
     renderRoleBar();
+    // 顶栏/页脚是 JS 注入的，品牌节点（自定义 logo、公司名）要在注入后再刷一遍
+    if (global.CP && global.CP.applyBrand) { global.CP.applyBrand(); }
   }
 
   /* 版权页脚：所有页面统一注入，无需各页面各写一份 */
@@ -329,11 +338,13 @@
     const f = document.createElement('footer');
     f.className = 'site-footer';
     const theme = currentTheme();
+    const mark = theme === 'light' ? '/assets/logo-sm-light.png' : '/assets/logo-sm.png';
     f.innerHTML =
       '<div class="fl">' +
-      '<img src="' + (theme === 'light' ? '/assets/logo-sm-light.png' : '/assets/logo-sm.png') + '" alt="' + BRAND.full + '">' +
+      '<img src="' + mark + '" data-cp-brand-logo-src="' + mark + '" alt="' + BRAND.full + '">' +
       '<span class="sig">（' + BRAND.en + '）</span>' +
-      '<span>© ' + new Date().getFullYear() + ' ' + BRAND.full + ' · 保留所有权利</span>' +
+      '<span>© ' + new Date().getFullYear() + ' <span data-cp-brand="company">云枢智能</span> · ' +
+      BRAND.full + ' · 保留所有权利</span>' +
       '</div>' +
       '<div class="spacer"></div>' +
       '<div class="fl"><span>规则引擎判定 · 大模型辅以措辞 · 全程可离线运行</span>' +

@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepAgents 深度搜索项目 · Day04 从零到一 PyCharm 实战指南</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/ini.min.js"></script>
+<style>
+  :root{
+    --bg:#0b1020; --bg2:#0e1530; --panel:#121a35; --panel2:#0f1730;
+    --line:#26335c; --line2:#31406e;
+    --txt:#e8ecf8; --dim:#9aa7cc; --faint:#6b78a5;
+    --cyan:#22d3ee; --blue:#60a5fa; --purple:#a78bfa; --green:#34d399;
+    --amber:#fbbf24; --red:#f87171; --pink:#f472b6;
+    --grad:linear-gradient(120deg,#22d3ee,#60a5fa 45%,#a78bfa);
+    --codebg:#0a0f22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:20px}
+  body{background:var(--bg);color:var(--txt);font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;line-height:1.75;font-size:15px}
+  ::selection{background:rgba(34,211,238,.25)}
+  /* ===== 顶部进度条 ===== */
+  #prog{position:fixed;top:0;left:0;height:3px;width:0;background:var(--grad);z-index:999;transition:width .1s}
+  /* ===== 侧边导航 ===== */
+  #side{position:fixed;left:0;top:0;bottom:0;width:288px;background:rgba(14,21,48,.92);backdrop-filter:blur(14px);border-right:1px solid var(--line);overflow-y:auto;z-index:100;padding:22px 14px 40px;scrollbar-width:thin;scrollbar-color:#31406e transparent}
+  #side::-webkit-scrollbar{width:6px}
+  #side::-webkit-scrollbar-thumb{background:#31406e;border-radius:3px}
+  .logo{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;border-bottom:1px solid var(--line);margin-bottom:14px}
+  .logo-badge{width:36px;height:36px;border-radius:10px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#06122a;box-shadow:0 4px 18px rgba(34,211,238,.35)}
+  .logo-txt b{display:block;font-size:14px;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .logo-txt span{font-size:11px;color:var(--faint)}
+  .nav-sec{font-size:11px;color:var(--faint);letter-spacing:.12em;text-transform:uppercase;padding:14px 10px 6px;font-weight:700}
+  .nav-sec:first-child{padding-top:2px}
+  .nav-item{display:block;padding:7px 10px;border-radius:8px;color:var(--dim);text-decoration:none;font-size:13px;border:1px solid transparent;transition:.18s;margin:1px 0}
+  .nav-item:hover{color:var(--txt);background:rgba(34,211,238,.08)}
+  .nav-item.active{color:var(--cyan);background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.25)}
+  .nav-item small{color:var(--faint);font-size:11px}
+  /* ===== 主区 ===== */
+  #main{margin-left:288px;padding:0 46px 90px;max-width:1180px}
+  /* 英雄区 */
+  .hero{padding:72px 8px 40px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:-40% -20% auto;height:520px;background:radial-gradient(600px 300px at 30% 0%,rgba(34,211,238,.14),transparent 70%),radial-gradient(600px 300px at 75% 10%,rgba(167,139,250,.14),transparent 70%);pointer-events:none}
+  .hero .tag{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;border:1px solid rgba(34,211,238,.35);background:rgba(34,211,238,.08);color:var(--cyan);font-size:12px;font-weight:600;letter-spacing:.05em}
+  .hero h1{font-size:40px;line-height:1.25;margin:20px 0 14px;font-weight:800;position:relative}
+  .hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{color:var(--dim);font-size:16px;max-width:760px;position:relative}
+  .hero-stats{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;position:relative}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 20px;min-width:150px}
+  .stat b{font-size:24px;display:block;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .stat span{font-size:12px;color:var(--faint)}
+  /* 章节 */
+  .chapter{margin-top:64px;scroll-margin-top:20px}
+  .chapter h2{font-size:27px;font-weight:800;display:flex;align-items:center;gap:14px;margin-bottom:10px}
+  .chapter h2 .num{flex:none;width:42px;height:42px;border-radius:12px;background:var(--grad);color:#06122a;display:inline-flex;align-items:center;justify-content:center;font-size:19px;font-weight:900;box-shadow:0 6px 20px rgba(34,211,238,.3)}
+  .chapter .lead{color:var(--dim);font-size:15.5px;margin-bottom:26px;max-width:880px}
+  .chapter h3{font-size:20px;font-weight:700;margin:40px 0 12px;padding-left:14px;border-left:4px solid var(--cyan);line-height:1.4}
+  .chapter h4{font-size:16.5px;font-weight:700;margin:30px 0 10px;color:#d7e3ff}
+  .chapter h4::before{content:"▍";color:var(--purple);margin-right:6px}
+  .chapter p{color:#c3cdea;margin:10px 0}
+  .chapter ul,.chapter ol{margin:10px 0 10px 22px;color:#c3cdea}
+  .chapter li{margin:5px 0}
+  .chapter b{color:#fff}
+  .chapter code.inline{background:rgba(34,211,238,.12);color:var(--cyan);padding:1px 7px;border-radius:6px;font-size:13px;font-family:Consolas,"Courier New",monospace}
+  /* 提示框 */
+  .tip,.warn,.pycharm{display:flex;gap:12px;padding:14px 18px;border-radius:12px;margin:18px 0;border:1px solid;font-size:14px}
+  .tip{background:rgba(52,211,153,.07);border-color:rgba(52,211,153,.3)}
+  .tip .ic{color:var(--green);font-size:18px;line-height:1.4}
+  .warn{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.3)}
+  .warn .ic{color:var(--amber);font-size:18px;line-height:1.4}
+  .pycharm{background:rgba(96,165,250,.07);border-color:rgba(96,165,250,.32)}
+  .pycharm .ic{color:var(--blue);font-size:18px;line-height:1.4}
+  /* 卡片网格 */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:18px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;transition:.2s}
+  .card:hover{border-color:var(--line2);transform:translateY(-2px)}
+  .card .ico{font-size:24px;margin-bottom:8px}
+  .card b{font-size:15px}
+  .card p{font-size:13px;color:var(--dim);margin-top:6px}
+  .tag-chip{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:600;margin:2px 4px 2px 0}
+  .c-cyan{background:rgba(34,211,238,.12);color:var(--cyan)}
+  .c-purple{background:rgba(167,139,250,.14);color:var(--purple)}
+  .c-green{background:rgba(52,211,153,.12);color:var(--green)}
+  .c-amber{background:rgba(251,191,36,.12);color:var(--amber)}
+  .c-blue{background:rgba(96,165,250,.14);color:var(--blue)}
+  .c-pink{background:rgba(244,114,182,.12);color:var(--pink)}
+  /* 图文卡(图) */
+  .figcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin:22px 0}
+  .figcard .fig-title{font-size:14px;font-weight:700;margin-bottom:14px;color:#d7e3ff}
+  .figcard .fig-title::before{content:"🖼 ";margin-right:4px}
+  /* 代码块 */
+  .codepanel{margin:20px 0;border-radius:14px;border:1px solid var(--line);overflow:hidden;background:var(--codebg)}
+  .codehead{display:flex;align-items:center;gap:8px;padding:9px 16px;background:rgba(96,165,250,.08);border-bottom:1px solid var(--line);font-family:Consolas,"Courier New",monospace;font-size:13px;color:#bcd0ff}
+  .codehead .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .codehead .fn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .codehead .path{color:var(--faint);font-size:11.5px}
+  .codepanel pre{margin:0;padding:16px 18px;overflow-x:auto;background:transparent}
+  .codepanel code{font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.75;color:#dbe4ff}
+  .hljs{background:transparent !important;padding:0 !important}
+  /* 逐行注释表 */
+  .annots{background:rgba(167,139,250,.06);border-top:1px dashed rgba(167,139,250,.35);padding:14px 18px}
+  .annots .a-title{font-size:12.5px;font-weight:800;color:var(--purple);letter-spacing:.08em;margin-bottom:10px}
+  .annots .a-title::before{content:"📝 "}
+  .annots table{width:100%;border-collapse:collapse;font-size:13px}
+  .annots th{color:var(--faint);font-weight:600;text-align:left;padding:3px 6px;font-size:11.5px;border-bottom:1px solid rgba(167,139,250,.25)}
+  .annots td{padding:5px 6px;vertical-align:top;border-bottom:1px solid rgba(167,139,250,.1)}
+  .annots td.ln{width:74px;color:var(--faint);font-family:Consolas,monospace;white-space:nowrap}
+  .annots td.why{color:#c3cdea}
+  .annots tr:hover td{background:rgba(167,139,250,.08)}
+  /* 流程步骤 */
+  .steps{counter-reset:st;margin:18px 0}
+  .step{display:flex;gap:16px;padding:14px 0;border-bottom:1px dashed var(--line)}
+  .step:last-child{border-bottom:none}
+  .step .n{counter-increment:st;flex:none;width:34px;height:34px;border-radius:50%;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.4);color:var(--cyan);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .step .n::before{content:counter(st)}
+  .step b{display:block;font-size:15px}
+  .step p{font-size:13.5px;color:var(--dim);margin-top:2px}
+  /* 表格 */
+  table.tbl{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;background:var(--panel);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+  table.tbl th{background:rgba(34,211,238,.1);color:var(--cyan);padding:10px 14px;text-align:left;font-weight:700}
+  table.tbl td{padding:9px 14px;border-top:1px solid var(--line);color:#c3cdea}
+  table.tbl tr:hover td{background:rgba(34,211,238,.04)}
+  /* 页脚 */
+  footer{margin-top:80px;padding:30px 0;border-top:1px solid var(--line);color:var(--faint);font-size:13px;text-align:center}
+  /* 折叠 */
+  details{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:14px 0;padding:12px 18px}
+  details summary{cursor:pointer;font-weight:700;color:#d7e3ff;font-size:14.5px}
+  details[open] summary{margin-bottom:10px;color:var(--cyan)}
+  /* 响应式 */
+  @media(max-width:960px){
+    #side{transform:translateX(-100%);transition:.25s}
+    #side.open{transform:none;box-shadow:0 0 60px rgba(0,0,0,.6)}
+    #main{margin-left:0;padding:0 18px 70px}
+    .hero h1{font-size:29px}
+    .grid2,.grid3{grid-template-columns:1fr}
+    #menuBtn{display:flex}
+  }
+  #menuBtn{display:none;position:fixed;top:14px;left:14px;z-index:200;width:40px;height:40px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--cyan);font-size:18px;align-items:center;justify-content:center;cursor:pointer}
+  .backtop{position:fixed;right:22px;bottom:26px;width:42px;height:42px;border-radius:12px;background:var(--panel);border:1px solid var(--line);color:var(--cyan);font-size:17px;cursor:pointer;z-index:150;display:none;align-items:center;justify-content:center}
+  .backtop.show{display:flex}
+  .flow-svg{width:100%;height:auto}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<button id="menuBtn" onclick="document.getElementById('side').classList.toggle('open')">☰</button>
+<button class="backtop" id="backtop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- ============ 侧边导航 ============ -->
+<nav id="side">
+  <div class="logo">
+    <div class="logo-badge">D</div>
+    <div class="logo-txt"><b>DeepAgents 深度搜索</b><span>Day04 · PyCharm 实战指南</span></div>
+  </div>
+  <div class="nav-sec">📖 项目介绍</div>
+  <a class="nav-item" href="#s1">一、深度搜索项目介绍</a>
+  <a class="nav-item" href="#s1-1" style="padding-left:26px"><small>1.1 项目目标</small></a>
+  <a class="nav-item" href="#s1-2" style="padding-left:26px"><small>1.2 Agent Design</small></a>
+  <a class="nav-item" href="#s1-3" style="padding-left:26px"><small>1.3 工具体系</small></a>
+  <div class="nav-sec">🔧 搭建指南</div>
+  <a class="nav-item" href="#s2">二、项目搭建指南</a>
+  <a class="nav-item" href="#s2-1" style="padding-left:26px"><small>2.1 创建项目</small></a>
+  <a class="nav-item" href="#s2-2" style="padding-left:26px"><small>2.2 依赖与 uv sync</small></a>
+  <a class="nav-item" href="#s2-3" style="padding-left:26px"><small>2.3 包结构</small></a>
+  <a class="nav-item" href="#s2-4" style="padding-left:26px"><small>2.4 基础导入</small></a>
+  <div class="nav-sec">🧠 功能开发</div>
+  <a class="nav-item" href="#s3">三、功能开发 &amp; 测试</a>
+  <a class="nav-item" href="#s3-1" style="padding-left:26px"><small>3.1 大模型准备</small></a>
+  <a class="nav-item" href="#s3-2" style="padding-left:26px"><small>3.2 提示词配置</small></a>
+  <a class="nav-item" href="#s3-3" style="padding-left:26px"><small>3.3 Sub Agents 实现</small></a>
+  <a class="nav-item" href="#s3-4" style="padding-left:26px"><small>3.4 Main Agent 实现</small></a>
+  <div class="nav-sec">🌐 Web 接口</div>
+  <a class="nav-item" href="#s4">四、Web 接口开发与测试</a>
+  <a class="nav-item" href="#s4-1" style="padding-left:26px"><small>4.1 server 基础准备</small></a>
+  <a class="nav-item" href="#s4-2" style="padding-left:26px"><small>4.2 开启任务 /api/task</small></a>
+  <a class="nav-item" href="#s4-3" style="padding-left:26px"><small>4.3 上传 /api/upload</small></a>
+  <a class="nav-item" href="#s4-4" style="padding-left:26px"><small>4.4 下载 /api/download</small></a>
+  <a class="nav-item" href="#s4-5" style="padding-left:26px"><small>4.5 文件列表 /api/files</small></a>
+  <a class="nav-item" href="#s4-6" style="padding-left:26px"><small>4.6 WebSocket 实时通讯</small></a>
+  <a class="nav-item" href="#s4-7" style="padding-left:26px"><small>4.7 启动服务器 main.py</small></a>
+  <a class="nav-item" href="#s5" style="padding-left:26px"><small>4.8 端到端运行验证</small></a>
+</nav>
+
+<!-- ============ 主内容 ============ -->
+<div id="main">
+
+<!-- ======== 英雄区 ======== -->
+<header class="hero">
+  <span class="tag">⚡ DeepAgents Framework · FastAPI · WebSocket · Vue3</span>
+  <h1>基于 DeepAgents 的<br><span class="grad">「深度搜索研究员」</span> 全栈实战</h1>
+  <p>1 个主智能体统筹调度 + 3 个专家子智能体并行协作 + 6 大工具，从 0 到 1 在 PyCharm 中搭建、开发、联调、上线。本文按教程文档顺序逐步讲解，<b>每一段代码都附逐行注释</b>。</p>
+  <div class="hero-stats">
+    <div class="stat"><b>1 + 3</b><span>主智能体 + 专家子智能体</span></div>
+    <div class="stat"><b>6</b><span>硬核工具库</span></div>
+    <div class="stat"><b>3</b><span>信息源：网络/数据库/私库</span></div>
+    <div class="stat"><b>8000</b><span>后端端口 · 5173 前端</span></div>
+  </div>
+</header>
+
+<!-- ======== 第一章 ======== -->
+<section class="chapter" id="s1">
+  <h2><span class="num">一</span>深度搜索项目介绍</h2>
+  <p class="lead">本项目是 DeepAgents 框架的一个典型最佳实践，目标是构建一个<b>「深度搜索研究员」</b>：模拟人类高级研究员的思维，把「搜索 → 阅读 → 反思 → 再搜索」的多轮迭代过程自动化，实现广覆盖、高精准、强可靠的复杂信息处理与文档生成。</p>
+
+  <h3 id="s1-1">1.1 项目目标</h3>
+  <p>利用 DeepAgents 构建<b>多路组合智能体系统</b>，以「主智能体统筹 + 多专家子智能体并行协作」为核心架构，突破传统 RAG 单次检索的局限，通过多轮迭代深度挖掘海量信息背后的隐藏逻辑，最终自动产出高质量的 Markdown / PDF 分析文档。</p>
+
+  <h3 id="s1-2">1.2 Agent Design —— 1 主 + N 专</h3>
+  <p>系统采用「1 主 + N 专」多路组合模式：主智能体是「项目经理」，不亲自干活，只负责<b>理解需求 → 拆解任务 → 调度资源 → 交付结果</b>；三类专家子智能体各司其职、并行工作。</p>
+
+  <div class="figcard">
+    <div class="fig-title">系统总体架构图（从用户指令到最终 PDF 的完整链路）</div>
+    <svg class="flow-svg" viewBox="0 0 900 470" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei,Segoe UI,sans-serif">
+      <defs>
+        <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#60a5fa"/></linearGradient>
+        <linearGradient id="gB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient>
+        <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#7f93c9"/></marker>
+      </defs>
+      <rect x="10" y="10" width="880" height="450" rx="20" fill="#0f1730" stroke="#26335c"/>
+      <!-- 用户 -->
+      <rect x="60" y="60" width="140" height="52" rx="12" fill="#121a35" stroke="#22d3ee"/>
+      <text x="130" y="83" fill="#e8ecf8" font-size="14" text-anchor="middle" font-weight="700">👤 用户指令</text>
+      <text x="130" y="101" fill="#9aa7cc" font-size="11" text-anchor="middle">WebSocket 提问</text>
+      <!-- 服务器 -->
+      <rect x="250" y="60" width="150" height="52" rx="12" fill="#121a35" stroke="#60a5fa"/>
+      <text x="325" y="83" fill="#e8ecf8" font-size="14" text-anchor="middle" font-weight="700">FastAPI Server</text>
+      <text x="325" y="101" fill="#9aa7cc" font-size="11" text-anchor="middle">/api/task · :8000</text>
+      <!-- 主智能体 -->
+      <rect x="440" y="60" width="180" height="52" rx="12" fill="url(#gA)"/>
+      <text x="530" y="84" fill="#06122a" font-size="14" text-anchor="middle" font-weight="800">Main Agent</text>
+      <text x="530" y="102" fill="#06122a" font-size="11" text-anchor="middle">主智能体 · 项目经理</text>
+      <!-- 箭头 -->
+      <line x1="200" y1="86" x2="248" y2="86" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr)"/>
+      <line x1="400" y1="86" x2="438" y2="86" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr)"/>
+      <text x="300" y="55" fill="#6b78a5" font-size="10.5">注入 ThreadID &amp; SessionDir</text>
+      <!-- 思考循环框 -->
+      <rect x="60" y="150" width="560" height="240" rx="16" fill="#121a35" stroke="#31406e" stroke-dasharray="6 4"/>
+      <text x="80" y="176" fill="#22d3ee" font-size="13" font-weight="700">⟳ Thinking Loop 思考循环</text>
+      <!-- 规划 -->
+      <rect x="110" y="195" width="130" height="46" rx="10" fill="#121a35" stroke="#fbbf24"/>
+      <text x="175" y="216" fill="#fbbf24" font-size="12.5" text-anchor="middle" font-weight="700">任务规划</text>
+      <text x="175" y="232" fill="#9aa7cc" font-size="10" text-anchor="middle">Planning</text>
+      <line x1="530" y1="112" x2="530" y2="193" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr)"/>
+      <!-- 分发 -->
+      <line x1="240" y1="218" x2="320" y2="218" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr)"/>
+      <rect x="322" y="195" width="120" height="46" rx="10" fill="#121a35" stroke="#f472b6"/>
+      <text x="382" y="216" fill="#f472b6" font-size="12.5" text-anchor="middle" font-weight="700">分发任务</text>
+      <text x="382" y="232" fill="#9aa7cc" font-size="10" text-anchor="middle">Dispatch</text>
+      <!-- 三个子智能体 -->
+      <rect x="90" y="285" width="150" height="52" rx="10" fill="#121a35" stroke="#22d3ee"/>
+      <text x="165" y="307" fill="#22d3ee" font-size="12" text-anchor="middle" font-weight="700">网络搜索助手</text>
+      <text x="165" y="325" fill="#9aa7cc" font-size="10" text-anchor="middle">Tavily 最多5次检索</text>
+      <rect x="275" y="285" width="150" height="52" rx="10" fill="#121a35" stroke="#34d399"/>
+      <text x="350" y="307" fill="#34d399" font-size="12" text-anchor="middle" font-weight="700">数据库查询助手</text>
+      <text x="350" y="325" fill="#9aa7cc" font-size="10" text-anchor="middle">MySQL 业务库</text>
+      <rect x="460" y="285" width="150" height="52" rx="10" fill="#121a35" stroke="#a78bfa"/>
+      <text x="535" y="307" fill="#a78bfa" font-size="12" text-anchor="middle" font-weight="700">RAGFlow 助手</text>
+      <text x="535" y="325" fill="#9aa7cc" font-size="10" text-anchor="middle">私有知识库</text>
+      <!-- 分发到子智能体 -->
+      <path d="M382 241 L165 283" stroke="#7f93c9" stroke-width="1.6" marker-end="url(#arr)" fill="none"/>
+      <path d="M382 241 L350 283" stroke="#7f93c9" stroke-width="1.6" marker-end="url(#arr)" fill="none"/>
+      <path d="M382 241 L535 283" stroke="#7f93c9" stroke-width="1.6" marker-end="url(#arr)" fill="none"/>
+      <!-- 子智能体结果回主 -->
+      <path d="M165 337 L165 360 Q165 375 200 375 L490 375 Q530 375 530 360 L530 337" stroke="#7f93c9" stroke-width="1.6" marker-end="url(#arr)" fill="none"/>
+      <path d="M350 337 L350 355" stroke="#7f93c9" stroke-width="1.6" marker-end="url(#arr)" fill="none"/>
+      <path d="M535 337 L535 360 Q535 375 490 375 L240 375 Q200 375 200 360 L200 337" stroke="#7f93c9" stroke-width="1.6" marker-end="url(#arr)" fill="none"/>
+      <text x="350" y="395" fill="#6b78a5" font-size="10" text-anchor="middle">结果回传 Main → 信息充足？不足再规划</text>
+      <!-- 生成工具 -->
+      <rect x="110" y="350" width="190" height="52" rx="10" fill="#121a35" stroke="#60a5fa"/>
+      <text x="205" y="372" fill="#60a5fa" font-size="12" text-anchor="middle" font-weight="700">① 撰写 generate_markdown</text>
+      <text x="205" y="390" fill="#9aa7cc" font-size="10" text-anchor="middle">Markdown 文档</text>
+      <rect x="320" y="350" width="190" height="52" rx="10" fill="#121a35" stroke="#34d399"/>
+      <text x="415" y="372" fill="#34d399" font-size="12" text-anchor="middle" font-weight="700">② 转换 convert_md_to_pdf</text>
+      <text x="415" y="390" fill="#9aa7cc" font-size="10" text-anchor="middle">Word 引擎 → PDF</text>
+      <!-- PDF 输出 -->
+      <rect x="700" y="150" width="170" height="240" rx="14" fill="#0f1730" stroke="#26335c"/>
+      <text x="785" y="185" fill="#a78bfa" font-size="13" font-weight="700" text-anchor="middle">📄 交付物</text>
+      <rect x="720" y="205" width="130" height="110" rx="10" fill="#121a35" stroke="#34d399"/>
+      <text x="785" y="245" fill="#34d399" font-size="12" text-anchor="middle" font-weight="700">报告 .md</text>
+      <text x="785" y="268" fill="#9aa7cc" font-size="11" text-anchor="middle">报告 .pdf</text>
+      <text x="785" y="296" fill="#6b78a5" font-size="10.5" text-anchor="middle">output/session_xx/</text>
+      <rect x="720" y="330" width="130" height="44" rx="10" fill="#121a35" stroke="#60a5fa"/>
+      <text x="785" y="350" fill="#60a5fa" font-size="11.5" text-anchor="middle">WebSocket 推送</text>
+      <text x="785" y="366" fill="#9aa7cc" font-size="10" text-anchor="middle">思考过程实时可见</text>
+      <path d="M560 376 L700 300" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+      <path d="M700 240 L660 218 L620 218" stroke="#7f93c9" stroke-width="1.6" marker-end="url(#arr)" fill="none" stroke-dasharray="4 3"/>
+      <!-- 底栏 -->
+      <text x="340" y="438" fill="#6b78a5" font-size="11" text-anchor="middle">主智能体 Tools：read_file_content（读上传文件）· generate_markdown · convert_md_to_pdf</text>
+    </svg>
+  </div>
+
+  <h4>三个专家子智能体</h4>
+  <div class="grid3">
+    <div class="card"><div class="ico">🌐</div><b>网络搜索助手</b><p>公开知识广域检索，支持由浅入深、多轮递进搜索，最多 5 次精准检索，覆盖 3 个以上信息维度。</p><span class="tag-chip c-cyan">Tavily</span></div>
+    <div class="card"><div class="ico">🗄️</div><b>数据库查询助手</b><p>对接企业业务库，支持表结构读取、数据预览、自定义 SQL，精准提取商品 / 业务明细数据。</p><span class="tag-chip c-green">MySQL</span></div>
+    <div class="card"><div class="ico">📚</div><b>RAGFlow 助手</b><p>对接私有知识库：先获取可用助手列表，再分层提问、深度检索，确保内部专有信息安全可用。</p><span class="tag-chip c-purple">RAGFlow</span></div>
+  </div>
+
+  <h3 id="s1-3">1.3 工具体系 —— 主智能体三大工具</h3>
+  <div class="grid3">
+    <div class="card"><div class="ico">📖</div><b>read_file_content</b><p>读取用户上传到工作目录的文件内容，让 Agent 能「先读后答」。</p><span class="tag-chip c-blue">上传文件</span></div>
+    <div class="card"><div class="ico">📝</div><b>generate_markdown</b><p>按标准格式生成 Markdown 分析文档，自动保存到会话工作目录。</p><span class="tag-chip c-amber">撰写</span></div>
+    <div class="card"><div class="ico">📄</div><b>convert_md_to_pdf</b><p>调用本机 Word 引擎（COM）把 Markdown 高质量转换为 PDF。</p><span class="tag-chip c-pink">转换</span></div>
+  </div>
+
+  <div class="tip"><span class="ic">💡</span><div><b>设计理念：</b>主智能体不直接执行搜索/查询，它只做「理解需求 → 拆解任务 → 调度子智能体 → 汇总报告」，这正是人类团队中项目经理的角色；子智能体各管一个信息维度，最后统一由主智能体生成交付物。</div></div>
+</section>
+
+<!-- ======== 第二章 ======== -->
+<section class="chapter" id="s2">
+  <h2><span class="num">二</span>项目搭建指南</h2>
+  <p class="lead">从创建项目目录开始，到引入前端、打通 API 通信基础、接入配置与工具，让工程「先立起来」，再进入功能开发。</p>
+
+  <h3 id="s2-1">2.1 在 PyCharm 中创建项目</h3>
+  <div class="steps">
+    <div class="step"><div class="n"></div><div><b>新建项目</b><p>PyCharm → <code class="inline">File → New Project</code> → 选择目录（例如 <code class="inline">D:\software\PycharmProjects\deep_agent_search</code>）。建议勾选「Create a main.py welcome script」可跳过。</p></div></div>
+    <div class="step"><div class="n"></div><div><b>配置 uv 解释器</b><p>项目会使用 <code class="inline">uv</code> 管理依赖。在 <code class="inline">Settings → Project → Python Interpreter</code> → <code class="inline">Add Interpreter → Add Local Interpreter…</code> → 类型选 <code class="inline">uv</code>（或 Virtualenv 后手动指定 uv 路径），Python 版本选 3.12，点 OK 创建 <code class="inline">.venv</code>。</p></div></div>
+    <div class="step"><div class="n"></div><div><b>验证解释器</b><p>打开下方 Terminal，确认路径前缀为项目 <code class="inline">.venv</code>：<code class="inline">uv venv --python 3.12</code> 手动重建也行。PyCharm 底部解释器一栏应显示 <code class="inline">Python 3.12 (.venv)</code>。</p></div></div>
+  </div>
+  <div class="pycharm"><span class="ic">🧩</span><div><b>PyCharm 小贴士：</b>如果 PyCharm 提示解释器失效（如换过电脑路径），先删除项目下 <code class="inline">.venv</code>，再用 <code class="inline">uv</code> 类型重建；uv 会在 <code class="inline">pyproject.toml + uv.lock</code> 存在时自动 <code class="inline">sync</code> 依赖，无需手动 pip install。</div></div>
+
+  <h3 id="s2-2">2.2 依赖包与 uv sync</h3>
+  <p>依赖统一声明在 <code class="inline">pyproject.toml</code> 中，用 <code class="inline">uv sync</code> 一键安装锁定版本。以下是核心依赖清单：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#f87171"></span><span class="fn">pyproject.toml</span><span class="path">项目根目录</span></div>
+    <pre><code class="language-toml">[project]
+name = "deep-agent-search"          # 项目名
+version = "0.1.0"                   # 版本号
+requires-python = ">=3.12"          # Python 版本下限（建议 3.12）
+dependencies = [                    # 运行时依赖列表（uv sync 会自动安装）
+    "deepagents>=0.2.8",            # DeepAgents 多智能体框架（核心）
+    "langchain-core>=0.3.0",        # LangChain 基础类型（tool/@tool）
+    "langchain-community",          # 社区集成（Tavily 搜索等）
+    "tavily-python",                # Tavily 网络搜索 API 客户端
+    "pymysql",                      # 纯 Python MySQL 驱动
+    "cryptography",                 # MySQL8 认证插件依赖
+    "fastapi",                      # Web 框架（后端）
+    "uvicorn",                      # ASGI 服务器（启动服务）
+    "python-multipart",             # FastAPI 文件上传解析
+    "websockets",                   # WebSocket 协议支持
+    "openai",                       # OpenAI 兼容接口（阿里云百炼）
+    "python-dotenv",                # 读取 .env 环境变量
+    "pyyaml",                       # 解析 prompts.yml 提示词
+    "python-docx",                  # 生成 Word 文档（PDF 转换引擎）
+    "pywin32",                      # Windows COM 调用 Word（Win 专用）
+    "aiofiles",                     # 异步文件读写
+    "requests",                     # HTTP 请求（RAGFlow API）
+]
+</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>配置</th><th>作用</th></tr>
+      <tr><td class="ln">[project]</td><td class="why">uv/pip 认识项目元信息的必需头——没有它 uv sync 可能清空环境（实测坑点）</td></tr>
+      <tr><td class="ln">dependencies</td><td class="why">按「框架 → 数据源 → Web → 工具」分组记忆：deepagents 负责智能体，tavily/pymysql/requests 负责三路信息源，fastapi/uvicorn/websockets 负责对外服务</td></tr>
+      <tr><td class="ln">pywin32</td><td class="why">仅 Windows 需要：通过 COM 调用本机 Word 把 Markdown 转 PDF</td></tr>
+    </table></div>
+  </div>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#34d399"></span><span class="fn">终端命令（PyCharm Terminal）</span></div>
+    <pre><code class="language-bash">uv sync              # 按 pyproject.toml + uv.lock 安装全部依赖到 .venv
+uv add 包名          # 新增依赖并自动写入 pyproject.toml
+uv run python --version   # 用虚拟环境运行任意命令</code></pre>
+    <div class="annots"><div class="a-title">说明</div><table>
+      <tr><td class="ln">uv sync</td><td class="why">开发期只需执行一次；之后每次从 git 拉取或换机器，重跑它即可恢复环境。若跨磁盘（如项目在 D 盘、venv 在 C 盘），加 <code>--link-mode=copy</code> 避免软链失败。</td></tr>
+    </table></div>
+  </div>
+
+  <h3 id="s2-3">2.3 项目包结构</h3>
+  <p>整个工程按职责划分目录，先记住这张「地图」，后面每一章都能对号入座：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#60a5fa"></span><span class="fn">目录结构总览</span></div>
+    <pre><code class="language-bash">deep_agent_search/
+├── main.py                 # 入口：配置日志 + 启动 FastAPI
+├── pyproject.toml          # 依赖清单（uv 用）
+├── uv.lock                 # 依赖锁定版本（自动生成）
+├── .env                    # 密钥配置：LLM / MySQL / RAGFlow / Tavily
+├── agent/                  # ⭐ 智能体核心包
+│   ├── llm.py              #   大模型对象（阿里云百炼 qwen）
+│   ├── load_prompts.py     #   读取 prompts.yml → 配置 dict
+│   ├── main_agent.py       #   主智能体组装 + 执行 + 进度上报
+│   └── sub_agents/         #   3 个专家子智能体
+│       ├── network_search_agent.py   # 网络搜索助手
+│       ├── db_sub_agent.py            # 数据库查询助手
+│       └── rag_sub_agent.py           # RAGFlow 助手
+├── api/                    # Web / 通信层
+│   ├── server.py           #   FastAPI 路由（任务/上传/下载/文件/WS）
+│   ├── context.py          #   会话上下文（ThreadID & SessionDir 隔离）
+│   └── monitor.py          #   WebSocket 连接管理与进度推送
+├── prompt/
+│   └── prompts.yml         #   所有智能体的提示词配置
+├── tools/                  # 主智能体的工具
+│   ├── upload_file_read_tool.py  # 读上传文件
+│   ├── markdown_tools.py         # 生成 Markdown
+│   ├── pdf_tools.py              # Markdown → PDF
+│   └── internet_search_tool.py   # Tavily 搜索（给子智能体用）
+├── utils/                  # 通用工具
+│   ├── logger_utils.py     #   日志封装
+│   ├── path_utils.py       #   路径解析（防穿越）
+│   └── converter_utils.py  #   Markdown→Word→PDF 核心转换
+├── sql/db.sql              # 建库建表 + 示例数据
+├── output/                 # 运行产物（每个会话一个目录）
+├── upload/                 # 用户上传文件（按会话分目录）
+└── ui/                     # 前端 Vue3 工程（端口 5173）</code></pre>
+  </div>
+
+  <h3 id="s2-4">2.4 基础导入：前端、通信层、配置与工具</h3>
+
+  <h4>2.4.1 导入前端项目（Vue3）</h4>
+  <p>前端源码是现成的 Vue3 工程（<code class="inline">ui/</code> 目录）。在 PyCharm 里打开 Terminal，<code class="inline">cd ui</code> 后安装依赖并启动开发服务器：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#34d399"></span><span class="fn">前端启动（PyCharm Terminal）</span></div>
+    <pre><code class="language-bash">cd ui                     # 进入前端工程目录
+npm install               # 安装 node_modules（首次较慢）
+npm run dev               # 启动 Vite 开发服务器 → http://localhost:5173/</code></pre>
+    <div class="annots"><div class="a-title">说明</div><table>
+      <tr><td class="ln">npm run dev</td><td class="why">Vite 热更新开发服务器，5173 端口。前端通过 <code>/api/task</code> 发任务、<code>/ws/{thread_id}</code> 订阅实时进度，右侧面板实时展示 Agent 思考过程与生成的文件。</td></tr>
+    </table></div>
+  </div>
+
+  <h4>2.4.2 API 通信层（api/ 包）</h4>
+  <p>通信层解决两个核心问题：<b>① 多用户/多会话隔离</b>——每个请求带一个 <code class="inline">thread_id</code>，ContextVar 保证并发不串数据；<b>② 实时进度推送</b>——WebSocket 管理器把 Agent 的思考过程推给前端。</p>
+
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#60a5fa"></span><span class="fn">api/context.py — 会话上下文隔离</span><span class="path">核心：ContextVar</span></div>
+    <pre><code class="language-python">"""会话上下文管理：用 ContextVar 做线程/协程级别的变量隔离"""
+from contextvars import ContextVar    # 上下文变量：每个异步任务有自己的值
+from typing import Optional
+
+# 当前会话的 thread_id（哪个用户在提问）
+_thread_id_var: ContextVar[Optional[str]] = ContextVar("thread_id", default=None)
+# 当前会话的输出目录（output/session_xx）
+_session_dir_var: ContextVar[Optional[str]] = ContextVar("session_dir", default=None)
+
+def set_thread_context(thread_id: str):
+    """保存 thread_id，返回 token 用于后续恢复"""
+    return _thread_id_var.set(thread_id)      # set 返回一个 token
+
+def get_thread_context() -> Optional[str]:
+    """读取当前会话的 thread_id"""
+    return _thread_id_var.get()
+
+def set_session_context(session_dir: str):
+    """保存当前会话的输出目录"""
+    return _session_dir_var.set(session_dir)
+
+def get_session_context() -> Optional[str]:
+    """读取当前会话的输出目录（工具保存文件时要用）"""
+    return _session_dir_var.get()
+
+def reset_session_context(session_token, thread_token):
+    """任务结束：用 token 恢复旧值，防止变量泄漏到下一个请求"""
+    _session_dir_var.reset(session_token)     # 撤销本次 set
+    _thread_id_var.reset(thread_token)</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">ContextVar</td><td class="why">比全局变量安全：同一进程里多个并发会话互不干扰，各自读到自己的值</td></tr>
+      <tr><td class="ln">set → token</td><td class="why">set 返回 token，reset(token) 可精确还原旧值，是「用完即还」的标准写法</td></tr>
+      <tr><td class="ln">get_thread/get_session</td><td class="why">工具函数内部通过 <code>get_session_context()</code> 拿到当前会话目录去写文件</td></tr>
+      <tr><td class="ln">reset_session_context</td><td class="why">在 <code>finally</code> 中调用，保证异常时也清理上下文</td></tr>
+    </table></div>
+  </div>
+
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#f472b6"></span><span class="fn">api/monitor.py — WebSocket 管理器与进度上报</span><span class="path">核心：ConnectionManager</span></div>
+    <pre><code class="language-python">"""实时监控：管理 WebSocket 连接，把智能体进度推送给前端"""
+import asyncio
+import json
+from typing import Dict
+from fastapi import WebSocket
+
+class ConnectionManager:
+    """WebSocket 连接管理器：按 thread_id 分组维护长连接"""
+
+    def __init__(self):
+        # thread_id -> 该会话的所有 WebSocket 连接
+        self.active_connections: Dict[str, list[WebSocket]] = {}
+        # 后端运行的事件循环（startup 事件里绑定，线程安全投递用）
+        self.loop = None
+
+    def set_loop(self, loop):
+        """服务启动时绑定主事件循环"""
+        self.loop = loop
+
+    async def connect(self, websocket: WebSocket, thread_id: str):
+        """接受连接并注册到对应会话分组"""
+        await websocket.accept()                 # 完成 WS 握手
+        if thread_id not in self.active_connections:
+            self.active_connections[thread_id] = []
+        self.active_connections[thread_id].append(websocket)
+
+    def disconnect(self, websocket: WebSocket, thread_id: str):
+        """连接断开时从分组中移除"""
+        if thread_id in self.active_connections:
+            self.active_connections[thread_id].remove(websocket)
+
+    async def _send_personal_message(self, message: dict, websocket: WebSocket):
+        """向单个连接发送 JSON"""
+        try:
+            await websocket.send_json(message)
+        except Exception:
+            pass                                # 客户端可能已断开，静默忽略
+
+    def _emit(self, event: str, message: str, thread_id: str | None = None):
+        """向某会话的所有连接广播事件（核心方法）"""
+        payload = {"event": event, "message": message}
+        # 没绑定 loop（如本地脚本测试）→ 打印到控制台即可
+        if self.loop is None:
+            print(f"[monitor] {event} | {message}")
+            return
+        for tid, conns in self.active_connections.items():
+            if thread_id and tid != thread_id:
+                continue                        # 只发给指定会话
+            for ws in conns:
+                # 协程投递到事件循环线程执行（线程安全）
+                asyncio.run_coroutine_threadsafe(
+                    self._send_personal_message(payload, ws), self.loop)
+
+    # ---- 以下是对外便捷方法：事件类型语义化 ----
+    def report_assistant(self, subagent_type: str, description: str):
+        """上报：主智能体准备调用某子智能体"""
+        self._emit("assistant", f"调用子智能体【{subagent_type}】: {description}")
+
+    def report_tool(self, tool_name: str, args=None):
+        """上报：智能体准备调用某工具"""
+        self._emit("tool", f"调用工具【{tool_name}】: {args}")
+
+    def report_task_result(self, content: str):
+        """上报：智能体返回最终结果"""
+        self._emit("result", content)
+
+    def report_session_dir(self, session_dir: str):
+        """上报：当前会话的输出目录（前端用于展示文件列表）"""
+        self._emit("session_dir", session_dir)
+
+# 全局单例：server.py 与各工具都 import 这一个实例
+manager = ConnectionManager()
+# 兼容旧命名：很多工具文件里写的是 monitor
+monitor = manager</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">active_connections</td><td class="why">dict 结构：thread_id → [WebSocket,...]，天然支持多客户端订阅同一会话</td></tr>
+      <tr><td class="ln">loop</td><td class="why">FastAPI 启动时把事件循环存进来；后台线程调用 <code>run_coroutine_threadsafe</code> 跨线程投递消息</td></tr>
+      <tr><td class="ln">_emit</td><td class="why">唯一出口：所有事件最终都走这里。脚本直跑时 loop 为 None，自动降级为控制台打印</td></tr>
+      <tr><td class="ln">report_*</td><td class="why">语义化上报：assistant=调子智能体、tool=调工具、result=最终结果、session_dir=输出目录</td></tr>
+      <tr><td class="ln">monitor = manager</td><td class="why">兼容别名，让各工具文件直接 <code>from api.monitor import monitor</code></td></tr>
+    </table></div>
+  </div>
+
+  <h4>2.4.3 配置文件 .env</h4>
+  <p>所有密钥与外部服务地址都放进 <code class="inline">.env</code>，代码里用 <code class="inline">python-dotenv</code> 读取。注意：<b>.env 不要提交到 git</b>（加入 .gitignore）。</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#fbbf24"></span><span class="fn">.env — 环境变量配置</span><span class="path">项目根目录</span></div>
+    <pre><code class="language-ini"># ===== 大模型（阿里云百炼，OpenAI 兼容）=====
+LLM_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+LLM_API_KEY=你的百炼API-KEY
+LLM_MODEL=qwen-plus
+
+# ===== MySQL 业务数据库 =====
+DB_HOST=127.0.0.1
+DB_PORT=3307
+DB_USER=root
+DB_PASSWORD=itwwy123456
+DB_NAME=pharma_db
+
+# ===== RAGFlow 私有知识库 =====
+RAGFLOW_API_URL=http://118.195.130.244
+RAGFLOW_API_KEY=ragflow-你的KEY
+
+# ===== Tavily 网络搜索 =====
+TAVILY_API_KEY=tvly-你的KEY</code></pre>
+    <div class="annots"><div class="a-title">说明</div><table>
+      <tr><th>变量</th><th>作用</th></tr>
+      <tr><td class="ln">LLM_*</td><td class="why">走 OpenAI 兼容协议连阿里云百炼；模型名如 qwen-plus / qwen3 系列</td></tr>
+      <tr><td class="ln">DB_*</td><td class="why">Docker 起的 MySQL：宿主机 3307 → 容器 3306；库 pharma_db 有 drugs/inventory/sales_records 三张表</td></tr>
+      <tr><td class="ln">RAGFLOW_*</td><td class="why">已部署的 RAGFlow 服务器地址与 API Key，用于私有知识库问答</td></tr>
+      <tr><td class="ln">TAVILY_API_KEY</td><td class="why">网络搜索 API 密钥，子智能体「网络搜索助手」使用</td></tr>
+    </table></div>
+  </div>
+
+  <h4>2.4.4 通用工具（utils/）</h4>
+  <p>三个基础工具：日志封装、路径解析、Markdown→PDF 转换引擎。它们是后续所有代码的地基。</p>
+
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#34d399"></span><span class="fn">utils/logger_utils.py — 日志封装</span></div>
+    <pre><code class="language-python">"""统一的日志工具：全项目共用一个 logger 实例"""
+import logging
+from logging.handlers import RotatingFileHandler  # 滚动文件日志（按大小轮转）
+from pathlib import Path
+
+# 日志根目录：项目根/logs
+_LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
+
+def configure_project_logging(level=logging.INFO):
+    """配置全局日志：控制台 + 滚动文件双输出"""
+    _LOG_DIR.mkdir(exist_ok=True)                 # 确保 logs 目录存在
+    fmt = logging.Formatter(                       # 日志格式模板
+        "%(asctime)s | %(levelname)-7s | %(name)s | %(message)s")
+    # ① 控制台 handler
+    console = logging.StreamHandler()
+    console.setFormatter(fmt)
+    # ② 文件 handler：5MB 一个文件，保留 3 份
+    file_handler = RotatingFileHandler(
+        _LOG_DIR / "app.log", maxBytes=5 * 1024 * 1024, backupCount=3, encoding="utf-8")
+    file_handler.setFormatter(fmt)
+
+    # 配置根 logger
+    root = logging.getLogger()
+    root.setLevel(level)
+    root.addHandler(console)
+    root.addHandler(file_handler)
+
+# 模块级单例 logger：所有文件直接 import 使用
+logger = logging.getLogger("deep_agent")
+
+# 若直接运行本文件，则自动初始化（方便单独调试）
+if __name__ == "__main__":
+    configure_project_logging()
+    logger.info("日志系统初始化完成")</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">RotatingFileHandler</td><td class="why">日志文件超过 5MB 自动轮转，保留最近 3 份，避免日志无限膨胀</td></tr>
+      <tr><td class="ln">configure_project_logging</td><td class="why">在 <code>main.py</code> 第一行调用；必须在 import 其他模块<b>之前</b>执行，否则它们的 logger 收不到 handler</td></tr>
+      <tr><td class="ln">logger = getLogger(...)</td><td class="why">模块级单例：<code>from utils.logger_utils import logger</code> 全项目共享</td></tr>
+    </table></div>
+  </div>
+
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#a78bfa"></span><span class="fn">utils/path_utils.py — 路径解析（安全）</span></div>
+    <pre><code class="language-python">"""路径工具：把相对路径安全解析到会话目录内，防止路径穿越"""
+from pathlib import Path
+import os
+
+def resolve_path(filename: str, session_dir: str) -> str:
+    """
+    将 filename 解析为 session_dir 下的绝对路径。
+    核心：无论传绝对路径还是相对路径，最终都收拢到会话目录里，
+    杜绝 `../../etc/passwd` 这类越权访问。
+    """
+    if not session_dir:
+        session_dir = "."                        # 兜底：未配置就用当前目录
+    session_path = Path(session_dir).resolve()   # 会话目录的绝对路径
+    input_path = Path(filename)                  # 目标文件名/路径
+
+    # ① 绝对路径：直接拼到会话目录下（丢弃盘符/根前缀）
+    if input_path.is_absolute():
+        full_path = session_path / input_path.name
+    # ② 相对路径：文件名可能含子目录（如 sub_dir/a.md）
+    else:
+        full_path = session_path / input_path
+
+    # ③ 安全校验：解析后必须仍在会话目录内
+    full_path = full_path.resolve()
+    if not str(full_path).startswith(str(session_path)):
+        raise ValueError(f"路径越界: {full_path}")
+    return str(full_path)</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">is_absolute 分支</td><td class="why">绝对路径只取文件名再拼到会话目录，避免写穿到系统目录</td></tr>
+      <tr><td class="ln">相对路径分支</td><td class="why">支持 <code>sub_dir/文件.md</code> 这种带子目录的写法</td></tr>
+      <tr><td class="ln">startswith 校验</td><td class="why">resolve() 后再检查前缀，防御 <code>..</code> 穿越攻击</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- ======== 第三章 ======== -->
+<section class="chapter" id="s3">
+  <h2><span class="num">三</span>功能开发 &amp; 测试</h2>
+  <p class="lead">本章按「大模型 → 提示词 → 子智能体 → 主智能体」的顺序，逐文件实现核心功能。每一段代码都严格按照教程源文件，并附逐行注释。</p>
+
+  <h3 id="s3-1">3.1 大模型准备</h3>
+  <h4>3.1.1 检查配置文件（.env）</h4>
+  <p>项目大模型走<b>阿里云百炼</b>的 OpenAI 兼容接口。先在 <code class="inline">.env</code> 中确认三个关键变量：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#fbbf24"></span><span class="fn">.env — LLM 配置</span></div>
+    <pre><code class="language-ini"># LLM配置
+DASHSCOPE_BASE_URL=https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+DASHSCOPE_API_KEY=sk-你的百炼密钥
+LLM_QWEN_PLUS=qwen3.6-flash</code></pre>
+    <div class="annots"><div class="a-title">说明</div><table>
+      <tr><th>变量</th><th>作用</th></tr>
+      <tr><td class="ln">DASHSCOPE_BASE_URL</td><td class="why">百炼的 OpenAI 兼容网关地址；<code>token-plan.cn-beijing</code> 是官方加速域名</td></tr>
+      <tr><td class="ln">LLM_QWEN_PLUS</td><td class="why">模型名存成变量，方便日后换模型只改这里</td></tr>
+    </table></div>
+  </div>
+
+  <h4>3.1.2 创建大模型对象（agent/llm.py）</h4>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#60a5fa"></span><span class="fn">agent/llm.py — 全局 LLM 单例</span></div>
+    <pre><code class="language-python">from dotenv import load_dotenv, find_dotenv   # 加载 .env 环境变量
+import os                                      # 读取环境变量
+from langchain.chat_models import init_chat_model  # 统一模型工厂
+
+load_dotenv(find_dotenv())                     # 自动寻找项目根 .env 并加载
+
+model = init_chat_model(                       # 创建可被 Agent 直接使用的大模型对象
+    model=os.getenv("LLM_QWEN_PLUS"),          # ① 模型名：qwen3.6-flash
+    model_provider="openai",                   # ② 走 OpenAI 协议（兼容百炼）
+    api_key=os.getenv("DASHSCOPE_API_KEY"),    # ③ 密钥
+    base_url=os.getenv("DASHSCOPE_BASE_URL"),  # ④ 网关地址
+)</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">load_dotenv(find_dotenv())</td><td class="why">find_dotenv 从当前目录向上找 .env，避免路径写死</td></tr>
+      <tr><td class="ln">init_chat_model</td><td class="why">LangChain 工厂函数，<code>model_provider="openai"</code> 表示用 OpenAI 兼容 API 调用任何模型</td></tr>
+      <tr><td class="ln">os.getenv(...)</td><td class="why">从环境变量取值——密钥不进代码库，安全且可迁移</td></tr>
+    </table></div>
+  </div>
+
+  <h3 id="s3-2">3.2 提示词配置 &amp; 加载</h3>
+  <h4>3.2.1 创建提示词配置文件（prompt/prompts.yml）</h4>
+  <p>所有智能体的「人设、职责、行为规则」统一写在 YAML 里，代码只负责读取。这是本项目的<b>提示词中枢</b>：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#a78bfa"></span><span class="fn">prompt/prompts.yml — 完整版</span></div>
+    <pre><code class="language-yaml"># [核心] 所有 Prompt 配置文件
+main_agent:
+  system_prompt: |
+    你是一个沃华医药公司的智能团队负责人，负责协调三个专家助手完成复杂任务
+    先占位~~~~~~~~~
+sub_agents:
+  tavily:
+    name: "网络搜索助手"
+    description: |
+      负责进行网络知识搜索的智能体助手，当需要从网络中查询数据的时候，可以执行数据检索，在检索后会返回一段检索结果.
+      在需要进行非内部信息(不是数据库数据和rag的数据)的公开信息查询时务必使用此助手进行查询。
+    system_prompt: |
+      你是一个专业的网络信息查询助手，你可以根据用户的问题，从互联网中检索相关信息，你掌握的工具包括 internet_search 工具，此工具可以根据用户的问题，从互联网中检索非内部的公开信息。
+      在检索网络知识的时候，至少检索2个角度的该问题，一共最多进行3次检索，如果超过3次，则不允许继续检索
+  db:
+    name: "数据库查询助手"
+    description: |
+      负责进行数据库查询的智能体助手。它可以查看数据库中有哪些表，读取表数据和查看表结构，并执行自定义SQL查询以获取精确的业务数据。
+      数据库中包含了企业的药品信息、药品库存信息、以及药品销售具体数据，可以看到所有特定商品的一切详细信息。但是数据库中不包含概括性的知识，只包含具体商品的信息。
+    system_prompt: |
+      你是一个专业的数据库查询助手。你可以直接与MySQL数据库交互来检索信息。
+      你掌握的工具包括：
+       1. list_sql_tables: 列出数据库中所有可用的表，这是了解数据库结构的第一步。
+       2. get_table_data: 读取指定表的前100行数据，用于快速预览数据内容和表列的信息。
+       3. execute_sql_query: 执行自定义SQL查询。当需要复杂的筛选、联接或聚合时使用此工具。
+      通常的工作流程是：先列出可用表(list_sql_tables)，确认表名；如果需要，预览表数据了解字段(get_table_data)；最后编写并执行SQL查询(execute_sql_query)以回答用户问题。
+  ragflow:
+    name: "RAGFlow助手"
+    description: |
+      负责与RAGFlow知识库进行交互的智能体助手
+    system_prompt: |
+      你是一个专业的RAGFlow知识库助手</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>语法</th><th>作用</th></tr>
+      <tr><td class="ln">main_agent.system_prompt</td><td class="why">主智能体人设；<code>|</code> 后是多行文本块</td></tr>
+      <tr><td class="ln">sub_agents.tavily/db/ragflow</td><td class="why">三个子智能体，每个含 name（显示名）、description（何时用我）、system_prompt（怎么干活）</td></tr>
+      <tr><td class="ln">description</td><td class="why">主智能体「调度依据」——它靠这段文字决定把任务派给谁</td></tr>
+      <tr><td class="ln">system_prompt</td><td class="why">子智能体自己的行为准则（检索次数上限、SQL 三步走等）</td></tr>
+      <tr><td class="ln">\| 块折叠标量</td><td class="why">YAML 的 Literal Block Scalar：以 <code>|</code> 开头，多行文本<b>完整保留换行</b>，适合写大段 Prompt</td></tr>
+    </table></div>
+  </div>
+
+  <h4>3.2.2 读取提示词文件（agent/load_prompts.py）</h4>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#60a5fa"></span><span class="fn">agent/load_prompts.py — 加载 YAML 为 Python dict</span></div>
+    <pre><code class="language-python"># 加载prompts.yaml中的prompt配置
+import yaml
+from pathlib import Path
+
+# 加载指定路径文件的函数
+def _load_yaml(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:  # 以 UTF-8 读文件（中文必需）
+        return yaml.safe_load(f)                        # 安全解析 YAML → dict
+
+# 加载项目中的yaml配置文件（parents[1] = 项目根目录）
+_yaml_path = Path(__file__).parents[1] / 'prompt/prompts.yml'
+_config = _load_yaml(_yaml_path)                        # 模块加载时立即执行一次
+
+# 主agent配置（dict：system_prompt）
+main_agent_config = _config['main_agent']
+# 所有子agent配置（dict：tavily / db / ragflow）
+sub_agents_config = _config['sub_agents']
+
+if __name__ == '__main__':
+    # 直接运行本文件可快速检查配置是否解析成功
+    print(_config)
+    print(main_agent_config)
+    print(sub_agents_config)</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">yaml.safe_load</td><td class="why">安全模式解析，不会执行 YAML 中的危险标签</td></tr>
+      <tr><td class="ln">Path(__file__).parents[1]</td><td class="why">无论从哪里启动，都基于文件位置定位项目根——避免「当前目录不同导致找不到配置」</td></tr>
+      <tr><td class="ln">main/sub_agents_config</td><td class="why">全局变量，其他模块直接 import；<code>if __name__=='__main__'</code> 便于单独调试</td></tr>
+    </table></div>
+  </div>
+  <div class="warn"><span class="ic">⚠️</span><div><b>注意导入名不一致：</b>教程中子智能体文件写的是 <code class="inline">from agent.load_prompt import sub_agents_config</code>（单数），而主智能体写 <code class="inline">from agent.load_prompts import main_agent_config</code>（复数）。若照抄导致 ModuleNotFoundError，统一文件名为 <code class="inline">load_prompts.py</code> 并同步所有 import 即可。</div></div>
+
+  <h3 id="s3-3">3.3 Sub Agents 实现（三个专家助手）</h3>
+
+  <!-- 3.3.1 网络搜索助手 -->
+  <h4>3.3.1 网络搜索助手（network_search_agent）</h4>
+  <p><b>职责</b>：负责公开互联网知识的广域检索。<b>提示词设计要点</b>：① 强制「至少检索 2 个角度」防止一次搜索就交差；② 硬性「最多 3 次检索」防止死循环烧 Token；③ 明确边界「只查非内部公开信息」，与数据库/RAG 助手不冲突。</p>
+  <div class="figcard">
+    <div class="fig-title">网络搜索助手执行策略（搜索 → 反思 → 再搜索）</div>
+    <svg class="flow-svg" viewBox="0 0 760 210" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei,Segoe UI,sans-serif">
+      <defs><marker id="arr2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#7f93c9"/></marker></defs>
+      <rect x="10" y="10" width="740" height="190" rx="18" fill="#0f1730" stroke="#26335c"/>
+      <rect x="30" y="70" width="130" height="46" rx="10" fill="#121a35" stroke="#22d3ee"/>
+      <text x="95" y="92" fill="#22d3ee" font-size="12.5" text-anchor="middle" font-weight="700">接收任务</text>
+      <text x="95" y="108" fill="#9aa7cc" font-size="10" text-anchor="middle">来自 Main Agent</text>
+      <line x1="160" y1="93" x2="195" y2="93" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="198" y="70" width="140" height="46" rx="10" fill="#121a35" stroke="#fbbf24"/>
+      <text x="268" y="92" fill="#fbbf24" font-size="12.5" text-anchor="middle" font-weight="700">思考拆解</text>
+      <text x="268" y="108" fill="#9aa7cc" font-size="10" text-anchor="middle">信息是否充足?</text>
+      <line x1="338" y1="93" x2="373" y2="93" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="376" y="70" width="130" height="46" rx="10" fill="#121a35" stroke="#f472b6"/>
+      <text x="441" y="92" fill="#f472b6" font-size="12.5" text-anchor="middle" font-weight="700">构造 Query</text>
+      <text x="441" y="108" fill="#9aa7cc" font-size="10" text-anchor="middle">换角度搜索</text>
+      <line x1="506" y1="93" x2="541" y2="93" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="544" y="70" width="140" height="46" rx="10" fill="#121a35" stroke="#60a5fa"/>
+      <text x="614" y="92" fill="#60a5fa" font-size="12.5" text-anchor="middle" font-weight="700">internet_search</text>
+      <text x="614" y="108" fill="#9aa7cc" font-size="10" text-anchor="middle">调用 Tavily API</text>
+      <line x1="614" y1="116" x2="614" y2="148" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="544" y="150" width="140" height="34" rx="10" fill="#121a35" stroke="#34d399"/>
+      <text x="614" y="171" fill="#34d399" font-size="11.5" text-anchor="middle">获取搜索结果</text>
+      <path d="M544 167 L430 167 Q400 167 400 116 L400 116" stroke="#7f93c9" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arr2)" fill="none"/>
+      <text x="462" y="155" fill="#6b78a5" font-size="10">次数&lt;3 且 角度≥2 ?</text>
+      <rect x="30" y="150" width="150" height="34" rx="10" fill="#121a35" stroke="#a78bfa"/>
+      <text x="105" y="171" fill="#a78bfa" font-size="11.5" text-anchor="middle">汇总整理 → 返回 Main</text>
+      <path d="M268 116 L268 130 Q268 138 200 138 L105 138 Q95 138 95 148" stroke="#7f93c9" stroke-width="1.8" marker-end="url(#arr2)" fill="none"/>
+    </svg>
+  </div>
+  <p><b>① 工具层</b>——先到 <a class="nav-item" style="display:inline;padding:0;color:var(--cyan)" href="https://app.tavily.com/" target="_blank">Tavily 官网</a> 注册获取 <code class="inline">TAVILY_API_KEY</code>（免费版每月 1000 次请求，学习完全够用），写入 .env，再实现搜索工具：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#22d3ee"></span><span class="fn">tools/internet_search_tool.py — Tavily 搜索工具</span></div>
+    <pre><code class="language-python">from utils.logger_utils import logger          # 日志
+import os
+from dotenv import load_dotenv                  # .env 加载
+from typing import Literal                      # 限定枚举类型
+from langchain_core.tools import tool           # LangChain 工具装饰器
+from tavily import TavilyClient                 # Tavily 官方客户端
+from api.monitor import monitor                 # 进度上报
+
+load_dotenv()                                   # 加载 .env
+_tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))  # 全局客户端
+
+@tool
+def internet_search(
+        query: str,                                              # ① 查询内容
+        topic: Literal["general", "news", "finance"] = "general",# ② 类别（枚举）
+        max_results: int = 5,                                    # ③ 返回条数
+        include_raw_content: bool = False                        # ④ 是否含正文
+):
+    """
+    进行网络搜索工具,可以查询数据库或者rag助手中不包含的数据
+    :param query: 查询内容
+    :param topic: 查询类别
+    :param max_results: 查询返回的条数
+    :param include_raw_content: 是否精简返回
+    :return: 查询的返回结果
+    """
+    # 1. 日志记录（调试排查用）
+    logger.debug(f"开始进行internet_search工具的调用!查询内容:{query} , 查询数量:{max_results}")
+    # 2. 向前端推送「正在调用工具」事件
+    monitor.report_tool(tool_name="网络搜索工具", args={"query": query, "topic": topic,
+                                                       "max_results": max_results,
+                                                       "include_raw_content": include_raw_content})
+    # 3. 真正调用 Tavily 搜索
+    return _tavily_client.search(
+        query=query,
+        topic=topic,
+        max_results=max_results,
+        include_raw_content=include_raw_content
+    )</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">@tool</td><td class="why">把普通函数变成 LLM 可调用的 Tool（自动生成 JSON Schema 给模型）</td></tr>
+      <tr><td class="ln">Literal[...]</td><td class="why">类型即约束：模型只能传 general/news/finance 之一，天然防瞎传</td></tr>
+      <tr><td class="ln">monitor.report_tool</td><td class="why">前端实时看到「正在用网络搜索工具」——教学演示的关键体验</td></tr>
+      <tr><td class="ln">_tavily_client.search</td><td class="why">Tavily 返回结构化结果（链接+清洗后正文），比裸 Google 省 Token</td></tr>
+    </table></div>
+  </div>
+
+  <p><b>② 智能体层</b>——把「名字 + 描述 + 工具 + 提示词」打包成 DeepAgents 认识的子智能体字典：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#22d3ee"></span><span class="fn">agent/sub_agents/network_search_agent.py — 组装网络助手</span></div>
+    <pre><code class="language-python">from agent.load_prompt import sub_agents_config   # 提示词配置（tavily 段）
+from tools.internet_search_tool import internet_search  # 搜索工具
+
+# 网络请求 subagent —— 一个普通 dict，字段与 DeepAgents 约定一致
+internet_sub_agent = {
+    "name": sub_agents_config['tavily']['name'],        # "网络搜索助手"
+    "description": sub_agents_config['tavily']['description'],  # 何时使用我
+    "tools": [internet_search],                          # 我能用的工具
+    "system_prompt": sub_agents_config['tavily']['system_prompt']  # 行为准则
+}</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">internet_sub_agent</td><td class="why">四个字段缺一不可：name 用于调度显示，description 供主智能体决策，tools 提供能力，system_prompt 约束行为</td></tr>
+      <tr><td class="ln">sub_agents_config['tavily']</td><td class="why">与 prompts.yml 的 <code>tavily:</code> 键一一对应</td></tr>
+    </table></div>
+  </div>
+
+  <!-- 3.3.2 数据库助手 -->
+  <h4>3.3.2 数据库查询助手（db_sub_agent）</h4>
+  <p><b>职责</b>：查询企业内部结构化数据（药品、库存、销售），解决「具体是多少」的精度问题。技术栈 = Text-to-SQL（LLM 写 SQL）+ MySQL Connector。<b>提示词设计要点</b>：① 强制「先 list_sql_tables」防幻觉（不臆造表名）；② 要求预览数据理解字段格式；③ 全程只读检索的安全边界。</p>
+  <div class="figcard">
+    <div class="fig-title">数据库助手执行策略（三步走：看表 → 预览 → 查询）</div>
+    <svg class="flow-svg" viewBox="0 0 760 150" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei,Segoe UI,sans-serif">
+      <defs><marker id="arr3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#7f93c9"/></marker></defs>
+      <rect x="10" y="10" width="740" height="130" rx="18" fill="#0f1730" stroke="#26335c"/>
+      <rect x="30" y="50" width="150" height="46" rx="10" fill="#121a35" stroke="#34d399"/>
+      <text x="105" y="72" fill="#34d399" font-size="12.5" text-anchor="middle" font-weight="700">① list_sql_tables</text>
+      <text x="105" y="88" fill="#9aa7cc" font-size="10" text-anchor="middle">列出所有表</text>
+      <line x1="180" y1="73" x2="220" y2="73" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="223" y="50" width="160" height="46" rx="10" fill="#121a35" stroke="#fbbf24"/>
+      <text x="303" y="72" fill="#fbbf24" font-size="12.5" text-anchor="middle" font-weight="700">② get_table_data</text>
+      <text x="303" y="88" fill="#9aa7cc" font-size="10" text-anchor="middle">预览前100行·理解字段</text>
+      <line x1="383" y1="73" x2="423" y2="73" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="426" y="50" width="160" height="46" rx="10" fill="#121a35" stroke="#60a5fa"/>
+      <text x="506" y="72" fill="#60a5fa" font-size="12.5" text-anchor="middle" font-weight="700">③ execute_sql_query</text>
+      <text x="506" y="88" fill="#9aa7cc" font-size="10" text-anchor="middle">编写并执行 SQL</text>
+      <line x1="586" y1="73" x2="620" y2="73" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="623" y="50" width="110" height="46" rx="10" fill="#121a35" stroke="#34d399"/>
+      <text x="678" y="72" fill="#34d399" font-size="12.5" text-anchor="middle" font-weight="700">精确数据</text>
+      <text x="678" y="88" fill="#9aa7cc" font-size="10" text-anchor="middle">返回 Main</text>
+    </svg>
+  </div>
+
+  <p><b>① 准备数据库</b>——先执行 <code class="inline">sql/company_data.sql</code> 建库建表插数据（pharma_db 库，drugs / inventory / sales_records 三张表，10 种药品、30 条库存、20 条销售）：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#34d399"></span><span class="fn">sql/company_data.sql — 建库建表（核心结构节选）</span></div>
+    <pre><code class="language-sql">CREATE DATABASE IF NOT EXISTS pharma_db;   -- 业务库
+USE pharma_db;
+
+-- 1. 药品信息表
+CREATE TABLE drugs (
+    drug_id INT PRIMARY KEY AUTO_INCREMENT,      -- 主键自增
+    generic_name VARCHAR(100) NOT NULL,          -- 通用名 (布洛芬缓释胶囊)
+    brand_name VARCHAR(100),                     -- 商品名 (芬必得)
+    approval_number VARCHAR(50),                 -- 批准文号
+    specifications VARCHAR(100),                 -- 规格 (0.3g*20粒)
+    dosage_form VARCHAR(50),                     -- 剂型
+    manufacturer VARCHAR(100),                   -- 生产厂家
+    therapeutic_area VARCHAR(50),                -- 治疗领域
+    description TEXT                             -- 适应症描述
+);
+-- 2. 库存表（每药3个批次：批号/库存量/库位/生产日期/有效期）
+CREATE TABLE inventory (
+    inventory_id INT PRIMARY KEY AUTO_INCREMENT,
+    drug_id INT NOT NULL,
+    batch_number VARCHAR(50) NOT NULL,           -- 生产批号
+    quantity_on_hand INT DEFAULT 0,              -- 当前库存
+    warehouse_location VARCHAR(50),              -- 仓库位置
+    production_date DATE,                        -- 生产日期
+    expiry_date DATE,                            -- 有效期至（预警用）
+    FOREIGN KEY (drug_id) REFERENCES drugs(drug_id) ON DELETE CASCADE
+);
+-- 3. 销售记录表（日期/数量/单价/总额/客户/区域/销售代表）
+CREATE TABLE sales_records (
+    sale_id INT PRIMARY KEY AUTO_INCREMENT,
+    drug_id INT NOT NULL,
+    sale_date DATE NOT NULL,
+    quantity_sold INT NOT NULL,
+    unit_price DECIMAL(10,2),
+    total_amount DECIMAL(15,2),
+    customer_name VARCHAR(100),
+    region VARCHAR(50),
+    sales_rep VARCHAR(50),
+    FOREIGN KEY (drug_id) REFERENCES drugs(drug_id) ON DELETE CASCADE
+);
+-- 4. 模拟数据：10种药品 + 30条库存 + 20条销售（INSERT INTO ... 长列表）
+INSERT INTO drugs (generic_name, brand_name, ...) VALUES ('阿莫西林胶囊', ...), ...;</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>设计</th><th>作用</th></tr>
+      <tr><td class="ln">FOREIGN KEY + ON DELETE CASCADE</td><td class="why">三表通过 drug_id 关联；删药品自动删其库存/销售，保证数据一致性</td></tr>
+      <tr><td class="ln">expiry_date</td><td class="why">库存预警场景的核心字段——「查询库存最少/临期药品」都要靠它</td></tr>
+      <tr><td class="ln">DECIMAL(10,2)</td><td class="why">金额用定点数而非浮点，避免 0.1+0.2 精度问题</td></tr>
+    </table></div>
+  </div>
+
+  <p><b>② 数据库配置</b>（.env）：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#fbbf24"></span><span class="fn">.env — MySQL 配置</span></div>
+    <pre><code class="language-ini">MYSQL_USER=root
+MYSQL_PASSWORD=root
+MYSQL_DATABASE=deepagents_database   # 教程示例库名；本机实际用 pharma_db
+MYSQL_HOST=localhost
+MYSQL_PORT=3306                      # 本机按实际端口填写（如 Docker 映射 3307）</code></pre>
+  </div>
+
+  <p><b>③ 数据库工具</b>——三个工具：列表、预览、执行 SQL。注意代码用的是 <code class="inline">mysql.connector</code>（对应依赖 <code class="inline">mysql-connector-python</code>，不是 pymysql）：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#34d399"></span><span class="fn">tools/mysql_tools.py — 数据库三件套</span></div>
+    <pre><code class="language-python">import os
+from dotenv import load_dotenv
+from api.monitor import monitor
+from mysql.connector import connect, Error      # MySQL 官方驱动
+from typing import Annotated, List
+from langchain_core.tools import tool
+
+load_dotenv()
+
+# ---- 从环境变量组装连接配置 ----
+def get_db_config():
+    """Get database configuration from environment variables."""
+    config = {
+        "host": os.getenv("MYSQL_HOST", "localhost"),
+        "port": int(os.getenv("MYSQL_PORT", "3306")),
+        "user": os.getenv("MYSQL_USER"),
+        "password": os.getenv("MYSQL_PASSWORD"),
+        "database": os.getenv("MYSQL_DATABASE"),
+        "charset": os.getenv("MYSQL_CHARSET", "utf8mb4"),
+        "collation": os.getenv("MYSQL_COLLATION", "utf8mb4_unicode_ci"),
+        "autocommit": True,                      # 自动提交（只读场景安全）
+        "sql_mode": os.getenv("MYSQL_SQL_MODE", "TRADITIONAL")
+    }
+    # 移除 None 值（没配置的键不传给驱动，避免报错）
+    config = {k: v for k, v in config.items() if v is not None}
+    # 校验核心配置是否齐全
+    required_keys = ["user", "password", "database"]
+    missing_keys = [k for k in required_keys if k not in config]
+    if missing_keys:
+        raise ValueError(f"缺失数据库核心配置：{', '.join(missing_keys)}")
+    return config
+
+# ============ 1. 列出所有表 ============
+@tool
+def list_sql_tables() -> str:
+    """查询当前库中有哪些可用表! 对应的sql: show tables;"""
+    monitor.report_tool(tool_name="搜索表名工具")
+    try:
+        with connect(**get_db_config()) as conn:      # with：用完自动关连接
+            with conn.cursor() as cursor:             # 游标：执行 SQL 的入口
+                sql = "show tables;"
+                cursor.execute(sql)                   # 执行查询
+                select_result = cursor.fetchall()     # 取回全部行 [(a,), (b,)]
+                if not select_result or len(select_result) == 0:
+                    return "没有可用表"
+                table_name_list = [item[0] for item in select_result]  # 取每行第0列
+                return f"可用表:{','.join(table_name_list)}"
+    except Error as e:
+        return "数据库连接失败: " + str(e)
+
+# ============ 2. 预览表数据（前100行） ============
+@tool
+def get_table_data(table_name: str) -> str:
+    """查询指定表名的数据，返回表格格式文本，让助手理解表结构"""
+    monitor.report_tool(tool_name="搜索指定表名的数据工具", args={"table_name": table_name})
+    try:
+        with connect(**get_db_config()) as conn:
+            with conn.cursor() as cursor:
+                sql = f"select * from {table_name} limit 100;"
+                cursor.execute(sql)
+                description = cursor.description       # 列元数据（表头）
+                if not description:
+                    return f"当前表{table_name}没有数据"
+                table_header = [c[0] for c in description]          # 列名列表
+                result = cursor.fetchall()                           # 行元组列表
+                data_list = [",".join(map(str, row)) for row in result]  # 行→"a,b,c"
+                return ",".join(table_header) + "\n" + "\n".join(data_list)
+    except Error as e:
+        return "数据库连接失败: " + str(e)
+
+# ============ 3. 执行自定义 SQL ============
+@tool
+def execute_sql_query(sql: str) -> str:
+    """执行自定义SQL查询（复杂筛选/联接/聚合）"""
+    monitor.report_tool(tool_name="执行自定义SQL查询工具", args={"sql": sql})
+    try:
+        with connect(**get_db_config()) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(sql)
+                description = cursor.description
+                if not description:
+                    return f"当前语句{sql}没有数据"
+                table_header = [c[0] for c in description]
+                result = cursor.fetchall()
+                data_list = [",".join(map(str, row)) for row in result]
+                return ",".join(table_header) + "\n" + "\n".join(data_list)
+    except Error as e:
+        return "数据库连接失败: " + str(e)
+
+if __name__ == '__main__':
+    # 本地自测：直接验证 SQL 工具
+    print(execute_sql_query.invoke({"sql": "select * from drugs limit 100"}))</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">with connect(...) as conn</td><td class="why">上下文管理器自动关闭连接，防资源泄漏——每个工具都复用这个模式</td></tr>
+      <tr><td class="ln">cursor.description</td><td class="why">返回结果集的列元数据，取 <code>[0]</code> 就是列名——用它动态生成「表头行」</td></tr>
+      <tr><td class="ln">fetchall() + join</td><td class="why">把行元组转成 <code>a,b,c</code> 纯文本表格，LLM 一眼看懂，还省 Token</td></tr>
+      <tr><td class="ln">except Error</td><td class="why">任何数据库异常都返回友好字符串，而不是让 Agent 崩掉</td></tr>
+      <tr><td class="ln">if __name__=='__main__'</td><td class="why">PyCharm 里右键 Run 即可单独测数据库连通性</td></tr>
+    </table></div>
+  </div>
+
+  <p><b>④ 组装 db_sub_agent</b>：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#34d399"></span><span class="fn">agent/sub_agents/db_sub_agent.py</span></div>
+    <pre><code class="language-python">from agent.load_prompt import sub_agents_config
+from tools.mysql_tools import list_sql_tables, get_table_data, execute_sql_query
+
+# 本地数据库查询的 subagent
+db_sub_agent = {
+    "name": sub_agents_config["db"].get("name", ""),
+    "description": sub_agents_config["db"].get("description", ""),
+    "system_prompt": sub_agents_config["db"].get("system_prompt", ""),
+    "tools": [list_sql_tables, get_table_data, execute_sql_query]
+}</code></pre>
+    <div class="annots"><div class="a-title">说明</div><table>
+      <tr><td class="ln">.get(key, "")</td><td class="why">取不到时给空串兜底，配置写错也不会 ImportError</td></tr>
+      <tr><td class="ln">tools 三件套</td><td class="why">与 system_prompt 中描述的工具一一对应，LLM 才知道「我有这三个工具可用」</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- 3.3.3 RAGFlow -->
+<section class="chapter" id="s3-3-3">
+  <h3 style="margin-top:0">3.3.3 RAGFlow 助手（rag_sub_agent）</h3>
+  <p><b>职责</b>：检索企业<b>私有非结构化文档</b>（规章制度、技术文档），解决「内部怎么规定」的深度问题。技术栈 = RAGFlow API + 向量数据库。<b>提示词设计要点</b>：① 先 <code class="inline">get_assistant_list</code> 动态发现知识库；② 至少提三个不同问题做「饱和式检索」提高召回率；③ 保留原始信息不做概括，避免「传话筒效应」信息失真。</p>
+  <div class="figcard">
+    <div class="fig-title">RAGFlow 助手执行策略（发现 → 匹配 → 多角度提问 → 打包原始切片）</div>
+    <svg class="flow-svg" viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei,Segoe UI,sans-serif">
+      <defs><marker id="arr4" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#7f93c9"/></marker></defs>
+      <rect x="10" y="10" width="740" height="200" rx="18" fill="#0f1730" stroke="#26335c"/>
+      <rect x="30" y="50" width="160" height="46" rx="10" fill="#121a35" stroke="#a78bfa"/>
+      <text x="110" y="72" fill="#a78bfa" font-size="12.5" text-anchor="middle" font-weight="700">① get_assistant_list</text>
+      <text x="110" y="88" fill="#9aa7cc" font-size="10" text-anchor="middle">发现可用知识库助手</text>
+      <line x1="190" y1="73" x2="225" y2="73" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr4)"/>
+      <rect x="228" y="50" width="150" height="46" rx="10" fill="#121a35" stroke="#fbbf24"/>
+      <text x="303" y="72" fill="#fbbf24" font-size="12.5" text-anchor="middle" font-weight="700">② 匹配助手</text>
+      <text x="303" y="88" fill="#9aa7cc" font-size="10" text-anchor="middle">按描述挑选目标</text>
+      <line x1="378" y1="73" x2="413" y2="73" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr4)"/>
+      <rect x="416" y="50" width="160" height="46" rx="10" fill="#121a35" stroke="#f472b6"/>
+      <text x="496" y="72" fill="#f472b6" font-size="12.5" text-anchor="middle" font-weight="700">③ create_ask_delete</text>
+      <text x="496" y="88" fill="#9aa7cc" font-size="10" text-anchor="middle">至少3个不同角度提问</text>
+      <line x1="576" y1="73" x2="610" y2="73" stroke="#7f93c9" stroke-width="2" marker-end="url(#arr4)"/>
+      <rect x="613" y="50" width="120" height="46" rx="10" fill="#121a35" stroke="#34d399"/>
+      <text x="673" y="72" fill="#34d399" font-size="12.5" text-anchor="middle" font-weight="700">知识切片</text>
+      <text x="673" y="88" fill="#9aa7cc" font-size="10" text-anchor="middle">RAGFlow 返回</text>
+      <rect x="228" y="130" width="240" height="46" rx="10" fill="#121a35" stroke="#60a5fa"/>
+      <text x="348" y="152" fill="#60a5fa" font-size="12.5" text-anchor="middle" font-weight="700">打包原始信息 → 返回 Main</text>
+      <text x="348" y="168" fill="#9aa7cc" font-size="10" text-anchor="middle">不做概括总结，原样传输</text>
+      <path d="M496 96 L496 115 Q496 124 420 124 L348 124 Q310 124 310 128" stroke="#7f93c9" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arr4)" fill="none"/>
+      <text x="560" y="118" fill="#6b78a5" font-size="10">还有问题? 循环提问</text>
+    </svg>
+  </div>
+
+  <p><b>① .env 配置</b>（RAGFlow 服务器地址与 Key）：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#fbbf24"></span><span class="fn">.env — RAGFlow 配置</span></div>
+    <pre><code class="language-ini">RAGFLOW_API_URL=http://你的RAGFlow服务器IP
+RAGFLOW_API_KEY=ragflow-你的KEY</code></pre>
+  </div>
+
+  <p><b>② RAGFlow 工具</b>——两个工具：获取助手列表、提问（建会话→提问→删会话）。用官方 SDK <code class="inline">ragflow_sdk</code>：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#a78bfa"></span><span class="fn">tools/ragflow_tools.py — RAGFlow 工具</span></div>
+    <pre><code class="language-python">import os
+from dotenv import load_dotenv
+from langchain_core.tools import tool
+from api.monitor import monitor
+from ragflow_sdk import RAGFlow            # RAGFlow 官方 Python SDK
+
+load_dotenv(override=True)                # override：强制覆盖已存在的同名变量
+
+# 全局 RAGFlow 客户端（api_key + 服务器地址）
+_ragflow_client = RAGFlow(
+    api_key=os.getenv("RAGFLOW_API_KEY"),
+    base_url=os.getenv("RAGFLOW_API_URL")
+)
+
+# ============ 1. 获取助手列表 ============
+@tool
+def get_assistant_list() -> str:
+    """
+    获取ragflow服务中所有的聊天助手信息! 用于后续具体提问的筛选!
+    返回格式: 助手名称:xxx , 描述: xx , 关联的知识库: x,x,x,x
+    """
+    monitor.report_tool(tool_name="查询ragflow助手列表信息")
+    try:
+        # 1. 查询所有聊天助手（list_chats 返回 Chat 对象列表）
+        chat_list = _ragflow_client.list_chats()
+        if not chat_list or len(chat_list) == 0:
+            return "未找到可用任何助手"
+        # 2. 逐个助手拼接「名称/描述/关联知识库」
+        final_result = ""
+        for chat in chat_list:
+            name = chat.name
+            description = chat.description
+            datasets = chat.datasets            # 关联知识库（dict 列表）
+            dataset_name_list = [d['name'] for d in datasets]
+            final_result += f"助手名称:{name} , 描述: {description} , 关联的知识库: {','.join(dataset_name_list)} \n"
+        return final_result
+    except Exception as e:
+        return f"查询助手列表失败：{str(e)}"
+
+# ============ 2. 创建会话 → 提问 → 删除会话 ============
+@tool
+def create_ask_delete(chat_name: str, question: str) -> str:
+    """
+    向指定的助手提问,并获取返回结果!
+    参数 chat_name 就是助手的名称（需先用 get_assistant_list 查询确认）
+    返回结果就是提问的回答
+    """
+    monitor.report_tool(tool_name=f"向ragflow提问工具", args={"chat_name": chat_name})
+    try:
+        # 1. 按名称精确查找助手
+        list_chats = _ragflow_client.list_chats(name=chat_name)
+        if not list_chats or len(list_chats) == 0:
+            return f"未找到名称为{chat_name}的助手"
+        chat = list_chats[0]                    # 取第一个匹配项
+        # 2. 创建临时会话并流式提问
+        session = chat.create_session(name="temp_session")
+        stream = session.ask(question=question, stream=True)
+        final_result = ""
+        # 3. 流式响应：chunk 自带累加，取最后一个即为完整答案
+        for chunk in stream:
+            final_result = chunk.content
+        # 4. 提问完即删会话（干净利落，不留垃圾数据）
+        chat.delete_sessions([session.id])
+        return final_result
+    except Exception as e:
+        return f"向{chat_name}提问失败：{str(e)}"
+
+if __name__ == "__main__":
+    # 自测：向指定助手提问
+    print(create_ask_delete.invoke({"chat_name": "空调安装助手", "question": "空调的绝热工作怎么做？"}))</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">load_dotenv(override=True)</td><td class="why">强制覆盖，防止之前 load 过的旧值残留</td></tr>
+      <tr><td class="ln">chat.datasets</td><td class="why">Chat 对象暴露关联知识库列表；用 <code>['name']</code> 提取知识库名</td></tr>
+      <tr><td class="ln">create_session / ask / delete_sessions</td><td class="why">SDK 三连：建临时会话→提问→删除，避免在服务器端堆积无用会话</td></tr>
+      <tr><td class="ln">stream=True 取最后一个 chunk</td><td class="why">流式响应每帧都是累积文本，所以「取最后一个」= 完整答案</td></tr>
+    </table></div>
+  </div>
+
+  <p><b>③ 组装 rag_sub_agent</b>：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#a78bfa"></span><span class="fn">agent/sub_agents/rag_sub_agent.py</span></div>
+    <pre><code class="language-python">from agent.load_prompt import sub_agents_config
+from tools.ragflow_tools import get_assistant_list, create_ask_delete
+
+rag_sub_agent = {
+    "name": sub_agents_config["ragflow"].get("name", ""),
+    "description": sub_agents_config["ragflow"].get("description", ""),
+    "system_prompt": sub_agents_config["ragflow"].get("system_prompt", ""),
+    "tools": [get_assistant_list, create_ask_delete]
+}</code></pre>
+    <div class="annots"><div class="a-title">说明</div><table>
+      <tr><td class="ln">tools 两个</td><td class="why">列表发现 + 定向提问，正好对应 RAGFlow 助手的「发现→提问」策略</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- 3.4 MainAgent -->
+<section class="chapter" id="s3-4">
+  <h3 style="margin-top:0">3.4 Main Agent 实现</h3>
+  <p>主智能体 = 「项目经理」。它不亲自查库、不亲自搜索，只负责<b>拆解任务 → 派活给三个助手 → 汇总信息 → 调用自己的工具生成文档</b>。</p>
+
+  <h4>3.4.1 MainAgent 提示词（prompts.yml 细化版）</h4>
+  <p>主智能体提示词有几个<b>红线规则</b>必须遵守：</p>
+  <div class="grid3">
+    <div class="card"><div class="ico">🧭</div><b>信息获取规则</b><p>外部/背景知识→网络助手；企业内部非流通知识→RAGFlow；企业商品数据→数据库助手；边界不明→三个全用。</p></div>
+    <div class="card"><div class="ico">📁</div><b>工作目录强制</b><p>所有文件操作仅限系统指定的工作目录，调用子助手时必须传达该路径。</p></div>
+    <div class="card"><div class="ico">⏳</div><b>执行顺序红线</b><p>必须先取信息再生成文件；严禁一步同时搜索+生成；严禁占位符生成；文档须含 todo-list 且不少于 1000 字。</p></div>
+  </div>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#fbbf24"></span><span class="fn">prompts.yml — main_agent.system_prompt（要点摘录）</span></div>
+    <pre><code class="language-yaml">main_agent:
+  system_prompt: |
+    你是一个沃华医药公司的智能团队负责人，负责协调三个专家助手完成复杂任务
+    你的团队成员如下：
+    1. **网络搜索助手**
+    2. **数据库查询助手**
+    3. **RAGFlow助手**
+    你的工作流程通常涉及：
+    - 信息获取：
+      - 对于背景知识和外部知识，可以使用**网络搜索助手**完成广范围信息的收集...
+      - 对于企业内部专有的知识，可以使用**RAGFlow助手**实现内部知识的搜索
+      - 对于本企业内部的商品数据等信息，可以使用**数据库查询助手**进行搜索
+      - 如果边界并不明确，则全部使用
+    - 文件生成：
+      - 可以根据用户的指令,使用你的工具生成Markdown、PDF格式的文件
+    你的工作具体要求：
+    - 文件操作目录：每次任务开始时，系统会提供一个指定的绝对路径作为工作目录。
+    - 强制要求：你必须且只能在该工作目录下进行所有文件的创建、读取和保存操作。
+    - 涉及生成输出文档的时候，严格遵循用户的生成需求
+    你的主要任务类别：
+    - 用户没有明确要求生成文件 → 获取信息后直接反馈给用户
+    - 用户明确要求生成文件 → 只能交给文件生成工具解决，你没有生成文件的能力
+    文件生成：
+    - Markdown 用 generate_markdown 工具直接生成
+    - PDF 必须先生成 Markdown，再用 convert_md_to_pdf 转换
+    - 无论什么复杂程度的任务，都需要生成一个 todo-list 进行规划
+    - 汇报进度时不允许发送文档路径，只允许通知用户已成功创建
+    - 内容要求丰富且全面，不少于1000字
+    【关键执行顺序】
+    1. 必须先调用子智能体获取信息。
+    2. **绝不允许**在获取信息之前调用文件生成工具。
+    3. 严禁使用"等待子任务完成"之类的占位符生成文件。
+    4. 需要先搜索再生成时，分两步执行，不要在同一个 Tool Call 中同时做。</code></pre>
+    <div class="annots"><div class="a-title">设计解读</div><table>
+      <tr><th>规则</th><th>为什么要这样写</th></tr>
+      <tr><td class="ln">不能自己生成文件</td><td class="why">强制走工具，让文档格式可控；避免 LLM 直接输出 Markdown 文本而不是真正落盘</td></tr>
+      <tr><td class="ln">先取信息后生成</td><td class="why">防止「先建空文件再补内容」的幻觉占位行为</td></tr>
+      <tr><td class="ln">不发送路径</td><td class="why">用户只看结果，路径由前端从 session_dir 展示——这也是 prompt 与前端联动的设计</td></tr>
+    </table></div>
+  </div>
+
+  <h4>3.4.2 定义主智能体的三个工具</h4>
+
+  <p><b>① 读取上传文件工具</b>（tools/upload_file_read_tool.py）——支持 .md/.txt/.docx/.pdf/.xlsx/.xls 六类文件，Excel 还会附带统计信息：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#60a5fa"></span><span class="fn">tools/upload_file_read_tool.py — 读文件</span></div>
+    <pre><code class="language-python">from pathlib import Path
+from typing import Annotated
+from langchain_core.tools import tool
+from api.monitor import monitor
+from api.context import get_session_context
+from utils.path_utils import resolve_path
+import docx                      # Word 解析
+import pypdf                     # PDF 解析
+import pandas as pd              # Excel 解析
+
+@tool
+def read_file_content(
+        filename: Annotated[str, "要读取的文件名或路径（支持 .md, .docx, .pdf, .xlsx, .xls）"],
+        instruction: Annotated[str, "对提取内容的具体指令（例如：'提取摘要', '统计数据'）"] = "提取全部内容"
+) -> str:
+    """读取指定文件的内容。支持 Markdown(.md)、Word(.docx)、PDF(.pdf) 和 Excel(.xlsx/.xls)。"""
+    monitor.report_tool("文件内容读取工具", {"filename": filename, "instruction": instruction})
+
+    # ===== 1. 路径解析（收拢到当前会话目录，防穿越） =====
+    session_dir = get_session_context()                       # 从 ContextVar 取会话目录
+    file_path = Path(resolve_path(filename, session_dir))     # 安全解析
+    if not file_path.exists():
+        return f"错误：文件 '{filename}' 不存在 (解析路径: {file_path})。"
+    ext = file_path.suffix.lower()                            # 后缀转小写
+
+    try:
+        # ===== 2. 按类型读取 =====
+        if ext in ['.md', '.txt']:
+            return file_path.read_text(encoding='utf-8')      # 纯文本直接读
+
+        elif ext == '.docx':
+            doc = docx.Document(str(file_path))               # Word：取所有段落
+            return '\n'.join([p.text for p in doc.paragraphs])
+
+        elif ext == '.pdf':
+            reader = pypdf.PdfReader(str(file_path))          # PDF：逐页提取文本
+            return "\n".join([page.extract_text() or "" for page in reader.pages])
+
+        elif ext in ['.xlsx', '.xls']:
+            df = pd.read_excel(str(file_path))                # Excel：转 DataFrame
+            result = [
+                f"文件: {filename}",
+                f"行数: {len(df)}, 列数: {len(df.columns)}",
+                f"列名: {', '.join(df.columns.astype(str))}",
+                "\n[前5行数据预览]:", df.head().to_string(index=False),
+                "\n[统计描述]:", df.describe().to_string()
+            ]
+            return "\n".join(result)                          # 结构+预览+统计
+
+        else:
+            return file_path.read_text(encoding='utf-8')      # 兜底按文本读
+    except UnicodeDecodeError:
+        return f"错误：不支持的文件格式 '{ext}'，且无法作为文本读取。"
+    except Exception as e:
+        return f"读取文件出错: {str(e)}"</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">Annotated[str, "..."]</td><td class="why">给参数加中文说明——LLM 会读到这段描述，知道怎么传参</td></tr>
+      <tr><td class="ln">get_session_context()</td><td class="why">工具深处直接取「当前会话目录」，无需层层传参（ContextVar 的威力）</td></tr>
+      <tr><td class="ln">df.head() / describe()</td><td class="why">Excel 不只给原文，还自动算前5行 + 统计描述，LLM 秒懂数据结构</td></tr>
+      <tr><td class="ln">except 分级</td><td class="why">UnicodeDecodeError 单独捕获，给出「不支持该格式」的准确提示</td></tr>
+    </table></div>
+  </div>
+
+  <p><b>② 生成 Markdown 工具</b>（tools/markdown_tools.py）：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#fbbf24"></span><span class="fn">tools/markdown_tools.py — 生成 Markdown</span></div>
+    <pre><code class="language-python">from utils.logger_utils import logger
+from pathlib import Path
+from typing import Annotated
+from langchain_core.tools import tool
+from api.monitor import monitor
+from api.context import get_session_context
+from utils.path_utils import resolve_path
+
+@tool
+def generate_markdown(
+        content: Annotated[str, "要写入Markdown文档的文本内容"],
+        filename: Annotated[str, "Markdown文档的文件名（不包含扩展名或包含.md）"],
+        path: Annotated[str, "文件保存的绝对路径"] = ""
+):
+    """根据提供的文本内容，生成对应的Markdown(.md)文件"""
+    logger.debug(f"路径是{path}")
+    monitor.report_tool("Markdown文档生成工具", {"写入的文本内容": content})
+    if not filename.endswith('.md'):          # 自动补全 .md 后缀
+        filename += '.md'
+
+    session_dir = get_session_context()       # 当前会话目录
+
+    # ---- 路径清洗：path 参数与 filename 组合 ----
+    if path and path != ".":
+        full_input_path = str(Path(path) / filename)   # path/filename 拼接
+    else:
+        full_input_path = filename                     # 只用 filename
+    full_path_str = resolve_path(full_input_path, session_dir)  # 安全解析到会话目录
+    file_path = Path(full_path_str)
+    parent_dir = file_path.parent
+
+    try:
+        if not parent_dir.exists():                    # 父目录不存在则创建
+            parent_dir.mkdir(parents=True, exist_ok=True)
+        file_path.write_text(content, encoding='utf-8')  # Path 直接写文件
+        logger.debug(f"[MarkdownTool] Successfully wrote to: {file_path}")
+        return f"Markdown文件 '{file_path}' 已成功生成并保存。"
+    except Exception as e:
+        logger.error(f"[MarkdownTool] Error writing file: {e}")
+        return f"生成Markdown文件失败: {str(e)}"</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">endswith('.md')</td><td class="why">模型可能传「报告」不带后缀，自动补 .md 提升鲁棒性</td></tr>
+      <tr><td class="ln">resolve_path(...)</td><td class="why">无论模型传绝对/相对/虚拟路径，都收拢到会话目录内</td></tr>
+      <tr><td class="ln">mkdir(parents=True, exist_ok=True)</td><td class="why">子目录自动创建，且重复调用不报错</td></tr>
+      <tr><td class="ln">返回成功文案</td><td class="why">成功/失败都返回可读字符串，LLM 据此判断是否继续</td></tr>
+    </table></div>
+  </div>
+
+  <p><b>③ Markdown → PDF 工具</b>（tools/pdf_tools.py）——调用 <code class="inline">utils/converter_utils.py</code> 里封装好的 Word COM 引擎转换：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#f472b6"></span><span class="fn">tools/pdf_tools.py — 转 PDF</span></div>
+    <pre><code class="language-python">from utils.logger_utils import logger
+from pathlib import Path
+from typing import Annotated, Optional
+from langchain_core.tools import tool
+from api.monitor import monitor
+from api.context import get_session_context
+from utils.path_utils import resolve_path
+from utils.converter_utils import convert_md_to_pdf_via_word   # 核心转换引擎
+
+@tool
+def convert_md_to_pdf(
+        md_filename: Annotated[str, "要转换的Markdown文档路径（包含.md后缀）"],
+        pdf_filename: Annotated[Optional[str], "输出的PDF文件路径（可选，默认与源文件同名）"] = None
+) -> str:
+    """将Markdown文档转换为PDF（基于Word引擎）"""
+    monitor.report_tool("Markdown转PDF工具")
+    try:
+        # 1. 路径预处理：补全 .md、解析到会话目录
+        session_dir = get_session_context()
+        md_path = Path(md_filename).with_suffix('.md')
+        md_abs_path = Path(resolve_path(str(md_path), session_dir))
+
+        # 2. 源文件必须存在
+        if not md_abs_path.exists():
+            return f"错误：文件不存在 {md_abs_path}"
+
+        # 3. 确定输出路径（不传则与源文件同名）
+        if pdf_filename:
+            pdf_path = Path(pdf_filename).with_suffix('.pdf')
+            pdf_abs_path = Path(resolve_path(str(pdf_path), session_dir))
+        else:
+            pdf_abs_path = md_abs_path.with_suffix('.pdf')
+
+        # 4. 调用核心转换（Markdown → HTML → Word → PDF）
+        return convert_md_to_pdf_via_word(md_abs_path, pdf_abs_path)
+    except Exception as e:
+        logger.error(f"转换失败: {e}", exc_info=True)
+        return f"转换失败: {str(e)}"</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">with_suffix('.md')</td><td class="why">无论传什么后缀都统一成 .md，防模型传错</td></tr>
+      <tr><td class="ln">Optional 参数</td><td class="why">pdf_filename 可空，默认同名输出，减少模型决策负担</td></tr>
+      <tr><td class="ln">分层设计</td><td class="why">Tool 只做路径管理，真正转换在 converter_utils——职责分离，测试友好</td></tr>
+    </table></div>
+  </div>
+
+  <p><b>④ 转换引擎</b>（utils/converter_utils.py）——Markdown → HTML（markdown 库）→ Word COM → PDF（本机安装的 Microsoft Word 负责排版）：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#f472b6"></span><span class="fn">utils/converter_utils.py — 核心转换逻辑</span></div>
+    <pre><code class="language-python">from utils.logger_utils import logger
+from pathlib import Path
+import markdown                      # Markdown → HTML
+import win32com.client               # 调用 Word 的 COM 接口（Windows）
+import pythoncom                     # COM 初始化/释放
+
+def convert_md_to_pdf_via_word(md_abs_path: Path, pdf_abs_path: Path) -> str:
+    """使用 Microsoft Word COM 接口将 Markdown 转换为 PDF。"""
+    temp_html_path = md_abs_path.with_suffix('.temp.html')   # 中间产物
+    word_app = None
+
+    try:
+        # ===== 1. MD → HTML（带表格/代码块扩展） =====
+        with open(md_abs_path, 'r', encoding='utf-8') as f:
+            md_content = f.read()
+        html_body = markdown.markdown(md_content, extensions=['tables', 'fenced_code'])
+        html_content = f"""
+        <html><head><meta charset="UTF-8">
+        <style>
+            body {{ font-family: "Microsoft YaHei", "SimHei", sans-serif; }}
+            table {{ border-collapse: collapse; width: 100%; }}
+            th, td {{ border: 1px solid black; padding: 8px; }}
+            pre {{ background-color: #f5f5f5; padding: 10px; border-radius: 4px; }}
+        </style></head><body>{html_body}</body></html>
+        """
+        with open(temp_html_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+
+        # ===== 2. 用 Word COM 打开 HTML，另存为 PDF =====
+        pythoncom.CoInitialize()                         # 初始化 COM 线程
+        word_app = win32com.client.Dispatch('Word.Application')  # 启动 Word
+        word_app.Visible = False                         # 后台运行（不弹窗）
+        word_app.DisplayAlerts = False                   # 关掉警告弹窗
+        doc = word_app.Documents.Open(str(temp_html_path.resolve()))
+        doc.SaveAs(str(pdf_abs_path.resolve()), FileFormat=17)  # 17 = wdFormatPDF
+        doc.Close(SaveChanges=0)
+
+        if pdf_abs_path.exists():
+            return f"成功转换: {pdf_abs_path} (Word引擎)"
+        return f"转换完成但未生成文件: {pdf_abs_path}"
+
+    except ImportError:
+        return "缺少依赖库，请安装: pip install pywin32 markdown"
+    except Exception as e:
+        logger.error(f"Word转换PDF失败: {e}", exc_info=True)
+        return f"转换失败: {str(e)}"
+    finally:
+        # ===== 3. 资源清理：关 Word、删临时 HTML、释放 COM =====
+        if word_app:
+            try:
+                word_app.Quit()
+            except Exception as e:
+                logger.warning(f"关闭Word应用时出错: {e}")
+        if temp_html_path.exists():
+            try:
+                temp_html_path.unlink()
+            except Exception as e:
+                logger.warning(f"删除临时HTML文件时出错: {e}")
+        try:
+            pythoncom.CoUninitialize()
+        except Exception as e:
+            logger.warning(f"释放COM初始化时出错: {e}")</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">extensions=['tables','fenced_code']</td><td class="why">让 Markdown 里的表格和代码块正确转成 HTML 表格/代码样式</td></tr>
+      <tr><td class="ln">word_app.Visible=False</td><td class="why">后台运行 Word，用户无感知</td></tr>
+      <tr><td class="ln">FileFormat=17</td><td class="why">Word 常量：17 表示 PDF 格式（核心一行）</td></tr>
+      <tr><td class="ln">finally 清理</td><td class="why">无论成败都退出 Word、删除临时 HTML、释放 COM，防止进程残留</td></tr>
+      <tr><td class="ln">pythoncom</td><td class="why">COM 必须在线程内先 CoInitialize 后 CoUninitialize，否则可能卡死</td></tr>
+    </table></div>
+  </div>
+
+  <h4>3.4.3 定义 MainAgent（agent/main_agent.py）</h4>
+  <p>这是全项目的「总装车间」：组装主智能体、定义进度上报、执行 Agent 流、注入会话上下文。逐行看：</p>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#f472b6"></span><span class="fn">agent/main_agent.py — 总装与执行</span></div>
+    <pre><code class="language-python"># [核心] 智能体组装与执行逻辑
+import shutil
+from pathlib import Path
+
+from deepagents import create_deep_agent        # DeepAgents 工厂：创建多智能体
+
+from agent.llm import model as llm              # 大模型对象
+from agent.load_prompts import main_agent_config   # 主智能体提示词
+from agent.sub_agents.rag_sub_agent import rag_sub_agent
+from agent.sub_agents.db_sub_agent import db_sub_agent
+from agent.sub_agents.network_search_agent import internet_sub_agent
+from api.context import set_thread_context, set_session_context, reset_session_context
+from api.monitor import monitor
+from tools.markdown_tools import generate_markdown
+from tools.pdf_tools import convert_md_to_pdf
+from tools.upload_file_read_tool import read_file_content
+from utils.logger_utils import logger
+
+print(main_agent_config['system_prompt'])       # 启动时打印主提示词（便于调试）
+
+# ============ 组装主智能体 ============
+main_agent = create_deep_agent(
+    model=llm,                                  # ① 大模型
+    system_prompt=main_agent_config['system_prompt'],   # ② 主智能体人设
+    subagents=[rag_sub_agent, db_sub_agent, internet_sub_agent],  # ③ 三个专家
+    tools=[read_file_content, generate_markdown, convert_md_to_pdf]  # ④ 三大工具
+)
+
+# ============ 进度上报：把每个 chunk 翻译成前端事件 ============
+def _report_agent_process(chunk):
+    for key, value in chunk.items():            # chunk: {"model":..., "tools":...}
+        if not value or "messages" not in value:
+            continue
+        message = value["messages"][-1]         # 只看最新一条消息
+        if key == "model":
+            if message.tool_calls:              # 模型要调用工具/子智能体
+                for tool_call in message.tool_calls:
+                    if tool_call["name"] == "task":   # task = 调用子智能体
+                        monitor.report_assistant(
+                            tool_call['args']['subagent_type'],
+                            tool_call['args']['description'])
+                    else:                       # 其他 = 调用普通工具
+                        monitor.report_tool(tool_call['name'], tool_call['args'])
+            elif message.content:               # 模型输出最终文本
+                monitor.report_task_result(message.content)
+
+# ============ 执行入口 ============
+async def run_deep_agent(query: str, thread_id: str):
+    # 1. 保存 thread_id 到上下文
+    thread_token = set_thread_context(thread_id)
+    # 2. 生成会话输出目录 output/session_<thread_id> 并保存
+    project_dir = Path(__file__).parents[1].resolve()       # 项目根
+    session_dir = project_dir / "output" / f"session_{thread_id}"
+    session_dir.mkdir(parents=True, exist_ok=True)
+    session_dir_str = str(session_dir).replace("\\", "/")   # Windows 反斜杠→正斜杠
+    session_token = set_session_context(session_dir_str)
+    monitor.report_session_dir(session_dir_str)             # 告诉前端输出目录
+
+    # 3. 把 upload/session_<thread_id> 里的上传文件拷贝到会话目录
+    upload_dir = project_dir / "upload" / f"session_{thread_id}"
+    uploaded_info = ''
+    if upload_dir.exists():
+        file_names = [i.name for i in upload_dir.iterdir() if i.is_file()]
+        for name in file_names:
+            shutil.copy2(upload_dir / name, session_dir / name)
+        uploaded_info = (f"\n    [已上传文件] 已加载到工作目录:\n" +
+                         "\n".join([f"    - {f}" for f in file_names]) +
+                         "\n    请优先使用工具读取并参考这些文件。")
+
+    # 4. 组装「工作环境指令」注入给主智能体
+    relative_session_dir_str = str(session_dir.relative_to(project_dir)).replace("\\", "/")
+    path_instruction = f"""
+            【工作环境指令】
+            工作目录: {relative_session_dir_str}
+            {uploaded_info}
+            规则：
+            1. 新生成文件必须保存到工作目录：'{relative_session_dir_str}'
+            2. 读取已上传的文件时，请直接将文件名（例如：'开篇.txt'）作为 filename 参数传入
+            3. 使用相对路径，禁止使用绝对路径
+            4. 若存在上传文件，请先分析内容
+            """
+
+    try:
+        # 5. 流式执行：遍历每个 chunk 并实时上报给前端
+        result = main_agent.astream({
+            "messages": [{
+                "role": "user",
+                "content": f"问题：{query}, 补充描述: {path_instruction}"
+            }]
+        })
+        async for chunk in result:
+            _report_agent_process(chunk)
+    except Exception as e:
+        logger.error(f"智能体执行最终失败：{e}")
+        monitor._emit("error", "智能体执行最终失败了")
+    finally:
+        # 6. 无论成败都重置上下文，防止污染下一个请求
+        reset_session_context(session_token, thread_token)</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">create_deep_agent</td><td class="why">DeepAgents 核心工厂：传 model + system_prompt + subagents + tools，返回可执行的智能体对象</td></tr>
+      <tr><td class="ln">tool_call["name"] == "task"</td><td class="why">DeepAgents 里调用子智能体就是一个名为 <code>task</code> 的工具调用，args 里有 subagent_type</td></tr>
+      <tr><td class="ln">astream</td><td class="why">异步流式执行：边跑边产出 chunk，前端才能看到「思考过程」</td></tr>
+      <tr><td class="ln">set/reset 上下文</td><td class="why">token 制：执行前 set，finally 里 reset，保证并发会话不串数据</td></tr>
+      <tr><td class="ln">拷贝上传文件</td><td class="why">用户传的文件自动进会话目录，提示词里告诉 Agent「先读这些文件」</td></tr>
+      <tr><td class="ln">path_instruction</td><td class="why">把工作目录以「指令」形式拼进用户问题，强制 Agent 在正确目录写文件</td></tr>
+    </table></div>
+  </div>
+  <div class="tip"><span class="ic">💡</span><div><b>本地冒烟测试：</b>main_agent.py 自带 <code class="inline">__main__</code> 测试入口（挂载假 runtime 让进度打印到控制台），在 PyCharm 里可直接右键 Run，也可 <code class="inline">python -m agent.main_agent "你的问题"</code> 验证整条链路。</div></div>
+</section>
+
+<!-- ======== 第四章 ======== -->
+<section class="chapter" id="s4">
+  <h2><span class="num">四</span>Web 接口开发与测试</h2>
+  <p class="lead">最后一步：把智能体包成 HTTP + WebSocket 服务，让前端浏览器能真正对话。本章开发 5 个 API 接口 + 1 个 WebSocket 端点，最后启动整站验证。</p>
+
+  <h3 id="s4-1">4.1 server 基础准备（api/server.py）</h3>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#60a5fa"></span><span class="fn">api/server.py — FastAPI 应用初始化</span></div>
+    <pre><code class="language-python">import uuid                      # 生成会话 ID
+import asyncio                   # 异步任务
+import uvicorn                   # ASGI 服务器
+from pathlib import Path
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, Form
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel   # 请求体校验
+from typing import List
+import shutil                    # 文件流复制
+from agent.main_agent import run_deep_agent   # 智能体执行入口
+from api.monitor import manager  # WebSocket 管理器
+
+# 项目根目录路径（server.py 的上一级）
+_project_root = Path(__file__).resolve().parent.parent
+
+app = FastAPI(title="DeepAgents API")   # 创建 FastAPI 实例
+
+# 挂载输出目录（前端展示生成的文件）
+_output_dir = _project_root / "output"
+_output_dir.mkdir(exist_ok=True)
+
+# 定义上传目录 upload
+_upload_dir = _project_root / "upload"
+_upload_dir.mkdir(exist_ok=True)
+
+# 配置 CORS（允许前端 5173 跨域访问）
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],          # 开发期放开所有来源
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class TaskRequest(BaseModel):     # POST /api/task 的请求体模型
+    query: str                    # 用户提问（必填）
+    thread_id: str = None         # 会话 ID（可选，不传则服务端生成）
+
+@app.on_event("startup")
+async def startup_event():
+    """
+    服务启动时，获取当前运行的事件循环，并绑定到 WebSocket 管理器。
+    确保后台线程能通过 run_coroutine_threadsafe 准确投递消息。
+    """
+    loop = asyncio.get_running_loop()   # 拿到主事件循环
+    manager.set_loop(loop)              # 交给 WS 管理器（跨线程投递用）
+    logger.debug(f"[Server] WebSocket Manager bound to loop: {id(loop)}")</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">Path(__file__).resolve().parent.parent</td><td class="why">不管从哪启动，都能定位项目根目录</td></tr>
+      <tr><td class="ln">CORSMiddleware</td><td class="why">开发期 <code>*</code> 全开；上线前应改为具体域名</td></tr>
+      <tr><td class="ln">TaskRequest</td><td class="why">Pydantic 自动校验请求体，缺 query 直接 422</td></tr>
+      <tr><td class="ln">on_event("startup")</td><td class="why">FastAPI 启动钩子：把事件循环注入 manager，WebSocket 广播才有「线程安全投递」的基础</td></tr>
+    </table></div>
+  </div>
+
+  <h3 id="s4-2">4.2 开启任务接口（POST /api/task）</h3>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#22d3ee"></span><span class="fn">api/server.py — 任务启动</span></div>
+    <pre><code class="language-python">@app.post("/api/task")
+async def run_task(request: TaskRequest):
+    """
+    智能体任务启动接口 (Run Agent Task)。
+    1. 接收用户的自然语言指令。
+    2. 在后台异步启动 Agent 执行逻辑。
+    3. 返回会话 ID，供前端通过 WebSocket 订阅实时进度。
+    """
+    # 1. [ID 初始化] 有 thread_id 用它的，没有则生成 UUID
+    thread_id = request.thread_id or str(uuid.uuid4())
+
+    # 2. [后台执行] 异步运行 Agent，不阻塞 HTTP 线程
+    # 注意：asyncio.create_task 触发后立即返回，由 main_agent 内部负责实时推送
+    asyncio.create_task(run_deep_agent(request.query, thread_id))
+
+    # 3. [立即响应] 返回 status + thread_id，前端马上拿到会话号
+    return {"status": "started", "thread_id": thread_id}</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">asyncio.create_task</td><td class="why">关键设计：任务丢后台异步跑，接口<b>立即返回</b>，不会卡住浏览器等待几十秒</td></tr>
+      <tr><td class="ln">thread_id 生成</td><td class="why">前端未传时自动 UUID；前端拿到后即可用 <code>ws://.../ws/{thread_id}</code> 订阅进度</td></tr>
+      <tr><td class="ln">返回 started</td><td class="why">「已启动」语义——真正结果通过 WebSocket 流式送达</td></tr>
+    </table></div>
+  </div>
+
+  <h3 id="s4-3">4.3 上传文件接口（POST /api/upload）</h3>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#fbbf24"></span><span class="fn">api/server.py — 文件上传</span></div>
+    <pre><code class="language-python">@app.post("/api/upload")
+async def upload_files(files: List[UploadFile] = File(...), thread_id: str = Form(...)):
+    """
+    文件上传接口 (File Upload)。
+    1. 接收用户上传的一个或多个文件。
+    2. 保存到 `upload/session_{thread_id}` 目录。
+    3. 供 Agent 在后续任务中读取和分析。
+    """
+    # 1. [目录准备] 按会话建目录
+    target_dir = _upload_dir / f"session_{thread_id}"
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    saved_files = []
+    # 2. [保存] 遍历并写入文件
+    for file in files:
+        file_path = target_dir / file.filename
+        # 二进制流写入，支持图片/PDF/文本等任意格式
+        # shutil.copyfileobj 高效复制，避免大文件一次性进内存
+        with file_path.open("wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        saved_files.append(file.filename)
+
+    # 3. [响应] 返回成功保存的文件列表
+    return {"status": "uploaded", "files": saved_files}</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">File(...) / Form(...)</td><td class="why">FastAPI 自动解析 multipart 表单；<code>...</code> 表示必填</td></tr>
+      <tr><td class="ln">session_{thread_id}</td><td class="why">按会话隔离上传文件——每个用户的资料互不干扰</td></tr>
+      <tr><td class="ln">copyfileobj</td><td class="why">流式复制：文件多大都行，不会撑爆内存</td></tr>
+    </table></div>
+  </div>
+
+  <h3 id="s4-4">4.4 下载文件接口（GET /api/download）</h3>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#34d399"></span><span class="fn">api/server.py — 文件下载（含安全检查）</span></div>
+    <pre><code class="language-python">@app.get("/api/download")
+async def download_file(path: str):
+    """
+    文件下载接口 (File Download)。
+    1. 根据绝对路径下载文件。
+    2. 严格的安全检查，防止越权访问。
+    """
+    # 1. [安全检查] 路径解析与越权校验
+    try:
+        abs_path = Path(path).resolve()
+        output_abs = _output_dir.resolve()
+
+        # 必须确保请求的文件在 output 目录下（防目录穿越攻击）
+        if not abs_path.is_relative_to(output_abs):
+            return {"error": "拒绝访问: 只能下载输出目录下的文件"}
+    except Exception:
+        return {"error": "无效的路径参数"}
+
+    # 2. [存在性检查]
+    if not abs_path.exists():
+        return {"error": "文件不存在"}
+
+    # 3. [响应] 返回文件流（浏览器自动触发下载）
+    return FileResponse(abs_path, filename=abs_path.name)</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">is_relative_to(output_abs)</td><td class="why">Python 3.9+ 内置路径包含判断——这是防「../../etc/passwd」类攻击的关键一行</td></tr>
+      <tr><td class="ln">FileResponse</td><td class="why">FastAPI 直接把文件流返回，浏览器自动下载；filename 指定下载名</td></tr>
+    </table></div>
+  </div>
+
+  <h3 id="s4-5">4.5 查询文件列表接口（GET /api/files）</h3>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#a78bfa"></span><span class="fn">api/server.py — 文件列表</span></div>
+    <pre><code class="language-python">@app.get("/api/files")
+async def list_files(path: str):
+    """
+    文件列表查询接口 (File Explorer)。
+    1. 列出指定目录下的所有生成文件。
+    2. 提供文件元数据（大小、时间、下载链接）。
+    3. 严格的安全检查，防止路径遍历攻击。
+    """
+    print(f"[DEBUG] 请求文件列表: {path}")
+
+    try:
+        abs_path = Path(path).resolve()
+        output_abs = _output_dir.resolve()
+
+        # [安全] 检查路径是否越界 (Path Traversal Check)
+        if not abs_path.is_relative_to(output_abs):
+            print(f"[ERROR] 拒绝访问: {abs_path} 不在 {output_abs} 目录下")
+            return {"error": "拒绝访问: 只能访问输出目录下的文件"}
+    except Exception as e:
+        print(f"[ERROR] 路径解析失败: {e}")
+        return {"error": f"路径无效: {e}"}
+
+    # [检查] 目录是否存在
+    if not abs_path.exists():
+        return {"error": "目录不存在"}
+
+    files = []
+    try:
+        # [遍历] 递归查找所有文件
+        for file_path in abs_path.rglob("*"):
+            if file_path.is_file():
+                stat = file_path.stat()
+                files.append({
+                    "name": file_path.name,      # 文件名
+                    "type": "file",
+                    "path": str(file_path),      # 绝对路径（下载接口用它）
+                    "size": stat.st_size,        # 字节数
+                    "mtime": stat.st_mtime       # 修改时间戳
+                })
+    except Exception as e:
+        print(f"[ERROR] 遍历文件失败: {e}")
+        return {"error": str(e)}
+
+    # [排序] 按修改时间倒序（最新在前）
+    files.sort(key=lambda x: x.get("mtime", 0), reverse=True)
+    print(f"[DEBUG] 找到 {len(files)} 个文件")
+    return {"files": files}</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">rglob("*")</td><td class="why">递归遍历目录下所有文件（含子目录）</td></tr>
+      <tr><td class="ln">stat()</td><td class="why">取文件大小与修改时间——前端文件列表卡片的元数据来源</td></tr>
+      <tr><td class="ln">sort reverse=True</td><td class="why">新生成的文件排最前，用户体验更好</td></tr>
+    </table></div>
+  </div>
+
+  <h3 id="s4-6">4.6 WebSocket 实时通讯（/ws/{thread_id}）</h3>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#22d3ee"></span><span class="fn">api/server.py — WebSocket 端点</span></div>
+    <pre><code class="language-python">@app.websocket("/ws/{thread_id}")
+async def websocket_endpoint(websocket: WebSocket, thread_id: str):
+    """
+    WebSocket 实时通讯核心接口。
+    1. 建立长连接，实现服务端与前端的双向通信。
+    2. 绑定 `thread_id`，实现会话级消息隔离。
+    3. 维持心跳 (Keep-Alive)，防止连接超时。
+    """
+    # 1. [注册] 建立连接并绑定到管理器
+    await manager.connect(websocket, thread_id)
+
+    try:
+        # 2. [循环] 保持连接活跃
+        while True:
+            # 3. [监听] 接收前端消息（通常是 ping 心跳）
+            data = await websocket.receive_text()
+
+            # 4. [响应] 回复 pong 消息
+            await websocket.send_json({
+                "type": "pong",
+                "message": f"服务端已收到: {data}"
+            })
+    except WebSocketDisconnect:
+        # 5. [清理] 客户端主动断开
+        manager.disconnect(websocket, thread_id)
+        print(f"[WebSocket] 客户端已断开: {thread_id}")
+    except Exception as e:
+        # 6. [异常] 发生错误时断开
+        print(f"[WebSocket] 连接异常: {e}")
+        manager.disconnect(websocket, thread_id)</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">manager.connect</td><td class="why">把当前 WS 连接按 thread_id 注册进管理器——之后 monitor 广播就能找到它</td></tr>
+      <tr><td class="ln">while True + receive_text</td><td class="why">长连接循环：前端发 ping 保活，服务端回 pong</td></tr>
+      <tr><td class="ln">WebSocketDisconnect</td><td class="why">客户端关页/断网时优雅清理，避免僵尸连接占内存</td></tr>
+      <tr><td class="ln">monitor 广播链路</td><td class="why">Agent 每步 <code>report_*</code> → manager <code>send_to_thread</code> → 前端实时刷新思考过程</td></tr>
+    </table></div>
+  </div>
+
+  <h3 id="s4-7">4.7 启动服务器（main.py）</h3>
+  <div class="codepanel">
+    <div class="codehead"><span class="dot" style="background:#34d399"></span><span class="fn">main.py — 全站入口</span></div>
+    <pre><code class="language-python">from utils.logger_utils import configure_project_logging
+configure_project_logging()          # ① 必须先配日志（其他模块 import 前）
+
+from api.server import start_server   # ② 再导入并启动服务
+
+if __name__ == "__main__":
+    start_server()                    # uvicorn.run(app, host="0.0.0.0", port=8000)</code></pre>
+    <div class="annots"><div class="a-title">逐行解读</div><table>
+      <tr><th>代码</th><th>作用</th></tr>
+      <tr><td class="ln">configure_project_logging() 在最前</td><td class="why">必须在 import 其他模块之前配置日志，否则它们的 logger 收不到 handler（实测坑点）</td></tr>
+      <tr><td class="ln">start_server</td><td class="why">uvicorn 启动 FastAPI，监听 0.0.0.0:8000（局域网也能访问）</td></tr>
+    </table></div>
+  </div>
+
+  <h3 id="s5">4.8 端到端运行验证</h3>
+  <div class="steps">
+    <div class="step"><div class="n"></div><div><b>启动数据库</b><p>确认 Docker 容器 <code class="inline">mydb</code> 已启动且映射 3307 端口（<code class="inline">docker start mydb</code>），三张表数据完好。</p></div></div>
+    <div class="step"><div class="n"></div><div><b>启动后端</b><p>PyCharm 中运行 <code class="inline">main.py</code>（或 <code class="inline">uvicorn api.server:app --reload --port 8000</code>），终端出现 <code class="inline">Uvicorn running on http://0.0.0.0:8000</code> 即成功。</p></div></div>
+    <div class="step"><div class="n"></div><div><b>启动前端</b><p>终端 <code class="inline">cd ui && npm run dev</code>，浏览器访问 <code class="inline">http://localhost:5173/</code>。</p></div></div>
+    <div class="step"><div class="n"></div><div><b>提问测试</b><p>输入如「查询库存最少的10种药品，生成库存预警清单 PDF」。右侧面板会实时滚动显示：调用子智能体 → 查库 → 生成 Markdown → 转 PDF，最终文件出现在文件列表并可下载。</p></div></div>
+    <div class="step"><div class="n"></div><div><b>产物检查</b><p>生成的文件在 <code class="inline">output/session_&lt;thread_id&gt;/</code> 下；后端日志同步记录在 <code class="inline">logs/app.log</code>。</p></div></div>
+  </div>
+
+  <div class="pycharm"><span class="ic">🧩</span><div><b>PyCharm 运行配置建议：</b>菜单 <code class="inline">Run → Edit Configurations → + → Python</code>，Script path 选 <code class="inline">main.py</code>，Python interpreter 选项目 <code class="inline">.venv</code>；再建一个 <code class="inline">ui</code> 目录的 <code class="inline">npm run dev</code> 配置（或直接用内置 Terminal）。以后一键 Run 就能起整套系统。</div></div>
+  <div class="tip"><span class="ic">💡</span><div><b>红字报错不要慌：</b>运行时若出现 <code class="inline">langchain_aws / fireworks</code> 等 DEBUG 级红字，是 DeepAgents 中间件缺包被 try/except 吞掉的正常现象，不影响功能；只要最终输出目录里生成了报告，链路就是通的。</div></div>
+</section>
+
+<footer>
+  <p>📘 DeepAgents 深度搜索项目 · Day04 PyCharm 实战指南 — 1 主 + 3 专 + 6 工具 全链路图文教程</p>
+  <p style="margin-top:6px;font-size:12px">教程依据：day04/2.深度搜索项目.md · 全部代码与源文件严格对齐</p>
+</footer>
+</div>
+
+<script>
+hljs.highlightAll();
+// 进度条
+addEventListener('scroll',()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;document.getElementById('prog').style.width=p+'%';document.getElementById('backtop').classList.toggle('show',h.scrollTop>600);});
+// 高亮当前导航
+const secs=[...document.querySelectorAll('section.chapter')];const items=[...document.querySelectorAll('.nav-item')];
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const id=e.target.id;items.forEach(i=>i.classList.toggle('active',i.getAttribute('href')==='#'+id));}})},{rootMargin:'-15% 0px -75% 0px'});
+secs.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>

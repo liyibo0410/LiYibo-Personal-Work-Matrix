@@ -1,5 +1,5 @@
 """
-检视 BOSS 智库三个后端的当前已存内容（只读，不修改任何数据）。
+检视 RAG 知识库三个后端的当前已存内容（只读，不修改任何数据）。
 依赖项目依赖：minio / pymilvus / pymongo / python-dotenv。
 运行：.venv/Scripts/python.exe inspect_storage.py
 """

@@ -127,7 +127,8 @@ class ModelTarget(StrEnum):
 class UserRole(StrEnum):
     OWNER = "owner"
     OPERATOR = "operator"
-    VIEWER = "viewer"
+    DESIGNER = "designer"
+    CS = "cs"
 
 
 class UserStatus(StrEnum):

@@ -175,7 +175,7 @@ html.js .reveal[data-d="6"] { transition-delay: .36s; }
 .pipeline-svg { width: 100%; height: auto; display: block; min-width: 640px; }
 .pipeline-svg text { font-family: var(--sans); }
 .pipeline-svg .conn {
-  fill: none; stroke: rgba(79, 140, 255, .34); stroke-width: 1.7;
+  fill: none; stroke: rgba(51, 112, 255, .34); stroke-width: 1.7;
   stroke-dasharray: 7 6; animation: dashFlow 1s linear infinite;
 }
 .pipeline-svg .conn-loop {
@@ -186,7 +186,7 @@ html.js .reveal[data-d="6"] { transition-delay: .36s; }
 .pipeline-svg .nd-glow { opacity: 0; transition: opacity .35s; }
 .pipeline-svg .node-g.active .nd-rect { filter: brightness(1.45) drop-shadow(0 0 9px currentColor); }
 .pipeline-svg .node-g.active .nd-glow { opacity: .75; }
-.pipeline-svg .node-g.active .nd-no { fill: #04101f; }
+.pipeline-svg .node-g.active .nd-no { fill: #0B0E14; }
 .pipeline-svg .flow-dot { filter: drop-shadow(0 0 5px currentColor); }
 
 /* 请求进度指示 */
@@ -203,7 +203,7 @@ html.js .reveal[data-d="6"] { transition-delay: .36s; }
   content: ""; position: absolute; left: 0; top: 0; height: 100%; border-radius: 3px;
   background: linear-gradient(90deg, var(--cyan), var(--brand));
   width: var(--p, 0%); transition: width .55s cubic-bezier(.22, .68, .36, 1);
-  box-shadow: 0 0 10px rgba(79, 140, 255, .85);
+  box-shadow: 0 0 10px rgba(51, 112, 255, .85);
 }
 .req-indicator .ri-step {
   font-size: 12.5px; color: var(--cyan); font-weight: 650; flex: none; min-width: 96px;
@@ -229,8 +229,8 @@ html.js .reveal[data-d="6"] { transition-delay: .36s; }
 .dash-head .dh-title { display: flex; align-items: center; gap: 12px; }
 .dash-head .dh-logo {
   width: 40px; height: 40px; border-radius: var(--radius-s); object-fit: contain; flex: none;
-  background: linear-gradient(135deg, rgba(34, 211, 238, .14), rgba(124, 92, 255, .14));
-  padding: 5px; box-shadow: 0 4px 16px -6px rgba(79, 140, 255, .8);
+  background: linear-gradient(135deg, rgba(34, 211, 238, .14), rgba(51, 112, 255, .14));
+  padding: 5px; box-shadow: 0 4px 16px -6px rgba(51, 112, 255, .8);
 }
 .dash-head .dh-title h1 { font-size: 19px; font-weight: 750; letter-spacing: .4px; margin: 0; }
 .dash-head .dh-title .sub { font-size: 12px; color: var(--faint); margin-top: 1px; letter-spacing: .3px; }
@@ -263,7 +263,7 @@ html.js .reveal[data-d="6"] { transition-delay: .36s; }
   padding: 15px 16px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   transition: transform .3s cubic-bezier(.22, .68, .36, 1), border-color .3s, box-shadow .3s;
 }
-.kpi:hover { transform: translateY(-4px); border-color: rgba(79, 140, 255, .45); box-shadow: var(--glow); }
+.kpi:hover { transform: translateY(-4px); border-color: rgba(51, 112, 255, .45); box-shadow: var(--glow); }
 .kpi::before {
   content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, var(--kc, var(--brand)), transparent);
@@ -313,7 +313,7 @@ html.js .reveal[data-d="6"] { transition-delay: .36s; }
   padding: 13px 14px; margin-bottom: 11px; transition: border-color .25s;
 }
 .model-card:last-child { margin-bottom: 0; }
-.model-card:hover { border-color: rgba(79, 140, 255, .4); }
+.model-card:hover { border-color: rgba(51, 112, 255, .4); }
 .model-card .mc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
 .model-card .mc-name { font-size: 13.5px; font-weight: 700; color: var(--ink); }
 .model-card .mc-role { font-size: 11.5px; color: var(--faint); margin-top: 2px; }
@@ -332,7 +332,7 @@ html.js .reveal[data-d="6"] { transition-delay: .36s; }
   padding: 12px 13px; margin-bottom: 10px; transition: border-color .25s;
 }
 .store-card:last-child { margin-bottom: 0; }
-.store-card:hover { border-color: rgba(79, 140, 255, .4); }
+.store-card:hover { border-color: rgba(51, 112, 255, .4); }
 .store-card .sc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
 .store-card .sc-name { font-size: 13.5px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 7px; }
 .store-card .sc-name .si {

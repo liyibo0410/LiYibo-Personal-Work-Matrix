@@ -9,19 +9,19 @@ import { EChart } from "./echart";
 
 export type NameValue = { name: string; value: number };
 
-/** 深色主题调色板：品牌蓝为主，辅以绿/橙/红/灰。 */
+/** 白底调色板：品牌蓝为主，辅以绿/橙/红/灰（与 echart.tsx 的 cp-light 主题同源）。 */
 const palette = [
   "#3370FF",
-  "#4ADE80",
-  "#FB923C",
-  "#F87171",
-  "#6B9BFF",
-  "#A1C0FF",
-  "#34D399",
-  "#FBBF24",
+  "#12B76A",
+  "#F79009",
+  "#E4474B",
+  "#7B5CFA",
+  "#98A2B3",
+  "#245AE0",
+  "#B4690E",
 ];
-const axisText = "#6b7280";
-const axisLine = "#2a3040";
+const axisText = "#8A94A3";
+const axisLine = "#DDE2EA";
 
 function donutOption(data: NameValue[], colors: string[] = palette): EChartsOption {
   return {
@@ -40,7 +40,7 @@ function donutOption(data: NameValue[], colors: string[] = palette): EChartsOpti
         radius: ["45%", "70%"],
         center: ["50%", "44%"],
         avoidLabelOverlap: true,
-        itemStyle: { borderColor: "#141820", borderWidth: 2 },
+        itemStyle: { borderColor: "#FFFFFF", borderWidth: 2 },
         label: { show: false },
         data: data.map((d) => ({ name: d.name, value: d.value })),
         color: colors,
@@ -162,7 +162,7 @@ export function DashboardCharts({
 
       <ChartCard title="店铺状态分布" description="启用 / 暂停 / 关闭" data={storeStatus}>
         <EChart
-          option={donutOption(storeStatus, ["#4ADE80", "#FB923C", "#4B5563"])}
+          option={donutOption(storeStatus, ["#12B76A", "#F79009", "#98A2B3"])}
           height={260}
         />
       </ChartCard>

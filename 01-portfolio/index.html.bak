@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢智能 CloudPivot · AI 电商运营中台</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--bg:#0B0E14;--surface:#141820;--elevated:#1A1F2B;--line:#2A3040;--ink1:#E8EAF0;--ink2:#9BA3B0;--ink3:#7C8493;--brand:#3370FF;--brand-bg:#0F1A35;--success:#4ADE80;--warning:#FB923C}
+body{background:var(--bg);color:var(--ink1);font-family:'PingFang SC','Microsoft YaHei',Inter,system-ui,sans-serif}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;transition:all .25s}
+.card:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 8px 32px rgba(51,112,255,.12)}
+.badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:9999px;font-size:12px;font-weight:500}
+.badge-layer{background:var(--brand-bg);color:var(--brand)}
+.badge-status{background:#0A2E14;color:var(--success)}
+.badge-status-wip{background:#2E1F0A;color:var(--warning)}
+.glow{position:relative}.glow::before{content:'';position:absolute;inset:-1px;border-radius:13px;background:linear-gradient(135deg,var(--brand) 0%,transparent 50%);opacity:0;transition:opacity .3s;z-index:-1}.glow:hover::before{opacity:.3}
+.flow-line{position:relative}.flow-line::after{content:'';position:absolute;top:50%;right:-24px;width:24px;height:2px;background:var(--line)}
+.flow-line:last-child::after{display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.animate-in{animation:fadeUp .6s ease-out both}
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- Hero -->
+<header class="relative overflow-hidden border-b border-[var(--line)]">
+  <div class="absolute inset-0 bg-gradient-to-br from-[var(--brand-bg)] via-transparent to-transparent opacity-50"></div>
+  <div class="relative mx-auto max-w-6xl px-6 py-20 text-center">
+    <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--surface)] px-4 py-1.5 text-sm text-[var(--ink2)]">
+      <span class="h-2 w-2 rounded-full bg-[var(--success)]"></span>
+      全栈 AI 电商运营中台
+    </div>
+    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
+      <span class="text-[var(--brand)]">云枢智能</span> CloudPivot
+    </h1>
+    <p class="mx-auto mt-4 max-w-2xl text-lg text-[var(--ink2)]">
+      面向品牌电商与 MCN 的 AI 原生运营服务商<br>
+      <span class="text-[var(--ink3)]">十大 AI 能力模块 · 数据闭环 · 统一架构</span>
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href="#modules" class="inline-flex h-11 items-center gap-2 rounded-lg bg-[var(--brand)] px-6 text-sm font-medium text-white transition hover:opacity-90">
+        探索模块 ↓
+      </a>
+      <a href="#architecture" class="inline-flex h-11 items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface)] px-6 text-sm font-medium text-[var(--ink1)] transition hover:bg-[var(--elevated)]">
+        架构总览
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Stats -->
+<section class="border-b border-[var(--line)] bg-[var(--surface)]">
+  <div class="mx-auto grid max-w-6xl grid-cols-2 gap-px px-6 py-8 sm:grid-cols-4">
+    <div class="text-center"><p class="text-3xl font-bold text-[var(--brand)]">10</p><p class="mt-1 text-sm text-[var(--ink3)]">AI 能力模块</p></div>
+    <div class="text-center"><p class="text-3xl font-bold text-[var(--brand)]">4</p><p class="mt-1 text-sm text-[var(--ink3)]">业务应用线</p></div>
+    <div class="text-center"><p class="text-3xl font-bold text-[var(--brand)]">200+</p><p class="mt-1 text-sm text-[var(--ink3)]">设定服务店铺</p></div>
+    <div class="text-center"><p class="text-3xl font-bold text-[var(--brand)]">50万</p><p class="mt-1 text-sm text-[var(--ink3)]">日均会话量</p></div>
+  </div>
+</section>
+
+<!-- Modules -->
+<section id="modules" class="mx-auto max-w-6xl px-6 py-16">
+  <h2 class="mb-2 text-2xl font-bold">十大模块</h2>
+  <p class="mb-8 text-[var(--ink3)]">四层架构 · 数据闭环 · 全链路 AI 赋能</p>
+
+  <!-- L3 Application -->
+  <h3 class="mb-4 flex items-center gap-2 text-sm font-medium text-[var(--ink2)]"><span class="badge badge-layer">L3 应用层</span> 直接面向业务的 AI 应用</h3>
+  <div class="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="card glow p-5 animate-in" style="animation-delay:.1s">
+      <div class="mb-3 flex items-center justify-between"><span class="text-2xl">💬</span><span class="badge badge-status">已运行</span></div>
+      <h4 class="font-semibold">P01 AI 电商客服</h4>
+      <p class="mt-1 text-sm text-[var(--ink3)]">意图识别 → 知识检索 → 生成回复 → 负面情绪自动转人工</p>
+      <p class="mt-3 text-xs text-[var(--ink3)]">FastAPI · LangChain · Vue 3</p>
+    </div>
+    <div class="card glow p-5 animate-in" style="animation-delay:.15s">
+      <div class="mb-3 flex items-center justify-between"><span class="text-2xl">📊</span><span class="badge badge-status">★ 旗舰</span></div>
+      <h4 class="font-semibold">P02 电商运营助手</h4>
+      <p class="mt-1 text-sm text-[var(--ink3)]">商品诊断 · 创意策划 · 合规检测 · 广告实验 · 四角色 RBAC</p>
+      <p class="mt-3 text-xs text-[var(--ink3)]">FastAPI · LangGraph · Next.js 16</p>
+    </div>
+    <div class="card glow p-5 animate-in" style="animation-delay:.2s">
+      <div class="mb-3 flex items-center justify-between"><span class="text-2xl">📝</span><span class="badge badge-status">已运行</span></div>
+      <h4 class="font-semibold">P05 合同审批系统</h4>
+      <p class="mt-1 text-sm text-[var(--ink3)]">规则引擎 + LLM 二阶段语义复核 · 零第三方依赖 · 66 项自检</p>
+      <p class="mt-3 text-xs text-[var(--ink3)]">Pure Python · SQLite · 原生 HTML</p>
+    </div>
+    <div class="card glow p-5 animate-in" style="animation-delay:.25s">
+      <div class="mb-3 flex items-center justify-between"><span class="text-2xl">🏆</span><span class="badge badge-status-wip">构建中</span></div>
+      <h4 class="font-semibold">P09 AI 销售考核</h4>
+      <p class="mt-1 text-sm text-[var(--ink3)]">会话质检 · 多维评分 · 排行榜 · 人工一致性分析</p>
+      <p class="mt-3 text-xs text-[var(--ink3)]">FastAPI · ECharts · LLM 结构化输出</p>
+    </div>
+  </div>
+
+  <!-- L2 Capability -->
+  <h3 class="mb-4 flex items-center gap-2 text-sm font-medium text-[var(--ink2)]"><span class="badge badge-layer">L2 能力层</span> 可复用的 AI 中台能力</h3>
+  <div class="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="card glow p-5 animate-in" style="animation-delay:.3s">
+      <div class="mb-3 flex items-center justify-between"><span class="text-2xl">🔍</span><span class="badge badge-status">已运行</span></div>
+      <h4 class="font-semibold">P03 Deep Research</h4>
+      <p class="mt-1 text-sm text-[var(--ink3)]">自动出 SQL → 执行 → 图表 → 带溯源报告 · 恶意 SQL 拦截</p>
+      <p class="mt-3 text-xs text-[var(--ink3)]">DeepAgents · LangChain · Vue 3</p>
+    </div>
+    <div class="card glow p-5 animate-in" style="animation-delay:.35s">
+      <div class="mb-3 flex items-center justify-between"><span class="text-2xl">📚</span><span class="badge badge-status">已运行</span></div>
+      <h4 class="font-semibold">P04 RAG 知识库</h4>
+      <p class="mt-1 text-sm text-[var(--ink3)]">HyDE + RRF 多路融合 · BGE-M3 · Reranker · 评测四指标</p>
+      <p class="mt-3 text-xs text-[var(--ink3)]">FastAPI · Milvus · LangGraph</p>
+    </div>
+    <div class="card glow p-5 animate-in" style="animation-delay:.4s">
+      <div class="mb-3 flex items-center justify-between"><span class="text-2xl">🎨</span><span class="badge badge-status">已运行</span></div>
+      <h4 class="font-semibold">P07 AI 素材中心</h4>
+      <p class="mt-1 text-sm text-[var(--ink3)]">素材管理 · 智能打标 · 以文搜图 · AI 生成 · 投放效果关联</p>
+      <p class="mt-3 text-xs text-[var(--ink3)]">FastAPI · SQLite · ECharts</p>
+    </div>
+    <div class="card glow p-5 animate-in" style="animation-delay:.45s">
+      <div class="mb-3 flex items-center justify-between"><span class="text-2xl">🎬</span><span class="badge badge-status-wip">构建中</span></div>
+      <h4 class="font-semibold">P08 直播切片</h4>
+      <p class="mt-1 text-sm text-[var(--ink3)]">ASR 转写 · 高光打分 · 自动切片 · 批量任务队列</p>
+      <p class="mt-3 text-xs text-[var(--ink3)]">FastAPI · ffmpeg · faster-whisper</p>
+    </div>
+  </div>
+
+  <!-- L1 + L0 -->
+  <div class="grid gap-8 lg:grid-cols-2">
+    <div>
+      <h3 class="mb-4 flex items-center gap-2 text-sm font-medium text-[var(--ink2)]"><span class="badge badge-layer">L1 模型层</span></h3>
+      <div class="card glow p-5 animate-in" style="animation-delay:.5s">
+        <div class="mb-3 flex items-center justify-between"><span class="text-2xl">🧠</span><span class="badge badge-status-wip">构建中</span></div>
+        <h4 class="font-semibold">P10 模型微调平台</h4>
+        <p class="mt-1 text-sm text-[var(--ink3)]">数据集管理 · LoRA 训练 · 评测对比 · 模型注册 · OpenAI 兼容部署</p>
+        <p class="mt-3 text-xs text-[var(--ink3)]">PyTorch · PEFT · FastAPI</p>
+      </div>
+    </div>
+    <div>
+      <h3 class="mb-4 flex items-center gap-2 text-sm font-medium text-[var(--ink2)]"><span class="badge badge-layer">L0 数据层</span></h3>
+      <div class="card glow p-5 animate-in" style="animation-delay:.55s">
+        <div class="mb-3 flex items-center justify-between"><span class="text-2xl">🗄️</span><span class="badge badge-status-wip">构建中</span></div>
+        <h4 class="font-semibold">P06 数据中台</h4>
+        <p class="mt-1 text-sm text-[var(--ink3)]">数据接入 · 数仓分层 · 指标口径 · 血缘可视化 · 质量校验</p>
+        <p class="mt-3 text-xs text-[var(--ink3)]">FastAPI · DuckDB · ECharts</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Architecture -->
+<section id="architecture" class="border-t border-[var(--line)] bg-[var(--surface)]">
+  <div class="mx-auto max-w-6xl px-6 py-16">
+    <h2 class="mb-2 text-2xl font-bold">数据闭环架构</h2>
+    <p class="mb-8 text-[var(--ink3)]">底层数据统一口径 → 模型层沉淀能力 → 能力层提供服务 → 应用层组装业务 → 数据回流形成闭环</p>
+
+    <div class="grid gap-6 lg:grid-cols-5">
+      <div class="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-4 text-center">
+        <p class="text-xs font-medium text-[var(--brand)]">L0 数据</p>
+        <p class="mt-2 text-sm font-semibold">P06 数据中台</p>
+        <p class="mt-1 text-xs text-[var(--ink3)]">统一口径</p>
+      </div>
+      <div class="flex items-center justify-center text-[var(--ink3)]">→</div>
+      <div class="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-4 text-center">
+        <p class="text-xs font-medium text-[var(--brand)]">L2 能力</p>
+        <p class="mt-2 text-sm font-semibold">P04 / P07 / P08</p>
+        <p class="mt-1 text-xs text-[var(--ink3)]">RAG · 素材 · 切片</p>
+      </div>
+      <div class="flex items-center justify-center text-[var(--ink3)]">→</div>
+      <div class="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-4 text-center">
+        <p class="text-xs font-medium text-[var(--brand)]">L3 应用</p>
+        <p class="mt-2 text-sm font-semibold">P01 / P02 / P05 / P09</p>
+        <p class="mt-1 text-xs text-[var(--ink3)]">客服 · 运营 · 合同 · 考核</p>
+      </div>
+    </div>
+
+    <div class="mt-6 flex items-center justify-center gap-2 text-sm text-[var(--ink3)]">
+      <span>低分样本回流</span>
+      <span class="text-[var(--brand)]">→ P10 微调 →</span>
+      <span>新模型回到 P01/P02</span>
+    </div>
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-3">
+      <div class="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-4">
+        <p class="text-sm font-medium text-[var(--ink1)]">shared/llm-gateway</p>
+        <p class="mt-1 text-xs text-[var(--ink3)]">统一模型网关 · 多端点故障转移 · 成本统计 · Mock 降级</p>
+      </div>
+      <div class="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-4">
+        <p class="text-sm font-medium text-[var(--ink1)]">shared/auth</p>
+        <p class="mt-1 text-xs text-[var(--ink3)]">统一 JWT 认证 · 四角色 RBAC · Workspace 多租户</p>
+      </div>
+      <div class="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-4">
+        <p class="text-sm font-medium text-[var(--ink1)]">shared/ui-kit</p>
+        <p class="mt-1 text-xs text-[var(--ink3)]">统一深色主题 · 设计令牌 · 组件库</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Stack -->
+<section class="mx-auto max-w-6xl px-6 py-16">
+  <h2 class="mb-8 text-2xl font-bold">技术栈</h2>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="card p-4"><p class="text-sm font-medium">后端</p><p class="mt-1 text-xs text-[var(--ink3)]">Python 3.11+ · FastAPI · SQLAlchemy 2.0 · Pydantic v2 · uv</p></div>
+    <div class="card p-4"><p class="text-sm font-medium">前端</p><p class="mt-1 text-xs text-[var(--ink3)]">Next.js 16 · React 19 · TypeScript · Tailwind 4 · Vue 3</p></div>
+    <div class="card p-4"><p class="text-sm font-medium">AI</p><p class="mt-1 text-xs text-[var(--ink3)]">LangGraph · LangChain · BGE-M3 · Milvus · PEFT/LoRA</p></div>
+    <div class="card p-4"><p class="text-sm font-medium">基础设施</p><p class="mt-1 text-xs text-[var(--ink3)]">Docker · DuckDB · SQLite · Redis · ECharts</p></div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-[var(--line)] bg-[var(--surface)]">
+  <div class="mx-auto max-w-6xl px-6 py-8 text-center text-sm text-[var(--ink3)]">
+    <p>云枢智能 CloudPivot · AI 电商运营中台作品集</p>
+    <p class="mt-1">李奕波 · 2026</p>
+  </div>
+</footer>
+
+</body>
+</html>

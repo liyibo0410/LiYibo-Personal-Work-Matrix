@@ -153,7 +153,7 @@ export function PlatformMappingPanel({
 
         <button
           type="submit"
-          className="inline-flex h-9 w-fit items-center gap-2 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white transition hover:bg-ink-1"
+          className="inline-flex h-9 w-fit items-center gap-2 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white transition hover:bg-brand-700"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
           添加映射

@@ -1,0 +1,210 @@
+/* ══════════════════════════════════════════════════════════════════
+   云枢智能统一平台 · 设计令牌（Design Tokens）
+   —— 全局版式 / 配色 / 间距 / 圆角 / 字体的唯一真源。
+   所有模块前端与 shell 一律引入本文件，禁止各自硬编码颜色与魔法数字。
+   风格：企业简洁 · **白底为默认** · 单一强调色（蓝 #3370FF，只用于按钮与关键信息）
+        · 不用毛玻璃与渐变装饰 · 克制动效。
+   深色态保留为可选项：`html[data-theme="dark"]`。
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ---- 配色：白底浅色主题（默认）---- */
+  --cp-bg: #F5F7FA;            /* 页面底色（近白，让纯白卡片有层次）*/
+  --cp-surface: #FFFFFF;       /* 卡片/侧栏/顶栏面 */
+  --cp-elevated: #EEF1F6;      /* 悬浮/激活态面 */
+  --cp-line: #DDE2EA;          /* 分隔线/边框 */
+  --cp-ink1: #1A1F2B;          /* 主文本 */
+  --cp-ink2: #5A6472;          /* 次文本 */
+  --cp-ink3: #8A94A3;          /* 弱文本/占位 */
+  --cp-brand: #3370FF;         /* 唯一强调色：按钮、链接、关键数字 */
+  --cp-brand-hover: #245AE0;   /* 白底上 hover 走深而不是走亮 */
+  --cp-brand-bg: #E8F0FF;      /* 强调色弱底（选中态背景）*/
+  --cp-on-brand: #FFFFFF;
+
+  /* ---- 语义色（状态）：白底专用取值，保证文字对比度 ---- */
+  --cp-success: #16A34A;
+  --cp-success-bg: #E7F6EC;
+  --cp-warning: #B4690E;
+  --cp-warning-bg: #FDF1DC;
+  --cp-danger: #D92D20;
+  --cp-danger-bg: #FEE9E7;
+  /* info 用中性石板灰而不是青色：全平台只保留「蓝」这一个强调色 */
+  --cp-info: #475467;
+  --cp-info-bg: #F2F4F7;
+
+  /* ---- 图表序列（ECharts 全平台统一；1 号恒为品牌蓝）---- */
+  --cp-chart-1: #3370FF;
+  --cp-chart-2: #7B5CFA;
+  --cp-chart-3: #12B76A;
+  --cp-chart-4: #F79009;
+  --cp-chart-5: #E4474B;
+  --cp-chart-6: #98A2B3;
+
+  /* ---- 间距（8pt 栅格）---- */
+  --cp-sp-1: 4px;
+  --cp-sp-2: 8px;
+  --cp-sp-3: 12px;
+  --cp-sp-4: 16px;
+  --cp-sp-5: 24px;
+  --cp-sp-6: 32px;
+  --cp-sp-7: 48px;
+
+  /* ---- 圆角 ---- */
+  --cp-radius-sm: 6px;
+  --cp-radius: 10px;
+  --cp-radius-lg: 14px;
+  --cp-radius-pill: 999px;
+
+  /* ---- 字体 ---- */
+  --cp-font: 'PingFang SC', 'Microsoft YaHei', Inter, system-ui, -apple-system, sans-serif;
+  --cp-font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+  --cp-fs-xs: 11px;
+  --cp-fs-sm: 12px;
+  --cp-fs-base: 13px;
+  --cp-fs-md: 15px;
+  --cp-fs-lg: 18px;
+  --cp-fs-xl: 24px;
+  --cp-fs-2xl: 30px;
+  --cp-lh: 1.6;
+
+  /* ---- 阴影（白底用淡灰投影，避免脏底）---- */
+  --cp-shadow-sm: 0 1px 2px rgba(16, 24, 40, .06);
+  --cp-shadow: 0 4px 16px rgba(16, 24, 40, .08);
+  --cp-shadow-lg: 0 12px 40px rgba(16, 24, 40, .12);
+
+  /* ---- 布局尺寸 ---- */
+  --cp-topbar-h: 56px;
+  --cp-sidebar-w: 240px;
+  --cp-sidebar-w-collapsed: 64px;
+
+  /* ---- 动效（克制）---- */
+  --cp-ease: cubic-bezier(.4, 0, .2, 1);
+  --cp-dur: .18s;
+
+  color-scheme: light;
+}
+
+/* 深色主题：仅当 <html data-theme="dark"> 时覆盖（夜间/投影演示可选）*/
+html[data-theme="dark"] {
+  --cp-bg: #0B0E14;
+  --cp-surface: #141820;
+  --cp-elevated: #1A1F2B;
+  --cp-line: #2A3040;
+  --cp-ink1: #E8EAF0;
+  --cp-ink2: #9BA3B0;
+  --cp-ink3: #7C8493;
+  --cp-brand: #3370FF;
+  --cp-brand-hover: #4C86FF;   /* 深底上 hover 走亮 */
+  --cp-brand-bg: #0F1A35;
+  --cp-on-brand: #FFFFFF;
+
+  --cp-success: #4ADE80;
+  --cp-success-bg: #12291C;
+  --cp-warning: #FB923C;
+  --cp-warning-bg: #2A1D10;
+  --cp-danger: #F87171;
+  --cp-danger-bg: #2A1414;
+  --cp-info: #98A2B3;
+  --cp-info-bg: #1F2530;
+
+  --cp-chart-1: #4C86FF;
+  --cp-chart-2: #9B87FF;
+  --cp-chart-3: #4ADE80;
+  --cp-chart-4: #FB923C;
+  --cp-chart-5: #F87171;
+  --cp-chart-6: #7C8493;
+
+  --cp-shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
+  --cp-shadow: 0 4px 16px rgba(0, 0, 0, .35);
+  --cp-shadow-lg: 0 12px 40px rgba(0, 0, 0, .45);
+  color-scheme: dark;
+}
+
+/* 显式浅色声明命中默认白底态（模块页面上已有 data-theme="light" 的写法保持兼容）*/
+html[data-theme="light"] {
+  --cp-bg: #F5F7FA;
+  --cp-surface: #FFFFFF;
+  --cp-elevated: #EEF1F6;
+  --cp-line: #DDE2EA;
+  --cp-ink1: #1A1F2B;
+  --cp-ink2: #5A6472;
+  --cp-ink3: #8A94A3;
+  --cp-brand: #3370FF;
+  --cp-brand-hover: #245AE0;
+  --cp-brand-bg: #E8F0FF;
+  --cp-on-brand: #FFFFFF;
+  --cp-success: #16A34A;
+  --cp-success-bg: #E7F6EC;
+  --cp-warning: #B4690E;
+  --cp-warning-bg: #FDF1DC;
+  --cp-danger: #D92D20;
+  --cp-danger-bg: #FEE9E7;
+  --cp-info: #475467;
+  --cp-info-bg: #F2F4F7;
+  --cp-chart-1: #3370FF;
+  --cp-chart-2: #7B5CFA;
+  --cp-chart-3: #12B76A;
+  --cp-chart-4: #F79009;
+  --cp-chart-5: #E4474B;
+  --cp-chart-6: #98A2B3;
+  --cp-shadow-sm: 0 1px 2px rgba(16, 24, 40, .06);
+  --cp-shadow: 0 4px 16px rgba(16, 24, 40, .08);
+  --cp-shadow-lg: 0 12px 40px rgba(16, 24, 40, .12);
+  color-scheme: light;
+}
+
+/* ---- 全局基线 ---- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body.cp-app {
+  margin: 0;
+  background: var(--cp-bg);
+  color: var(--cp-ink1);
+  font-family: var(--cp-font);
+  font-size: var(--cp-fs-base);
+  line-height: var(--cp-lh);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 链接配色必须放在 @layer base 里。
+   Tailwind 的工具类（.text-white / .text-ink-2）都在 @layer utilities，
+   而未分层的声明优先级高于所有层 —— 一旦这里的 a{} 不分层，就会盖掉
+   所有 <a> 上的文字色工具类：链接型按钮变成蓝底蓝字（字看不见），
+   侧栏链接也全部被染成品牌蓝。 */
+@layer base {
+  a { color: var(--cp-brand); text-decoration: none; }
+  a:hover { color: var(--cp-brand-hover); }
+}
+
+::selection { background: var(--cp-brand); color: var(--cp-on-brand); }
+
+/* 统一滚动条 */
+.cp-scroll, body.cp-app { scrollbar-width: thin; scrollbar-color: var(--cp-line) transparent; }
+.cp-scroll::-webkit-scrollbar, body.cp-app::-webkit-scrollbar { width: 8px; height: 8px; }
+.cp-scroll::-webkit-scrollbar-thumb, body.cp-app::-webkit-scrollbar-thumb {
+  background: var(--cp-line); border-radius: var(--cp-radius-pill);
+}
+.cp-scroll::-webkit-scrollbar-track, body.cp-app::-webkit-scrollbar-track { background: transparent; }
+
+/* ---- 品牌位标记：logo 可换图，无图时回落到字母标 ----
+   给只引入本文件、未引入 components.css 的静态模块用（P04/P06-P10/画廊/作品集）。
+   节点标 data-cp-brand="logo"，ui-kit.js 的 CP.applyBrand 会按 brand.json 写入
+   <img>（用户上传的自定义 logo）或 initials 字母标。 */
+.cp-brandmark {
+  width: 32px; height: 32px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--cp-radius-sm);
+  background: var(--cp-brand); color: var(--cp-on-brand);
+  font-weight: 700; font-size: var(--cp-fs-sm); line-height: 1;
+  overflow: hidden;
+}
+.cp-brandmark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.cp-brandmark.cp-brand-is-image { background: transparent; }
+
+/* 降低动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+}

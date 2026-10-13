@@ -17,6 +17,12 @@ import os
 import sys
 
 API_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# API_DIR = .../面试项目/projects/p02-ecommerce-ops-assistant/api
+# 向上 3 级到工作区根（面试项目/）
+WORKSPACE_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(API_DIR)))
+SHARED_LLM_GATEWAY = os.path.join(WORKSPACE_ROOT, "shared", "llm-gateway", "src")
+if os.path.isdir(SHARED_LLM_GATEWAY):
+    sys.path.insert(0, os.path.abspath(SHARED_LLM_GATEWAY))
 
 # 开发模式环境变量：覆盖 api/.env 中的 MySQL / redis 配置。
 os.environ["DATABASE_URL"] = os.getenv(

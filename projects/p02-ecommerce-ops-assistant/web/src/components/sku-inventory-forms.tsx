@@ -101,7 +101,7 @@ export function SkuCreateForm({ canEdit = true, productId }: { canEdit?: boolean
 
       <button
         type="submit"
-        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
         创建 SKU
@@ -152,7 +152,7 @@ export function InventoryMovementForm({ productId, sku }: { productId: number; s
       </label>
       <button
         type="submit"
-        className="inline-flex h-9 items-center justify-center rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white transition hover:bg-ink-1"
+        className="inline-flex h-9 items-center justify-center rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white transition hover:bg-brand-700"
       >
         登记
       </button>
@@ -339,7 +339,7 @@ function SkuUpdateForm({ productId, sku }: { productId: number; sku: ProductSku 
       </div>
       <button
         type="submit"
-        className="inline-flex h-9 w-fit items-center rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white transition hover:bg-ink-1"
+        className="inline-flex h-9 w-fit items-center rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white transition hover:bg-brand-700"
       >
         保存 SKU
       </button>

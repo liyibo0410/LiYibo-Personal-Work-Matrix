@@ -18,6 +18,16 @@ from utils.minio_utils import get_minio_client
 from utils.task_utils import update_task_status, add_done_task, add_running_task, get_task_status, get_done_task_list, \
     get_running_task_list, set_task_meta
 from utils.mongo_document_utils import save_document_metadata, update_document_status, get_user_documents, delete_document_record, get_document_statistics
+from utils.mongo_document_utils import get_document_mongo_tool
+from utils.milvus_utils import count_chunks_by_file_title, delete_vectors_by_file_title
+
+
+def doc_file_title(doc: Dict[str, Any]) -> str:
+    """从 MongoDB 文档记录反推入库时写进 Milvus 的 file_title。
+
+    必须与 node_entry 的取值口径一致：文件名去扩展名（不是带扩展名的 filename）。
+    """
+    return Path(doc.get("filename") or "").stem
 
 # 1. 创建路由（可由统一入口 console_service.py 挂载，也可独立运行）
 # 说明：合并后台后本文件不再直接创建 FastAPI 实例，改为导出 APIRouter；
@@ -76,13 +86,11 @@ def run_graph_task(task_id: str, file_dir: str, import_file_path: str, owner: st
         # 4. 全流程执行完成，更新任务全局状态为：已完成
         update_task_status(task_id, "completed")
         
-        # 5. 更新文档元数据状态
+        # 5. 更新文档元数据状态：chunk_count 从向量库按 file_title 实测回读。
+        # 原实现为了拿 chunk_count 会把整条 LangGraph 流程**再跑一遍**（跑完还丢弃结果、恒写 0），
+        # 等于每次上传都做双份切分 + 双份嵌入 + 双份入库。
         try:
-            # 从最后一个节点结果中获取 chunk_count
-            chunk_count = 0
-            if "node_document_split" in [list(event.keys())[0] for event in workflow.run(init_state, stream=True)]:
-                # 重新执行一次获取 chunk_count（简化处理，实际应该从 state 中获取）
-                pass
+            chunk_count = count_chunks_by_file_title(Path(import_file_path).stem, owner)
             update_document_status(task_id, "completed", chunk_count=chunk_count)
         except Exception as e:
             logger.warning(f"[{task_id}] 更新文档状态失败：{e}")
@@ -213,6 +221,7 @@ async def list_documents(owner: str = "public", limit: int = 50):
     """
     try:
         docs = get_user_documents(owner, limit)
+        _backfill_chunk_counts(docs)
         return {
             "code": 200,
             "total": len(docs),
@@ -223,25 +232,65 @@ async def list_documents(owner: str = "public", limit: int = 50):
         raise HTTPException(status_code=500, detail=f"查询失败：{str(e)}")
 
 
+def _backfill_chunk_counts(docs: List[Dict[str, Any]]) -> None:
+    """把历史遗留的 chunk_count=0 按向量库实测值回填。
+
+    旧版入库流程从不回写真实条数（恒 0），导致「热门文档 TOP 10」实际是按 0 排序、
+    删除确认里报的条数也不可信。这里在列表接口上自愈一次，只查缺的那些。
+    """
+    tool = get_document_mongo_tool()
+    for doc in docs:
+        if doc.get("chunk_count"):
+            continue
+        title = doc_file_title(doc)
+        if not title:
+            continue
+        try:
+            n = count_chunks_by_file_title(title, doc.get("owner"))
+        except Exception as e:
+            logger.warning(f"回填 chunk_count 失败 {title}：{e}")
+            continue
+        doc["chunk_count"] = n
+        if not n:
+            continue
+        try:
+            tool.update_document_status(doc["task_id"], doc.get("status") or "completed", chunk_count=n)
+        except Exception as e:
+            logger.warning(f"持久化 chunk_count 失败 {doc.get('task_id')}：{e}")
+
+
 # 8. 文档删除接口
-@router.delete("/documents/{task_id}", summary="删除文档", description="删除指定文档的记录和相关数据")
+@router.delete("/documents/{task_id}", summary="删除文档", description="级联删除：Milvus 向量 + MongoDB 记录")
 async def delete_document(task_id: str):
     """
-    文档删除接口
-    删除 MongoDB 中的文档记录（物理文件暂不删除，保留恢复可能）
-    
+    文档删除接口（真删除）
+
+    顺序：先按 file_title 清掉 kb_chunks / kb_item_names 的向量，最后才删 MongoDB 记录。
+    反了会怎样：Mongo 先删就再也查不到 file_title，向量变成永远清理不掉的孤儿 —— 之前
+    正是这个顺序缺陷，导致删掉的文档仍会被「检索问答」命中。
+    原始文件与 MinIO 对象保留（体积可控，且留出误删恢复的余地）。
+
     :param task_id: 文档任务ID
-    :return: 删除结果
+    :return: 删除结果，含被清理的向量条数
     """
+    tool = get_document_mongo_tool()
+    doc = tool.get_document_by_task_id(task_id)
+    if not doc:
+        raise HTTPException(status_code=404, detail="文档不存在")
+
+    title = doc_file_title(doc)
     try:
-        success = delete_document_record(task_id)
-        if success:
-            return {
-                "code": 200,
-                "message": "文档删除成功"
-            }
-        else:
+        removed = delete_vectors_by_file_title(title, doc.get("owner")) if title \
+            else {"chunks": 0, "item_names": 0}
+        if not delete_document_record(task_id):
             raise HTTPException(status_code=404, detail="文档不存在")
+        return {
+            "code": 200,
+            "message": "文档删除成功",
+            "file_title": title,
+            "removed_chunks": removed["chunks"],
+            "removed_item_names": removed["item_names"],
+        }
     except HTTPException:
         raise
     except Exception as e:
@@ -250,16 +299,18 @@ async def delete_document(task_id: str):
 
 
 # 9. 文档统计接口
-@router.get("/statistics", summary="文档统计", description="获取文档统计信息")
-async def get_statistics():
+@router.get("/statistics", summary="文档统计", description="获取文档总数、切片数、今日上传数等统计信息（按 owner 口径，与文档列表一致）")
+async def get_statistics(owner: str = "public"):
     """
     文档统计接口
     返回文档总数、总chunk数、今日上传数等统计信息
-    
+
+    :param owner: 统计口径，默认 public —— 必须与 /documents 的过滤一致，
+                  否则页头计数与表格行数对不上，看起来像「删除没生效」
     :return: 统计信息
     """
     try:
-        stats = get_document_statistics()
+        stats = get_document_statistics(owner)
         return {
             "code": 200,
             "statistics": stats
@@ -362,31 +413,41 @@ async def get_all_tags(owner: str = "public"):
 
 
 # 13. 批量删除接口
-@router.post("/documents/batch-delete", summary="批量删除", description="批量删除文档")
+@router.post("/documents/batch-delete", summary="批量删除", description="批量级联删除文档（向量 + 记录）")
 async def batch_delete_documents(task_ids: List[str]):
-    """批量删除文档"""
-    try:
-        from utils.mongo_document_utils import get_document_mongo_tool
-        tool = get_document_mongo_tool()
-        deleted = 0
-        for task_id in task_ids:
-            if tool.delete_document(task_id):
-                deleted += 1
-        return {
-            "code": 200,
-            "message": f"成功删除 {deleted} 个文档",
-            "deleted": deleted
-        }
-    except Exception as e:
-        logger.error(f"批量删除失败：{e}")
-        raise HTTPException(status_code=500, detail=f"删除失败：{str(e)}")
+    """批量删除：逐个复用单条删除逻辑，保证向量与记录一起清掉。
+
+    逐条返回结果，部分失败不会把已成功的回滚（Milvus 删除不可回滚），
+    所以把失败项明确告诉调用方，而不是只报一个「成功 N 个」。
+    """
+    results = []
+    for task_id in task_ids:
+        try:
+            r = await delete_document(task_id)
+            results.append({"task_id": task_id, "ok": True,
+                            "removed_chunks": r.get("removed_chunks", 0)})
+        except HTTPException as e:
+            results.append({"task_id": task_id, "ok": False, "error": e.detail})
+        except Exception as e:
+            results.append({"task_id": task_id, "ok": False, "error": str(e)})
+    deleted = sum(1 for x in results if x["ok"])
+    failed = [x for x in results if not x["ok"]]
+    message = f"成功删除 {deleted} 个文档"
+    if failed:
+        message += f"，{len(failed)} 个失败"
+    return {
+        "code": 200,
+        "message": message,
+        "deleted": deleted,
+        "results": results,
+    }
 
 
 if __name__ == "__main__":
     """独立运行入口（兼容旧方式：单跑导入服务，端口 8000）"""
     app = FastAPI(
-        title="BOSS智库-导入API",
-        description="此文档是BOSS智库导入流程的API接口说明",
+        title="RAG 知识库-导入API",
+        description="此文档是RAG 知识库导入流程的API接口说明",
     )
     app.add_middleware(
         CORSMiddleware,
@@ -396,7 +457,7 @@ if __name__ == "__main__":
         allow_headers=["*"],  # 允许的请求头
     )
     app.include_router(router)
-    logger.info("BOSS智库导入服务启动中...")
+    logger.info("RAG 知识库导入服务启动中...")
     # 启动uvicorn服务，绑定本地IP和8000端口，关闭自动重载（生产环境建议用workers多进程）
     uvicorn.run(
         app=app,

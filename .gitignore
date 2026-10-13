@@ -29,3 +29,15 @@ _evidence/**/raw/
 # 运行时数据库与上传产物（含真实合同内容，不入库）
 projects/*/data/
 !projects/*/data/.gitkeep
+
+# 服务托管运行时产物（日志/PID）与临时排查目录，不入库
+_runtime/
+_tmp_issue/
+
+# 个人档案与含个人信息的文件：远端是公开仓库，一律不入库
+# （.workbuddy/ 是各项目的会话记忆与交接档案，03-resume/ 是简历，_resume_dump.txt 是简历文本转储）
+.workbuddy/
+03-resume/
+_tools/_resume_dump.txt
+# 品牌位真源里存着用户上传的 logo dataURL，属本机数据；仓库靠各模块默认值兜底
+shared/config/brand.json

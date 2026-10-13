@@ -1,0 +1,8 @@
+pyproject.toml
+src/cloudpivot_config/__init__.py
+src/cloudpivot_config/registry.py
+src/cloudpivot_config.egg-info/PKG-INFO
+src/cloudpivot_config.egg-info/SOURCES.txt
+src/cloudpivot_config.egg-info/dependency_links.txt
+src/cloudpivot_config.egg-info/requires.txt
+src/cloudpivot_config.egg-info/top_level.txt

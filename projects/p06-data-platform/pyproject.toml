@@ -1,0 +1,28 @@
+[project]
+name = "p06-data-platform"
+version = "1.0.0"
+description = "CloudPivot Data Platform - E-commerce data hub with ingestion, analytics, quality, and lineage"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    "sqlalchemy>=2.0.25",
+    "duckdb>=0.10.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    "python-multipart>=0.0.6",
+    "aiosqlite>=0.19.0",
+]
+
+[project.scripts]
+p06-start = "app.main:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "httpx>=0.27.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

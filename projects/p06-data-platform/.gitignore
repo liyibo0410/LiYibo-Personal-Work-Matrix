@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+data/*.duckdb
+data/*.duckdb.wal
+data/metadata.db
+.env
+*.egg-info/
+dist/
+build/

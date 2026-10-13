@@ -21,7 +21,7 @@ def test_run_due_competitor_monitors_requires_edit_permission() -> None:
     _seed_due_monitor(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).post(
             "/api/v1/workspace/competitor-monitors/run-due",

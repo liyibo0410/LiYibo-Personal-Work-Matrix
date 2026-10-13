@@ -61,7 +61,7 @@ def require_edit_permission(
     access = _bind_workspace_to_session(db, current_user=current_user, workspace_id=x_workspace_id)
     # Workspace 已启用后以成员角色为准，避免全局 operator 绕过目标 Workspace 的 viewer 限制。
     effective_role = access.role if access is not None else current_user.role
-    if effective_role not in {UserRole.OWNER, UserRole.OPERATOR}:
+    if effective_role not in {UserRole.OWNER, UserRole.OPERATOR, UserRole.DESIGNER}:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Edit permission required")
     return current_user
 
@@ -93,7 +93,7 @@ def require_workspace_edit_permission(
     access: Annotated[WorkspaceAccess, Depends(get_current_workspace)],
 ) -> WorkspaceAccess:
     """处理校验并获取Workspaceedit权限接口；完成身份、Workspace、资源归属和输入校验后返回结构化结果。"""
-    if access.role not in {UserRole.OWNER, UserRole.OPERATOR}:
+    if access.role not in {UserRole.OWNER, UserRole.OPERATOR, UserRole.DESIGNER}:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Workspace edit permission required")
     return access
 
@@ -112,6 +112,13 @@ def require_manage_users_permission(current_user: Annotated[User, Depends(get_cu
     """处理校验并获取manageusers权限接口；完成身份、Workspace、资源归属和输入校验后返回结构化结果。"""
     if current_user.role != "owner":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User management permission required")
+    return current_user
+
+
+def require_owner_permission(current_user: Annotated[User, Depends(get_current_user)]) -> User:
+    """老板看板专属权限，仅 OWNER 可访问。"""
+    if current_user.role != "owner":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Owner dashboard access only")
     return current_user
 
 

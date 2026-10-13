@@ -127,16 +127,24 @@ class DocumentMongoTool:
             docs.append(doc)
         return docs
 
-    def get_statistics(self) -> Dict:
-        """获取文档统计信息"""
-        total_docs = self.documents.count_documents({})
+    def get_statistics(self, owner: Optional[str] = None) -> Dict:
+        """获取文档统计信息。
+
+        传 owner 就只统计该租户：文档列表按 owner 过滤，而统计原先数的是全库 ——
+        库里有一条历史 test 记录时，页头「共 N 个文档」就和表格行数对不上，
+        看起来像「删了却没少」。
+        """
+        flt = {"owner": owner} if owner else {}
+        total_docs = self.documents.count_documents(flt)
         total_chunks = self.documents.aggregate([
+            {"$match": flt},
             {"$group": {"_id": None, "total": {"$sum": "$chunk_count"}}}
         ])
         total_chunks = list(total_chunks)
         total_chunks = total_chunks[0]["total"] if total_chunks else 0
-        
+
         recent_docs = self.documents.count_documents({
+            **flt,
             "created_at": {"$gte": datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)}
         })
         
@@ -236,7 +244,7 @@ def delete_document_record(task_id: str) -> bool:
     return tool.delete_document(task_id)
 
 
-def get_document_statistics() -> Dict:
+def get_document_statistics(owner: Optional[str] = None) -> Dict:
     """获取文档统计"""
     tool = get_document_mongo_tool()
-    return tool.get_statistics()
+    return tool.get_statistics(owner)

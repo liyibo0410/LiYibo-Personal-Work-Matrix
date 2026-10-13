@@ -25,7 +25,7 @@
 | **端口** | `shared/config/services.json` = SERVICE_REGISTRY，10 个服务的唯一真源；跨模块调用一律解析于此，**禁止硬编码端口** | [ADR-0002](docs/adr/0002-service-registry-端口单一真源.md) |
 | **模型** | 所有 LLM 调用走 `shared/llm-gateway`：主力/备用双端点 + 自动故障转移 + token/耗时统计 + 无 Key 降级 mock | — |
 | **取数** | 跨模块取数走**真实 HTTP**：P02 取 P06 指标、P09 取 P01 会话；正常路径 `source=p06-live`，降级路径 `degraded=True` 且**不返回伪造字段** | [ADR-0004](docs/adr/0004-跨模块真实调用与降级不伪造.md) |
-| **视觉** | `shared/ui-kit/tokens.css` 单一令牌源（深灰底 + 单一品牌蓝）；静态模块运行时挂 `/shared`，构建型前端构建期内联 + `cp:theme` 主题桥 | [ADR-0005](docs/adr/0005-设计令牌单一真源与构建期耦合.md) |
+| **视觉** | `shared/ui-kit/tokens.css` 单一令牌源（**白底 + 单一品牌蓝**，深色为可选态）；静态模块运行时挂 `/shared`，构建型前端构建期内联 + `cp:theme` 主题桥；公司名与 logo 全站走 `brand.json` 可自定义 | [ADR-0005](docs/adr/0005-设计令牌单一真源与构建期耦合.md) |
 
 ## 二、架构
 
@@ -39,7 +39,7 @@ flowchart TB
     P09["P09 AI 销售考核<br/>:8090"]
   end
   subgraph L2["L2 能力层"]
-    P03["P03 Deep Research 问数<br/>:8030 / 5174"]
+    P03["P03 NL2SQL 问数<br/>:8030 / 5174"]
     P04["P04 RAG 知识库<br/>:8041"]
     P07["P07 AI 素材中心<br/>:8070"]
     P08["P08 直播切片<br/>:8080"]
@@ -100,6 +100,8 @@ stop-all.bat
 
 侧栏状态点是真探活：`GET /api/services/health` 由网关对各模块端口做 TCP 探测，绿=在监听、灰=未启动；未启动的模块在挂载区直接给出可执行启动命令，而不是一个空白 iframe。
 
+**打开就是作品集首页**：`http://127.0.0.1:8800` 的第一屏不是要登录的后台，而是整屏作品集 —— 四层模块卡（每张带实测指标与 **Mock 边界**）、数据流闭环 + 6 条 ADR、可复核的评测（含 P04 本地/云端 Ragas 对照表）、真实/模拟边界声明。访客不登录就能读完；点「进入演示」才弹登录模态，登录后自动回跳到点进去的那个模块。证据与实测链见 `_evidence/shell/D13-portfolio-home.md`。
+
 **品牌可自定义**：外壳左下角 ⚙ 改公司名 / 英文名 / 副标题、上传 logo（自动缩放）→「保存并全站生效」。写的是 `shared/config/brand.json`（品牌位单一真源），外壳、登录页、页脚与各模块侧栏一起变。
 
 ## 四、十个模块
@@ -110,7 +112,7 @@ stop-all.bat
 | L3 | **P02 电商运营助手 ★** | `ecommerce-ops` | 8000 / 3001 | 登录 → 选店 → 文案生成 → **合规检测拦截** → 广告实验 → 对比数据 | FastAPI + LangGraph + SQLAlchemy / Next.js + React 19 + Tailwind 4 |
 | L3 | P05 合同审批（衡鉴） | `contract` | 8770 | 上传 → 条款抽取 → 规则风险打分 → LLM 二阶段语义复核 → 报告 + 审批留痕 | **零第三方依赖**：纯标准库 + `ThreadingHTTPServer` + SQLite |
 | L3 | P09 AI 销售考核 | `sales-assessment` | 8090 | 导入会话（可来自 P01）→ 规则评分 → 排行榜 + 个人报告 | FastAPI + 规则引擎 + 人机一致性口径 |
-| L2 | P03 Deep Research 问数 | `research` | 8030 / 5174 | 自然语言 → SQL → 执行 → 图表 → 溯源报告，带只读护栏 | DeepAgents + LangChain + FastAPI + Vue3 |
+| L2 | P03 NL2SQL 问数 | `research` | 8030 / 5174 | 自然语言 → SQL → 执行 → 图表 → 溯源报告，带只读护栏 | DeepAgents + LangChain + FastAPI + Vue3 |
 | L2 | P04 RAG 知识库 | `knowledge` | 8041 | 上传 → 切片 → 检索问答**带引用** → 召回/精确/拒答/忠实度评测 | LangGraph + FastAPI + Milvus + MongoDB + 本地 BGE-M3/BGE-reranker |
 | L2 | P07 AI 素材中心 | `asset-center` | 8070 | 上传 → 打标 → 以文搜图 → 与投放效果关联 | FastAPI + SQLite + ECharts |
 | L2 | P08 直播切片 | `live-clip` | 8080 | 样例直播 → 分段打点（**每段给出得分构成**）→ 批量队列 + 进度 | FastAPI + Pydantic v2 |
@@ -220,11 +222,12 @@ MCP 报错被 `try/except` 吞掉 → 功能死了但流程照跑、日志只有
 
 ## 九、已知限制（当前阶段未闭环）
 
-1. **外部模型凭据**：两套阿里云 Key 实测均 `InvalidApiKey`，直接后果是 P03 无法给出真实回答；P04 的云端重排通路依赖的 Coding Plan Key 官方定位是「Coding tools only」，属条款灰区 —— 对外演示需换按量付费 Key。已做到的是：失败原因明确推给前端，不做静默兜底。
+1. **模型凭据与数据源**：两套阿里云百炼 Key 经实测**均已有效**，P03 问数的模型层已真实接通（2026-10-13 晚）。此前「答不出内容」的根因不是 Key 失效，而是 P03 把仓库根目录算成了 `projects/`、根 `.env` 从未被读到 —— 修复与逐条实测记录见 `_evidence/INDEX.md` 的 D12。仍未闭环的是**数据源**：P03 依赖的 MySQL(3306) / RAGFlow(9380) 未启动、网络搜索仍是 mock Key（已实测到「库里没有的数据会明确拒答而不是编造数字」）。另实测出一条能力边界：**Embedding / Rerank 只有免费额度端点提供，Token Plan 端点返回 `Model not exist`**，因此 P04 的真嵌入不能只靠套餐通道，对外演示建议换按量付费 `sk-` Key。
 2. **没有的性能数字就是不写**：全平台**未做并发压测**（无 P95 / 错误率），**未测覆盖率**。P06/P07/P09 的性能描述属 README 声明。
 3. **P10 未真实训练**（无 GPU 可用），loss 曲线与前后对比属模拟演示；页面与本 README 双处标注。
 4. **P02 浅色态**：`/` → `/login` 跳转会丢 `?cp-theme`，需改 Cookie 供 SSR 读取（尚未做）。
 5. `02-flagship/` 为空占位；门户 `01-portfolio/` 是静态页，不依赖后端进程。
+6. **没有公网入口**：十个模块全部只监听本机/局域网，**远程访问尚未打通**。工具已就位（`_tools/tunnel.py start/stop/status`，自校验通过才对外发链接），但本机「快车VPN」的 TUN + fake-IP 会对 `argotunnel.com` 做 TLS 中间人，cloudflared 边缘握手直接 `EOF`、访客侧 530。当前可用的只有同 WiFi 的 `http://192.168.1.112:8800`（见 D12）。三条出路与取舍见 `_evidence/shell/D13-portfolio-home.md` 第三节。
 
 ## 十、目录与证据
 

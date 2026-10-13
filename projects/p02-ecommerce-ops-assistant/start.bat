@@ -1,63 +1,63 @@
 @echo off
-chcp 936 >nul
-title Ecommerce Operation Assistant
+chcp 65001 >nul 2>&1
+title CloudPivot P02 - ç”µå•†è¿è¥åŠ©æ‰‹
 cd /d "%~dp0"
 
 echo ============================================================
-echo   µçÉÌÔËÓªÖúÊÖ - Ò»¼üÆô¶¯
+echo   CloudPivot P02 - ç”µå•†è¿è¥åŠ©æ‰‹ ä¸€é”®å¯åŠ¨
 echo ============================================================
 echo.
 
-REM ¼ì²é²¢ÇåÀí¶Ë¿Ú 8000
-echo [1/4] ¼ì²éºó¶Ë¶Ë¿Ú...
+REM æ£€æŸ¥å¹¶é‡Šæ”¾ç«¯å£ 8000
+echo [1/4] æ£€æŸ¥åŽç«¯ç«¯å£...
 for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8000 ^| findstr LISTENING 2^>nul') do (
-    echo   ·¢ÏÖ¶Ë¿Ú 8000 ±»Õ¼ÓÃ (PID: %%a)£¬ÕýÔÚÍ£Ö¹...
+    echo   å‘çŽ°ç«¯å£ 8000 è¢«å ç”¨ (PID: %%a)ï¼Œæ­£åœ¨åœæ­¢...
     taskkill /PID %%a /F >nul 2>&1
     if errorlevel 1 (
-        echo   [WARN] ÎÞ·¨Í£Ö¹½ø³Ì %%a
+        echo   [WARN] æ— æ³•åœæ­¢è¿›ç¨‹ %%a
     ) else (
-        echo   [OK] ÒÑÍ£Ö¹¾É½ø³Ì
+        echo   [OK] å·²åœæ­¢è¿›ç¨‹
     )
 )
-echo   [OK] ¶Ë¿Ú 8000 ¿ÉÓÃ
+echo   [OK] ç«¯å£ 8000 å¯ç”¨
 echo.
 
-REM ¼ì²é²¢ÇåÀí¶Ë¿Ú 3000
-echo [2/4] ¼ì²éÇ°¶Ë¶Ë¿Ú...
-for /f "tokens=5" %%a in ('netstat -ano ^| findstr :3000 ^| findstr LISTENING 2^>nul') do (
-    echo   ·¢ÏÖ¶Ë¿Ú 3000 ±»Õ¼ÓÃ (PID: %%a)£¬ÕýÔÚÍ£Ö¹...
+REM æ£€æŸ¥å¹¶é‡Šæ”¾ç«¯å£ 3001
+echo [2/4] æ£€æŸ¥å‰ç«¯ç«¯å£...
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr :3001 ^| findstr LISTENING 2^>nul') do (
+    echo   å‘çŽ°ç«¯å£ 3001 è¢«å ç”¨ (PID: %%a)ï¼Œæ­£åœ¨åœæ­¢...
     taskkill /PID %%a /F >nul 2>&1
     if errorlevel 1 (
-        echo   [WARN] ÎÞ·¨Í£Ö¹½ø³Ì %%a
+        echo   [WARN] æ— æ³•åœæ­¢è¿›ç¨‹ %%a
     ) else (
-        echo   [OK] ÒÑÍ£Ö¹¾É½ø³Ì
+        echo   [OK] å·²åœæ­¢è¿›ç¨‹
     )
 )
-echo   [OK] ¶Ë¿Ú 3000 ¿ÉÓÃ
+echo   [OK] ç«¯å£ 3001 å¯ç”¨
 echo.
 
-REM Æô¶¯ Docker »ù´¡ÉèÊ©
-echo [3/4] Æô¶¯ Docker »ù´¡ÉèÊ©...
+REM å¯åŠ¨ Docker åŸºç¡€è®¾æ–½
+echo [3/4] å¯åŠ¨ Docker åŸºç¡€è®¾æ–½...
 docker compose --env-file .env up -d >nul 2>&1
 if errorlevel 1 (
-    echo   [WARN] Docker Æô¶¯Ê§°Ü£¬ÇëÈ·±£ Docker Desktop ÕýÔÚÔËÐÐ
+    echo   [WARN] Docker å¯åŠ¨å¤±è´¥ï¼Œè¯·ç¡®è®¤ Docker Desktop å·²å¯åŠ¨
 ) else (
-    echo   [OK] Docker ·þÎñÒÑÆô¶¯
+    echo   [OK] Docker å®¹å™¨å·²å°±ç»ª
     timeout /t 5 /nobreak >nul
 )
 echo.
 
-REM Æô¶¯Ó¦ÓÃ·þÎñ
-echo [4/4] Æô¶¯Ó¦ÓÃ·þÎñ...
+REM å¯åŠ¨åº”ç”¨æœåŠ¡
+echo [4/4] å¯åŠ¨åº”ç”¨æœåŠ¡...
 start "Backend" /d "%~dp0api" cmd /k "uv run uvicorn app.main:app --reload --port 8000"
-start "Frontend" /d "%~dp0web" cmd /k "npm run dev"
+start "Frontend" /d "%~dp0web" cmd /k "npm run dev -- -p 3001"
 
 echo.
 echo ============================================================
-echo   Æô¶¯³É¹¦!
-echo   ºó¶Ë API: http://localhost:8000/docs
-echo   Ç°¶Ë½çÃæ: http://localhost:3000
+echo   å¯åŠ¨æˆåŠŸ!
+echo   åŽç«¯ API: http://localhost:8000/docs
+echo   å‰ç«¯ç•Œé¢: http://localhost:3001
 echo ============================================================
 echo.
-echo °´ÈÎÒâ¼ü¹Ø±Õ´Ë´°¿Ú (·þÎñ»á¼ÌÐøÔËÐÐ)
+echo æŒ‰ä»»æ„é”®å…³é—­æ­¤çª—å£ (ä¸å½±å“æœåŠ¡è¿è¡Œ)
 pause >nul

@@ -80,7 +80,7 @@ def test_viewer_cannot_update_model_settings() -> None:
     Base.metadata.create_all(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).patch(
             "/api/v1/model-settings",
@@ -100,7 +100,7 @@ def test_viewer_cannot_test_model_settings() -> None:
     Base.metadata.create_all(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).post(
             "/api/v1/model-settings/test",

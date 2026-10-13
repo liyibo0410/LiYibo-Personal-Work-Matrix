@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-cp-brand-title="P06 数据中台 · {name_en}">P06 数据中台 - CloudPivot</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<!-- 统一设计系统：tokens.css 是配色/间距/字体唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
+<link rel="stylesheet" href="/shared/ui-kit/tokens.css">
+<script src="/shared/config/services.js"></script>
+<script src="/shared/ui-kit/ui-kit.js"></script>
+<style>
+/* ── Reset & Base ─────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* 颜色统一引用 shared/ui-kit/tokens.css 的 --cp-* 令牌（改一处，全平台生效） */
+  --bg:var(--cp-bg);--surface:var(--cp-surface);--surface2:var(--cp-elevated);--surface3:#E3E8F0;
+  --border:var(--cp-line);--border-light:#C8D0DC;
+  --accent:var(--cp-brand);--accent-hover:var(--cp-brand-hover);--accent-dim:var(--cp-brand-bg);
+  --success:var(--cp-success);--warning:var(--cp-warning);--danger:var(--cp-danger);
+  --text:var(--cp-ink1);--text2:var(--cp-ink2);--text3:var(--cp-ink3);
+  --radius:8px;--radius-lg:12px;
+  --shadow:var(--cp-shadow);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+}
+html{font-size:14px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent-hover)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+
+/* ── Layout ───────────────────────────────────────────────── */
+.app{display:flex;min-height:100vh}
+.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.sidebar-header{padding:20px 16px;border-bottom:1px solid var(--border)}
+.sidebar-header h1{font-size:16px;font-weight:700;color:var(--text)}
+.sidebar-header .subtitle{font-size:11px;color:var(--text3);margin-top:4px;letter-spacing:.5px}
+.sidebar-nav{flex:1;padding:12px 8px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius);color:var(--text2);cursor:pointer;transition:all .15s;font-size:13px;margin-bottom:2px}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--accent-dim);color:var(--accent);font-weight:600}
+.nav-icon{width:18px;height:18px;opacity:.7}
+.nav-item.active .nav-icon{opacity:1}
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text3)}
+
+.main{flex:1;margin-left:220px;padding:24px 28px}
+.page{display:none}
+.page.active{display:block}
+
+/* ── Components ───────────────────────────────────────────── */
+.page-title{font-size:20px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.page-title .badge{font-size:11px;background:var(--accent-dim);color:var(--accent);padding:3px 8px;border-radius:10px;font-weight:500}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:1200px){.grid-4,.grid-5{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr}}
+
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px}
+.stat-card .label{font-size:12px;color:var(--text3);margin-bottom:6px}
+.stat-card .value{font-size:24px;font-weight:700;color:var(--text)}
+.stat-card .trend{font-size:12px;margin-top:4px}
+.trend-up{color:var(--success)}
+.trend-down{color:var(--danger)}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;transition:all .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-sm{padding:5px 10px;font-size:12px}
+
+table.data-table{width:100%;border-collapse:collapse}
+table.data-table th{text-align:left;padding:10px 12px;background:var(--surface2);color:var(--text2);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border)}
+table.data-table td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
+table.data-table tr:hover td{background:var(--surface2)}
+table.data-table .mono{font-family:'JetBrains Mono',Consolas,monospace;font-size:12px;color:var(--text2)}
+
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.tag-pass{background:var(--cp-success-bg);color:var(--success)}
+.tag-warn{background:var(--cp-warning-bg);color:var(--warning)}
+.tag-fail{background:var(--cp-danger-bg);color:var(--danger)}
+.tag-ods{background:var(--cp-brand-bg);color:var(--accent)}
+.tag-dwd{background:var(--cp-success-bg);color:var(--success)}
+.tag-dws{background:var(--cp-warning-bg);color:var(--warning)}
+.tag-ads{background:#F1ECFE;color:#7B5CFA}
+
+select,input[type="text"],input[type="date"]{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s}
+select:focus,input:focus{border-color:var(--accent)}
+select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A0A6B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
+
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.toolbar label{font-size:12px;color:var(--text2)}
+
+.empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty svg{width:48px;height:48px;margin-bottom:12px;opacity:.4}
+
+/* ── Health Score ─────────────────────────────────────────── */
+.health-ring{position:relative;width:120px;height:120px;margin:0 auto}
+.health-ring svg{transform:rotate(-90deg)}
+.health-ring .score-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;font-weight:700}
+.health-ring .score-label{position:absolute;top:62%;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text3)}
+
+/* ── Lineage SVG ──────────────────────────────────────────── */
+#lineage-container{width:100%;overflow:auto;min-height:500px}
+#lineage-svg{width:100%;min-height:500px}
+#lineage-svg text{font-family:var(--font)}
+
+/* ── Loading ──────────────────────────────────────────────── */
+.loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text3)}
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin-right:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Upload zone ──────────────────────────────────────────── */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:40px;text-align:center;cursor:pointer;transition:all .2s}
+.upload-zone:hover{border-color:var(--accent);background:var(--accent-dim)}
+.upload-zone.dragover{border-color:var(--accent);background:var(--accent-dim)}
+.upload-zone p{color:var(--text2);margin-top:8px}
+.upload-zone .hint{font-size:12px;color:var(--text3);margin-top:4px}
+
+/* ── Toast ────────────────────────────────────────────────── */
+.toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 18px;border-radius:var(--radius);font-size:13px;animation:slideIn .2s;box-shadow:var(--shadow)}
+.toast-success{background:var(--success);color:#fff}
+.toast-error{background:var(--danger);color:#fff}
+.toast-info{background:var(--accent);color:#fff}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+</style>
+</head>
+<body class="cp-app" data-cp-module="p06" data-cp-brand-src="/shared/config/brand.json">
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="cp-brandmark" data-cp-brand="logo">云枢</div>
+      <h1 data-cp-brand="company">云枢智能</h1>
+      <div class="subtitle">P06 数据中台</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" data-page="dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        数据总览
+      </div>
+      <div class="nav-item" data-page="tables">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+        数据表管理
+      </div>
+      <div class="nav-item" data-page="metrics">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        指标探查
+      </div>
+      <div class="nav-item" data-page="quality">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        数据质量
+      </div>
+      <div class="nav-item" data-page="lineage">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="6" r="3"/><circle cx="19" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="M7.5 7.5L10.5 16M16.5 7.5L13.5 16"/></svg>
+        数据血缘
+      </div>
+      <div class="nav-item" data-page="ingest">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        数据接入
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      v1.0.0 &middot; DuckDB + FastAPI
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <!-- ═══ Dashboard ═══ -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-title">数据总览 <span class="badge" id="dash-badge">加载中...</span></div>
+      <div class="grid grid-4" id="dash-stats"></div>
+      <div class="grid grid-2" style="margin-top:16px">
+        <div class="card">
+          <div class="card-title">数据健康度</div>
+          <div id="dash-health" style="display:flex;align-items:center;gap:24px">
+            <div class="health-ring" id="health-ring"></div>
+            <div id="health-details"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">数仓分层</div>
+          <div id="dash-layers"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">核心指标概览</div>
+        <div class="grid grid-4" id="dash-metrics"></div>
+      </div>
+    </div>
+
+    <!-- ═══ Tables ═══ -->
+    <div id="page-tables" class="page">
+      <div class="page-title">数据表管理</div>
+      <div class="toolbar">
+        <label>分层筛选：</label>
+        <select id="table-layer-filter">
+          <option value="">全部</option>
+          <option value="ODS">ODS 原始层</option>
+          <option value="DWD">DWD 明细层</option>
+          <option value="DWS">DWS 汇总层</option>
+          <option value="ADS">ADS 应用层</option>
+        </select>
+      </div>
+      <div class="card" style="padding:0;overflow:auto">
+        <table class="data-table" id="tables-table">
+          <thead><tr><th>表名</th><th>显示名</th><th>分层</th><th>行数</th><th>列数</th><th>说明</th><th>操作</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <!-- Table detail panel -->
+      <div id="table-detail" class="card" style="display:none;margin-top:16px">
+        <div class="card-title">
+          <span id="detail-title"></span>
+          <button class="btn btn-sm" onclick="closeDetail()">关闭</button>
+        </div>
+        <div id="detail-info" style="margin-bottom:16px"></div>
+        <div style="margin-bottom:12px;font-weight:600;font-size:13px;color:var(--text2)">列信息</div>
+        <div style="overflow:auto;margin-bottom:16px">
+          <table class="data-table" id="detail-columns">
+            <thead><tr><th>列名</th><th>类型</th><th>可空</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div style="margin-bottom:12px;font-weight:600;font-size:13px;color:var(--text2)">数据预览（前50行）</div>
+        <div style="overflow:auto;max-height:400px">
+          <table class="data-table" id="detail-preview">
+            <thead><tr id="detail-preview-head"></tr></thead>
+            <tbody id="detail-preview-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Metrics ═══ -->
+    <div id="page-metrics" class="page">
+      <div class="page-title">指标探查</div>
+      <div class="toolbar">
+        <label>指标：</label>
+        <select id="metric-code"></select>
+        <label>起始：</label>
+        <input type="date" id="metric-start" value="2024-07-01">
+        <label>结束：</label>
+        <input type="date" id="metric-end" value="2024-09-30">
+        <label>粒度：</label>
+        <select id="metric-granularity">
+          <option value="day">日</option>
+          <option value="week">周</option>
+          <option value="month">月</option>
+        </select>
+        <button class="btn btn-primary" onclick="queryMetric()">查询</button>
+      </div>
+      <div class="grid grid-4" id="metric-summary" style="margin-bottom:16px"></div>
+      <div class="card">
+        <div id="metric-chart" style="width:100%;height:400px"></div>
+      </div>
+    </div>
+
+    <!-- ═══ Quality ═══ -->
+    <div id="page-quality" class="page">
+      <div class="page-title">数据质量</div>
+      <div class="toolbar">
+        <button class="btn btn-primary" onclick="runQualityChecks()">运行质量检查</button>
+        <label id="quality-status" style="color:var(--text3)"></label>
+      </div>
+      <div class="grid grid-4" id="quality-summary"></div>
+      <div class="card" style="padding:0;overflow:auto;margin-top:16px">
+        <table class="data-table" id="quality-table">
+          <thead><tr><th>状态</th><th>严重度</th><th>检查项</th><th>表</th><th>列</th><th>指标值</th><th>阈值</th><th>详情</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ Lineage ═══ -->
+    <div id="page-lineage" class="page">
+      <div class="page-title">数据血缘</div>
+      <div class="card">
+        <div id="lineage-container">
+          <svg id="lineage-svg" viewBox="0 0 900 520"></svg>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">血缘明细</div>
+        <div style="overflow:auto">
+          <table class="data-table" id="lineage-table">
+            <thead><tr><th>源表</th><th>目标表</th><th>转换类型</th><th>说明</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Ingestion ═══ -->
+    <div id="page-ingest" class="page">
+      <div class="page-title">数据接入</div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">CSV 文件上传</div>
+          <div class="upload-zone" id="csv-zone" onclick="document.getElementById('csv-input').click()">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/></svg>
+            <p>点击或拖拽 CSV 文件到此处</p>
+            <div class="hint">支持 UTF-8 编码的 CSV 文件，最大 100MB</div>
+          </div>
+          <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="handleFileUpload(this,'csv')">
+          <div style="margin-top:12px">
+            <label>表名：</label><input type="text" id="csv-table" placeholder="auto_detected_table" style="width:200px">
+            <label style="margin-left:8px">分层：</label>
+            <select id="csv-layer"><option>ODS</option><option>DWD</option><option>DWS</option><option>ADS</option></select>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">JSON 文件上传</div>
+          <div class="upload-zone" id="json-zone" onclick="document.getElementById('json-input').click()">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/></svg>
+            <p>点击或拖拽 JSON 文件到此处</p>
+            <div class="hint">支持对象数组格式，最大 100MB</div>
+          </div>
+          <input type="file" id="json-input" accept=".json" style="display:none" onchange="handleFileUpload(this,'json')">
+          <div style="margin-top:12px">
+            <label>表名：</label><input type="text" id="json-table" placeholder="auto_detected_table" style="width:200px">
+            <label style="margin-left:8px">分层：</label>
+            <select id="json-layer"><option>ODS</option><option>DWD</option><option>DWS</option><option>ADS</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">接入日志</div>
+        <div id="ingest-log" style="font-family:monospace;font-size:12px;color:var(--text2);max-height:300px;overflow:auto;padding:8px;background:var(--bg);border-radius:var(--radius)">等待上传...</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   P06 Data Platform - Frontend Logic
+   ═══════════════════════════════════════════════════════════ */
+
+const API = '';
+
+// ── Navigation ──────────────────────────────────────────────
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    const page = item.dataset.page;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    // Load page data
+    const loaders = { dashboard: loadDashboard, tables: loadTables, metrics: loadMetricsPage, quality: ()=>{}, lineage: loadLineage, ingest: ()=>{} };
+    if (loaders[page]) loaders[page]();
+  });
+});
+
+// ── API helper ──────────────────────────────────────────────
+
+async function api(path, opts = {}) {
+  try {
+    const res = await fetch(API + '/api/v1' + path, opts);
+    const json = await res.json();
+    if (json.code !== 0) throw new Error(json.msg || 'API error');
+    return json.data;
+  } catch (e) {
+    console.error('API error:', path, e);
+    throw e;
+  }
+}
+
+// ── Toast ───────────────────────────────────────────────────
+
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = 'toast toast-' + type;
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ── Formatting ──────────────────────────────────────────────
+
+function fmtNum(n, unit = '') {
+  if (n == null) return '-';
+  if (typeof n === 'number') {
+    if (n >= 1e8) return (n / 1e8).toFixed(2) + '亿' + unit;
+    if (n >= 1e4) return (n / 1e4).toFixed(2) + '万' + unit;
+    return n.toLocaleString('zh-CN') + unit;
+  }
+  return n + unit;
+}
+
+function fmtPct(n) {
+  if (n == null) return '-';
+  return (n * 100).toFixed(2) + '%';
+}
+
+function trendHtml(v) {
+  if (v == null || v === 0) return '<span style="color:var(--text3)">-</span>';
+  const cls = v > 0 ? 'trend-up' : 'trend-down';
+  const arrow = v > 0 ? '&#9650;' : '&#9660;';
+  return `<span class="${cls}">${arrow} ${fmtPct(Math.abs(v))}</span>`;
+}
+
+// ═══ Dashboard ═══════════════════════════════════════════════
+
+async function loadDashboard() {
+  try {
+    const data = await api('/dashboard');
+    document.getElementById('dash-badge').textContent = `${data.table_count} 张表 / ${fmtNum(data.total_rows)} 行`;
+
+    // Stats cards
+    const statsHtml = [
+      { label: '数据表', value: data.table_count, sub: `${Object.values(data.layers).reduce((a,b)=>a+b,0)} 张` },
+      { label: '总行数', value: fmtNum(data.total_rows), sub: '' },
+      { label: '健康评分', value: data.health.score, sub: `${data.health.passed}/${data.health.total_checks} 通过` },
+      { label: '数仓层级', value: Object.keys(data.layers).length, sub: Object.keys(data.layers).join(' / ') },
+    ].map(s => `<div class="stat-card"><div class="label">${s.label}</div><div class="value">${s.value}</div><div class="trend" style="color:var(--text3)">${s.sub}</div></div>`).join('');
+    document.getElementById('dash-stats').innerHTML = statsHtml;
+
+    // Health ring
+    renderHealthRing(data.health.score);
+    document.getElementById('health-details').innerHTML = `
+      <div style="margin-bottom:8px"><span class="tag tag-pass">通过 ${data.health.passed}</span></div>
+      <div style="margin-bottom:8px"><span class="tag tag-warn">警告 ${data.health.warned}</span></div>
+      <div><span class="tag tag-fail">失败 ${data.health.failed}</span></div>
+    `;
+
+    // Layers
+    const layerColors = { ODS: '#3370FF', DWD: '#16A34A', DWS: '#B4690E', ADS: '#7B5CFA' };
+    const layerNames = { ODS: '原始层 ODS', DWD: '明细层 DWD', DWS: '汇总层 DWS', ADS: '应用层 ADS' };
+    document.getElementById('dash-layers').innerHTML = Object.entries(data.layers).map(([k, v]) =>
+      `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="width:10px;height:10px;border-radius:2px;background:${layerColors[k] || '#666'}"></span>
+        <span style="flex:1;font-size:13px">${layerNames[k] || k}</span>
+        <span style="font-weight:600">${v} 张表</span>
+      </div>`
+    ).join('');
+
+    // Metrics overview
+    document.getElementById('dash-metrics').innerHTML = data.metrics.map(m =>
+      `<div class="stat-card">
+        <div class="label">${m.name}</div>
+        <div class="value" style="font-size:20px">${m.unit === '%' ? fmtPct(m.latest) : fmtNum(m.latest)}</div>
+        <div class="trend">${trendHtml(m.trend)}</div>
+      </div>`
+    ).join('');
+
+  } catch (e) {
+    toast('加载总览失败: ' + e.message, 'error');
+  }
+}
+
+function renderHealthRing(score) {
+  const color = score >= 80 ? 'var(--success)' : score >= 60 ? 'var(--warning)' : 'var(--danger)';
+  const pct = score / 100;
+  const r = 48, c = 2 * Math.PI * r;
+  document.getElementById('health-ring').innerHTML = `
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--border)" stroke-width="8"/>
+      <circle cx="60" cy="60" r="${r}" fill="none" stroke="${color}" stroke-width="8"
+        stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - pct)}" stroke-linecap="round"/>
+    </svg>
+    <div class="score-text" style="color:${color}">${score}</div>
+    <div class="score-label">健康分</div>
+  `;
+}
+
+// ═══ Tables ══════════════════════════════════════════════════
+
+let allTables = [];
+
+async function loadTables() {
+  try {
+    allTables = await api('/tables');
+    renderTables(allTables);
+  } catch (e) {
+    toast('加载表列表失败', 'error');
+  }
+}
+
+function renderTables(tables) {
+  const tbody = document.querySelector('#tables-table tbody');
+  const layerTag = l => `<span class="tag tag-${l.toLowerCase()}">${l}</span>`;
+  tbody.innerHTML = tables.map(t => `
+    <tr>
+      <td class="mono">${t.table_name}</td>
+      <td>${t.display_name}</td>
+      <td>${layerTag(t.layer)}</td>
+      <td>${fmtNum(t.row_count)}</td>
+      <td>${t.column_count}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.description || ''}">${t.description || '-'}</td>
+      <td><button class="btn btn-sm" onclick="showTableDetail('${t.table_name}')">查看</button></td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('table-layer-filter').addEventListener('change', function() {
+  const layer = this.value;
+  renderTables(layer ? allTables.filter(t => t.layer === layer) : allTables);
+});
+
+async function showTableDetail(name) {
+  try {
+    const [info, preview] = await Promise.all([
+      api('/tables/' + name),
+      api('/tables/' + name + '/preview?limit=50'),
+    ]);
+
+    document.getElementById('detail-title').textContent = `${info.display_name} (${info.table_name})`;
+    document.getElementById('detail-info').innerHTML = `
+      <div style="display:flex;gap:20px;font-size:13px;color:var(--text2)">
+        <span>分层: <strong>${info.layer}</strong></span>
+        <span>行数: <strong>${fmtNum(info.row_count)}</strong></span>
+        <span>列数: <strong>${info.columns.length}</strong></span>
+        <span>${info.description || ''}</span>
+      </div>
+    `;
+
+    // Columns
+    document.querySelector('#detail-columns tbody').innerHTML = info.columns.map(c =>
+      `<tr><td class="mono">${c.name}</td><td>${c.type}</td><td>${c.nullable ? '是' : '否'}</td></tr>`
+    ).join('');
+
+    // Preview
+    const rows = preview.rows;
+    if (rows.length > 0) {
+      const cols = Object.keys(rows[0]);
+      document.getElementById('detail-preview-head').innerHTML = cols.map(c => `<th>${c}</th>`).join('');
+      document.getElementById('detail-preview-body').innerHTML = rows.map(r =>
+        '<tr>' + cols.map(c => `<td class="mono" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r[c] ?? ''}</td>`).join('') + '</tr>'
+      ).join('');
+    }
+
+    document.getElementById('table-detail').style.display = 'block';
+    document.getElementById('table-detail').scrollIntoView({ behavior: 'smooth' });
+  } catch (e) {
+    toast('加载表详情失败', 'error');
+  }
+}
+
+function closeDetail() {
+  document.getElementById('table-detail').style.display = 'none';
+}
+
+// ═══ Metrics ═════════════════════════════════════════════════
+
+let metricChart = null;
+
+async function loadMetricsPage() {
+  try {
+    const metrics = await api('/metrics');
+    const sel = document.getElementById('metric-code');
+    if (sel.options.length <= 1) {
+      sel.innerHTML = metrics.map(m => `<option value="${m.code}">${m.name} (${m.code})</option>`).join('');
+    }
+    queryMetric();
+  } catch (e) {
+    toast('加载指标列表失败', 'error');
+  }
+}
+
+async function queryMetric() {
+  const code = document.getElementById('metric-code').value;
+  const start = document.getElementById('metric-start').value;
+  const end = document.getElementById('metric-end').value;
+  const gran = document.getElementById('metric-granularity').value;
+  if (!code) return;
+
+  try {
+    const params = new URLSearchParams({ granularity: gran });
+    if (start) params.set('start_date', start);
+    if (end) params.set('end_date', end);
+    const data = await api('/metrics/' + code + '/query?' + params.toString());
+
+    // Summary cards
+    const s = data.summary;
+    const unit = data.metric.unit;
+    document.getElementById('metric-summary').innerHTML = [
+      { label: '最新值', value: unit === '%' ? fmtPct(s.latest) : fmtNum(s.latest) },
+      { label: '平均值', value: unit === '%' ? fmtPct(s.avg) : fmtNum(s.avg) },
+      { label: '最大值', value: unit === '%' ? fmtPct(s.max) : fmtNum(s.max) },
+      { label: '最小值', value: unit === '%' ? fmtPct(s.min) : fmtNum(s.min) },
+    ].map(c => `<div class="stat-card"><div class="label">${c.label}</div><div class="value" style="font-size:20px">${c.value}</div></div>`).join('');
+
+    // Chart
+    renderMetricChart(data);
+  } catch (e) {
+    toast('查询指标失败: ' + e.message, 'error');
+  }
+}
+
+function renderMetricChart(data) {
+  const container = document.getElementById('metric-chart');
+  if (!metricChart) {
+    metricChart = echarts.init(container, null);
+    window.addEventListener('resize', () => metricChart.resize());
+  }
+
+  const periods = data.data.map(d => d.period);
+  const values = data.data.map(d => d.value);
+
+  metricChart.setOption({
+    backgroundColor: 'transparent',
+    title: { text: `${data.metric.name} 趋势`, left: 'center', textStyle: { color: '#1A1F2B', fontSize: 14 } },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: '#FFFFFF',
+      borderColor: '#DDE2EA',
+      textStyle: { color: '#1A1F2B' },
+      formatter: function(params) {
+        const p = params[0];
+        const v = data.metric.unit === '%' ? fmtPct(p.value) : fmtNum(p.value);
+        return `${p.axisValue}<br/>${data.metric.name}: <strong>${v}</strong> ${data.metric.unit !== '%' ? data.metric.unit : ''}`;
+      }
+    },
+    grid: { left: 60, right: 30, top: 50, bottom: 40 },
+    xAxis: {
+      type: 'category', data: periods,
+      axisLine: { lineStyle: { color: '#DDE2EA' } },
+      axisLabel: { color: '#5A6472', fontSize: 11 },
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: { show: false },
+      splitLine: { lineStyle: { color: '#EEF1F6' } },
+      axisLabel: { color: '#5A6472', fontSize: 11 },
+    },
+    series: [{
+      type: 'line', data: values, smooth: true, symbol: 'none',
+      lineStyle: { color: '#3370FF', width: 2 },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgba(51,112,255,0.3)' },
+          { offset: 1, color: 'rgba(51,112,255,0.02)' },
+        ]),
+      },
+    }],
+  }, true);
+}
+
+// ═══ Quality ═════════════════════════════════════════════════
+
+async function runQualityChecks() {
+  const statusEl = document.getElementById('quality-status');
+  statusEl.textContent = '正在检查...';
+  statusEl.style.color = 'var(--accent)';
+
+  try {
+    const data = await api('/quality/check');
+    statusEl.textContent = `检查完成 - ${data.checks.length} 项`;
+    statusEl.style.color = 'var(--success)';
+
+    const h = data.health;
+    document.getElementById('quality-summary').innerHTML = [
+      { label: '健康评分', value: h.score, color: h.score >= 80 ? 'var(--success)' : h.score >= 60 ? 'var(--warning)' : 'var(--danger)' },
+      { label: '通过', value: h.passed, color: 'var(--success)' },
+      { label: '警告', value: h.warned, color: 'var(--warning)' },
+      { label: '失败', value: h.failed, color: 'var(--danger)' },
+    ].map(c => `<div class="stat-card"><div class="label">${c.label}</div><div class="value" style="font-size:20px;color:${c.color}">${c.value}</div></div>`).join('');
+
+    const statusTag = s => `<span class="tag tag-${s.toLowerCase()}">${s}</span>`;
+    const sevTag = s => {
+      const map = { INFO: 'pass', WARN: 'warn', CRITICAL: 'fail' };
+      return `<span class="tag tag-${map[s] || 'pass'}">${s}</span>`;
+    };
+
+    document.querySelector('#quality-table tbody').innerHTML = data.checks.map(c => `
+      <tr>
+        <td>${statusTag(c.status)}</td>
+        <td>${sevTag(c.severity)}</td>
+        <td>${c.check_name}</td>
+        <td class="mono">${c.table_name}</td>
+        <td class="mono">${c.column_name || '-'}</td>
+        <td>${typeof c.metric_value === 'number' && c.metric_value < 1 ? fmtPct(c.metric_value) : c.metric_value}</td>
+        <td>${typeof c.threshold === 'number' && c.threshold < 1 ? fmtPct(c.threshold) : c.threshold}</td>
+        <td style="max-width:300px;font-size:12px;color:var(--text2)">${c.details}</td>
+      </tr>
+    `).join('');
+
+    toast(`质量检查完成: ${h.passed} 通过, ${h.warned} 警告, ${h.failed} 失败`, h.failed > 0 ? 'error' : 'success');
+  } catch (e) {
+    statusEl.textContent = '检查失败';
+    statusEl.style.color = 'var(--danger)';
+    toast('质量检查失败: ' + e.message, 'error');
+  }
+}
+
+// ═══ Lineage ═════════════════════════════════════════════════
+
+async function loadLineage() {
+  try {
+    const data = await api('/lineage');
+    renderLineageSVG(data);
+    renderLineageTable(data);
+  } catch (e) {
+    toast('加载血缘数据失败', 'error');
+  }
+}
+
+function renderLineageSVG(data) {
+  const svg = document.getElementById('lineage-svg');
+  const layerX = { ODS: 80, DWD: 300, DWS: 520, ADS: 740 };
+  const layerColors = { ODS: '#3370FF', DWD: '#16A34A', DWS: '#B4690E', ADS: '#7B5CFA' };
+
+  // Group nodes by layer
+  const layerNodes = { ODS: [], DWD: [], DWS: [], ADS: [] };
+  data.nodes.forEach(n => {
+    if (layerNodes[n.layer]) layerNodes[n.layer].push(n.id);
+  });
+
+  // Calculate Y positions
+  const nodePos = {};
+  Object.entries(layerNodes).forEach(([layer, nodes]) => {
+    const x = layerX[layer];
+    const totalH = nodes.length * 50;
+    const startY = (500 - totalH) / 2 + 25;
+    nodes.forEach((id, i) => {
+      nodePos[id] = { x, y: startY + i * 50 };
+    });
+  });
+
+  // Build SVG
+  let svgContent = '';
+
+  // Layer headers
+  Object.entries(layerX).forEach(([layer, x]) => {
+    svgContent += `<text x="${x}" y="20" fill="${layerColors[layer]}" font-size="13" font-weight="700" text-anchor="middle">${layer}</text>`;
+  });
+
+  // Edges
+  data.edges.forEach(e => {
+    const s = nodePos[e.source];
+    const t = nodePos[e.target];
+    if (s && t) {
+      const mx = (s.x + t.x) / 2;
+      svgContent += `<path d="M${s.x + 55},${s.y} C${mx},${s.y} ${mx},${t.y} ${t.x - 55},${t.y}" fill="none" stroke="#8A94A3" stroke-width="1.5" opacity="0.6"/>`;
+    }
+  });
+
+  // Nodes
+  Object.entries(nodePos).forEach(([id, pos]) => {
+    const layer = data.nodes.find(n => n.id === id)?.layer || 'ODS';
+    const color = layerColors[layer];
+    const shortName = id.replace(/^(ods|dwd|dws|ads)_/, '').replace(/_/g, ' ');
+    svgContent += `
+      <g>
+        <rect x="${pos.x - 55}" y="${pos.y - 16}" width="110" height="32" rx="6" fill="${color}22" stroke="${color}" stroke-width="1.5"/>
+        <text x="${pos.x}" y="${pos.y + 4}" fill="${color}" font-size="11" font-weight="600" text-anchor="middle">${shortName}</text>
+      </g>
+    `;
+  });
+
+  svg.innerHTML = svgContent;
+}
+
+function renderLineageTable(data) {
+  document.querySelector('#lineage-table tbody').innerHTML = data.edges.map(e => `
+    <tr>
+      <td class="mono">${e.source}</td>
+      <td class="mono">${e.target}</td>
+      <td><span class="tag tag-ods">${e.transform_type}</span></td>
+      <td style="color:var(--text2)">${e.description || '-'}</td>
+    </tr>
+  `).join('');
+}
+
+// ═══ Ingestion ═══════════════════════════════════════════════
+
+function handleFileUpload(input, type) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const tableName = document.getElementById(type + '-table').value || file.name.replace(/\.\w+$/, '').replace(/[^a-zA-Z0-9_]/g, '_');
+  const layer = document.getElementById(type + '-layer').value;
+  const logEl = document.getElementById('ingest-log');
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  logEl.innerHTML += `\n[${new Date().toLocaleTimeString()}] 开始上传: ${file.name} → ${tableName} (${layer})`;
+
+  fetch(`${API}/api/v1/ingest/${type}?table_name=${tableName}&layer=${layer}`, {
+    method: 'POST',
+    body: formData,
+  })
+  .then(r => r.json())
+  .then(json => {
+    if (json.code === 0) {
+      const d = json.data;
+      logEl.innerHTML += `\n[${new Date().toLocaleTimeString()}] ✓ 成功: ${d.row_count} 行, ${d.columns} 列`;
+      toast(`上传成功: ${d.row_count} 行导入 ${tableName}`, 'success');
+    } else {
+      logEl.innerHTML += `\n[${new Date().toLocaleTimeString()}] ✗ 失败: ${json.msg}`;
+      toast('上传失败: ' + json.msg, 'error');
+    }
+    logEl.scrollTop = logEl.scrollHeight;
+  })
+  .catch(e => {
+    logEl.innerHTML += `\n[${new Date().toLocaleTimeString()}] ✗ 错误: ${e.message}`;
+    toast('上传错误: ' + e.message, 'error');
+    logEl.scrollTop = logEl.scrollHeight;
+  });
+
+  input.value = '';
+}
+
+// Drag & drop
+['csv', 'json'].forEach(type => {
+  const zone = document.getElementById(type + '-zone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const input = document.getElementById(type + '-input');
+    input.files = e.dataTransfer.files;
+    handleFileUpload(input, type);
+  });
+});
+
+// ═══ Init ════════════════════════════════════════════════════
+
+loadDashboard();
+</script>
+</body>
+</html>

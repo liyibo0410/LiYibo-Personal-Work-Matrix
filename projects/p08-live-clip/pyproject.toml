@@ -1,0 +1,25 @@
+[project]
+name = "p08-live-clip"
+version = "1.0.0"
+description = "P08 直播切片系统 - 云枢智能 (CloudPivot)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
+    "pydantic>=2.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[dependency-groups]
+dev = ["pytest>=8.0.0", "httpx>=0.27.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"

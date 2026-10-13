@@ -495,3 +495,512 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
   local: 2.106（≥ 0.5 触发）     / 相对 0.460（触发）
 → 同一语义关系，cloud 量纲下按设计意图工作，local 量纲下必然截断
 ```
+
+---
+
+## D6 · 全模块批量推进（2026-10-12 晚）
+
+### P02 · 四角色 RBAC + 合规评测（Qoder 自主完成）
+
+| 文件 | 内容 | 采集时间 |
+|---|---|---|
+| `p02/rbac_四角色验证报告.md` | 四角色权限矩阵 + 403 证据 + 代码变更清单 | 2026-10-12 |
+| `p02/合规评测报告.md` | 36 条评测集：准确率 100%、高危拦截 100%、误报 0%、绕过 0% | 2026-10-12 |
+
+**变更摘要**：
+- UserRole 枚举从 3 角色扩展为 4 角色：OWNER/OPERATOR/DESIGNER/CS
+- 新增 `require_owner_permission` 依赖 + `/api/v1/dashboard/overview` 老板看板端点
+- CS 角色访问老板看板返回 **HTTP 403**（已验证）
+- 前端导航按角色过滤 + 角色徽章展示
+- 4 个演示账号：boss/ops/design/cs@cloudpivot.com
+
+### P01 · AI 客服（从源项目复制）
+
+- 源项目：`D:\software\PycharmProjects\customer-service-backend\`
+- 状态：已复制、README 重写、start.bat 修复
+- 技术栈：FastAPI + LangChain + Vue 3 + MySQL
+
+### P03 · Deep Research（从源项目复制）
+
+- 源项目：`D:\software\PycharmProjects\deep_agent_search\`
+- 状态：已复制、pyproject.toml 更新、README 重写
+- 技术栈：DeepAgents + LangChain + Vue 3 + MySQL
+
+### P04 · RAG 知识库（深色主题转换）
+
+- 3 个 HTML 页面（console/chat/import）全部从浅色转为深色主题
+- 设计令牌与 P02 统一：bg #0B0E14, surface #141820, accent #3370FF
+- highlight.js 主题从 github → github-dark
+
+### P05 · 合同审批（验证通过）
+
+- 66/66 项自检全部通过
+- 状态：生产级，无需修改
+
+### P07 · AI 素材中心（从零构建）
+
+- 完整 FastAPI 后端 + 深色主题单页前端
+- 12 个演示素材 + 7 条投放效果关联
+- 以文搜图（TF-IDF mock）+ AI 生成（mock）
+- Mock 边界在 UI 和 README 双处标注
+
+### P08/P09/P10 · 构建中（Agent 执行）
+
+- P08 直播切片、P09 销售考核、P10 微调平台正在由后台 Agent 构建
+
+### Shell + 门户
+
+- `shell/index.html`：统一工作台入口，iframe 挂载各模块
+- `01-portfolio/index.html`：深色主题作品集门户，展示十大模块
+
+---
+
+## D7 · 全服务验证（2026-10-12 深夜）
+
+| 文件 | 内容 | 采集时间 |
+|---|---|---|
+| `D7-全服务验证报告.md` | 10/10 模块端口映射 + curl 验证 + 修复记录 | 2026-10-12 |
+
+**10/10 服务全部运行中**：
+
+| 模块 | 端口 | 状态 |
+|---|---|---|
+| P01 AI客服 | 18082 | ✅ |
+| P02 运营助手 | 8000+3001 | ✅ |
+| P03 Deep Research | 8030 | ✅ |
+| P04 RAG知识库 | 8041 | ✅ |
+| P05 合同审批 | 8770 | ✅ |
+| P06 数据中台 | 8060 | ✅ |
+| P07 素材中心 | 8070 | ✅ |
+| P08 直播切片 | 8080 | ✅ |
+| P09 销售考核 | 8090 | ✅ |
+| P10 微调平台 | 8101 | ✅ |
+
+**本轮修复 6 个启动 Bug**：
+1. P06 uvicorn 字符串导入 → 传 app 对象 + sys.path 补丁
+2. P10 hatchling 包发现 → pyproject.toml 加 packages 配置
+3. P10 端口 8100 冲突 → 改 8101
+4. P03 端口 8000 与 P02 冲突 → 改 8030
+5. P04 端口 8100 冲突 → 改 8041
+6. P03 缺 .env → 创建占位配置
+
+---
+
+## D8 · 统一平台：跨模块真实 HTTP 调用（2026-10-13）
+
+> 落实架构规范「跨模块取数（P02 取 P06 指标、P09 取 P01 会话）必须走**真实 HTTP 调用**，
+> 端口从 `shared/config` 的 `SERVICE_REGISTRY` 解析，禁止硬编码其他模块端口，并在 `_evidence/` 留调用日志」。
+> 两条链路均实现「正常路径真实取数 + 降级路径不伪造数据（双处标注）」。
+
+| 文件 | 内容 | 采集时间 |
+|---|---|---|
+| `p02-ecommerce-ops-assistant/cross-module-p06-20261013.md` | **P02→P06 指标**：正常拉取 7 项真实指标（source=p06-live）+ 降级演练（死端口→degraded，不含 metrics 字段） | 2026-10-13 |
+| `p09-ai-sales-assessment/cross-module-p01-20261013.md` | **P09→P01 会话**：真实拉取 P01 MySQL 会话→角色映射→评分（65.5/70.5）+ 降级演练 + 34 pytest 全绿 | 2026-10-13 |
+
+**P02 → P06 数据中台（指标）**
+- 新增 `api/app/services/data_platform_client.py`；`/api/v1/dashboard/overview` 返回 `metrics/metrics_source/metrics_degraded`
+- 地址 `cloudpivot_config.api_url("p06","/metrics/summary")` 从 services.json 解析，**未硬编码端口**；支持 `CP_P06_METRICS_URL` 覆盖
+- 正常：7 项指标（gmv/order_count/conversion_rate/avg_order_value/return_rate/traffic_uv/traffic_pv），source=p06-live
+- 降级：`ok=False/degraded=True/source=unavailable`，**不含 metrics 字段（不伪造）**；前端 dashboard 双处标注（绿色实时 / 黄色降级）
+
+**P09 → P01 客服（会话）**
+- 新增 `app/p01_client.py` + 端点 `GET /api/v1/p01/status`、`POST /api/v1/import/from-p01`
+- 地址 `cloudpivot_config.api_url("p01","/chat/history")`；health 用 `service_url`（P01 探针在根 `/health`，不在 `/api` 前缀下）
+- 角色映射 P01 user/bot → P09 customer/agent，按 session_id 聚合，规则引擎评分
+- 正常：真实拉取 2 段会话并评分（source=p01-live）；降级：`imported=0` 不伪造
+- 新增 4 项跨模块集成测试（monkeypatch，不依赖 P01 在线）；P09 pytest 30→**34 全绿**
+- 同步修正 P09 README 第 10 条问答（原为「符合架构规范」的空泛表述 → 现写明真实端点/映射/降级/证据路径）
+
+---
+
+## D9 · 统一设计系统：三套构建型前端接入单一令牌源（2026-10-13）
+
+> 落实规范「前端全部重构，版式/配色/组件全局统一」「统一深色主题 + 单一强调色」。
+> 本轮覆盖三套**构建型**前端（P01 Vue+Vite、P02 Next.js、P03 Vue+Vite）——它们与
+> 静态模块（p04~p10 走 `/shared` 运行时注入）不同，须把 `shared/ui-kit/tokens.css`
+> **在构建期打进各自 bundle**，并把模块局部配色变量重指向 `var(--cp-*)`。
+
+**统一机制（构建型模块）**
+- 单一真源：`shared/ui-kit/tokens.css`（`--cp-bg/-surface/-line/-ink1..3/-brand/-success/-warning/-danger` + 浅色系覆盖 + `body.cp-app` 基线）
+- 注入方式：以 **CSS 模块 `import`** 引入令牌（实测跨根 `@import` 会被 rolldown-vite/Next 静默丢弃）
+- 变量重指向：模块 `:root` / Tailwind `@theme` 核心色 → `var(--cp-*)`；无对应令牌的派生色阶（brand 100~400/700~900、个别填充档）保留局部字面量
+- 桥接：`data-theme="dark"`（html）+ `class="cp-app" data-cp-module="pXX"`（body）+ shell↔模块 `cp:theme` postMessage 主题同步
+- P02 特例：Next 禁止 import 项目根外文件 → 新增 `web/scripts/copy-tokens.mjs`，`predev/prebuild` 构建期把令牌复制进 `web/src/app/tokens.css`（GENERATED 头，真源仍在仓库根）
+
+| 文件 | 内容 | 采集时间 |
+|---|---|---|
+| `p01-ai-customer-service/p01-unified-chat.png` | P01 三栏客服工作台，深色统一主题真实渲染（构建产物 vite preview） | 2026-10-13 |
+| `p02-ecommerce-ops-assistant/p02-unified-login.png` | P02 旗舰登录页，`--cp-bg` 底 + `--cp-brand` 主按钮真实渲染（next start 生产构建） | 2026-10-13 |
+| `p03-deep-research/p03-unified-welcome.png` | P03 问数欢迎页，统一深色 + 品牌蓝标题真实渲染（vite preview） | 2026-10-13 |
+
+**构建校验（真实执行）**
+- P01 `vite build` ✅ → bundle 含 `--cp-bg:#0B0E14` + 浅色 `#F5F7FA` + `--cp-brand:#3370FF`
+- P02 `next build` ✅（清 `.next` 后干净重建）→ 生产 CSS chunk `3ea7t4ed533b3.css`：`--color-brand-500:var(--cp-brand)`、`--color-fill-1:var(--cp-bg)`、`--color-ink-1:var(--cp-ink1)`，`--cp-bg` 深/浅双值，`body.cp-app`；`cp-shell/cp:ready` 主题桥编译进客户端 chunk；无残留字面量 `#3370ff`
+- P03 `vue-tsc && vite build` ✅ → 令牌内联；删除死脚手架 `HelloWorld.vue`/`assets/vue.svg`/`public/vite.svg`，favicon 改内联品牌 SVG；端口 8030→5174（避开 P01 5173），registry 镜像 `services.js` 同步再生
+- P03 后端补 `/outputs` StaticFiles 挂载，产物链接可解析；前端 API 基址由硬编码 `localhost:8000`（错误端口）改为同源相对 + Vite 代理
+
+**未做/边界**：P02 图表组件内 JS 十六进制数组、内联 SVG `stop-color` 仍为字面量（值 == 品牌蓝，属性无法取 var()）；浅色模式下 P02 未映射的 brand 派生色阶不翻转（平台默认深色，浅色为次要开关）。
+
+---
+
+## D10 · 全平台联调 + 技术选型 ADR（2026-10-13）
+
+**全平台联调（真实点击，browser-use 驱动 owner 账号）**
+- 外壳网关 `8800`（当前代码）：真实登录签发 HS256 令牌 → 智能体矩阵首页 → 点导航 iframe 挂载模块
+- 为联调把 **P06(8060)、P07(8070)** 从当前代码重启（旧进程无 `/shared` 挂载），实测 `/shared/ui-kit/tokens.css`=200、首页含 `cp-app`+`data-cp-module`
+- 证据（`_evidence/shell/`，详见该目录 INDEX.md）：
+  - `shell-login.png` 统一登录页
+  - `shell-matrix-home.png` 登录后 AI 智能体矩阵首页（分层导航 10 模块 + 数据流闭环 + 统计）
+  - `shell-mount-p06.png` 挂载 P06 数据中台，与外壳同一深色设计系统
+  - `shell-mount-p07.png` 挂载 P07 素材中心，统一主题 + ECharts + 「Mock 模式」标注
+
+**技术选型决策记录（`docs/adr/`）**
+- `README.md` 索引 + 6 条 ADR：0001 微前端外壳（非单体）· 0002 SERVICE_REGISTRY 端口单一真源 · 0003 统一认证与令牌下发（P02 Cookie 会话例外）· 0004 跨模块真实调用与降级不伪造 · 0005 设计令牌单一真源与两类前端注入/耦合代价 · 0006 P05 零依赖例外
+
+**启动脚本修正**
+- `start-all.bat`：补上此前缺失的 **shell 网关(8800)** 与 **P01 前端(5173)/P03 前端(5174)**；统一入口由错误的「file:// 打开 shell\index.html」改为 **http://127.0.0.1:8800**；端口速查标注真源为 services.json
+- `stop-all.bat`：端口清单补 8800/5173/5174
+
+**门户现状校真（`01-portfolio/index.html`）**
+- 十大模块卡的状态标签从「构建中」橙色改为「已运行」绿色（P01/P05/P09/P03/P04/P07/P08/P06/P10 均已真实运行，此前低估）；P02 保留「★ 旗舰」
+- 「数据闭环架构」区补第 4 个共用盒 **`shell · 统一外壳`**（微前端外壳：登录 · 模块挂载 · 分层导航 · iframe），与 shared/llm-gateway、shared/auth+config、shared/ui-kit 并列
+- 全页仍走 `shared/ui-kit` 深色令牌 + 单一品牌蓝强调色（无硬编码色）
+
+| 文件 | 内容 | 采集时间 |
+|---|---|---|
+| `portfolio/portfolio-home.png` | 门户首屏（Hero + 统计条 + 旗舰 spotlight + 十大模块卡全绿「已运行」）Edge headless 真实渲染 | 2026-10-13 |
+| `portfolio/portfolio-full.png` | 门户整页（含数据闭环架构 4 共用盒 + shell 盒 + 技术栈 + 关于作者） | 2026-10-13 |
+
+**AGENTS.md 现状同步**：`agents.md`「当前阶段」由过期的「Phase 0 已完成」改写为真实当前态（微前端外壳 + SERVICE_REGISTRY + 统一认证（P02 例外）+ 跨模块真实调用 + 统一设计系统 + docs/adr + 证据 + start-all→http://127.0.0.1:8800）。
+
+**已知边界（诚实记录）**：门户为静态页、直接引用 `shared/ui-kit` 令牌，不受进程新旧影响。
+
+**续 · 静态模块全量重启收口（2026-10-13）**：上一节遗留的旧代码进程边界已闭合——用 `_restart_stale.bat` 从当前代码重启 **P04/P08/P09/P10** 并实测：四端口 `/shared/ui-kit/tokens.css` 全部 **200**、根页面均含 `cp-app` + `data-cp-module="pXX"` + tokens 链接；P09 Dashboard、P04 控制台真实截图确认与外壳同一深色主题（详见 `_evidence/shell/INDEX.md`）。至此**六个静态模块 P04/P06/P07/P08/P09/P10 全部运行当前代码、统一主题实测一致**。剩余边界仅为设计使然：P01/P02/P03 构建型前端令牌内联（见 D9）、P05 零依赖例外自带调色（ADR 0006），二者均不以 `/shared` 判定。
+
+**再续 · 十模块全平台在线**：进一步按 `start-all.bat` 方式把构建型前端 **P01(5173)/P02(3001)/P03(5174)** 从当前代码拉起，三套真实截图（`_evidence/shell/unified-p0{1,2,3}-web.png`）确认与外壳同一深色统一主题。**至此十模块 + 外壳全部在线、深色统一主题全平台实测一致**（P02 登录 307 路由守卫、P05 登录 302 均属预期）。
+
+---
+
+## D11 · 用户反馈十项问题返工（2026-10-13）
+
+反馈来源：`E:\桌面\问题整理.docx`（11 张截图）。逐条根因、修复与证据登记在
+**`_evidence/shell/INDEX.md` 的「D11 返工」一节**，此处只记结论与状态变化。
+
+| # | 反馈 | 结论 |
+|---|---|---|
+| 1 | CP logo / 云枢智能 要可自定义 | ✅ `shared/config/brand.json` 单一真源 + `/api/brand` 读写 + `data-cp-brand` 全站绑定；实测换成「奕波科技 / EboTech / 上传图片 logo」后外壳与模块同步变化（`D11-brand-custom-*.png`），随后已恢复默认 |
+| 2 | P01 数字人三卡要横排 | ✅ 根因是 `App.vue` 的 `@media (max-width:1280px)` 在 iframe 内（视口 = CSS 宽 − 240px 侧栏）被误命中；改 clamp 自适应列宽 + 断点降到 900px + 嵌入态单独放宽 |
+| 3 | P01 订单列表查不到 | ✅ 根因是商城中台 **18081 从未被 start-all.bat 启动**；已纳入托管，真实订单/商品出数据 |
+| 4 | P02 忘密码 + 页面不显示 | ✅ 口令 `Test123456`（`bootstrap_demo_users.py:19-24`，实测登录 200，**未重置任何数据**）；前端 3001 已起；三份系统凭据已写进 README 与 `start-all.bat` 输出 |
+| 5 | P05 颜色与平台不匹配 | ✅ 接入 `shared/ui-kit`（`/shared/*` 只读映射 + `cp:theme` 桥），并删掉 app.css 里把强调色覆盖成 **#7c3aed 紫**的重复 light 块；浅色态实测与外壳一致 |
+| 6 | P09 不显示 + 英文 | ✅ 服务已托管；界面与**后端演示数据**全部中文化（含质检规则词表与台词一一对齐，评分区分度实测不变） |
+| 7 | P03 答不出 + 英文 | ⚠️ 界面已中文化；「答不出」根因是**两套阿里云 Key 实测均 `InvalidApiKey`**。已改为按「模块 .env → 根 .env 主/备」成对解析、占位值导入期即判定，并把中文原因通过 WS 明确推给前端（实测收到 `event: error`），不再永远「思考中…」。要真回答需补有效 Key |
+| 8 | P04 不显示 | ✅ 双重原因：服务没起 + 8041 上跑的是**旧进程**（`/` 路由还没注册，返回 `{"detail":"Not Found"}`）。全量重启后 `/` 307 → `/console.html` 正常 |
+| 9 | P07 概览图表混乱/太少/去 emoji | ✅ 根因是 `echarts.init` 在 Tailwind CDN 注入 grid 样式前测宽 → 画布溢出压图；改为双 rAF 后 init + ResizeObserver + 配色读 CSS 变量（浅色可读）。删掉用 `Math.random()` 造数的趋势图，换成真实字段聚合的转化漏斗/标签热度/尺寸分布，共 6 图；侧栏 emoji 换 `CP.icon` SVG。**注**：截图是旧版，磁盘代码此前已被改过一轮 —— 这正是「旧进程」问题 |
+| 10 | P08 / P10 不显示（P10 另含英文） | ✅ 服务托管 + P10 界面与演示数据中文化（模型/数据集标识符按约定保留英文） |
+
+**新增基础设施**：`_tools/supervisor.py`（15 进程托管，端口 TCP 实测，`--takeover` 接管旧进程）、
+`_tools/shot.py`（无头 Edge + CDP 截图取证，支持真实登录态注入与页面内断言）、
+`shared/config/brand.json` + `/api/brand` + `/api/services/health`。
+`start-all.bat` / `stop-all.bat` 改为调用 supervisor（旧版已备份到 `_tmp_issue/`）。
+
+**状态变化**：`supervisor.py status` → **15/15 在线**，且全部运行当前代码。
+
+**诚实边界**：① P03 需有效模型 Key 才能真回答；② P02 浅色态在 `/`→`/login` 跳转中会丢
+`?cp-theme`，需改 Cookie 供 SSR 读取（用户清单未提 P02 配色，未扩大改动）；
+③ P07 图表数据仍是 seed 演示数据，页面「Mock 模式」标注保留；
+④ 截图右下角的黄色鸭子/卡通头像经全仓检索确认**不是本项目组件**（来自浏览器扩展或桌面宠物层），未处理。
+
+---
+
+## D13 · 第二批用户反馈（2026-10-13 下午）
+
+5 条反馈逐条结论、根因与证据登记在 **`_evidence/shell/INDEX.md` 的「D13」一节**。要点：
+
+- **P01 三卡比例**：两侧从实测 204px 提到 326/340px、聊天从 880px 收到 622px。过程中发现
+  `App.vue:2615` 有一条**带 `!important` 的 `15vw` 规则**（另一并行会话所写）压制了列宽设置，
+  已删除并在索引里留了冲突记录。
+- **P02 登录页**：演示账号改为可点卡片，`?demo=boss|ops|design|cs` 服务端预填账号与口令。
+- **P04 文档管理删除**：原 `DELETE /documents/{task_id}` 只删 MongoDB 记录、**不删 Milvus 向量**，
+  删掉的文档仍会被检索命中（库里已实测存在 8 条孤儿向量）。改为向量与记录级联清理，
+  并写了 `scripts/verify_cascade_delete.py` 做端到端验证：**PASS**（上传→1 条向量→删除→
+  残留 0、按内容标记查回 0 条）。
+- **P04 数据看板无限变长**：`canvas` 裸放在无定高容器里，Chart.js `responsive + maintainAspectRatio:false`
+  每轮 resize 长高一点。套 `.chart-box{position:relative;height:260px}` 后实测 canvas 稳定 260px、
+  页面高度 3 秒零增长。
+- **顺带修掉两个真实缺陷**：① `run_graph_task` 为算 `chunk_count` 会把整条 LangGraph 导入流程
+  **重跑一遍**（跑完还丢弃、恒写 0）；② 存量 `chunk_count` 全为 0 导致「热门文档 TOP 10」按 0 排序，
+  已加列表接口自愈回填（实测 `0,0,0,0` → `14,7,5,3`）。另加 `console.html?tab=docs` 深链。
+- **因并行会话把外壳改绑 `0.0.0.0` 而补的加固**：`POST /api/brand` 加令牌校验
+  （实测无令牌 401 / 伪造 401 / 真实令牌 200，`GET` 仍匿名可读供登录页显示品牌）。
+- **P03 需要配什么 API**：已在索引里给出三级凭据解析表；当前根 `.env` 的 `LLM_API_KEY` 为空、
+  `LLM_API_KEY_FALLBACK` 与 `sk-ws-` 均实测 `InvalidApiKey`，需重新申领。未改代码。
+
+**状态**：`supervisor.py status` → 15/15 在线。改动均在工作区，未 commit、未 push。
+
+---
+
+## D11 · 全平台白底化 + 品牌位可定制（2026-10-13 晚）
+
+**做了什么**：默认主题由深色改为**白底 + 单一品牌蓝**（深色降级为 `html[data-theme="dark"]` 可选态）；
+公司名与 logo 在全部品牌位改为经 `shared/config/brand.json` 自定义。
+过程中先整体回滚了一次中途的「阿利茄汁面」品牌定制试验（该方向已放弃），
+回滚依赖 `_runtime/aliren-backup/` 的 36 份改前副本 + 两个子代理各自的备份目录，
+`shared/`、`shell/`、`01-portfolio/` 未入 git，故**没有 git 回退点，备份是唯一依据**。
+
+**证据**：`_evidence/whiteblue/`（12 张真实渲染截图：shell 登录页 + 作品集站 + P01–P10，Edge headless 采集，非设计稿）
+
+### 期间挖出并修掉的 4 个真实缺陷（都不是"配色"本身）
+
+| 编号 | 现象 | 根因 | 证据图 |
+|---|---|---|---|
+| W1 | P05 登录按钮整颗看不见（白色药丸 + 蓝色外发光） | `app/auth.py` 的 `PUBLIC_PREFIX` 漏了 `/shared/` → 登录页请求 `tokens.css` 被鉴权闸门 **302** 拦走 → `--cp-*` 全部取不到 → `.btn.primary` 的 `background: linear-gradient(var(--brand), var(--brand-2))` **整条声明失效**，而字面量 `box-shadow` 仍渲染，于是只剩一圈蓝光 | `whiteblue/p05.png`（修复后蓝底白字） |
+| W2 | P03 经营问数副标题/提示「看不见」 | `.welcome-text h2 { color: var(--border-color) }` —— 用**边框色当文字色**，深底上是暗灰幽灵字尚可读，白底上 `#DDE2EA` on `#F5F7FA` 对比度 ≈1.05 | `whiteblue/p03.png`（修复后可读） |
+| W3 | P02 按钮文字不清晰、hover 反白 | `web/src/app/globals.css` 的 brand 色阶是**为深色反向排的**（`--color-brand-100:#142040` 最深 → `900:#c6d6ff` 最浅），于是 `bg-brand-700 text-white` = 浅蓝底白字。已按 Tailwind 惯例重排为 50 最浅 → 900 最深，并修掉 `text-brand-300/400` 两处低对比文字 | `whiteblue/p02.png` |
+| W4 | 「怎么还有青色蓝色」 | 原 `:root` 里 `--cp-info:#38BDF8`（天青）与品牌蓝并存，且各静态模块页内联了 4–25 处**未令牌化**的深色值 | 全站 grep `38BDF8` 归零；`--cp-info` 改为中性 `#475467` |
+
+### 真实测试数字（未粉饰）
+
+- **P05**：`46 passed`（`.venv/Scripts/python.exe -m pytest tests -q`，1.9s）—— 放行 `/shared/` 后鉴权用例未回退。
+- **P06**：`44 passed`（同上，1.9s）—— 确认回滚后数据层与指标层完好。
+- **P05 数据健康分 48 / 质量校验 9 条失败**：**这是既有状态，不是本轮引入**。
+  根因是样例数据窗口硬编码在 `2024-07-01 + 91 天`，而 `check_freshness` 按 `date.today()` 判定，
+  超过 30 天即 FAIL。要修得重跑数据生成（会改变 `约 3.5 万订单` 等已登记口径），本轮**未动**，如实记录。
+
+### 品牌位可定制的落点（新增）
+
+- `shared/ui-kit/tokens.css` 内新增 `.cp-brandmark`（因 P04/P06–P10/画廊/作品集都**不引** `components.css`，
+  共享 logo 样式只能放在它们唯一引入的那个文件里）。
+- 新挂 `data-cp-brand="logo"` 钩子：P04 `console.html`/`chat.html`、P06、P08、P09、P10、作品集站 —— 此前只有 shell 与 P07 有。
+- 主题存储键升 `cp_theme_v2` 并由 `ui-kit.js` 清掉旧 `cp_theme`：
+  旧值里存的 `dark` 是「深色曾是默认」时 `initTheme()` 自动写入的，沿用旧键会让白底默认永远翻不回来。
+  读写方（ui-kit.js / P01 main.js / P02 theme.ts+bridge+layout / P03 main.ts / P05 app.js+7 页）共 15 个文件同步升键，否则外壳切主题模块不跟随。
+- 规范同步：`.qoder/rules/02-技术规范.md` 的「统一深色主题」已改为白底并加**对比度硬门禁**；
+  `docs/adr/0005` 追加修订记录（含上述"文档说挂了 tokens.css 但实际没挂"的偏差）。
+
+**状态**：15/15 在线。P05 为验证鉴权修复单独重启过，其余进程未动。改动均在工作区，未 commit、未 push。
+
+### 补记 · P02 运营助手返工（用户反馈「还是有问题」后）
+
+先排除取数问题：`POST /api/v1/auth/login` → 200，`GET /api/v1/dashboard/overview` → 200，
+返回真实指标（GMV 35958.37 / 订单 133 / 转化率 0.44% / 客单价 270.36 / 退货率 20.30%），
+与 P06 侧数据一致 —— **空白不是数据造成的**。
+
+再定位到两个前端问题：
+
+- **W5｜`bg-ink-1` 被当按钮与面板底色用了 51 处（共 86 处替换）**
+  `--color-ink-1` 是**文字色**令牌（ink = 墨），却被拿去当背景。
+  深色主题下它 = `#E8EAF0`（近白），于是 `bg-ink-1 text-white` 一直是**白字配近白底**，
+  即用户长期反馈的「按钮字看不清」；白底化后它 = `#1A1F2B`（深藏青），字能读了，
+  但在一片白页面上留下几十块深色，即「颜色不统一、还有深色块」。
+  处理：按钮统一 `bg-brand-600` + `hover:bg-brand-700`（原来 `hover:bg-ink-1` 等于没有悬停反馈）；
+  Agent 页「Harness 边界」整块深底面板与生成任务的 JSON 代码块改成浅面深字。
+- **W6｜我自己引入的禁用态回归**：把 `--color-fill-3` 从 `#222836` 改浅为 `#E4E9F1` 后，
+  5 处 `text-white ... disabled:bg-fill-3` 变成白字配浅灰底。已补 `disabled:text-ink-3`。
+
+**验证方式（如实说明）**：P02 我**没能用像素验证** —— 沙箱内置浏览器经代理请求
+`/_next/static/chunks/*` 全部 403（同一 URL 用 curl 是 200），页面只水合出顶栏。
+改用服务端渲染产物验证：`/agent`、`/settings`、`/products` 三页 HTML 中
+`bg-ink-1` 命中 **0**、`bg-brand-600` 分别 6/10/6、`data-theme="light"` 各 1；
+`npx tsc --noEmit` 退出码 0。P02 web dev server 已重启（清掉旧 chunk/HMR 状态，
+这是「内容空白」最可能的环境成因），重启后 `/dashboard` SSR 200、46174 字节、日志无编译错误。
+**页面实际观感需你在自己浏览器里硬刷新（Ctrl+Shift+R）确认。**
+
+---
+
+## D12 · P03 问数模型凭据接通（2026-10-13 晚，Key 由用户重新提供）
+
+**结论先行：两套百炼 Key 现在都有效，P03 问数已能真实出内容。此前「答不出」不是 Key 的问题，是代码 bug。**
+
+### 根因（真凶，非凭据）
+
+`projects/p03-deep-research/agent/llm.py` 用 `Path(__file__).resolve().parents[2]` 定位仓库根并注释「即面试项目根」——
+实际指向 `面试项目/projects`，那里没有 `.env`。于是 `_read_root_env()` 恒返回空字典，
+根 `.env` 里配对好的两套凭据**一次都没被读到**，`resolve_model_config()` 直接落到
+「未找到可用的模型凭据」分支。已改为向上扫描、以 `LLM_API_KEY_FALLBACK` 作根 `.env` 锚点定位。
+
+| 时点 | 同一问句实测 | 证据 |
+|---|---|---|
+| 修复前（服务加载旧代码） | `session_created → error「未找到可用的模型凭据」`，2 个事件即终止 | `p03/e2e-20261013-203658.json` |
+| 修复后（直答类问句） | `session_created → task_result`，**8.0 秒**真实中文答复，无 `__mock__` 标记 | `p03/e2e-20261013-204428.json` |
+| 修复后（取数类问句） | 17 个事件、**195.5 秒**：派发「数据库查询助手」→ `SHOW TABLES`/`SELECT 1`/`SHOW DATABASES` 多次重试 → 转 RAGFlow → **明确回答「未取得数据」并拒绝编造销量数字**，给出端口级故障定性（3306/9380 无人监听）与恢复清单 | `p03/e2e-20261013-204855.json` |
+
+第三行是本轮最有价值的一条：模型层通了之后，`04-验收门禁.md` 要求的「幻觉测试——库里没有的数据必须拒答而非编造」
+在真实链路上自发成立（未改提示词）。P03 的 SQL→执行→图表全链路仍卡在 **MySQL 未启动**，见下「遗留」。
+
+### 两套凭据的真实能力边界（本轮逐个打出来的，非文档抄录）
+
+| 通道 | `/models` | chat（qwen3.8-max / flash） | Embedding | 备注 |
+|---|---|---|---|---|
+| `sk-ws-` 免费额度 `ws-amdqcpdtt4gdo5ax...maas` | 200，**176 个模型** | 200 / 200 | **200**（`qwen3.7-text-embedding-flash`，1024 维） | `qwen3.7-plus` 返回 403 `Free quota exhausted`（账号处于「仅用免费额度」模式）；TCP 层偶发连不通，3 次里 1 次 |
+| `sk-sp-` Token Plan（Essential）`token-plan...maas` | 200，17 个模型 | 200 / 200 / 200（含 `qwen3.7-plus`） | **404 `Model not exist`** | 官方标注 2026-10-22 00:00 到期，配额稳定 |
+
+上表由 `p03/llm-endpoint-probe.py` 打出（带重试，逐个端点跑 `/models` + `/chat/completions`），原始输出 `p03/llm-endpoint-probe.txt`。脚本只从 `.env` 取 Key，不落字面量。
+
+要点：**Embedding/Rerank 只有免费额度端点有**，Essential 端点没有 —— 凡涉及真嵌入的模块（P04）不能只靠套餐通道。
+
+### 凭据解析顺序（P03）
+
+`模块 .env` → 根 `.env` 主（`LLM_API_KEY`，当前空）→ **Essential 套餐**（稳定，现用）→ 免费额度端点（兜底，10-22 套餐到期后无需改代码即接管）。
+
+### 顺手修掉的网关缺陷
+
+`shared/llm-gateway` 的 `GatewayConfig.endpoints` 把**主 Key 复用给备用端点** —— 百炼三套凭证互相隔离，
+这正是本项目自己文档里禁止的「A 家的 Key 打 B 家的端点」，故障转移必然 401。已新增 `fallback_api_key`
+（缺省仍复用主 Key，兼容既有调用方）。回归：`projects/p02-ecommerce-ops-assistant/api/scripts/test_gateway_integration.py`
+四场景全 PASS，真实调用消耗 265 tokens、总时延 9.4s。
+
+### ⚠️ 本轮发现的安全问题（需用户处置）
+
+`projects/p02-ecommerce-ops-assistant/api/scripts/test_gateway_integration.py:18` 把 `sk-sp-` 真实 Key
+**写成源码字面量**，且该文件已随 `ac08668` 推到 `github.com/liyibo0410/yunshu-ai-portfolio` 的 `origin/main`。
+本轮已把源码改为从 `api/.env` 读取（脚本回归通过），但**历史提交里的 Key 仍在公网上**：
+需在百炼控制台**吊销并重发**这把 `sk-sp-`，再决定是否清理 git 历史（清历史要 force-push，属破坏性动作，未经确认不做）。
+
+### 遗留（不算本轮完成）
+
+- **P03 完整门禁未闭环**：`sql/cps.yml` 的 MySQL 配 `3307/mydb`，而 P03 自己 `.env` 写的是 `3306/pharma_db/mock_password`；
+  本机 3306 无监听、3307 已被 P01 的 `customer-service-mysql` 容器占用 → 起库前要先定端口，属需确认的动作。
+- **网络搜索通路仍是 mock**：`TAVILY_API_KEY=tvly-mock-key-not-configured`，工具会返回 `error` 结构（不崩），但问不出外部实时信息。
+- **一次瞬时故障**：`p03/e2e-20261013-204321.json` 收到 `error「Execution failed: Connection error.」`（OpenAI SDK 的 APIConnectionError）。
+  同一问句重跑已能通过，判定为本机内存吃紧所致——排查期间空闲物理内存仅 **1.0 GB / 16 GB**，
+  我的复现脚本直接被 `OpenBLAS: Memory allocation still failed after 10 retries` 打死。演示前建议先关掉占用内存的无关进程。
+- `00-总纲/09-凭据与套餐配置说明.md` 第 26 行仍写着 `sk-ws- → 401 InvalidApiKey`，属**绝对保护目录**未改动，此处登记待用户在总纲内自行更新。
+
+---
+
+## D14 · P02 工作台四张图表空白 + 链接型按钮「蓝底无字」（2026-10-13 晚）
+
+**用户反馈**：电商运营助手的「平台商品分布 / 店铺状态分布 / 各店铺商品数 / 商品类目分布」不显示，
+且「好多蓝色按钮不显示字」。
+
+**根因是两条互不相干的缺陷，都被同一个页面同时暴露出来：**
+
+### ① 图表空白 = Next 16 dev server 把 JS chunk 判成跨站，全部 403
+
+`next dev` 默认只放行 `localhost` 来源的 `/_next/*` 请求（`server/lib/router-utils/block-cross-site-dev.js`，
+允许名单 = `**.localhost` + `localhost` + `allowedDevOrigins` + 启动时的 hostname）。
+统一平台按 SERVICE_REGISTRY 用 **`http://127.0.0.1:3001`** 挂载 P02，浏览器为 `<script type=module>`
+带上 `Origin: http://127.0.0.1:3001` → hostname `127.0.0.1` 不在名单 → **HTTP 403 `Unauthorized`**。
+
+- 实测：`curl -H "Origin: http://127.0.0.1:3001" .../_next/static/chunks/_1a9x3t3._.js` → **403**；去掉该头 → 200。
+- 后果链：HTML 与 CSS 正常（`<link rel=stylesheet>` 不发 Origin，所以样式在、页面看着"没坏"），
+  但 **3 个 chunk 403 → React 从不水合 → `EChart` 的 `useEffect` 不执行 → 一张 canvas 都不画**，
+  四张图表卡片只剩标题和空白。HMR 的 WebSocket 同样被 403（`ERR_INVALID_HTTP_RESPONSE`）。
+
+**修复**：`projects/p02-ecommerce-ops-assistant/web/next.config.ts` 增加 `allowedDevOrigins: ["127.0.0.1"]`
+（Next 官方口子，不是绕过），重启 dev server 生效。
+
+### ② 蓝底无字 = ui-kit 令牌表里的裸 `a{}` 未分层，压掉了 Tailwind 的文字色工具类
+
+`shared/ui-kit/tokens.css` 的 `a { color: var(--cp-brand) }` 与 `a:hover {...}` 是**未分层**声明，
+而 Tailwind 的 `.text-white` / `.text-ink-2` 在 `@layer utilities` 内 —— 按 CSS 层叠规则，
+未分层声明优先级高于**所有**层。于是凡是 `<a>` 扮演的按钮（`buttonVariants()` 走 `<Link>`）
+都被染成品牌蓝，配 `bg-brand-500` 就是**蓝底蓝字、文字消失**；侧栏 `<a>` 导航也被染蓝，
+违反了「单一强调色只用于按钮与关键信息」的设计门禁。
+
+**修复**：把这两条规则包进 `@layer base`（`utilities` 层在其后，工具类重新生效），
+并在令牌表里写清为什么必须分层。对不用 Tailwind 的静态模块（外壳 / P04~P10）无行为变化：
+`components.css` 里没有裸 `a{}` 规则，未分层声明原本就赢，现在仍然赢。
+改完由 `npm run copy:tokens` 同步进 P02 的构建期副本 `web/src/app/tokens.css`。
+
+### 验证（无头 Edge + CDP，带真实登录态）
+
+探针已固化为常驻工具 **`_tools/contrast_probe.py`**（WCAG 2.1 对比度 + 4xx 脚本 + 页面异常 + canvas 数）：
+`python _tools/contrast_probe.py http://127.0.0.1:3001/ --login-form p02 --out x.png`
+
+| 页面 | 修复前 | 修复后 |
+|---|---|---|
+| `/`（工作台） | `canvases=0`、3 个 chunk 403、4 个 `<a>` 蓝底蓝字（全部平台 / 店铺详情 ×3） | `canvases=4`、`badScripts=[]`、`errors=[]`、蓝底蓝字清零 |
+| `/products` | — | `badScripts=[]`、`errors=[]` |
+| `/dashboard` | — | 同上 |
+
+证据：
+- `p02/2026-10-13_图表空白_修复前.png` —— 四张图表卡片全空、三个蓝色按钮无字（与用户截图同一状态）
+- `p02/2026-10-13_图表与按钮文字_修复后.png` —— 双环形图 + 横/纵柱状图齐全，按钮文字可读，侧栏导航回到次文本灰
+- `p02/2026-10-13_外壳挂载P02.png` —— 经 `http://127.0.0.1:8800/#/workspace/ecommerce-ops` 挂载路径正常
+  （iframe 内是 P02 自己的登录页，属 ADR-0003 的有意识例外，不是回归）
+- `p02/2026-10-13_工作台_对比度探针.png` —— 修复后工作台整页（探针同时输出的位图）
+
+### ⚠️ 探针顺带量出来的存量欠账（未动，需用户定口径）
+
+`.qoder/rules/02-技术规范.md` 的门禁是「任何文字色在其底色上对比度 ≥ 4.5:1」。
+修复后的 P02 工作台仍有 **64 个元素不达标**，全部来自**令牌本身**而不是这次的改动：
+
+| 用法 | 实测 | 出现处 |
+|---|---|---|
+| `--cp-ink3 #8A94A3` 当正文/表头字色 | 2.71:1（灰底）/ 2.86:1（白底） | 商品池表头、页面副标题、登录页演示账号邮箱 |
+| `--cp-success #16A34A` 叠 `--cp-success-bg #E7F6EC` 的标签 | 2.95:1 | 店铺「启用」、商品「性价比」等状态 Tag |
+
+改这两个令牌会同时动到外壳与十个模块（含 P05 的强调色回指），属全站视觉决策，**本轮没有擅自改**。
+要收口的话，建议方向是：`--cp-ink3` 只留给禁用态，正文弱文本一律 `--cp-ink2`；
+成功/警告 Tag 改用更深的字色配浅底。
+
+### 本轮顺带发现 / 遗留
+
+- **同类隐患未逐个排查**：P03（Vite + Tailwind）也 `@import` 了同一份 tokens.css，修复①对它同样受益；
+  其余用 Tailwind 的模块若将来改用 `127.0.0.1` 访问 dev server，同样需要各自的 `allowedDevOrigins`。
+- **手机/局域网预览仍会踩坑**：`allowedDevOrigins` 只加了 `127.0.0.1`。用 LAN IP 打开外壳时，
+  iframe 的 Origin 变成该 IP → P02 的 chunk 会再次 403，需要把那个 IP 追加进名单（IP 会变，未预先写死）。
+- **服务现状**：排查期间共享控制台被 `^C`，除 shell / p02-api / p02-web 外其余 12 个服务掉线，
+  本轮未擅自全量重启（`supervisor.py status` → 3/15 在线）。
+- 改动均在工作区，**未 commit、未 push**。
+
+
+---
+
+## D15 · 用户反馈：P04 文档删不掉 / 检索问答请求失败 + 两处更名（2026-10-13 晚）
+
+用户原话：「BOSS智库有问题上传文件不能删除，知识库检索问答回答请求失败，请稍后重试，然后把 BOSS 智库名字改为 RAG 知识库，Deep Research 问数改为 NL2SQL 问数」。
+
+### 根因（一句话）
+
+**8040 上跑的是 10-12 22:56 启动的旧进程**，而级联删除等修复是 10-13 14:10 才写进磁盘的 —— 服务从未重启，用户点到的仍是「只删 Mongo、不清 Milvus」的旧接口；同时 SERVICE_REGISTRY 里 p04=8041 无人监听，外壳挂载区显示「未启动」。陈旧判定用的是那条老规矩：`console.html`=200 但 `/shared/ui-kit/tokens.css`=404。
+
+### 做了什么
+
+| 项 | 处理 | 证据 |
+|---|---|---|
+| 文档删除 | 重启到注册表端口 8041 跑当前代码（先按 `file_title` 清向量、最后删 Mongo 记录）；UI 侧确认框与结果提示带真实清理条数 | `_evidence/p04/verify-cascade-delete.log`（上传→1 条向量→删除→向量与记录双清→不再命中，PASS） |
+| 检索问答「请求失败」 | 控制台改走 `is_stream=true` + `EventSource`（阶段进度→逐字→final 带 4 条引用）；非流式分支从「在 `async def` 里直接跑 35s 流程图」改成 `asyncio.to_thread`，不再阻塞事件循环；失败时把 HTTP 状态 / 后端 detail / SSE error 原文显示出来，另加 120s 看门狗 | `_evidence/p04/stream-query-evidence.log`（317 个 SSE 事件、1861 字回答、引用带 score）、`console-qa-dom.json`（浏览器真实渲染）、`console-tab-qa.png` |
+| 上传列表不能移除 | 每行加「✕ 移除」+ 列表级「清空列表」，确认框写明「移除不中断服务器端导入，删文档请到文档管理」 | `console-tab-upload.png` + 浏览器内交互实测（1 行→点 ✕→0 行、列表条隐藏） |
+| 页头数字与表格行数对不上 | `/statistics` 数全库、列表按 `owner=public` 过滤（库里躺着 1 条历史 `owner=test`）→ 统计改为同口径 | `stream-query-evidence.log` 末尾（两边均 5 文档 / 36 切片） |
+| 降级路径自带炸弹 | `node_answer_output` 在 LLM 流式异常时 `push_to_session(SSEEvent.END,…)`，而 `SSEEvent` 没有 `END` → AttributeError 把整条流程带崩；删掉，终止事件统一由 FINAL 发 | 代码 `processor/query_processor/nodes/node_answer_output.py` |
+| 直跑入口谎报端口 | `console_service.__main__` 写死 8100（与注册表 8041 漂移，正是今天 8040/8041 漂移的同类病）→ 改从 `services.json` 解析 | 代码 `web/api/console_service.py:_registry_port` |
+| 更名 | 「BOSS智库 / 掌柜智库」→「RAG 知识库」：P04 页面标题/侧栏/欢迎语、FastAPI 标题与日志、`start.bat`、README、docs；「Deep Research 问数」→「NL2SQL 问数」：`services.json` 真源 + `build_js.py` 重生成、supervisor 标签、P03 页面标题与 `dist`、门户/画廊/README/AGENTS/规则。**历史归档不动**（`_evidence/`、`.workbuddy/`、`work/eval_report/`、`00-总纲/`、源项目名、GitHub 仓库名 `-BOSS-RAG-`） | `shared/config/services.js`、`curl :8800/shared/config/services.js` → p03=NL2SQL 问数 / p04=RAG 知识库；`:5174` 标题、`console-tab-docs.png` 侧栏 |
+
+### 顺带修掉的平台级缺陷（被这次重启暴露）
+
+- **P07 起不来**：`ModuleNotFoundError: No module named 'cloudpivot_config'` —— 真因是 `__editable__.cloudpivot_config-1.0.0.pth` 被写成 UTF-8 字节，而 Windows `site.py` 按 ANSI(GBK) 读 `.pth`，含中文的仓库路径解不出来，该目录从未进 `sys.path`（同 venv 里 GBK 写的 `llm_gateway.pth` 一切正常）。已把 p07/p09 两个 `.pth` 重写为 GBK，实测 `port('p07')=8070`、`api_url('p01',…)` 解析成功。**连带发现 P09 此前是静默走 env 兜底**，SERVICE_REGISTRY 其实一直没生效。
+- **P07 第二个坑**：`uv run python app/main.py` 下 `from app import config` 报 `No module named 'app'`（`sys.path[0]` 是 `app/`），按 p06 既有做法在入口补项目根。
+- **服务面**：接手时 3/15（D14 那轮被 `^C`），现已 `supervisor start` 全量拉起 → **15/15 在线**，外壳 `GET /api/services/health` 对 p03/p04/p07/p09 均报 online。
+
+### 未跑通 / 遗留（不当成已完成）
+
+- **P04 pytest 套件当前跑不完**：`tests/` 只有重排相关两个文件，复跑先 9 failed/14 passed、随后直接段错误，栈顶是 `torch/storage.py` mmap 读权重 + `FlagEmbedding` 重排器构造 —— 原生崩溃；机器可用内存 3.3/15.7 GB，且**停掉 p04 服务复跑仍崩**，与本轮改动文件无交集。详见 `_evidence/p04/pytest-reranker-crash-20261013.log`（基线 `full_testsuite_p1.log` 的 23 passed 是机器上没起这么多服务时跑出来的）。
+- 控制台「全部导入任务」表是内存态，重启即空 —— 已在 README「已知限制与 mock 边界」写明（该节本轮补齐，之前缺）。
+- 库里那条历史 `owner=test` 文档没动（属数据删除，需用户点头）。
+- P04 README「快速开始」里的 `git clone https://github.com/liyibo0410/-BOSS-RAG-.git` 未改：本机 curl 不出网，无法核实仓库是否还在，**若已改名需用户确认后一并更新**（简历两处也引用了该仓库名）。
+- 更名顺带同步了 `03-resume/` 两版简历里的「P04 BOSS 智库」字样（纯产品名，未动任何主张/数字）—— 如希望简历保留旧称，说一声即可回退。
+- 改动均在工作区，**未 commit、未 push**。
+
+
+## D16 · 用户反馈：品牌定制「logo 与名字还是不能自定义」全站返工（2026-10-13 晚）
+
+详情见 `_evidence/shell/D16-brand-fullsite.md`（七条根因逐条实测 + 改动清单 + 13 个入口取证）。
+
+**外壳 8800 的读写本来就通**（改名 / 传 logo / 刷新持久化均实测通过），坏的是「全站生效」那一半：
+
+| 根因 | 修复 |
+|---|---|
+| **8801 上跑着 8:26 启动的旧 `serve.py`**（品牌接口 18:52 才加），`/api/brand` 一律 404 → 该入口改品牌必然失败 | 按用户决定 `taskkill /PID 5220`，只保留 8800 一个网关 |
+| P04 `chat.html` 根本没引 ui-kit/services，`data-cp-brand` 是死绑定；`console.html` 缺 company 与 brand-src | 补齐引入与绑定 |
+| P05 七页有 ui-kit 但**零品牌节点**，公司名写死在 `app.js` 的 `BRAND` 常量 | 顶栏/页脚/登录页接品牌位，注入后重放 `applyBrand` |
+| P01 / P03 运行时桥只有 `cp:theme`/`cp:auth`，没有 `cp:brand` | 新增共用 ES 模块 `shared/ui-kit/brand-bridge.js`（含 MutationObserver 补挂） |
+| P02 无桥 + `layout.tsx` 硬编码标题 + Next origin 上 `/shared/brand.json` 404 | 新增 `/api/brand` 路由 + `useBrand()` store + `CpBrandBridge` + `generateMetadata` 读盘 |
+| 门户 / 画廊只有相对路径 brand-src 且没引 services.js → 既无同源可读也无端口兜底 | 补 `services.js`；画廊 h1 加 logo 位 |
+| 构建型模块与 `file://` 页面没有同源 `/shared` | 注册表新增顶层 `gateway.web_port`；网关 `GET /api/brand` 开 CORS；`CP.loadBrand` 改成「同源 → 网关」来源链；新增 `[data-cp-brand-logo-src]`（自定义 logo 优先、否则用模块自带标识）与 `cp:brand-applied` 事件 |
+
+**取证**：临时改名「启明科技 / Qiming Tech」→ 13 个入口逐张出图（`D16-brand-*.png`，含 `file://` 打开的门户与画廊）→ 脚本自动还原；P01/P02/P03/P06 另做 `cp:brand` 实时下发实测（DOM 与标题即时更新）。
+
+**遗留**：外壳 iframe 内的下发只能靠代码路径证明（跨源读不到 iframe DOM）；P01/P03 网关端口是构建期注入，改端口需重启 dev server；P02 容器化未挂 `shared/` 时回落默认值；**`shared/config/brand.json` 至今不在 git 里**（内含用户上传的 logo dataURL，是否入库待用户定口径）。

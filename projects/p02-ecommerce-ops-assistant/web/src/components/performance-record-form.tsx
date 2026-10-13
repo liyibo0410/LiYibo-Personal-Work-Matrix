@@ -154,7 +154,7 @@ export function PerformanceRecordForm({
 
       <button
         type="submit"
-        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
         保存数据

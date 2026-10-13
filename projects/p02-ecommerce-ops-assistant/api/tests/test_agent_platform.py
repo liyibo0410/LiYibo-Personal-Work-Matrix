@@ -635,7 +635,7 @@ def test_workspace_viewer_cannot_use_legacy_edit_endpoint() -> None:
             workspace_id=workspace_id,
             user_id=user_id,
         ).one()
-        membership.role = UserRole.VIEWER
+        membership.role = UserRole.CS
         db.commit()
     app.dependency_overrides[get_db] = _override_db(engine)
     app.dependency_overrides[get_current_user] = lambda: _user(user_id, UserRole.OPERATOR)

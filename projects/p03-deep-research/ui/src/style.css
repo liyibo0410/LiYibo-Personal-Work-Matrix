@@ -1,0 +1,31 @@
+/* 统一设计令牌（唯一真源：shared/ui-kit/tokens.css）。
+   令牌由 main.ts 以 CSS 模块形式 `import '.../tokens.css'` 注入（见该文件说明）；
+   App.vue 的局部变量一律 re-point 到 --cp-*，模块自身不保留独立色板。 */
+
+:root {
+  font-family: var(--cp-font);
+  line-height: var(--cp-lh);
+  font-weight: 400;
+
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--cp-bg);
+  color: var(--cp-ink1);
+  font-family: var(--cp-font);
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}

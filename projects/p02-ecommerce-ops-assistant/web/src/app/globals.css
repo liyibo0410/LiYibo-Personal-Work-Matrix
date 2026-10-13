@@ -1,59 +1,59 @@
 @import "tailwindcss";
 
 /* ============================================================
-   深色设计令牌（Dark Theme）
-   - 强调色：品牌蓝 #3370FF（唯一强调色）
-   - 表面分层：base → surface → elevated → hover
-   - 文字：高对比三级体系
-   - 圆角统一 8px
+   白底设计令牌（Light Theme）—— 单一真源来自 shared/ui-kit/tokens.css
+   （构建期由 scripts/copy-tokens.mjs 复制到 ./tokens.css 并随 layout 引入）
+   - 核心配色 / 字体一律 var(--cp-*)，全局改动令牌即同步生效
+   - 强调色：品牌蓝 --cp-brand（唯一强调色）
+   - brand 色阶按 Tailwind 惯例排列：50 最浅 → 900 最深。
+     原为深色主题反向排（100 最深），白底下若不纠正，
+     `bg-brand-700 text-white` 这类组合会变成浅蓝底白字而看不清。
    ============================================================ */
 @theme {
-  /* 品牌主色（强调色，保持不变） */
-  --color-brand-50: #0f1a35;
-  --color-brand-100: #142040;
-  --color-brand-200: #1a2a50;
-  --color-brand-300: #254080;
-  --color-brand-400: #3060cc;
-  --color-brand-500: #3370ff;
-  --color-brand-600: #5b8dff;
-  --color-brand-700: #7da8ff;
-  --color-brand-800: #a1c0ff;
-  --color-brand-900: #c6d6ff;
+  /* 品牌主色：50 映射全局令牌，其余为本模块局部派生 */
+  --color-brand-50: var(--cp-brand-bg);
+  --color-brand-100: #D6E4FF;
+  --color-brand-200: #ADC8FF;
+  --color-brand-300: #85ADFF;
+  --color-brand-400: #5C8EFF;
+  --color-brand-500: var(--cp-brand);
+  --color-brand-600: var(--cp-brand-hover);
+  --color-brand-700: #1A45B8;
+  --color-brand-800: #12338C;
+  --color-brand-900: #0B2260;
 
-  /* 表面分层（从深到浅） */
-  --color-surface: #141820;
-  --color-elevated: #1a1f2b;
+  /* 表面分层（白底：页面近白，卡片纯白） */
+  --color-surface: var(--cp-surface);
+  --color-elevated: var(--cp-elevated);
 
-  /* 中性文字体系（高对比度） */
-  --color-ink-1: #e8eaf0;
-  --color-ink-2: #9ba3b0;
-  --color-ink-3: #7c8493;
-  --color-ink-4: #4b5563;
+  /* 中性文字体系（高对比度；ink-4 是最弱的一档） */
+  --color-ink-1: var(--cp-ink1);
+  --color-ink-2: var(--cp-ink2);
+  --color-ink-3: var(--cp-ink3);
+  --color-ink-4: #A9B1BF;
 
   /* 分割线与填充底色 */
-  --color-line: #2a3040;
-  --color-line-2: #1e2430;
-  --color-fill-1: #0b0e14;
-  --color-fill-2: #1a1f2b;
-  --color-fill-3: #222836;
+  --color-line: var(--cp-line);
+  --color-line-2: #E8ECF2;
+  --color-fill-1: var(--cp-bg);
+  --color-fill-2: var(--cp-elevated);
+  --color-fill-3: #E4E9F1;
 
-  /* 状态色（深色底适配，含浅底） */
-  --color-success: #4ade80;
-  --color-success-bg: #0a2e14;
-  --color-warning: #fb923c;
-  --color-warning-bg: #2e1f0a;
-  --color-danger: #f87171;
-  --color-danger-bg: #2e0f0f;
+  /* 状态色（白底取值，来自全局令牌） */
+  --color-success: var(--cp-success);
+  --color-success-bg: var(--cp-success-bg);
+  --color-warning: var(--cp-warning);
+  --color-warning-bg: var(--cp-warning-bg);
+  --color-danger: var(--cp-danger);
+  --color-danger-bg: var(--cp-danger-bg);
 
-  /* 字体栈：中文优先 PingFang SC / 微软雅黑 */
-  --font-sans: "PingFang SC", "Microsoft YaHei", "Inter", "Segoe UI", system-ui,
-    -apple-system, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono",
-    monospace;
+  /* 字体栈：统一使用全局令牌字体 */
+  --font-sans: var(--cp-font);
+  --font-mono: var(--cp-font-mono);
 
-  /* 阴影（深色下更柔和） */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03);
-  --shadow-pop: 0 6px 24px rgba(0, 0, 0, 0.5);
+  /* 阴影（白底用淡灰投影，去掉深底专用的白色描边） */
+  --shadow-card: 0 1px 3px rgba(16, 24, 40, 0.06), 0 0 0 1px rgba(16, 24, 40, 0.04);
+  --shadow-pop: 0 6px 24px rgba(16, 24, 40, 0.14);
 }
 
 :root {

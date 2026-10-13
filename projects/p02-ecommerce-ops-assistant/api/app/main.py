@@ -8,6 +8,7 @@ from app.api.routes import (
     agent_platform,
     agent_runs,
     auth,
+    dashboard,
     health,
     model_settings,
     products,
@@ -41,6 +42,7 @@ app.add_middleware(
 
 app.include_router(health.router)
 app.include_router(auth.router, prefix="/api/v1")
+app.include_router(dashboard.router, prefix="/api/v1")
 app.include_router(agent_platform.router, prefix="/api/v1")
 app.include_router(agent_runs.router, prefix="/api/v1")
 app.include_router(products.router, prefix="/api/v1")

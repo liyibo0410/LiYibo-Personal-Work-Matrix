@@ -1,22 +1,21 @@
 @echo off
-chcp 936 >nul
-title BOSS ÖÇ¿â
+chcp 65001 >nul 2>&1
+title CloudPivot P04 - RAG çŸ¥è¯†åº“
 cd /d "%~dp0"
 
 echo ============================================================
-echo   BOSS ÖÇ¿â - Ò»¼üÆô¶¯
+echo   RAG çŸ¥è¯†åº“ - ä¸€é”®å¯åŠ¨
 echo ============================================================
 echo.
+echo   æ§åˆ¶å°åœ°å€: http://localhost:8041/console.html
 echo.
-echo   ¿ØÖÆÌ¨µØÖ·: http://localhost:8100/console.html
-echo.
-echo   °´ Ctrl+C Í£Ö¹·şÎñ
+echo   æŒ‰ Ctrl+C åœæ­¢æœåŠ¡
 echo.
 echo ============================================================
 echo.
 
-python -m uvicorn web.api.console_service:app --port 8100 --reload
+uv run python -m uvicorn web.api.console_service:app --port 8041 --reload
 
 echo.
-echo ·şÎñÒÑÍ£Ö¹
+echo æœåŠ¡å·²åœæ­¢
 pause

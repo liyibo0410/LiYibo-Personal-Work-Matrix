@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOSS智库 · 文件导入</title>
+    <title>RAG 知识库 · 文件导入</title>
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --primary-light: #eef2ff;
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --text-secondary: #64748b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --primary: var(--cp-brand, #3370FF);
+            --primary-hover: var(--cp-brand-hover, #245AE0);
+            --primary-light: var(--cp-brand-bg, #E8F0FF);
+            --bg: var(--cp-bg, #F5F7FA);
+            --surface: var(--cp-surface, #FFFFFF);
+            --elevated: var(--cp-elevated, #EEF1F6);
+            --border: var(--cp-line, #DDE2EA);
+            --text: var(--cp-ink1, #1A1F2B);
+            --text-secondary: var(--cp-ink2, #5A6472);
+            --text-muted: var(--cp-ink3, #8A94A3);
+            --success: var(--cp-success, #16A34A);
+            --success-bg: var(--cp-success-bg, #E7F6EC);
+            --warning: var(--cp-warning, #B4690E);
+            --warning-bg: var(--cp-warning-bg, #FDF1DC);
+            --danger: var(--cp-danger, #D92D20);
+            --danger-bg: var(--cp-danger-bg, #FEE9E7);
             --radius: 8px;
-            --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.025);
+            --shadow: 0 1px 3px rgba(16,24,40,0.06), 0 0 0 1px rgba(16,24,40,0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(16,24,40,0.08), 0 4px 6px -2px rgba(16,24,40,0.04);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -31,6 +36,11 @@
             justify-content: center;
             padding: 40px 20px;
         }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--cp-line, #DDE2EA); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C0C8D6; }
         .container {
             width: 100%;
             max-width: 800px;

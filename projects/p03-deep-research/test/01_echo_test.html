@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Demo1 - WebSocket 最小回显</title>
+<style>
+  body { font-family: "Microsoft YaHei", sans-serif; max-width: 600px; margin: 40px auto; background: #0B0E14; color: #E8EAF0; }
+  input, button { font-size: 16px; padding: 8px 12px; background: #141820; color: #E8EAF0; border: 1px solid #2A3040; border-radius: 6px; }
+  button { background: #3370FF; color: #fff; border: none; cursor: pointer; }
+  button:hover { background: #2560E0; }
+  #log { background: #141820; border: 1px solid #2A3040; border-radius: 6px; padding: 12px; height: 300px; overflow-y: auto; margin-top: 16px; }
+  .msg { margin: 6px 0; }
+  .from-server { color: #3370FF; }
+  .from-client { color: #4CAF50; }
+  .status { color: #94A3B8; font-size: 14px; }
+</style>
+</head>
+<body>
+<h2>Demo1：WebSocket 最小回显</h2>
+<div>
+  <input id="msg" placeholder="输入要发送的消息" style="width: 70%;">
+  <button onclick="sendMsg()">发送</button>
+  <button onclick="connect()">重新连接</button>
+</div>
+<div id="log"><div class="status">尚未连接…</div></div>
+
+<script>
+let ws = null;
+
+function log(text, cls = 'from-client') {
+  const div = document.createElement('div');
+  div.className = 'msg ' + cls;
+  div.textContent = text;
+  document.getElementById('log').appendChild(div);
+}
+
+function connect() {
+  // 关闭旧连接，重建
+  if (ws) { ws.close(); }
+  // 与后端 @app.websocket("/ws") 对应
+  ws = new WebSocket('ws://127.0.0.1:8000/ws');
+
+  ws.onopen = () => log('[已连接] ws://127.0.0.1:8000/ws', 'status');
+  ws.onmessage = (ev) => log(ev.data, 'from-server');
+  ws.onclose = () => log('[已断开]', 'status');
+  ws.onerror = (err) => log('[错误] ' + err, 'status');
+}
+
+function sendMsg() {
+  const input = document.getElementById('msg');
+  if (ws && ws.readyState === WebSocket.OPEN && input.value.trim()) {
+    ws.send(input.value.trim());
+    log('我发: ' + input.value.trim());
+    input.value = '';
+  } else {
+    log('请先连接，或输入内容。', 'status');
+  }
+}
+
+connect(); // 页面加载即自动连接
+</script>
+</body>
+</html>

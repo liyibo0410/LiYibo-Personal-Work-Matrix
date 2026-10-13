@@ -8,16 +8,35 @@ Tests 3 scenarios:
 
 import json
 import logging
+import os
 import sys
+from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 
 from llm_gateway import chat_completion_json, get_cost_report
 
 REAL_BASE = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
-REAL_KEY = "sk-sp-H.DPXRMP.tPFm.MEUCIQCHWQK_lWs_md3EB8wjk8aK12Rghe85CucGtLXQ_mi3mAIgJolVqV7L9LlazsVZbpEalyfkPo9sFlKbvBrGEv6bVC4"
 REAL_MODEL = "qwen3.8-flash"
 BROKEN_BASE = "https://this-host-does-not-exist.invalid/v1"
+
+
+def _load_key() -> str:
+    """凭据只从环境/api/.env 取 —— 脚本里不能出现 Key 字面量（本文件已入库）。"""
+    key = os.getenv("LLM_API_KEY", "")
+    if key:
+        return key
+    env_file = Path(__file__).resolve().parents[1] / ".env"
+    for line in env_file.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line.startswith("LLM_API_KEY="):
+            return line.split("=", 1)[1].strip().strip('"').strip("'")
+    return ""
+
+
+REAL_KEY = _load_key()
+if not REAL_KEY:
+    raise SystemExit("缺少 LLM_API_KEY：请在 api/.env 填写，或设置同名环境变量后重试。")
 
 MESSAGES = [
     {"role": "system", "content": "你是一个测试助手，只返回 JSON。"},

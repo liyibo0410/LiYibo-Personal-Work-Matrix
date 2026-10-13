@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloudpivot-auth"
+version = "1.0.0"
+description = "云枢智能统一平台 · 共享鉴权（纯标准库 HS256 令牌签发/校验），落实认证统一"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

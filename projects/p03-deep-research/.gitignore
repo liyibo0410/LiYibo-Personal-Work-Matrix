@@ -1,0 +1,76 @@
+# ===== 环境与密钥（严禁入库）=====
+.env
+.env.*
+!.env.example
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ===== 运行时产物（会话工作空间，只涨不落，不入库）=====
+output/
+upload/
+logs/
+*.log
+
+# ===== 站点部署产物（_site_8120 内含服务器凭据脚本，严禁入库/公开）=====
+_site_8120/
+_archive/
+
+# ===== 测试与覆盖率 =====
+htmlcov/
+.coverage
+.coverage.*
+.pytest_cache/
+coverage.xml
+*.cover
+
+# ===== Jupyter =====
+.ipynb_checkpoints
+
+# ===== 虚拟环境 =====
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ===== Ruff =====
+.ruff_cache/
+
+# ===== mypy =====
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ===== 临时文件 =====
+tempCodeRunnerFile.py
+*.tmp
+*.bak

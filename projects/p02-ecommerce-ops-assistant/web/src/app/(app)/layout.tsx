@@ -10,7 +10,11 @@ export default async function AppLayout({
   const currentUser = token ? await getCurrentUser(token) : null;
   return (
     <AppShell
-      user={currentUser ? { display_name: currentUser.display_name } : null}
+      user={
+        currentUser
+          ? { display_name: currentUser.display_name, role: currentUser.role }
+          : null
+      }
     >
       {children}
     </AppShell>

@@ -1,0 +1,18 @@
+[project]
+name = "p05-contract-review"
+version = "2.1.9"
+description = "P05 合同审批系统（衡鉴）- 云枢智能平台模块；零第三方依赖的确定性风险审查引擎"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8.0.0"]
+
+[tool.uv]
+# 单包 app/ + 顶层脚本布局，关闭自动打包发现，避免 setuptools 歧义报错
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

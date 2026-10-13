@@ -481,7 +481,7 @@ export type ModelSettings = {
   };
 };
 
-export type UserRole = "owner" | "operator" | "viewer";
+export type UserRole = "owner" | "operator" | "designer" | "cs";
 export type UserStatus = "active" | "disabled";
 
 export type UserAccount = {

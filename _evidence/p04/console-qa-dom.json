@@ -1,0 +1,26 @@
+{
+  "answer_chars": 1445,
+  "answer_first_160": "根据参考内容，HAK 180 烫金机的安全注意事项主要包括以下几个方面：\n\n**1. 设备放置与环境要求**\n*   **平稳表面**：将设备放置在平整、水平且稳定的表面（如桌面）上，避免震动和冲击。\n*   **边缘安全**：确保设备的任何部位均未伸出桌面或支架边缘。特别是当设备位于边缘时，请勿让出纸盒打开，以防设备",
+  "answer_is_error": false,
+  "captured_at": "2026-10-13T13:16:49.863Z",
+  "file_list_bar": {
+    "hidden": true,
+    "remove_buttons_present": true,
+    "text": "本次上传记录 0 条"
+  },
+  "page": "http://127.0.0.1:8041/console.html",
+  "page_title": "RAG 知识库 · 统一控制台",
+  "progress_collapsed": true,
+  "progress_summary": "阶段进度（已完成7，进行中0）",
+  "send_button": "发送",
+  "session_id": "kb-console-mv6orjqm-qzfncj",
+  "sidebar_brand": "RAG 知识库",
+  "sources": [
+    "[1] hak180产品安全手册 · Brother HAK 180 烫金机 相关性 0.9993",
+    "[2] hak180产品安全手册 · Brother HAK 180 烫金机 相关性 0.9988",
+    "[3] hak180产品安全手册 · Brother HAK 180 烫金机 相关性 0.9987",
+    "[4] hak180产品安全手册 · Brother HAK 180 烫金机 相关性 0.9387"
+  ],
+  "sources_title": "引用来源 4 条",
+  "total_messages": 2
+}

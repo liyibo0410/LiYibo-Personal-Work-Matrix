@@ -45,7 +45,7 @@ export function DiagnosisEditForm({ diagnosis, productId }: DiagnosisEditFormPro
 
       <button
         type="submit"
-        className="inline-flex h-10 w-fit items-center justify-center rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+        className="inline-flex h-10 w-fit items-center justify-center rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
       >
         保存诊断
       </button>

@@ -328,7 +328,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
                 <form action={`/products/${product.id}/diagnoses/generate`} method="post">
                   <button
                     type="submit"
-                    className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+                    className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
                   >
                     <Brain className="h-4 w-4" aria-hidden="true" />
                     生成诊断
@@ -385,7 +385,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
               <form action={`/products/${product.id}/creative-plans/main-images/generate`} method="post">
                 <button
                   type="submit"
-                  className="mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white transition hover:bg-ink-1"
+                  className="mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white transition hover:bg-brand-700"
                 >
                   <ImageIcon className="h-3.5 w-3.5" aria-hidden="true" />
                   生成主图
@@ -405,7 +405,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
               <form action={`/products/${product.id}/creative-plans/video-scripts/generate`} method="post">
                 <button
                   type="submit"
-                  className="mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white transition hover:bg-ink-1"
+                  className="mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white transition hover:bg-brand-700"
                 >
                   <Video className="h-3.5 w-3.5" aria-hidden="true" />
                   生成脚本
@@ -459,7 +459,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
                 <form action={`/products/${product.id}/review-reports/generate`} method="post">
                 <button
                   type="submit"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
                 >
                   <Megaphone className="h-4 w-4" aria-hidden="true" />
                   生成复盘
@@ -564,7 +564,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
                 <form action={`/products/${product.id}/promotion-links/generate`} method="post" className="mt-4">
                 <button
                   type="submit"
-                  className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+                  className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
                 >
                   <LinkIcon className="h-4 w-4" aria-hidden="true" />
                   生成链接
@@ -646,7 +646,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
               <form action={`/products/${product.id}/ad-recommendations/generate`} method="post">
               <button
                 type="submit"
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
               >
                 <Megaphone className="h-4 w-4" aria-hidden="true" />
                 生成投放建议
@@ -710,7 +710,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
                       type="submit"
                       name="confirmation_status"
                       value="confirmed"
-                      className="h-9 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white hover:bg-ink-1"
+                      className="h-9 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white hover:bg-brand-700"
                     >
                       确认建议
                     </button>
@@ -917,7 +917,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
                         </label>
                         <button
                           type="submit"
-                          className="h-9 w-fit rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white hover:bg-ink-1"
+                          className="h-9 w-fit rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white hover:bg-brand-700"
                         >
                           保存评价
                         </button>
@@ -998,7 +998,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
                           <input type="hidden" name="tab" value="jobs" />
                           <button
                             type="submit"
-                            className="h-8 rounded-lg bg-ink-1 px-3 text-xs font-medium text-white hover:bg-ink-1"
+                            className="h-8 rounded-lg bg-brand-600 px-3 text-xs font-medium text-white hover:bg-brand-700"
                           >
                             重试
                           </button>
@@ -1095,7 +1095,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
               <form action={`/products/${product.id}/creative-plans/video-scripts/generate`} method="post">
                 <button
                   type="submit"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
                 >
                   <Video className="h-4 w-4" aria-hidden="true" />
                   生成脚本
@@ -1241,7 +1241,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
               <form action={`/products/${product.id}/creative-plans/main-images/generate`} method="post">
                 <button
                   type="submit"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
                 >
                   <ImageIcon className="h-4 w-4" aria-hidden="true" />
                   生成主图
@@ -1418,7 +1418,7 @@ function ProductWorkflowPanel({
         </div>
         <Link
           href={nextStep.href}
-          className="inline-flex h-9 w-fit items-center gap-2 rounded-lg bg-ink-1 px-3 text-sm font-medium text-white hover:bg-ink-1"
+          className="inline-flex h-9 w-fit items-center gap-2 rounded-lg bg-brand-600 px-3 text-sm font-medium text-white hover:bg-brand-700"
         >
           {nextStep.done ? "查看复盘" : "继续处理"}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -1742,7 +1742,7 @@ function PromotionLinkCreateForm({ canEdit, productId }: { canEdit: boolean; pro
 
       <button
         type="submit"
-        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white transition hover:bg-ink-1"
+        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white transition hover:bg-brand-700"
       >
         <ExternalLink className="h-4 w-4" aria-hidden="true" />
         保存链接
@@ -1867,7 +1867,7 @@ function AssetScaleRecommendationPanel({
           href={absoluteMediaUrl(recommendation.asset.url)}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-9 w-fit shrink-0 items-center gap-2 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white hover:bg-ink-1"
+          className="inline-flex h-9 w-fit shrink-0 items-center gap-2 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white hover:bg-brand-700"
         >
           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
           查看素材
@@ -1945,7 +1945,7 @@ function PromotionLinkCard({ link }: { link: PromotionLink }) {
               href={shortUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-8 w-fit items-center gap-1.5 rounded-lg bg-ink-1 px-3 text-xs font-medium text-white hover:bg-ink-1"
+              className="inline-flex h-8 w-fit items-center gap-1.5 rounded-lg bg-brand-600 px-3 text-xs font-medium text-white hover:bg-brand-700"
             >
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
               打开短链
@@ -2039,7 +2039,7 @@ function AdWorkflowPanel({ product }: { product: ProductDetail }) {
         </div>
         <Link
           href={nextStep.href}
-          className="inline-flex h-9 w-fit items-center gap-2 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white hover:bg-ink-1"
+          className="inline-flex h-9 w-fit items-center gap-2 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white hover:bg-brand-700"
         >
           {nextStep.done ? "查看复盘" : "继续处理"}
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -2144,7 +2144,7 @@ function AdLinkRecommendationPanel({
           href={bestLink.link.url}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-9 w-fit shrink-0 items-center gap-2 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white hover:bg-ink-1"
+          className="inline-flex h-9 w-fit shrink-0 items-center gap-2 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white hover:bg-brand-700"
         >
           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
           打开链接
@@ -2185,7 +2185,7 @@ function AdAssetRecommendationPanel({
           href={absoluteMediaUrl(recommendation.asset.url)}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-9 w-fit shrink-0 items-center gap-2 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white hover:bg-ink-1"
+          className="inline-flex h-9 w-fit shrink-0 items-center gap-2 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white hover:bg-brand-700"
         >
           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
           打开素材
@@ -2343,7 +2343,7 @@ function AdExperimentPanel({
           <form action={`/products/${productId}/ad-experiments/generate`} method="post">
           <button
             type="submit"
-            className="inline-flex h-9 w-fit items-center justify-center gap-2 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white transition hover:bg-ink-1"
+            className="inline-flex h-9 w-fit items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white transition hover:bg-brand-700"
           >
             <Megaphone className="h-3.5 w-3.5" aria-hidden="true" />
             生成实验
@@ -2659,7 +2659,7 @@ function CompetitorMonitorPanel({
                   <form action={`/products/${productId}/competitor-monitors/${monitor.id}/run`} method="post">
                     <button
                       type="submit"
-                      className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-ink-1 px-3 text-xs font-semibold text-white transition hover:bg-ink-1"
+                      className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 text-xs font-semibold text-white transition hover:bg-brand-700"
                     >
                       <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
                       检查
@@ -2909,7 +2909,7 @@ function GenerationJobSummary({
                   <input type="hidden" name="tab" value={activeTab} />
                   <button
                     type="submit"
-                    className="h-6 rounded-lg bg-ink-1 px-2 text-xs font-medium text-white hover:bg-ink-1"
+                    className="h-6 rounded-lg bg-brand-600 px-2 text-xs font-medium text-white hover:bg-brand-700"
                   >
                     重试
                   </button>

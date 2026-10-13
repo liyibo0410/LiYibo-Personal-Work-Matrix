@@ -43,7 +43,7 @@ export function InventoryAdvicePanel({ storeId, canEdit = true }: { storeId: num
             type="button"
             onClick={generateAdvice}
             disabled={loading}
-            className="inline-flex h-9 w-fit items-center gap-2 rounded-lg bg-ink-1 px-3 text-sm font-medium text-white hover:bg-ink-1 disabled:cursor-not-allowed disabled:bg-fill-3"
+            className="inline-flex h-9 w-fit items-center gap-2 rounded-lg bg-brand-600 px-3 text-sm font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-fill-3 disabled:text-ink-3"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Brain className="h-4 w-4" aria-hidden="true" />}
             生成建议

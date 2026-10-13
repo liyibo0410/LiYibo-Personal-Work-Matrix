@@ -17,7 +17,7 @@ def test_platform_authorization_start_requires_edit_permission() -> None:
     store_id, account_id = _seed_account(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).post(
             f"/api/v1/stores/{store_id}/platform-accounts/{account_id}/authorization/start",

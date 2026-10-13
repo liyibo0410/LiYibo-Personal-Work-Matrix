@@ -136,7 +136,7 @@ export function AgentRunPanel({ productId, initialRuns, canEdit }: AgentRunPanel
               type="button"
               onClick={startRun}
               disabled={!canEdit || submitting || hasActiveRun}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-ink-1 px-4 py-2.5 text-sm font-semibold text-white hover:bg-ink-1 disabled:cursor-not-allowed disabled:bg-fill-3"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-fill-3 disabled:text-ink-3"
             >
               {submitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
               {hasActiveRun ? "运行进行中" : "启动运营 Agent"}

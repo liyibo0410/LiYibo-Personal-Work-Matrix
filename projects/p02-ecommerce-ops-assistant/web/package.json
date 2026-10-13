@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "copy:tokens": "node scripts/copy-tokens.mjs",
+    "predev": "node scripts/copy-tokens.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/copy-tokens.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

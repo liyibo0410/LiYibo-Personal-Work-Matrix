@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-cp-brand-title="P10 模型微调平台 · {company}">P10 模型微调平台 - 云枢智能</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<!-- 统一设计系统：tokens.css 是配色唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
+<link rel="stylesheet" href="/shared/ui-kit/tokens.css">
+<script src="/shared/config/services.js"></script>
+<script src="/shared/ui-kit/ui-kit.js"></script>
+<style>
+:root {
+  /* 颜色统一引用 shared/ui-kit/tokens.css 的 --cp-* 令牌（改一处，全平台生效） */
+  --bg: var(--cp-bg);
+  --surface: var(--cp-surface);
+  --surface2: var(--cp-elevated);
+  --border: var(--cp-line);
+  --accent: var(--cp-brand);
+  --accent-hover: var(--cp-brand-hover);
+  --accent-dim: var(--cp-brand-bg);
+  --text: var(--cp-ink1);
+  --text2: var(--cp-ink2);
+  --text3: var(--cp-ink3);
+  --success: var(--cp-success);
+  --warning: var(--cp-warning);
+  --danger: var(--cp-danger);
+  --radius: 8px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+
+/* Layout */
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--surface); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; position: fixed; height: 100vh; overflow-y: auto; }
+.main { margin-left: 240px; flex: 1; padding: 24px 32px; min-height: 100vh; }
+
+/* Sidebar */
+.logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.logo h1 { font-size: 16px; font-weight: 700; color: var(--text); }
+.logo span { font-size: 11px; color: var(--text3); display: block; margin-top: 4px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text2); cursor: pointer; transition: all 0.15s; font-size: 14px; border-left: 3px solid transparent; }
+.nav-item:hover { background: var(--accent-dim); color: var(--text); }
+.nav-item.active { color: var(--accent); background: var(--accent-dim); border-left-color: var(--accent); font-weight: 600; }
+.nav-icon { width: 18px; text-align: center; }
+
+/* Cards */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.card-title { font-size: 15px; font-weight: 600; }
+
+/* Stats grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.stat-label { font-size: 13px; color: var(--text2); }
+.stat-card.accent { border-left: 3px solid var(--accent); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; border: none; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-danger { background: var(--danger); color: #fff; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+th { color: var(--text2); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+td { color: var(--text); }
+tr:hover td { background: var(--accent-dim); }
+
+/* Badges */
+.badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.badge-success { background: var(--cp-success-bg); color: var(--success); }
+.badge-warning { background: var(--cp-warning-bg); color: var(--warning); }
+.badge-info { background: var(--accent-dim); color: var(--accent); }
+.badge-danger { background: var(--cp-danger-bg); color: var(--danger); }
+
+/* Forms */
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 6px; font-weight: 500; }
+.form-input, .form-select { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; outline: none; transition: border-color 0.15s; }
+.form-input:focus, .form-select:focus { border-color: var(--accent); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Tags */
+.tag { display: inline-block; padding: 2px 8px; background: var(--surface2); border-radius: 4px; font-size: 11px; color: var(--text2); margin-right: 4px; }
+
+/* Mock banner */
+.mock-banner { background: var(--cp-warning-bg); border: 1px solid rgba(180,105,14,0.3); border-radius: var(--radius); padding: 10px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--warning); }
+
+/* Page sections */
+.page { display: none; }
+.page.active { display: block; }
+.page-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+
+/* Model cards */
+.model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.model-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: border-color 0.15s; }
+.model-card:hover { border-color: var(--accent); }
+.model-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.model-name { font-size: 16px; font-weight: 600; }
+.model-version { font-size: 12px; color: var(--text3); }
+.model-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+.model-metric { text-align: center; padding: 8px; background: var(--bg); border-radius: 6px; }
+.model-metric-value { font-size: 16px; font-weight: 700; color: var(--accent); }
+.model-metric-label { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+/* Chart container */
+.chart-container { width: 100%; height: 360px; }
+
+/* Upload area */
+.upload-area { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; transition: all 0.15s; }
+.upload-area:hover { border-color: var(--accent); background: var(--accent-dim); }
+.upload-area p { color: var(--text2); margin-top: 8px; font-size: 13px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 16px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
+  .model-grid { grid-template-columns: 1fr; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body class="cp-app" data-cp-module="p10" data-cp-brand-src="/shared/config/brand.json">
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="cp-brandmark" data-cp-brand="logo">云枢</div>
+      <h1>P10 微调平台</h1>
+      <span><span data-cp-brand="company">云枢智能</span> AI 平台</span>
+    </div>
+    <nav>
+      <div class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">&#9632;</span> 总览
+      </div>
+      <div class="nav-item" data-page="datasets">
+        <span class="nav-icon">&#9776;</span> 数据集
+      </div>
+      <div class="nav-item" data-page="training">
+        <span class="nav-icon">&#9881;</span> 训练
+      </div>
+      <div class="nav-item" data-page="evaluation">
+        <span class="nav-icon">&#9733;</span> 评测
+      </div>
+      <div class="nav-item" data-page="models">
+        <span class="nav-icon">&#9670;</span> 模型仓库
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Dashboard -->
+    <div class="page active" id="page-dashboard">
+      <h2 class="page-title">平台总览</h2>
+      <div class="mock-banner">
+        &#9888; 演示模式：训练、评测和部署均为模拟，未实际占用 GPU 资源。
+      </div>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">最近训练</span>
+          <button class="btn btn-ghost btn-sm" onclick="navigate('training')">查看全部</button>
+        </div>
+        <table>
+          <thead><tr><th>名称</th><th>数据集</th><th>状态</th><th>最终损失</th><th>耗时</th></tr></thead>
+          <tbody id="recent-trainings"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Datasets -->
+    <div class="page" id="page-datasets">
+      <h2 class="page-title">数据集管理</h2>
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header">
+          <span class="card-title">上传数据集</span>
+        </div>
+        <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+          <div style="font-size:32px;color:var(--text3)">&#8593;</div>
+          <p>点击或拖拽文件到此处上传（JSON / JSONL）</p>
+          <input type="file" id="file-input" accept=".json,.jsonl" style="display:none" onchange="handleUpload(this)">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">全部数据集</span>
+          <span class="badge badge-info" id="dataset-count"></span>
+        </div>
+        <table>
+          <thead><tr><th>名称</th><th>格式</th><th>样本数</th><th>平均 Token</th><th>大小</th><th>状态</th><th>操作</th></tr></thead>
+          <tbody id="dataset-table"></tbody>
+        </table>
+      </div>
+      <!-- Dataset detail modal -->
+      <div class="card" id="dataset-detail" style="display:none">
+        <div class="card-header">
+          <span class="card-title" id="detail-ds-name"></span>
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('dataset-detail').style.display='none'">关闭</button>
+        </div>
+        <div id="detail-ds-content"></div>
+      </div>
+    </div>
+
+    <!-- Training -->
+    <div class="page" id="page-training">
+      <h2 class="page-title">训练</h2>
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header"><span class="card-title">开始新训练</span></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">训练名称</label>
+            <input class="form-input" id="train-name" placeholder="例如：cs-qa-lora-run3">
+          </div>
+          <div class="form-group">
+            <label class="form-label">数据集</label>
+            <select class="form-select" id="train-dataset"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">基座模型</label>
+            <select class="form-select" id="train-base-model">
+              <option value="Qwen/Qwen2.5-7B-Instruct">Qwen/Qwen2.5-7B-Instruct</option>
+              <option value="Qwen/Qwen2.5-14B-Instruct">Qwen/Qwen2.5-14B-Instruct</option>
+              <option value="meta-llama/Llama-3.1-8B-Instruct">meta-llama/Llama-3.1-8B-Instruct</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">方法</label>
+            <select class="form-select" id="train-method">
+              <option value="lora">LoRA</option>
+              <option value="qlora">QLoRA</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">LoRA 秩</label>
+            <input class="form-input" id="train-rank" type="number" value="16">
+          </div>
+          <div class="form-group">
+            <label class="form-label">LoRA Alpha</label>
+            <input class="form-input" id="train-alpha" type="number" value="32">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">学习率</label>
+            <input class="form-input" id="train-lr" type="text" value="2e-4">
+          </div>
+          <div class="form-group">
+            <label class="form-label">训练轮数</label>
+            <input class="form-input" id="train-epochs" type="number" value="3">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">批大小</label>
+            <input class="form-input" id="train-batch" type="number" value="4">
+          </div>
+          <div class="form-group">
+            <label class="form-label">最大序列长度</label>
+            <input class="form-input" id="train-seqlen" type="number" value="2048">
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <button class="btn btn-primary" onclick="startTraining()">&#9654; 开始训练（演示）</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">训练历史</span></div>
+        <table>
+          <thead><tr><th>名称</th><th>数据集</th><th>方法</th><th>状态</th><th>步数</th><th>最终损失</th><th>操作</th></tr></thead>
+          <tbody id="training-table"></tbody>
+        </table>
+      </div>
+      <!-- Loss curve -->
+      <div class="card" id="loss-card" style="display:none">
+        <div class="card-header">
+          <span class="card-title" id="loss-title">损失曲线</span>
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('loss-card').style.display='none'">关闭</button>
+        </div>
+        <div class="chart-container" id="loss-chart"></div>
+      </div>
+    </div>
+
+    <!-- Evaluation -->
+    <div class="page" id="page-evaluation">
+      <h2 class="page-title">评测对比</h2>
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header"><span class="card-title">微调前后对比</span></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">微调前（基座模型）</label>
+            <select class="form-select" id="eval-before">
+              <option value="">使用基线（基座模型）</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">微调后（微调模型）</label>
+            <select class="form-select" id="eval-after"></select>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="compareEvals()">开始对比</button>
+      </div>
+      <div class="card" id="compare-result" style="display:none">
+        <div class="card-header"><span class="card-title">对比结果</span></div>
+        <div class="chart-container" id="compare-chart"></div>
+        <div id="compare-table" style="margin-top:16px"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">全部评测</span></div>
+        <table>
+          <thead><tr><th>模型版本</th><th>数据集</th><th>准确率</th><th>格式分</th><th>LLM 评审</th><th>综合质量</th><th>样本数</th></tr></thead>
+          <tbody id="eval-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Model Registry -->
+    <div class="page" id="page-models">
+      <h2 class="page-title">模型仓库</h2>
+      <div class="model-grid" id="model-grid"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+const API = '';
+
+// ---- Navigation ----
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelector(`[data-page="${page}"]`).classList.add('active');
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'datasets') loadDatasets();
+  if (page === 'training') loadTraining();
+  if (page === 'evaluation') loadEvaluation();
+  if (page === 'models') loadModels();
+}
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => navigate(item.dataset.page));
+});
+
+// ---- Helpers ----
+function fmtBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+function fmtDuration(s) {
+  if (!s) return '-';
+  const h = Math.floor(s/3600);
+  const m = Math.floor((s%3600)/60);
+  return h > 0 ? `${h} 小时 ${m} 分` : `${m} 分`;
+}
+function statusBadge(s) {
+  const map = { completed:'success', running:'warning', pending:'info', failed:'danger', deployed:'success', registered:'info', archived:'warning', valid:'success', invalid:'danger' };
+  // 状态值（completed/deployed/…）是与后端约定的枚举，不可改；这里只做展示文案中文化
+  const label = { completed:'已完成', running:'运行中', pending:'待处理', failed:'失败', deployed:'已部署', registered:'已注册', archived:'已归档', valid:'有效', invalid:'无效' };
+  return `<span class="badge badge-${map[s]||'info'}">${label[s] || s}</span>`;
+}
+
+// ---- Dashboard ----
+async function loadDashboard() {
+  const stats = await fetch(API + '/api/v1/stats').then(r => r.json());
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card accent"><div class="stat-value">${stats.datasets}</div><div class="stat-label">数据集</div></div>
+    <div class="stat-card accent"><div class="stat-value">${stats.training_runs}</div><div class="stat-label">训练任务</div></div>
+    <div class="stat-card accent"><div class="stat-value">${stats.model_versions}</div><div class="stat-label">模型版本</div></div>
+    <div class="stat-card"><div class="stat-value">${stats.total_samples.toLocaleString()}</div><div class="stat-label">样本总量</div></div>
+    <div class="stat-card"><div class="stat-value">${(stats.avg_accuracy * 100).toFixed(1)}%</div><div class="stat-label">平均准确率</div></div>
+    <div class="stat-card"><div class="stat-value">${stats.deployed_models}</div><div class="stat-label">已部署</div></div>
+  `;
+
+  const trainings = await fetch(API + '/api/v1/training/train-001').then(r => r.json()).catch(() => null);
+  const trainings2 = await fetch(API + '/api/v1/training/train-002').then(r => r.json()).catch(() => null);
+  const list = [trainings, trainings2].filter(Boolean);
+  document.getElementById('recent-trainings').innerHTML = list.map(t => `
+    <tr>
+      <td>${t.name}</td>
+      <td>${t.dataset_name}</td>
+      <td>${statusBadge(t.status)}</td>
+      <td>${t.final_loss ? t.final_loss.toFixed(4) : '-'}</td>
+      <td>${fmtDuration(t.duration_seconds)}</td>
+    </tr>
+  `).join('');
+}
+
+// ---- Datasets ----
+async function loadDatasets() {
+  const datasets = await fetch(API + '/api/v1/datasets').then(r => r.json());
+  document.getElementById('dataset-count').textContent = `共 ${datasets.length} 个`;
+  document.getElementById('dataset-table').innerHTML = datasets.map(d => `
+    <tr>
+      <td><strong>${d.name}</strong><br><span style="font-size:11px;color:var(--text3)">${d.description.substring(0,60)}...</span></td>
+      <td><span class="tag">${d.format.toUpperCase()}</span></td>
+      <td>${d.sample_count.toLocaleString()}</td>
+      <td>${d.avg_tokens}</td>
+      <td>${fmtBytes(d.file_size_bytes)}</td>
+      <td>${statusBadge(d.validation_status)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="showDatasetDetail('${d.id}')">详情</button></td>
+    </tr>
+  `).join('');
+
+  // Populate training dataset selector
+  const sel = document.getElementById('train-dataset');
+  sel.innerHTML = datasets.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+}
+
+async function showDatasetDetail(id) {
+  const ds = await fetch(API + '/api/v1/datasets/' + id).then(r => r.json());
+  document.getElementById('detail-ds-name').textContent = ds.name;
+  const labelDist = ds.label_distribution || {};
+  const tokenHist = ds.token_histogram || {};
+  document.getElementById('detail-ds-content').innerHTML = `
+    <p style="color:var(--text2);margin-bottom:12px">${ds.description}</p>
+    <div class="stats-grid" style="margin-bottom:16px">
+      <div class="stat-card"><div class="stat-value">${ds.sample_count.toLocaleString()}</div><div class="stat-label">样本数</div></div>
+      <div class="stat-card"><div class="stat-value">${ds.avg_tokens}</div><div class="stat-label">平均 Token</div></div>
+      <div class="stat-card"><div class="stat-value">${fmtBytes(ds.file_size_bytes)}</div><div class="stat-label">文件大小</div></div>
+      <div class="stat-card"><div class="stat-value">${ds.duplicates_removed || 0}</div><div class="stat-label">去重样本数</div></div>
+    </div>
+    <h4 style="margin-bottom:8px;color:var(--text2)">标签分布</h4>
+    <div style="margin-bottom:16px">${Object.entries(labelDist).map(([k,v]) => `<span class="tag">${k}: ${(v*100).toFixed(0)}%</span>`).join(' ')}</div>
+    <h4 style="margin-bottom:8px;color:var(--text2)">Token 长度分位</h4>
+    <div>${Object.entries(tokenHist).map(([k,v]) => `<span class="tag">${k.toUpperCase()}: ${v}</span>`).join(' ')}</div>
+    <div style="margin-top:12px">
+      <span class="tag">语言：${ds.language || '未标注'}</span>
+      <span class="tag">编码：${ds.format_validation?.encoding || '未标注'}</span>
+      <span class="tag">结构校验：${ds.format_validation?.schema_checked ? '已校验' : '未校验'}</span>
+    </div>
+  `;
+  document.getElementById('dataset-detail').style.display = 'block';
+}
+
+async function handleUpload(input) {
+  if (!input.files.length) return;
+  const file = input.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('name', file.name);
+  const resp = await fetch(API + '/api/v1/datasets?name=' + encodeURIComponent(file.name) + '&format=jsonl', { method: 'POST', body: formData });
+  if (resp.ok) {
+    alert('数据集已上传（已生成演示统计数据）');
+    loadDatasets();
+  }
+  input.value = '';
+}
+
+// ---- Training ----
+async function loadTraining() {
+  // Load all trainings
+  const ids = ['train-001', 'train-002'];
+  const trainings = [];
+  for (const id of ids) {
+    try { const t = await fetch(API + '/api/v1/training/' + id).then(r => r.json()); trainings.push(t); } catch(e) {}
+  }
+  renderTrainingTable(trainings);
+}
+
+function renderTrainingTable(trainings) {
+  document.getElementById('training-table').innerHTML = trainings.map(t => `
+    <tr>
+      <td>${t.name}</td>
+      <td>${t.dataset_name}</td>
+      <td><span class="tag">${t.config.method.toUpperCase()}</span></td>
+      <td>${statusBadge(t.status)}</td>
+      <td>${t.total_steps.toLocaleString()}</td>
+      <td>${t.final_loss ? t.final_loss.toFixed(4) : '-'}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="showLossCurve('${t.id}', '${t.name}')">损失曲线</button></td>
+    </tr>
+  `).join('');
+}
+
+async function startTraining() {
+  const name = document.getElementById('train-name').value || '微调任务-' + Date.now();
+  const datasetId = document.getElementById('train-dataset').value;
+  const config = {
+    base_model: document.getElementById('train-base-model').value,
+    method: document.getElementById('train-method').value,
+    lora_rank: parseInt(document.getElementById('train-rank').value),
+    lora_alpha: parseInt(document.getElementById('train-alpha').value),
+    target_modules: ["q_proj", "v_proj", "k_proj", "o_proj"],
+    learning_rate: parseFloat(document.getElementById('train-lr').value),
+    num_epochs: parseInt(document.getElementById('train-epochs').value),
+    batch_size: parseInt(document.getElementById('train-batch').value),
+    gradient_accumulation_steps: 8,
+    max_seq_length: parseInt(document.getElementById('train-seqlen').value),
+    warmup_ratio: 0.05,
+    weight_decay: 0.01,
+  };
+  const resp = await fetch(API + '/api/v1/training/start', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ dataset_id: datasetId, config, name }),
+  });
+  if (resp.ok) {
+    const result = await resp.json();
+    alert(`训练已完成（模拟演示，未真实训练）！任务 ID：${result.id}，最终损失：${result.final_loss?.toFixed(4)}`);
+    loadTraining();
+    showLossCurve(result.id, result.name);
+  }
+}
+
+async function showLossCurve(trainingId, name) {
+  const data = await fetch(API + '/api/v1/training/' + trainingId + '/loss').then(r => r.json());
+  document.getElementById('loss-title').textContent = '损失曲线 - ' + name;
+  document.getElementById('loss-card').style.display = 'block';
+
+  const chart = echarts.init(document.getElementById('loss-chart'), null);
+  const steps = data.points.map(p => p.step);
+  const losses = data.points.map(p => p.loss);
+  const evalSteps = data.points.filter(p => p.eval_loss).map(p => p.step);
+  const evalLosses = data.points.filter(p => p.eval_loss).map(p => p.eval_loss);
+
+  chart.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['训练损失', '验证损失', '学习率'], textStyle: { color: '#5A6472' } },
+    grid: { left: 60, right: 60, top: 40, bottom: 40 },
+    xAxis: { type: 'category', data: steps, name: '步数', axisLine: { lineStyle: { color: '#DDE2EA' } }, axisLabel: { color: '#5A6472' } },
+    yAxis: [
+      { type: 'value', name: '损失', axisLine: { lineStyle: { color: '#DDE2EA' } }, axisLabel: { color: '#5A6472' }, splitLine: { lineStyle: { color: '#EEF1F6' } } },
+      { type: 'value', name: '学习率', axisLine: { lineStyle: { color: '#DDE2EA' } }, axisLabel: { color: '#5A6472' }, splitLine: { show: false } },
+    ],
+    series: [
+      { name: '训练损失', type: 'line', data: losses, smooth: true, lineStyle: { color: '#3370FF', width: 2 }, itemStyle: { color: '#3370FF' }, showSymbol: false, areaStyle: { color: 'rgba(51,112,255,0.08)' } },
+      { name: '验证损失', type: 'scatter', data: evalLosses, symbolSize: 8, itemStyle: { color: '#B4690E' }, yAxisIndex: 0 },
+    ],
+  });
+  window.addEventListener('resize', () => chart.resize());
+
+  // Scroll to chart
+  document.getElementById('loss-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ---- Evaluation ----
+async function loadEvaluation() {
+  const evals = await fetch(API + '/api/v1/evaluations').then(r => r.json());
+  document.getElementById('eval-table').innerHTML = evals.map(e => `
+    <tr>
+      <td><strong>${e.model_version}</strong></td>
+      <td>${e.dataset_name}</td>
+      <td>${(e.accuracy * 100).toFixed(1)}%</td>
+      <td>${(e.format_compliance * 100).toFixed(1)}%</td>
+      <td>${e.llm_judge_score.toFixed(2)}</td>
+      <td>${(e.avg_response_quality * 100).toFixed(1)}%</td>
+      <td>${e.sample_count.toLocaleString()}</td>
+    </tr>
+  `).join('');
+
+  // Populate comparison selectors
+  const afterSel = document.getElementById('eval-after');
+  afterSel.innerHTML = evals.filter(e => e.training_id).map(e => `<option value="${e.training_id}">${e.model_version}</option>`).join('');
+}
+
+async function compareEvals() {
+  const afterId = document.getElementById('eval-after').value;
+  const beforeId = document.getElementById('eval-before').value;
+  if (!afterId) { alert('请选择微调后的评测'); return; }
+
+  const resp = await fetch(API + '/api/v1/evaluations/compare', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ after_training_id: afterId, before_training_id: beforeId || null }),
+  });
+  const data = await resp.json();
+  document.getElementById('compare-result').style.display = 'block';
+
+  // Chart
+  const chart = echarts.init(document.getElementById('compare-chart'), null);
+  const metrics = ['accuracy', 'format_compliance', 'llm_judge_score', 'avg_response_quality'];
+  const labels = ['准确率', '格式分', 'LLM 评审（×0.2）', '综合质量'];
+  const beforeVals = data.before ? metrics.map(m => m === 'llm_judge_score' ? data.before[m] * 20 : data.before[m] * 100) : null;
+  const afterVals = metrics.map(m => m === 'llm_judge_score' ? data.after[m] * 20 : data.after[m] * 100);
+
+  const series = [{ name: '微调后', type: 'bar', data: afterVals, itemStyle: { color: '#3370FF' }, barWidth: 30 }];
+  if (beforeVals) {
+    series.push({ name: '微调前', type: 'bar', data: beforeVals, itemStyle: { color: '#6B7280' }, barWidth: 30 });
+  }
+
+  chart.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'axis' },
+    legend: { textStyle: { color: '#5A6472' } },
+    grid: { left: 60, right: 20, top: 40, bottom: 40 },
+    xAxis: { type: 'category', data: labels, axisLabel: { color: '#5A6472', interval: 0, rotate: 15 }, axisLine: { lineStyle: { color: '#DDE2EA' } } },
+    yAxis: { type: 'value', name: '得分（%）', max: 100, axisLabel: { color: '#5A6472' }, splitLine: { lineStyle: { color: '#EEF1F6' } } },
+    series,
+  });
+  window.addEventListener('resize', () => chart.resize());
+
+  // Table
+  let html = '<table><thead><tr><th>指标</th><th>微调前</th><th>微调后</th><th>变化</th></tr></thead><tbody>';
+  metrics.forEach((m, i) => {
+    const before = data.before ? data.before[m] : null;
+    const after = data.after[m];
+    const delta = data.delta ? data.delta[m] : null;
+    const deltaStr = delta !== null ? (delta > 0 ? `<span style="color:var(--success)">+${delta.toFixed(4)}</span>` : `<span style="color:var(--danger)">${delta.toFixed(4)}</span>`) : '-';
+    html += `<tr><td>${labels[i]}</td><td>${before !== null ? before.toFixed(4) : '-'}</td><td>${after.toFixed(4)}</td><td>${deltaStr}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('compare-table').innerHTML = html;
+  document.getElementById('compare-result').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ---- Models ----
+async function loadModels() {
+  const models = await fetch(API + '/api/v1/models').then(r => r.json());
+  document.getElementById('model-grid').innerHTML = models.map(m => `
+    <div class="model-card">
+      <div class="model-card-header">
+        <div>
+          <div class="model-name">${m.name}</div>
+          <div class="model-version">${m.version} &middot; ${m.base_model.split('/').pop()}</div>
+        </div>
+        ${statusBadge(m.status)}
+      </div>
+      <div class="model-metrics">
+        <div class="model-metric"><div class="model-metric-value">${(m.metrics.accuracy * 100).toFixed(1)}%</div><div class="model-metric-label">准确率</div></div>
+        <div class="model-metric"><div class="model-metric-value">${(m.metrics.format_compliance * 100).toFixed(1)}%</div><div class="model-metric-label">格式分</div></div>
+        <div class="model-metric"><div class="model-metric-value">${m.metrics.llm_judge_score.toFixed(2)}</div><div class="model-metric-label">LLM 评审</div></div>
+      </div>
+      <div style="margin-bottom:12px">
+        <span class="tag">${m.config.method.toUpperCase()}</span>
+        <span class="tag">LoRA 秩=${m.config.lora_rank}</span>
+        <span class="tag">学习率=${m.config.learning_rate}</span>
+        <span class="tag">轮数=${m.config.num_epochs}</span>
+      </div>
+      ${m.endpoint_url ? `<div style="font-size:12px;color:var(--text3);margin-bottom:8px">服务地址：<code style="color:var(--accent)">${m.endpoint_url}</code></div>` : ''}
+      <div style="display:flex;gap:8px">
+        ${m.status !== 'deployed' ? `<button class="btn btn-primary btn-sm" onclick="deployModel('${m.id}')">部署</button>` : `<button class="btn btn-success btn-sm" disabled>已部署</button>`}
+        <button class="btn btn-ghost btn-sm" onclick="showLossCurve('${m.training_id}', '${m.name} ${m.version}')">训练曲线</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function deployModel(id) {
+  const resp = await fetch(API + '/api/v1/models/' + id + '/deploy', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+  const data = await resp.json();
+  alert(data.message + '\n\n服务地址：' + data.endpoint_url);
+  loadModels();
+}
+
+// ---- Init ----
+loadDashboard();
+</script>
+</body>
+</html>

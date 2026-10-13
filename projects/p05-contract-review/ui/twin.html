@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>动态孪生平台看板 · 衡鉴 V2.1.9 · 企业合同智能审查系统</title>
 <link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/shared/ui-kit/tokens.css">
 <link rel="stylesheet" href="/assets/app.css">
 <link rel="stylesheet" href="/assets/fx.css">
 <script>
 (function () {
   try {
-    var t = localStorage.getItem('cr-theme');
-    if (t !== 'light' && t !== 'dark') t = 'dark';
+    var t = /[?&]cp-theme=(light|dark)/.exec(location.search);
+    t = t ? t[1] : (localStorage.getItem('cp_theme_v2') || localStorage.getItem('cr-theme'));
+    if (t !== 'light' && t !== 'dark') t = 'light';
     document.documentElement.setAttribute('data-theme', t);
   } catch (e) { }
 })();
 </script>
 </head>
-<body>
+<body data-cp-module="p05" data-cp-brand-src="/shared/config/brand.json">
 
 <div class="topbar" id="topbar"></div>
 
@@ -159,6 +161,7 @@
 
 </div>
 
+<script src="/shared/ui-kit/ui-kit.js"></script>
 <script src="/assets/app.js"></script>
 <script src="/assets/pet.js"></script>
 <script>

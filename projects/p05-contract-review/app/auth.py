@@ -144,7 +144,10 @@ PUBLIC_PATHS = {"/login", "/api/auth/login", "/api/health"}
 # /mock/ 是「模拟审批平台」的对外接口，按真实平台形态独立暴露，
 # 不参与本系统的登录态（系统内部也通过 HTTP 自调用它）。
 # 只放行「模拟审批系统」的对外 JSON 接口本身；/mock 是内部查看页，需要登录
-PUBLIC_PREFIX = ("/assets/", "/favicon", "/logo", "/mock/feishu/api")
+# /shared/ 是仓库根设计系统的只读映射（tokens.css / ui-kit.js），登录页与 /denied
+# 在拿到会话之前就要渲染，拦它会让 --cp-* 全部取不到值、按钮背景声明失效。
+# 只读且路径解析后必须仍在 shared/ 内（见 app.server.static_shared 的穿越防护）。
+PUBLIC_PREFIX = ("/assets/", "/shared/", "/favicon", "/logo", "/mock/feishu/api")
 
 COOKIE_NAME = "cr_session"
 # 会话令牌长度（token_urlsafe 的字节数，输出约 1.33 倍长度）

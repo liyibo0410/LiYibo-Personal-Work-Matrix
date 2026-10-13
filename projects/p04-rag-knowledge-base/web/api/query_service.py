@@ -2,6 +2,7 @@
 """
 查询流程的接口定义
 """
+import asyncio
 import uuid
 from pathlib import Path
 
@@ -14,8 +15,8 @@ from starlette.responses import FileResponse, StreamingResponse
 from processor.query_processor.main_graph import KBQueryWorkflow
 from utils.mongo_history_utils import clear_history, get_recent_messages
 from utils.sse_utils import create_sse_queue, SSEEvent, push_to_session, sse_generator
-from utils.task_utils import update_task_status, TASK_STATUS_PROCESSING, get_task_result, TASK_STATUS_COMPLETED, \
-    TASK_STATUS_FAILED
+from utils.task_utils import update_task_status, TASK_STATUS_PROCESSING, get_task_result, set_task_result, \
+    get_task_status, TASK_STATUS_COMPLETED, TASK_STATUS_FAILED
 from tool.logger import logger
 # 1. 创建路由（可由统一入口 console_service.py 挂载，也可独立运行）
 # 说明：合并后台后本文件不再直接创建 FastAPI 实例，改为导出 APIRouter；
@@ -79,13 +80,16 @@ async def query(background_tasks: BackgroundTasks, request: QueryRequest):
             "session_id":session_id
         }
     else:
-        # 同步运行
-        run_query_graph(session_id, user_query, is_stream)
+        # 同步运行：流程图要跑几十秒，直接放在事件循环里会把整个服务（含所有 SSE 流）卡死，
+        # 表现为前端 fetch 中断 —— 必须丢到线程池。
+        await asyncio.to_thread(run_query_graph, session_id, user_query, is_stream)
         answer = get_task_result(session_id,"answer","")
         sources = get_task_result(session_id,"sources",[])
         return {
             "message":"处理完成！",
             "session_id":session_id,
+            "status": get_task_status(session_id),
+            "error": get_task_result(session_id,"error",""),
             "answer":answer,
             "sources":sources,
             "done_list":[]
@@ -109,6 +113,7 @@ def run_query_graph(session_id: str, user_query: str, is_stream: bool = True):
     except Exception as e:
         logger.error(f"流程执行异常: {e}", exc_info=True)
         update_task_status(session_id, TASK_STATUS_FAILED, is_stream)
+        set_task_result(session_id, "error", str(e))
         if is_stream:
             push_to_session(session_id, SSEEvent.ERROR, {"error": str(e)})
 
@@ -193,8 +198,8 @@ async def health():
 if __name__ == "__main__":
     """独立运行入口（兼容旧方式：单跑查询服务，端口 8001）"""
     app = FastAPI(
-        title="掌柜智库-查询API",
-        description="此文档是掌柜智库查询流程的API接口说明",
+        title="RAG 知识库-查询API",
+        description="此文档是RAG 知识库查询流程的API接口说明",
     )
     app.add_middleware(
         CORSMiddleware,

@@ -1,6 +1,6 @@
 # web/api/console_service.py
 """
-BOSS智库 统一控制台服务（合并后台，方案 A）
+RAG 知识库 统一控制台服务（合并后台，方案 A）
 
 职责：
 - 挂载 import_service 路由：上传导入、任务状态、旧版 /import.html
@@ -31,6 +31,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
+from starlette.staticfiles import StaticFiles
 
 from web.api.import_service import router as import_router
 from web.api.query_service import router as query_router
@@ -39,7 +40,7 @@ from tool.logger import logger
 
 # 1. 创建统一应用
 app = FastAPI(
-    title="BOSS智库-统一控制台",
+    title="RAG 知识库-统一控制台",
     description="导入 + 查询合并后台（单进程单端口），控制台地址 /console.html",
 )
 
@@ -52,12 +53,23 @@ app.add_middleware(
     allow_headers=["*"],  # 允许的请求头
 )
 
+# 2b. 统一设计系统：挂载仓库根 shared/ 到 /shared，前端引用 tokens.css（配色唯一真源）+ ui-kit.js（主题桥接）
+_SHARED_DIR = PROJECT_ROOT.parent.parent / "shared"
+if _SHARED_DIR.exists():
+    app.mount("/shared", StaticFiles(directory=str(_SHARED_DIR)), name="shared")
+
 # 3. 挂载原有业务路由（业务逻辑零改动，仅把 FastAPI 实例替换为 APIRouter）
 app.include_router(import_router)
 app.include_router(query_router)
 
 
 # 4. 统一控制台页面
+@app.get("/", summary="根路径重定向到控制台")
+async def root_page():
+    from starlette.responses import RedirectResponse
+    return RedirectResponse(url="/console.html")
+
+
 @app.get("/console.html", summary="统一控制台页面", description="三 Tab：上传导入 / 文档管理 / 检索问答")
 async def console_page():
     current_dir_parent_path = Path(__file__).absolute().parent.parent
@@ -99,10 +111,26 @@ async def import_documents():
     }
 
 
+def _registry_port() -> int:
+    """端口只认 SERVICE_REGISTRY（shared/config/services.json）。
+
+    直跑 `-m web.api.console_service` 时写死端口，曾出现过注册表 8041、实跑 8040 的漂移，
+    结果外壳挂载的是旧进程 —— 这类问题就从这里防住。
+    """
+    import json
+    try:
+        reg = _SHARED_DIR / "config" / "services.json"
+        return int(json.loads(reg.read_text(encoding="utf-8"))["services"]["p04"]["api_port"])
+    except Exception as e:
+        logger.warning(f"读取 SERVICE_REGISTRY 的 p04 端口失败，回退 8041：{e}")
+        return 8041
+
+
 if __name__ == "__main__":
-    logger.info("BOSS智库统一控制台启动中... 端口 8100")
+    port = _registry_port()
+    logger.info(f"RAG 知识库统一控制台启动中... 端口 {port}")
     uvicorn.run(
         app=app,
         host="127.0.0.1",
-        port=8100,
+        port=port,
     )

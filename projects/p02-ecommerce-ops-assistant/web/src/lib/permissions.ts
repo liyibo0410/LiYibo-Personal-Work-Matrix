@@ -16,8 +16,26 @@ export function canRead(user: UserAccount | null): boolean {
   return Boolean(user?.permissions.can_read);
 }
 
+export function isOwner(user: UserAccount | null): boolean {
+  return user?.role === "owner";
+}
+
+export function isCs(user: UserAccount | null): boolean {
+  return user?.role === "cs";
+}
+
+export function roleLabel(role: string): string {
+  const map: Record<string, string> = {
+    owner: "老板",
+    operator: "运营",
+    designer: "美工",
+    cs: "客服",
+  };
+  return map[role] ?? role;
+}
+
 export function permissionBadges(user: UserAccount): string[] {
-  const badges = ["可查看"];
+  const badges = [roleLabel(user.role)];
   if (user.permissions.can_edit) {
     badges.push("可编辑");
   }

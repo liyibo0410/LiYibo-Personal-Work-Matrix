@@ -3,11 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>BOSS智库知识库</title>
+  <title>RAG 知识库</title>
+  <!-- 统一设计系统：tokens.css 是配色唯一真源；services.js + ui-kit.js 提供注册表、主题与品牌位桥接 -->
+  <link rel="stylesheet" href="/shared/ui-kit/tokens.css">
+  <script src="/shared/config/services.js"></script>
+  <script src="/shared/ui-kit/ui-kit.js"></script>
   <!-- Markdown 渲染 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <!-- 代码高亮 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
@@ -15,18 +19,31 @@
   <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/json.min.js"></script>
   <style>
     :root{
-      --bg:#f8fafc;
-      --panel:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --brand:#6366f1;
-      --brand2:#4f46e5;
-      --bubble-user:#6366f1;
-      --bubble-bot:#f8fafc;
-      --border:#e2e8f0;
-      --shadow:0 10px 30px rgba(0,0,0,0.08);
+      --bg:var(--cp-bg, #F5F7FA);
+      --panel:var(--cp-surface, #FFFFFF);
+      --elevated:var(--cp-elevated, #EEF1F6);
+      --text:var(--cp-ink1, #1A1F2B);
+      --muted:var(--cp-ink2, #5A6472);
+      --text-muted:var(--cp-ink3, #8A94A3);
+      --brand:var(--cp-brand, #3370FF);
+      --brand2:var(--cp-brand, #3370FF);
+      --bubble-user:var(--cp-brand, #3370FF);
+      --bubble-bot:var(--cp-elevated, #EEF1F6);
+      --border:var(--cp-line, #DDE2EA);
+      --primary-bg:var(--cp-brand-bg, #E8F0FF);
+      --success:var(--cp-success, #16A34A);
+      --success-bg:var(--cp-success-bg, #E7F6EC);
+      --warning:var(--cp-warning, #B4690E);
+      --warning-bg:var(--cp-warning-bg, #FDF1DC);
+      --danger:var(--cp-danger, #D92D20);
+      --danger-bg:var(--cp-danger-bg, #FEE9E7);
+      --shadow:0 10px 30px rgba(16,24,40,0.08);
     }
     *{box-sizing:border-box}
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--cp-line, #DDE2EA); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #C0C8D6; }
     body{
       margin:0;
       font-family: "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, Arial, sans-serif;
@@ -56,7 +73,7 @@
       gap:12px;
       padding:14px 18px;
       border-bottom:1px solid var(--border);
-      background:linear-gradient(90deg, rgba(99,102,241,0.08), rgba(79,70,229,0.08));
+      background:linear-gradient(90deg, rgba(51,112,255,0.1), rgba(91,141,255,0.06));
     }
     .brand{
       display:flex;
@@ -182,14 +199,14 @@
       margin: 4px 0;
     }
     .bubble .markdown-content code{
-      background: rgba(0,0,0,0.05);
+      background: rgba(16,24,40,0.06);
       padding: 2px 6px;
       border-radius: 4px;
       font-family: 'Consolas', 'Monaco', monospace;
       font-size: 13px;
     }
     .bubble .markdown-content pre{
-      background: #f6f8fa;
+      background: #0D1117;
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 12px;
@@ -212,15 +229,15 @@
       text-align: left;
     }
     .bubble .markdown-content th{
-      background: #f6f8fa;
+      background: var(--elevated);
       font-weight: 600;
     }
     .bubble .markdown-content blockquote{
       border-left: 4px solid var(--brand);
       margin: 10px 0;
       padding: 8px 16px;
-      background: rgba(99,102,241,0.05);
-      color: var(--text-secondary);
+      background: rgba(51,112,255,0.08);
+      color: var(--muted);
     }
     .bubble .markdown-content img{
       max-width: 100%;
@@ -271,7 +288,7 @@
       height: auto;
       border-radius:12px;
       border:1px solid var(--border);
-      box-shadow:0 10px 24px rgba(0,0,0,0.08);
+      box-shadow:0 10px 24px rgba(16,24,40,0.12);
       background:var(--panel);
     }
     .answer-images a{
@@ -318,7 +335,7 @@
       background:var(--bg);
       color:var(--text);
     }
-    textarea:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(99,102,241,0.15)}
+    textarea:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(51,112,255,0.2)}
     .send{
       width:88px;
       height:44px;
@@ -345,29 +362,29 @@
       background:var(--bg);
       color:var(--text);
     }
-    .sources-bar{margin-top:10px;padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;}
-    .sources-bar summary{cursor:pointer;font-weight:600;color:#6366f1;list-style:none;display:flex;align-items:center;gap:6px;}
+    .sources-bar{margin-top:10px;padding:8px 12px;background:var(--elevated);border:1px solid var(--border);border-radius:8px;font-size:13px;}
+    .sources-bar summary{cursor:pointer;font-weight:600;color:var(--brand);list-style:none;display:flex;align-items:center;gap:6px;}
     .sources-bar summary::before{content:'📄';font-size:14px;}
-    .source-item{padding:6px 0;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;}
+    .source-item{padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
     .source-item:last-child{border-bottom:none;}
-    .source-title{color:#334155;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .source-score{color:#94a3b8;font-size:12px;margin-left:8px;flex-shrink:0;}
-    .source-preview{color:#64748b;font-size:12px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:400px;}
+    .source-title{color:var(--text);font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .source-score{color:var(--muted);font-size:12px;margin-left:8px;flex-shrink:0;}
+    .source-preview{color:var(--muted);font-size:12px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:400px;}
     .feedback-bar{margin-top:8px;display:flex;gap:8px;align-items:center;}
-    .feedback-btn{border:1px solid #e2e8f0;background:#fff;border-radius:20px;padding:4px 14px;cursor:pointer;font-size:14px;transition:all .2s;}
-    .feedback-btn:hover{background:#f1f5f9;border-color:#cbd5e1;}
-    .feedback-btn.active-up{background:#ecfdf5;border-color:#34d399;color:#059669;}
-    .feedback-btn.active-down{background:#fef2f2;border-color:#fca5a5;color:#dc2626;}
-    .feedback-label{font-size:12px;color:#94a3b8;}
+    .feedback-btn{border:1px solid var(--border);background:var(--panel);border-radius:20px;padding:4px 14px;cursor:pointer;font-size:14px;transition:all .2s;color:var(--text);}
+    .feedback-btn:hover{background:var(--elevated);border-color:#C0C8D6;}
+    .feedback-btn.active-up{background:var(--success-bg);border-color:var(--success);color:var(--success);}
+    .feedback-btn.active-down{background:var(--danger-bg);border-color:var(--danger);color:var(--danger);}
+    .feedback-label{font-size:12px;color:var(--muted);}
   </style>
 </head>
-<body>
+<body class="cp-app" data-cp-module="p04" data-cp-brand-src="/shared/config/brand.json">
   <div class="app">
     <div class="topbar">
       <div class="brand">
-        <div class="logo"></div>
+        <div class="logo cp-brandmark" data-cp-brand="logo">云枢</div>
         <div class="title">
-          <strong>BOSS智库知识库</strong>
+          <strong>RAG 知识库</strong>
           <span id="subTitle">在线 · 可查询知识库与联网信息</span>
         </div>
       </div>
@@ -375,6 +392,7 @@
         <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer;user-select:none;color:var(--muted);margin-right:10px;">
           <input type="checkbox" id="streamToggle" checked> 流式输出
         </label>
+        <span class="pill" data-cp-brand="company">云枢智能</span>
         <span class="pill" id="apiPill">API: 未连接</span>
         <button class="btn" id="btnClear">清空对话</button>
       </div>
@@ -383,9 +401,9 @@
     <div class="chat" id="chat">
       <div class="dayline">今天</div>
       <div class="msg bot">
-        <div class="avatar bot">BOSS智库</div>
+        <div class="avatar bot">RAG 知识库</div>
         <div>
-          <div class="bubble">你好，我是BOSS智库知识库客服。你可以直接提问，我会在"阶段进度"里展示处理过程。</div>
+          <div class="bubble">你好，我是RAG 知识库客服。你可以直接提问，我会在"阶段进度"里展示处理过程。</div>
           <div class="meta">提示：可以问"如何使用万用表测量电压？"</div>
         </div>
       </div>
@@ -651,7 +669,7 @@
 
     function addBotMsgWithTime(text, ts, imageUrls){
       const id = 'bot-his-' + Math.random().toString(36).slice(2);
-      const html = `<div class="msg bot" id="${id}"><div class="avatar bot">BOSS智库</div><div><div class="bubble"><div class="answer"></div></div><div class="meta">${formatTime(ts)}</div></div></div>`;
+      const html = `<div class="msg bot" id="${id}"><div class="avatar bot">RAG 知识库</div><div><div class="bubble"><div class="answer"></div></div><div class="meta">${formatTime(ts)}</div></div></div>`;
       chatEl.insertAdjacentHTML('beforeend', html);
       const el = document.getElementById(id);
       if(el){
@@ -663,7 +681,7 @@
 
     function addBotMsgSkeleton(){
       const id = 'bot-' + Math.random().toString(36).slice(2);
-      const html = `<div class="msg bot" id="${id}"><div class="avatar bot">BOSS智库</div><div style="min-width: 180px;"><div class="bubble"><span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><details class="progress" open><summary>阶段进度（等待中）</summary><ul></ul></details></div><div class="meta">${nowTime()}</div></div></div>`;
+      const html = `<div class="msg bot" id="${id}"><div class="avatar bot">RAG 知识库</div><div style="min-width: 180px;"><div class="bubble"><span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><details class="progress" open><summary>阶段进度（等待中）</summary><ul></ul></details></div><div class="meta">${nowTime()}</div></div></div>`;
       chatEl.insertAdjacentHTML('beforeend', html);
       scrollToBottom();
       return document.getElementById(id);

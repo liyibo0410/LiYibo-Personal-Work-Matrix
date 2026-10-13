@@ -217,6 +217,21 @@ python tools/reset_data.py              # 重置数据（演示前清理）
 
 也可以在大盘页面点 **「一键自检」**，直接在弹窗里看到逐条结果。
 
+### pytest 单元 / 端到端测试（2026-10 新增）
+
+上面的 `tools/` 脚本是项目自带的运行期自检；另有一套标准 **pytest** 用例，覆盖审查引擎纯函数、
+`run_rules` 五种匹配模式、以及「解析真实样本 → 跑规则库 → 命中违约责任不对等」的端到端门禁：
+
+```bash
+uv sync                                    # 建 .venv（被测代码零第三方依赖，仅装 pytest）
+uv run python -m pytest tests -v           # 46 passed
+```
+
+- 用例位置：`tests/`（`test_review.py` 引擎+纯函数、`test_e2e_and_store.py` 真实样本端到端+持久层）
+- 门禁证据：`samples/03_大额销售合同_违约责任不对等.docx` 被正确识别为 SA-H-001 高风险命中，带原文证据与页码/字符坐标
+- 执行日志：`_evidence/p05-contract-review/pytest-20261013.log`（46 passed / 0 failed），登记见同目录 `INDEX.md`
+- 未覆盖：LLM 二阶段复核（默认 `llm.enabled=false`）、HTTP 服务层、审批回写、通知、队列调度、性能并发 —— 见 INDEX.md「未测量 / 未覆盖」
+
 最新一次验证结果：
 
 | 验证项 | v1.0 基线 | **v2.1.4 实测** | 报告 |

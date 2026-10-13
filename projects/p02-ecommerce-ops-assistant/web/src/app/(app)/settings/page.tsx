@@ -113,7 +113,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
               icon={<Bot className="h-5 w-5" aria-hidden="true" />}
               title="文本模型"
               subtitle="用于诊断、主图方案、视频脚本和复盘。"
-              tone="bg-ink-1"
+              tone="bg-brand-600"
             />
             <div className="mt-5 space-y-4">
               <TextInput
@@ -268,7 +268,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             <button
               type="submit"
               form="model-settings-form"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-ink-1 px-5 text-sm font-semibold text-white hover:bg-ink-1"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 text-sm font-semibold text-white hover:bg-brand-700"
             >
               <KeyRound className="h-4 w-4" aria-hidden="true" />
               保存配置
@@ -321,7 +321,7 @@ function UserManagementPanel({ users }: { users: UserAccount[] }) {
         </label>
         <button
           type="submit"
-          className="inline-flex h-11 items-center justify-center rounded-lg bg-ink-1 px-4 text-sm font-semibold text-white hover:bg-ink-1"
+          className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white hover:bg-brand-700"
         >
           添加用户
         </button>
@@ -405,7 +405,7 @@ function StatusPill({ label, value, active }: { label: string; value: string; ac
     <div className="rounded-lg border border-line bg-surface px-4 py-3">
       <p className="text-xs text-ink-2">{label}</p>
       <div className="mt-1 flex items-center gap-2">
-        <span className={`h-2 w-2 rounded-full ${active ? "bg-success" : "bg-fill-3"}`} />
+        <span className={`h-2 w-2 rounded-full ${active ? "bg-success" : "bg-ink-4"}`} />
         <p className="text-sm font-semibold text-ink-1">{value}</p>
       </div>
     </div>
@@ -514,9 +514,10 @@ function RoleSelect() {
         defaultValue="operator"
         className="mt-2 h-11 w-full rounded-lg border border-line bg-surface px-3 text-sm text-ink-1 outline-none transition focus:border-success focus:ring-4 focus:ring-success-bg"
       >
-        <option value="owner">Owner</option>
-        <option value="operator">Operator</option>
-        <option value="viewer">Viewer</option>
+        <option value="owner">老板 (Owner)</option>
+        <option value="operator">运营 (Operator)</option>
+        <option value="designer">美工 (Designer)</option>
+        <option value="cs">客服 (CS)</option>
       </select>
     </label>
   );
@@ -572,12 +573,10 @@ function testTargetLabel(target: string | undefined) {
 
 /** 把角色状态映射为中文显示文本，保持页面口径一致。 */
 function roleLabel(role: UserAccount["role"]): string {
-  if (role === "owner") {
-    return "Owner";
-  }
-  if (role === "viewer") {
-    return "Viewer";
-  }
-  return "Operator";
+  if (role === "owner") return "老板";
+  if (role === "operator") return "运营";
+  if (role === "designer") return "美工";
+  if (role === "cs") return "客服";
+  return role;
 }
 

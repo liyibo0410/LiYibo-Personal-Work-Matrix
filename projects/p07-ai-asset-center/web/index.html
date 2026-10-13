@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-cp-brand-title="AI 素材中心 · {company}">AI 素材中心 · 云枢智能</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<!-- 统一设计系统：tokens.css 是配色唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
+<link rel="stylesheet" href="/shared/ui-kit/tokens.css">
+<script src="/shared/config/services.js"></script>
+<script src="/shared/ui-kit/ui-kit.js"></script>
+<style>
+:root{--bg:var(--cp-bg);--surface:var(--cp-surface);--elevated:var(--cp-elevated);--line:var(--cp-line);--ink1:var(--cp-ink1);--ink2:var(--cp-ink2);--ink3:var(--cp-ink3);--brand:var(--cp-brand);--brand-bg:var(--cp-brand-bg);--success:var(--cp-success);--warning:var(--cp-warning);--danger:var(--cp-danger)}
+body{background:var(--bg);color:var(--ink1);font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:12px}
+.badge-brand{background:var(--brand-bg);color:var(--brand)}
+.badge-success{background:var(--cp-success-bg);color:var(--success)}
+.badge-warning{background:var(--cp-warning-bg);color:var(--warning)}
+.tab{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:14px;color:var(--ink2);transition:all .2s}
+.tab.active{background:var(--brand-bg);color:var(--brand);font-weight:500}
+.tab:hover:not(.active){background:var(--elevated);color:var(--ink1)}
+.tab svg{flex-shrink:0}
+input,select,textarea{background:var(--surface);border:1px solid var(--line);color:var(--ink1);border-radius:8px;padding:8px 12px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(51,112,255,.15)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;border:none}
+.btn-primary{background:var(--brand);color:#fff}.btn-primary:hover{opacity:.9}
+.btn-secondary{background:var(--surface);color:var(--ink1);border:1px solid var(--line)}.btn-secondary:hover{background:var(--elevated)}
+.mock-banner{display:flex;align-items:flex-start;gap:8px;background:var(--cp-warning-bg);border:1px solid rgba(180,105,14,.25);color:var(--warning);padding:10px 16px;border-radius:8px;font-size:13px;margin-bottom:16px}
+/* 图表容器必须有确定高度；此前靠内联 style 写死，配合 Tailwind CDN 的异步布局会量错宽度 */
+.chart-box{width:100%;height:280px}
+.brand-logo{width:32px;height:32px;border-radius:8px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;overflow:hidden;flex-shrink:0}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-logo.cp-brand-is-image{background:transparent}
+</style>
+</head>
+<body class="cp-app min-h-screen" data-cp-module="p07" data-cp-brand-src="/shared/config/brand.json">
+<div class="flex min-h-screen">
+  <!-- Sidebar -->
+  <aside class="hidden lg:flex w-56 shrink-0 flex-col border-r border-[var(--line)] bg-[var(--surface)]">
+    <div class="flex h-14 items-center gap-2 border-b border-[var(--line)] px-4">
+      <div class="brand-logo" data-cp-brand="logo">P7</div>
+      <div class="min-w-0"><p class="text-sm font-semibold truncate">AI 素材中心</p><p class="text-xs text-[var(--ink3)] truncate" data-cp-brand="name_en">CloudPivot</p></div>
+    </div>
+    <nav class="flex flex-1 flex-col gap-1 p-3" id="nav"></nav>
+    <div class="border-t border-[var(--line)] px-4 py-3 text-xs text-[var(--ink3)]"><span data-cp-brand="version">v0.1.0</span></div>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-[var(--line)] bg-[var(--surface)]/80 px-6 backdrop-blur">
+      <h1 class="text-lg font-semibold" id="page-title">素材概览</h1>
+      <span class="badge badge-brand">Mock 模式</span>
+    </header>
+    <main class="p-6" id="content"></main>
+  </div>
+</div>
+
+<script>
+const API = '/api/v1';
+let currentPage = 'dashboard';
+
+const TYPE_LABEL = { image: '图片', video: '视频', copy: '文案' };
+const PLATFORM_LABEL = { douyin: '抖音', taobao: '淘宝', tmall: '天猫', pinduoduo: '拼多多', jd: '京东' };
+
+// 侧栏导航：图标统一走 ui-kit 的 CP.icon，不再用 emoji
+const NAV = [
+  { page: 'dashboard', label: '概览', icon: 'grid' },
+  { page: 'library', label: '素材库', icon: 'image' },
+  { page: 'search', label: '以文搜图', icon: 'search' },
+  { page: 'generate', label: 'AI 生成', icon: 'brain' },
+  { page: 'report', label: '效果关联', icon: 'chart' }
+];
+document.getElementById('nav').innerHTML = NAV.map(n =>
+  `<a class="tab" data-page="${n.page}" onclick="showPage('${n.page}')">${CP.icon(n.icon, 16)}<span>${n.label}</span></a>`
+).join('');
+
+async function fetchJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+function showPage(page) {
+  currentPage = page;
+  document.querySelectorAll('#nav .tab').forEach(t => t.classList.toggle('active', t.dataset.page === page));
+  const titles = { dashboard: '素材概览', library: '素材库', search: '以文搜图', generate: 'AI 生成', report: '投放效果关联' };
+  document.getElementById('page-title').textContent = titles[page] || '';
+  const loaders = { dashboard: loadDashboard, library: loadLibrary, search: loadSearch, generate: loadGenerate, report: loadReport };
+  (loaders[page] || (() => { }))();
+}
+
+/* ---------------- 图表基础设施 ---------------- */
+// 页面挂在外壳 iframe 里、且样式来自 Tailwind CDN（运行时注入）。
+// 在 innerHTML 赋值后立刻 echarts.init 会按「尚未套上 grid 类」的全宽量到容器尺寸，
+// 于是画布溢出卡片、与相邻图重叠 —— 这里等两帧布局稳定再初始化，并挂 ResizeObserver。
+let charts = [];
+function chartTheme() {
+  const cs = getComputedStyle(document.documentElement);
+  const v = (n, f) => (cs.getPropertyValue(n) || '').trim() || f;
+  return {
+    ink2: v('--cp-ink2', '#5A6472'), ink3: v('--cp-ink3', '#8A94A3'),
+    line: v('--cp-line', '#DDE2EA'), surface: v('--cp-surface', '#FFFFFF'),
+    brand: v('--cp-brand', '#3370FF'), success: v('--cp-success', '#16A34A'),
+    warning: v('--cp-warning', '#B4690E'), danger: v('--cp-danger', '#D92D20'),
+    // 青色/粉色系列废弃：cyan 归一到中性信息灰，purple/pink 走统一图表序列令牌
+    purple: v('--cp-chart-2', '#7B5CFA'), pink: v('--cp-chart-5', '#E4474B'), cyan: v('--cp-info', '#475467')
+  };
+}
+function disposeCharts() {
+  charts.forEach(c => { try { c.dispose(); } catch (e) { } });
+  charts = [];
+}
+function mkChart(id, option) {
+  const node = document.getElementById(id);
+  if (!node || typeof echarts === 'undefined') return null;
+  const chart = echarts.init(node, null, { renderer: 'canvas' });
+  chart.setOption(option);
+  charts.push(chart);
+  if (typeof ResizeObserver !== 'undefined') {
+    const ro = new ResizeObserver(() => chart.resize());
+    ro.observe(node);
+    chart.__ro = ro;
+  }
+  return chart;
+}
+// 布局稳定后再 init：双 rAF 覆盖 Tailwind CDN 注入样式的时机
+function renderCharts(build) {
+  requestAnimationFrame(() => requestAnimationFrame(build));
+}
+
+async function loadDashboard() {
+  disposeCharts();
+  const el = document.getElementById('content');
+  let s, perf, assets;
+  try {
+    // size 上限是 100（后端 le=100），超了会 422 让整页空白
+    [s, perf, assets] = await Promise.all([
+      fetchJSON(`${API}/stats`),
+      fetchJSON(`${API}/reports/performance`),
+      fetchJSON(`${API}/assets?size=100`)
+    ]);
+  } catch (e) {
+    el.innerHTML = `<div class="card p-6 text-sm text-[var(--ink2)]">概览数据加载失败：${e.message || e}
+      <div class="mt-2 text-xs text-[var(--ink3)]">确认 P07 服务在跑：<code>python _tools\\supervisor.py status</code></div></div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+      ${metricCard('素材总数', s.total_assets, 'brand', '总')}
+      ${metricCard('已关联投放', s.linked_performance, 'success', '投')}
+      ${metricCard('总花费', '¥' + s.total_spend.toLocaleString(), 'warning', '费')}
+      ${metricCard('整体 ROI', s.roi + 'x', 'accent', 'ROI')}
+    </div>
+    <div class="grid gap-4 lg:grid-cols-2 mb-4">
+      <div class="card p-5"><h3 class="text-sm font-medium text-[var(--ink2)] mb-3">素材类型分布</h3><div class="chart-box" id="chart-type"></div></div>
+      <div class="card p-5"><h3 class="text-sm font-medium text-[var(--ink2)] mb-3">投放转化漏斗（已关联素材汇总）</h3><div class="chart-box" id="chart-funnel"></div></div>
+    </div>
+    <div class="grid gap-4 lg:grid-cols-2 mb-4">
+      <div class="card p-5"><h3 class="text-sm font-medium text-[var(--ink2)] mb-3">素材 ROI 排行</h3><div class="chart-box" id="chart-roi"></div></div>
+      <div class="card p-5"><h3 class="text-sm font-medium text-[var(--ink2)] mb-3">各平台花费与收入</h3><div class="chart-box" id="chart-platform"></div></div>
+    </div>
+    <div class="grid gap-4 lg:grid-cols-2">
+      <div class="card p-5"><h3 class="text-sm font-medium text-[var(--ink2)] mb-3">素材标签热度 Top 10</h3><div class="chart-box" id="chart-tags"></div></div>
+      <div class="card p-5"><h3 class="text-sm font-medium text-[var(--ink2)] mb-3">素材尺寸规格分布</h3><div class="chart-box" id="chart-size"></div></div>
+    </div>`;
+
+  renderCharts(() => {
+    const T = chartTheme();
+    const palette = [T.brand, T.success, T.warning, T.purple, T.pink, T.cyan];
+
+    // 1. 类型分布
+    const typeData = Object.entries(s.by_type).map(([k, v]) => ({ name: TYPE_LABEL[k] || k, value: v }));
+    mkChart('chart-type', {
+      tooltip: { trigger: 'item', formatter: '{b}：{c} 个（{d}%）' },
+      color: palette,
+      legend: { bottom: 0, textStyle: { color: T.ink2 }, itemWidth: 10, itemHeight: 10 },
+      series: [{
+        type: 'pie', radius: ['42%', '66%'], center: ['50%', '44%'], avoidLabelOverlap: true,
+        itemStyle: { borderColor: T.surface, borderWidth: 2 },
+        label: { color: T.ink2, formatter: '{b}\n{c}' },
+        labelLine: { lineStyle: { color: T.line } },
+        data: typeData
+      }]
+    });
+
+    // 2. 转化漏斗（曝光→点击→转化，真实汇总）
+    const sum = perf.items.reduce((a, i) => ({
+      imp: a.imp + i.impressions, clk: a.clk + i.clicks, cvt: a.cvt + i.conversions
+    }), { imp: 0, clk: 0, cvt: 0 });
+    mkChart('chart-funnel', {
+      tooltip: { trigger: 'item', formatter: p => `${p.name}：${p.value.toLocaleString()}` },
+      color: [T.brand, T.cyan, T.success],
+      series: [{
+        type: 'funnel', left: '6%', right: '6%', top: 10, bottom: 10, sort: 'descending', gap: 4,
+        minSize: '12%', maxSize: '100%',
+        label: { position: 'inside', color: '#FFFFFF', formatter: p => `${p.name}  ${p.value.toLocaleString()}` },
+        itemStyle: { borderWidth: 0 },
+        data: [
+          { name: '曝光', value: sum.imp },
+          { name: `点击 · CTR ${(sum.imp ? sum.clk / sum.imp * 100 : 0).toFixed(1)}%`, value: sum.clk },
+          { name: `转化 · CVR ${(sum.clk ? sum.cvt / sum.clk * 100 : 0).toFixed(1)}%`, value: sum.cvt }
+        ]
+      }]
+    });
+
+    // 3. ROI 排行（升序排，条形从下往上读即从高到低）
+    const roiItems = perf.items.slice().sort((a, b) => a.roi - b.roi);
+    mkChart('chart-roi', {
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: p => `${p[0].name}<br/>ROI：${p[0].value}x` },
+      grid: { left: 8, right: 48, top: 8, bottom: 8, containLabel: true },
+      xAxis: { type: 'value', axisLabel: { color: T.ink2, formatter: '{value}x' }, splitLine: { lineStyle: { color: T.line } } },
+      yAxis: {
+        type: 'category', data: roiItems.map(i => i.name),
+        axisLabel: { color: T.ink2, width: 110, overflow: 'truncate' },
+        axisLine: { lineStyle: { color: T.line } }
+      },
+      series: [{
+        type: 'bar', data: roiItems.map(i => i.roi), barMaxWidth: 16,
+        itemStyle: { color: T.brand, borderRadius: [0, 4, 4, 0] },
+        label: { show: true, position: 'right', color: T.ink2, formatter: '{c}x' }
+      }]
+    });
+
+    // 4. 各平台花费 vs 收入
+    const platformMap = {};
+    perf.items.forEach(i => {
+      const m = platformMap[i.platform] || (platformMap[i.platform] = { spend: 0, revenue: 0 });
+      m.spend += i.spend; m.revenue += i.revenue;
+    });
+    const pLabels = Object.keys(platformMap);
+    mkChart('chart-platform', {
+      tooltip: { trigger: 'axis', valueFormatter: v => '¥' + Number(v).toLocaleString() },
+      legend: { data: ['花费', '收入'], textStyle: { color: T.ink2 }, top: 0, itemWidth: 10, itemHeight: 10 },
+      grid: { left: 8, right: 16, top: 34, bottom: 8, containLabel: true },
+      xAxis: { type: 'category', data: pLabels.map(k => PLATFORM_LABEL[k] || k), axisLabel: { color: T.ink2 }, axisLine: { lineStyle: { color: T.line } } },
+      yAxis: { type: 'value', axisLabel: { color: T.ink2, formatter: v => v >= 10000 ? (v / 10000) + '万' : v }, splitLine: { lineStyle: { color: T.line } } },
+      series: [
+        { name: '花费', type: 'bar', data: pLabels.map(k => Math.round(platformMap[k].spend)), itemStyle: { color: T.warning, borderRadius: [4, 4, 0, 0] }, barMaxWidth: 22 },
+        { name: '收入', type: 'bar', data: pLabels.map(k => Math.round(platformMap[k].revenue)), itemStyle: { color: T.success, borderRadius: [4, 4, 0, 0] }, barMaxWidth: 22 }
+      ]
+    });
+
+    // 5. 标签热度
+    const tagCount = {};
+    assets.items.forEach(a => {
+      try { JSON.parse(a.tags || '[]').forEach(t => { tagCount[t] = (tagCount[t] || 0) + 1; }); } catch (e) { }
+    });
+    const tags = Object.entries(tagCount).sort((a, b) => a[1] - b[1]).slice(0, 10);
+    mkChart('chart-tags', {
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      grid: { left: 8, right: 24, top: 8, bottom: 8, containLabel: true },
+      xAxis: { type: 'value', minInterval: 1, axisLabel: { color: T.ink2 }, splitLine: { lineStyle: { color: T.line } } },
+      yAxis: { type: 'category', data: tags.map(t => t[0]), axisLabel: { color: T.ink2 }, axisLine: { lineStyle: { color: T.line } } },
+      series: [{ type: 'bar', data: tags.map(t => t[1]), barMaxWidth: 14, itemStyle: { color: T.purple, borderRadius: [0, 4, 4, 0] } }]
+    });
+
+    // 6. 尺寸规格分布
+    const sizeCount = {};
+    assets.items.forEach(a => {
+      const k = a.width && a.height ? `${a.width}×${a.height}` : '未标注';
+      sizeCount[k] = (sizeCount[k] || 0) + 1;
+    });
+    const sizes = Object.entries(sizeCount).sort((a, b) => b[1] - a[1]);
+    mkChart('chart-size', {
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      grid: { left: 8, right: 16, top: 8, bottom: 8, containLabel: true },
+      xAxis: { type: 'category', data: sizes.map(x => x[0]), axisLabel: { color: T.ink2, interval: 0, rotate: sizes.length > 4 ? 20 : 0 }, axisLine: { lineStyle: { color: T.line } } },
+      yAxis: { type: 'value', minInterval: 1, axisLabel: { color: T.ink2 }, splitLine: { lineStyle: { color: T.line } } },
+      series: [{ type: 'bar', data: sizes.map(x => x[1]), barMaxWidth: 34, itemStyle: { color: T.cyan, borderRadius: [4, 4, 0, 0] } }]
+    });
+  });
+}
+
+function metricCard(label, value, accent, mark) {
+  const colors = { brand: 'var(--brand)', success: 'var(--success)', warning: 'var(--warning)', accent: '#7B5CFA' };
+  const bgs = { brand: 'var(--brand-bg)', success: 'var(--cp-success-bg)', warning: 'var(--cp-warning-bg)', accent: '#F1ECFE' };
+  return `<div class="card p-5 flex items-center gap-4">
+    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg text-xs font-bold" style="background:${bgs[accent]};color:${colors[accent]}">${mark}</div>
+    <div class="min-w-0"><p class="text-sm text-[var(--ink3)] truncate">${label}</p><p class="text-2xl font-semibold">${value}</p></div></div>`;
+}
+
+async function loadLibrary() {
+  const d = await fetchJSON(`${API}/assets?size=50`);
+  const el = document.getElementById('content');
+  el.innerHTML = `
+    <div class="flex items-center gap-3 mb-4">
+      <input id="kw" placeholder="搜索素材名称/标签..." class="flex-1" onkeyup="if(event.key==='Enter')filterLib()">
+      <select id="type-filter" onchange="filterLib()"><option value="">全部类型</option><option value="image">图片</option><option value="video">视频</option><option value="copy">文案</option></select>
+      <button class="btn btn-primary" onclick="filterLib()">搜索</button>
+    </div>
+    <div id="asset-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>`;
+  renderAssets(d.items);
+}
+
+function renderAssets(items) {
+  const grid = document.getElementById('asset-grid');
+  const typeLabel = t => TYPE_LABEL[t] || t;
+  const typeMark = t => ({ image: 'IMG', video: 'VID', copy: 'TXT' }[t] || '?');
+  grid.innerHTML = items.map(a => {
+    const tags = JSON.parse(a.tags || '[]');
+    return `<div class="card overflow-hidden hover:border-[var(--brand)] transition cursor-pointer" onclick="showAssetDetail('${a.asset_id}')">
+      <div class="h-36 flex items-center justify-center bg-[var(--elevated)] text-sm font-medium text-[var(--ink3)]">${typeMark(a.asset_type)}</div>
+      <div class="p-3"><p class="text-sm font-medium truncate">${a.name}</p>
+      <div class="mt-2 flex flex-wrap gap-1">${tags.slice(0, 3).map(t => `<span class="badge badge-brand">${t}</span>`).join('')}</div>
+      <div class="mt-2 flex items-center justify-between"><span class="text-xs text-[var(--ink3)]">${typeLabel(a.asset_type)}</span><span class="text-xs text-[var(--ink3)]">${(a.file_size / 1024).toFixed(0)}KB</span></div></div></div>`;
+  }).join('');
+}
+
+async function filterLib() {
+  const kw = document.getElementById('kw').value;
+  const type = document.getElementById('type-filter').value;
+  let url = `${API}/assets?size=50`;
+  if (kw) url += `&keyword=${encodeURIComponent(kw)}`;
+  if (type) url += `&asset_type=${type}`;
+  const d = await fetchJSON(url);
+  renderAssets(d.items);
+}
+
+async function showAssetDetail(id) {
+  const a = await fetchJSON(`${API}/assets/${id}`);
+  const tags = JSON.parse(a.tags || '[]');
+  const el = document.getElementById('content');
+  const typeLabel = t => TYPE_LABEL[t] || t;
+  const typeMark = t => ({ image: 'IMG', video: 'VID', copy: 'TXT' }[t] || '?');
+  el.innerHTML = `
+    <button class="btn btn-secondary mb-4" onclick="showPage('library')">← 返回素材库</button>
+    <div class="grid gap-6 lg:grid-cols-3">
+      <div class="lg:col-span-2">
+        <div class="card h-64 flex items-center justify-center bg-[var(--elevated)] text-sm font-medium text-[var(--ink3)] mb-4">${typeMark(a.asset_type)}</div>
+        <div class="card p-5"><h3 class="font-medium mb-3">投放效果</h3>
+        ${a.performance.length ? `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-[var(--ink3)]"><th class="text-left py-2">平台</th><th>曝光</th><th>点击</th><th>转化</th><th>花费</th><th>收入</th><th>ROI</th></tr></thead><tbody>
+        ${a.performance.map(p => `<tr class="border-t border-[var(--line)]"><td class="py-2">${PLATFORM_LABEL[p.platform] || p.platform}</td><td class="text-center">${p.impressions.toLocaleString()}</td><td class="text-center">${p.clicks.toLocaleString()}</td><td class="text-center">${p.conversions}</td><td class="text-center">¥${p.spend.toLocaleString()}</td><td class="text-center">¥${p.revenue.toLocaleString()}</td><td class="text-center font-medium text-[var(--brand)]">${p.spend > 0 ? (p.revenue / p.spend).toFixed(1) + 'x' : '-'}</td></tr>`).join('')}
+        </tbody></table></div>` : '<p class="text-[var(--ink3)] text-sm">暂无投放数据</p>'}
+        </div></div>
+      <div class="space-y-4">
+        <div class="card p-5"><h3 class="font-medium mb-3">素材信息</h3>
+          <dl class="space-y-2 text-sm"><dt class="text-[var(--ink3)]">ID</dt><dd>${a.asset_id}</dd>
+          <dt class="text-[var(--ink3)]">类型</dt><dd>${typeLabel(a.asset_type)}</dd>
+          <dt class="text-[var(--ink3)]">大小</dt><dd>${(a.file_size / 1024).toFixed(1)} KB</dd>
+          ${a.width ? `<dt class="text-[var(--ink3)]">尺寸</dt><dd>${a.width}×${a.height}</dd>` : ''}
+          <dt class="text-[var(--ink3)]">来源</dt><dd>${a.source}</dd>
+          <dt class="text-[var(--ink3)]">描述</dt><dd>${a.description || '-'}</dd></dl></div>
+        <div class="card p-5"><h3 class="font-medium mb-3">标签</h3><div class="flex flex-wrap gap-2">${tags.map(t => `<span class="badge badge-brand">${t}</span>`).join('')}</div></div>
+      </div></div>`;
+}
+
+function loadSearch() {
+  document.getElementById('content').innerHTML = `
+    <div class="mock-banner">${CP.icon('search', 16)}<span>Mock 模式：以文搜图基于 TF-IDF 文本匹配模拟 CLIP 多模态检索，非真实向量检索</span></div>
+    <div class="card p-6 mb-6">
+      <div class="flex gap-3"><input id="search-q" class="flex-1" placeholder="输入描述搜索素材，如：春季 护肤 清爽"><button class="btn btn-primary" onclick="doSearch()">搜索</button></div>
+    </div>
+    <div id="search-results"></div>`;
+}
+
+async function doSearch() {
+  const q = document.getElementById('search-q').value;
+  if (!q) return;
+  const r = await fetch(`${API}/search`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: q, top_k: 10 }) });
+  const data = await r.json();
+  const el = document.getElementById('search-results');
+  if (!data.items.length) { el.innerHTML = '<p class="text-[var(--ink3)]">未找到匹配素材</p>'; return; }
+  el.innerHTML = `<p class="text-sm text-[var(--ink2)] mb-3">找到 ${data.total} 个结果</p>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${data.items.map(i => `
+    <div class="card p-4 hover:border-[var(--brand)] transition cursor-pointer" onclick="showAssetDetail('${i.asset_id}')">
+      <div class="flex items-center justify-between mb-2"><span class="badge badge-brand">相关度 ${(i.relevance_score * 100).toFixed(0)}%</span><span class="text-xs text-[var(--ink3)]">${TYPE_LABEL[i.asset_type] || i.asset_type}</span></div>
+      <p class="text-sm font-medium">${i.name}</p>
+      <p class="text-xs text-[var(--ink3)] mt-1">${i.description || ''}</p></div>`).join('')}</div>`;
+}
+
+function loadGenerate() {
+  document.getElementById('content').innerHTML = `
+    <div class="mock-banner">${CP.icon('brain', 16)}<span>Mock 模式：AI 生成返回预设模板，非真实图片/视频/文案生成</span></div>
+    <div class="card p-6 mb-6">
+      <div class="space-y-4">
+        <div><label class="text-sm text-[var(--ink2)]">提示词</label><textarea id="gen-prompt" class="w-full mt-1" rows="3" placeholder="描述你想生成的素材..."></textarea></div>
+        <div class="flex gap-4">
+          <div><label class="text-sm text-[var(--ink2)]">类型</label><select id="gen-type" class="mt-1"><option value="image">图片</option><option value="video">视频</option><option value="copy">文案</option></select></div>
+          <div><label class="text-sm text-[var(--ink2)]">风格</label><select id="gen-style" class="mt-1"><option value="commercial">商业</option><option value="creative">创意</option><option value="minimal">极简</option></select></div>
+        </div>
+        <button class="btn btn-primary" onclick="doGenerate()">生成</button>
+      </div></div>
+    <div id="gen-result"></div>`;
+}
+
+async function doGenerate() {
+  const prompt = document.getElementById('gen-prompt').value;
+  const type = document.getElementById('gen-type').value;
+  const style = document.getElementById('gen-style').value;
+  if (!prompt) return;
+  const r = await fetch(`${API}/generate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, asset_type: type, style }) });
+  const d = await r.json();
+  const el = document.getElementById('gen-result');
+  el.innerHTML = `<div class="card p-6"><h3 class="font-medium mb-3">生成结果</h3>
+    <div class="space-y-2 text-sm">
+    <p><span class="text-[var(--ink3)]">标题：</span>${d.result.title}</p>
+    <p><span class="text-[var(--ink3)]">描述：</span>${d.result.description}</p>
+    <p><span class="text-[var(--ink3)]">标签：</span>${d.result.tags.map(t => `<span class="badge badge-brand ml-1">${t}</span>`).join('')}</p>
+    ${d.result.mock_url ? `<p><span class="text-[var(--ink3)]">预览：</span><img src="${d.result.mock_url}" class="mt-2 rounded-lg max-w-sm"></p>` : ''}
+    ${d.result.mock_script ? `<p><span class="text-[var(--ink3)]">脚本：</span><br><span class="text-[var(--ink2)]">${d.result.mock_script}</span></p>` : ''}
+    ${d.result.mock_copy ? `<p><span class="text-[var(--ink3)]">文案：</span><br><span class="text-[var(--ink2)]">${d.result.mock_copy}</span></p>` : ''}
+    </div></div>`;
+}
+
+async function loadReport() {
+  const d = await fetchJSON(`${API}/reports/performance`);
+  const el = document.getElementById('content');
+  el.innerHTML = `
+    <div class="card p-5 mb-4">
+      <div class="flex items-center gap-3 mb-3">
+        <select id="perf-platform" onchange="loadReport()"><option value="">全部平台</option>${Object.entries(PLATFORM_LABEL).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="card overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="bg-[var(--elevated)] text-[var(--ink3)]"><th class="text-left px-4 py-3">素材</th><th>类型</th><th>平台</th><th>店铺</th><th class="text-right">曝光</th><th class="text-right">点击</th><th class="text-right">CTR</th><th class="text-right">转化</th><th class="text-right">花费</th><th class="text-right">收入</th><th class="text-right">ROI</th></tr></thead>
+        <tbody>${d.items.map(i => `<tr class="border-t border-[var(--line)] hover:bg-[var(--elevated)]">
+          <td class="px-4 py-3 font-medium">${i.name}</td>
+          <td class="text-center">${TYPE_LABEL[i.asset_type] || i.asset_type}</td>
+          <td class="text-center">${PLATFORM_LABEL[i.platform] || i.platform}</td>
+          <td class="text-center">${i.store_name}</td>
+          <td class="text-right">${i.impressions.toLocaleString()}</td>
+          <td class="text-right">${i.clicks.toLocaleString()}</td>
+          <td class="text-right">${(i.ctr * 100).toFixed(1)}%</td>
+          <td class="text-right">${i.conversions}</td>
+          <td class="text-right">¥${i.spend.toLocaleString()}</td>
+          <td class="text-right">¥${i.revenue.toLocaleString()}</td>
+          <td class="text-right font-medium text-[var(--brand)]">${i.roi}x</td></tr>`).join('')}
+        </tbody></table></div>`;
+}
+
+// 主题切换后重画图表：图表色板是从 CSS 变量读的，不重画会残留上一个主题的配色
+if (typeof MutationObserver !== 'undefined') {
+  new MutationObserver(() => {
+    if (currentPage === 'dashboard' && charts.length) { showPage('dashboard'); }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+}
+window.addEventListener('resize', () => charts.forEach(c => c.resize()));
+
+// Init
+showPage('dashboard');
+</script>
+</body>
+</html>

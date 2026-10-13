@@ -28,15 +28,15 @@ def test_anonymous_cannot_read_business_data() -> None:
     assert store_response.status_code == 401
 
 
-def test_viewer_can_read_business_data() -> None:
-    """验证“viewercan读取business数据”场景，确保重构后仍满足预期业务与安全边界。"""
+def test_cs_can_read_business_data() -> None:
+    """验证"CS可以读取business数据"场景，确保重构后仍满足预期业务与安全边界。"""
     # 按 Arrange、Act、Assert 组织场景，重点检查可观察状态和副作用。
     engine = _engine()
     Base.metadata.create_all(engine)
     product_id, store_id = _seed_product_and_store(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         client = TestClient(app)
         product_list_response = client.get("/api/v1/products", headers={"Authorization": "Bearer test"})
@@ -59,7 +59,7 @@ def test_viewer_cannot_create_store() -> None:
     Base.metadata.create_all(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).post(
             "/api/v1/stores",
@@ -100,7 +100,7 @@ def test_viewer_cannot_create_product() -> None:
     Base.metadata.create_all(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).post(
             "/api/v1/products",
@@ -171,7 +171,7 @@ def test_viewer_cannot_confirm_ad_experiment_status() -> None:
     product_id, experiment_id = _seed_ad_experiment(engine)
 
     app.dependency_overrides[get_db] = _override_db(engine)
-    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.VIEWER)
+    app.dependency_overrides[get_current_user] = lambda: _user(UserRole.CS)
     try:
         response = TestClient(app).patch(
             f"/api/v1/products/{product_id}/ad-experiments/{experiment_id}",

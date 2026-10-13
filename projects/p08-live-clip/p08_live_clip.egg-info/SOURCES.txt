@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+app/__init__.py
+app/main.py
+p08_live_clip.egg-info/PKG-INFO
+p08_live_clip.egg-info/SOURCES.txt
+p08_live_clip.egg-info/dependency_links.txt
+p08_live_clip.egg-info/requires.txt
+p08_live_clip.egg-info/top_level.txt
+tests/test_api.py
+tests/test_scoring.py

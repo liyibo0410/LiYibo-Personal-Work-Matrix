@@ -1,4 +1,4 @@
-# 🧠 BOSS 智库
+# 🧠 RAG 知识库
 
 <p align="center">
   <strong>企业级智能知识库系统 — 基于 RAG 的文档检索与智能问答平台</strong>
@@ -25,7 +25,7 @@
 
 ## 📖 项目简介
 
-BOSS 智库是一个基于 **RAG（检索增强生成）** 技术的企业级智能知识库系统，面向垂直领域（如电子产品手册、维修指南、技术文档等），提供从文档导入、智能解析到精准问答的全链路解决方案。
+RAG 知识库是一个基于 **RAG（检索增强生成）** 技术的企业级智能知识库系统，面向垂直领域（如电子产品手册、维修指南、技术文档等），提供从文档导入、智能解析到精准问答的全链路解决方案。
 
 **核心能力：** 将非结构化的 PDF / Markdown 文档转化为可检索的结构化知识，通过多路召回策略实现高精度检索，并以流式对话方式输出智能回答。
 
@@ -188,16 +188,20 @@ uv sync
 
 ### 5. 启动服务（合并后台）
 
-推荐启动**统一控制台服务**（单进程单端口，端口 8100）：
+**端口以仓库根 `shared/config/services.json` 为准：p04 = 8041**（`api_port == web_port`）。
+`console_service.py` 的 `__main__` 里写的是 8100，那是历史遗留默认值，
+按平台方式启动时必须显式指定端口，否则外壳挂不上：
 
 ```bash
-# 在项目根目录执行
-.venv\Scripts\python.exe -m web.api.console_service
-# 或
-uvicorn web.api.console_service:app --port 8100
+# 推荐：由全平台托管器拉起（端口自动从 SERVICE_REGISTRY 解析）
+python ..\..\_tools\supervisor.py start p04
+
+# 或手工
+.venv\Scripts\python.exe -m uvicorn web.api.console_service:app --host 0.0.0.0 --port 8041
 ```
 
-统一控制台地址：`http://localhost:8100/console.html`（三 Tab：上传导入 / 文档管理 / 检索问答）
+统一控制台地址：`http://localhost:8041/console.html`
+（四 Tab：上传导入 / 文档管理 / 检索问答 / 数据看板；支持 `?tab=docs` 之类深链直达）
 
 > 合并后台说明：`web/api/console_service.py` 通过 `include_router` 复用 `import_service` / `query_service` 的全部业务路由，业务逻辑零改动；另新增 2 个只读接口供「文档管理」Tab 使用：
 > - `GET /api/import/tasks`：导入任务列表（状态概览，按创建时间倒序）
@@ -291,11 +295,11 @@ knowledge/
 
 ```bash
 # 公开文档（所有人可检索）
-curl -X POST http://localhost:8100/upload \
+curl -X POST http://localhost:8041/upload \
   -F "file=@product_manual.pdf"
 
 # 私有文档（仅指定 owner 可检索）
-curl -X POST http://localhost:8100/upload \
+curl -X POST http://localhost:8041/upload \
   -F "file=@internal_doc.pdf" \
   -F "owner=department_a"
 ```
@@ -303,38 +307,59 @@ curl -X POST http://localhost:8100/upload \
 ### 智能问答
 
 ```bash
-curl -X POST http://localhost:8101/query \
+# 非流式：一次返回 answer + sources（整条链路实测约 35s，控制台默认走流式）
+curl -X POST http://localhost:8041/query \
   -H "Content-Type: application/json" \
-  -d '{"question": "如何更换电池？", "session_id": "user_001", "owner": "department_a"}'
+  -d '{"query": "HAK180 烫金机有哪些安全注意事项", "session_id": "user_001", "is_stream": false}'
 ```
 
 ### 流式获取答案
 
 ```bash
-# SSE 流式推送，逐字输出
-curl -N http://localhost:8101/stream/user_001
+# 1) 发起：is_stream=true 立即返回 session_id，流程图在后台线程跑
+curl -X POST http://localhost:8041/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "HAK180 烫金机有哪些安全注意事项", "session_id": "user_001", "is_stream": true}'
+
+# 2) 订阅 SSE：ready → progress（阶段进度）→ delta（逐字）→ final（完整答案 + sources 引用）
+curl -N http://localhost:8041/stream/user_001
 ```
 
 ### 用户反馈
 
 ```bash
 # 提交反馈（👍 或 👎）
-curl -X POST http://localhost:8101/feedback \
+curl -X POST http://localhost:8041/feedback \
   -H "Content-Type: application/json" \
   -d '{"session_id": "user_001", "message_id": "msg_001", "feedback": "up", "comment": "回答很准确"}'
 ```
 
-### 统一控制台与只读接口（合并后台）
+### 文档删除（级联清理向量）
 
 ```bash
-# 打开统一控制台（三Tab：上传导入 / 文档管理 / 检索问答）
-http://localhost:8100/console.html
+# 列表带真实 chunk_count（按向量库实测回读，历史遗留的 0 会在读取时自愈）
+curl "http://localhost:8041/documents?owner=public&limit=50"
 
-# 只读接口：导入任务列表
-curl http://localhost:8100/api/import/tasks
+# 删除顺序：先按 file_title 清 Milvus 的 kb_chunks / kb_item_names，最后才删 Mongo 记录。
+# 反了会怎样：Mongo 先删就再也查不到 file_title，向量变成永远清理不掉的孤儿，
+# 表现为「删掉的文档仍会被检索问答命中」。原始文件与 MinIO 对象保留（留出误删恢复余地）。
+curl -X DELETE http://localhost:8041/documents/<task_id>
 
-# 只读接口：已入库文档列表
-curl http://localhost:8100/api/import/documents
+# 统计口径与列表一致（默认 owner=public），否则页头计数会与表格行数对不上
+curl "http://localhost:8041/statistics?owner=public"
+```
+
+### 统一控制台（四 Tab）
+
+```bash
+# 上传导入 / 文档管理 / 检索问答 / 数据看板；支持 ?tab=upload|docs|qa|dashboard 直达
+http://localhost:8041/console.html
+
+# 只读接口：导入任务列表（内存态，服务重启后清空 —— 文档本身在「文档管理」里，不受影响）
+curl http://localhost:8041/api/import/tasks
+
+# 只读接口：已完成导入的文档列表
+curl http://localhost:8041/api/import/documents
 ```
 
 ---
@@ -392,6 +417,24 @@ uv run python eval/eval_compare.py
 
 ---
 
+## ⚠️ 已知限制与 mock 边界
+
+以下是**当前真实状态**，不是"待优化"，演示时按这个口径讲：
+
+| 项 | 真实情况 | 影响 |
+|---|---|---|
+| **原始文件未进 MinIO** | `run_graph_task` 里 MinIO 上传被显式跳过（本机代理会让 MinIO 写操作挂起），文件只落在 `DATA_BASED_ROOT_DIR/<日期>/<task_id>/` | 对象存储这条链路是**缺的**，README 架构图里的 MinIO 持久化目前仅用于图片资产；换机迁移要拷本地目录 |
+| 切片内图片 URL | 指向 `http://localhost:9000/knowledge-base/...`（MinIO 本机地址） | 换端口/远程访问时回答里的图片显示不出来 |
+| 「全部导入任务」表 | 数据源是进程内存（`utils/task_utils`），**服务重启即清空** | 只影响任务视图；已入库文档在「文档管理」，来自 MongoDB，不受重启影响 |
+| 文档删除的边界 | 级联删的是 Milvus 向量 + MongoDB 记录；**服务器原始文件与 MinIO 对象保留** | 误删可从磁盘重导；磁盘不会因删除而回收 |
+| 同名文档 | 向量按 `file_title`（文件名去扩展名）归属，同名文档共享切片 | 删其一会连带清掉另一个的向量，控制台已就地标黄提示 |
+| 统计口径 | `/statistics` 默认 `owner=public`，与文档列表一致；库里另有 1 条历史 `owner=test` 记录不计入 | 想看全库需显式传 `owner` 或改查询 |
+| MCP 联网搜索 | 真实 MCP 客户端，但端点握手失败时**降级跳过**（只记 warning，不伪造搜索结果） | 断网/端点异常时回答只来自本地知识库 |
+| 非流式 `/query` | 整条链路实测约 35s，且会占用一个工作线程；控制台与 chat 页默认走 SSE 流式 | 脚本压测别用非流式 |
+| Ragas 评测集 | 仅 3 条产品手册问答（`eval/qa.csv`） | 指标是小样本，只用于策略对比，不代表线上水位 |
+
+---
+
 ## 📝 开发计划
 
 - [x] 数据导入流水线（PDF / Markdown 解析 → 向量化入库）
@@ -416,7 +459,7 @@ MIT License
 ---
 
 <p align="center">
-  <sub>Made with ❤️ by BOSS Team</sub>
+  <sub>Made with ❤️ by 云枢智能 CloudPivot</sub>
 </p>
 
 ---

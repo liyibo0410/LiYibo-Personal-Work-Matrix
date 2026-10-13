@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Demo2 - 连接管理器（定向推送）</title>
+<style>
+  body { font-family: "Microsoft YaHei", sans-serif; max-width: 700px; margin: 40px auto; background: #0B0E14; color: #E8EAF0; }
+  input, button { font-size: 16px; padding: 8px 12px; background: #141820; color: #E8EAF0; border: 1px solid #2A3040; border-radius: 6px; }
+  button { background: #3370FF; color: #fff; border: none; cursor: pointer; }
+  button:hover { background: #2560E0; }
+  .flex { display: flex; gap: 16px; margin-top: 16px; }
+  .panel { flex: 1; background: #141820; border: 1px solid #2A3040; border-radius: 6px; padding: 12px; height: 300px; overflow-y: auto; }
+  .msg { margin: 6px 0; }
+  .m1 { color: #3370FF; }   /* thread-A 颜色 */
+  .m2 { color: #F59E0B; }   /* thread-B 颜色 */
+  .status { color: #94A3B8; font-size: 14px; }
+</style>
+</head>
+<body>
+<h2>Demo2：连接管理器 —— 两个连接互不干扰</h2>
+<div>
+  用下面两个按钮分别以 thread-A / thread-B 连接，然后各自发消息：<br>
+  你会看到 <b>每个连接只收到自己那条 thread_id 推送的内容</b>（定向，不是广播）。
+</div>
+
+<div class="flex">
+  <div>
+    <h3>thread-A</h3>
+    <button onclick="connect('A')">连接 thread-A</button>
+    <button onclick="send('A')">发消息</button>
+    <div id="logA" class="panel"><div class="status">未连接</div></div>
+  </div>
+  <div>
+    <h3>thread-B</h3>
+    <button onclick="connect('B')">连接 thread-B</button>
+    <button onclick="send('B')">发消息</button>
+    <div id="logB" class="panel"><div class="status">未连接</div></div>
+  </div>
+</div>
+
+<script>
+const sockets = { A: null, B: null };
+
+function log(id, text, cls) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + cls;
+  div.textContent = text;
+  document.getElementById('log' + id).appendChild(div);
+}
+
+function connect(id) {
+  if (sockets[id]) { sockets[id].close(); }
+  // 关键：URL 里带上 thread_id，服务端根据它定向推送
+  const ws = new WebSocket('ws://127.0.0.1:8000/ws/thread-' + id);
+  sockets[id] = ws;
+  ws.onopen = () => log(id, '[已连接 thread-' + id + ']', 'status');
+  ws.onmessage = (ev) => log(id, '收到: ' + ev.data, id === 'A' ? 'm1' : 'm2');
+  ws.onclose = () => log(id, '[已断开]', 'status');
+}
+
+function send(id) {
+  const ws = sockets[id];
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send('来自 thread-' + id + ' 的消息');
+    log(id, '我发: 来自 thread-' + id + ' 的消息', 'status');
+  } else {
+    log(id, '请先连接', 'status');
+  }
+}
+
+connect('A');
+connect('B');
+</script>
+</body>
+</html>

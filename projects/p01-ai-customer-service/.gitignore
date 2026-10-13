@@ -1,0 +1,48 @@
+# ===== 环境与密钥（严禁入库）=====
+.env
+.env.*
+!.env.example
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+*.egg
+build/
+dist/
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ===== 运行时产物 =====
+logs/
+*.log
+output/
+uploads/
+
+# ===== 测试与覆盖率 =====
+htmlcov/
+.coverage
+.coverage.*
+.pytest_cache/
+coverage.xml
+
+# ===== Jupyter =====
+.ipynb_checkpoints
+
+# ===== Ruff =====
+.ruff_cache/
+
+# ===== mypy =====
+.mypy_cache/
+
+# ===== 临时文件 =====
+*.tmp
+*.bak

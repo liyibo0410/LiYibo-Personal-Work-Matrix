@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>登录 · 衡鉴 V2.1.9 · 企业合同智能审查系统</title>
 <link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/shared/ui-kit/tokens.css">
 <link rel="stylesheet" href="/assets/app.css">
 <link rel="stylesheet" href="/assets/fx.css">
 <script>
 (function () {
   try {
-    var t = localStorage.getItem('cr-theme');
-    if (t !== 'light' && t !== 'dark') t = 'dark';
+    var t = /[?&]cp-theme=(light|dark)/.exec(location.search);
+    t = t ? t[1] : (localStorage.getItem('cp_theme_v2') || localStorage.getItem('cr-theme'));
+    if (t !== 'light' && t !== 'dark') t = 'light';
     document.documentElement.setAttribute('data-theme', t);
   } catch (e) { }
 })();
@@ -68,17 +70,17 @@
   .hint code { font-size: 11.2px; color: var(--brand); }
 </style>
 </head>
-<body class="login-body">
+<body data-cp-module="p05" data-cp-brand-src="/shared/config/brand.json" class="login-body">
 
 <div class="login-wrap">
 
   <!-- ==================== 左：口令登录 ==================== -->
   <section class="login-card">
     <div class="login-brand">
-      <img src="/assets/logo-sm.png" alt="衡鉴 V2.1.9 标识" id="loginLogo" width="38" height="39">
+      <img src="/assets/logo-sm.png" data-cp-brand-logo-src="/assets/logo-sm.png" alt="衡鉴 V2.1.9 标识" id="loginLogo" width="38" height="39">
       <div>
         <b>衡鉴 V2.1.9</b>
-        <i>企业合同智能审查系统</i>
+        <i>企业合同智能审查系统 · <span data-cp-brand="company">云枢智能</span></i>
       </div>
     </div>
 
@@ -121,6 +123,7 @@
 
 </div>
 
+<script src="/shared/ui-kit/ui-kit.js"></script>
 <script src="/assets/app.js"></script>
 <script src="/assets/pet.js"></script>
 <script>
@@ -139,11 +142,15 @@
       act: '可改规则 · 可重试阻塞 · 可查看指标' }
   ];
 
-  // 主题联动 logo（浅色主题用浅色版 logo）
+  // 主题联动 logo（浅色主题用浅色版 logo）：兜底图变了要同步给品牌桥，
+  // 否则「未设自定义 logo」时这里会把用户标识刷回深色版。
   try {
     if (localStorage.getItem('cr-theme') === 'light') {
-      $('#loginLogo').src = '/assets/logo-sm-light.png';
+      var ll = $('#loginLogo');
+      ll.setAttribute('data-cp-brand-logo-src', '/assets/logo-sm-light.png');
+      ll.src = '/assets/logo-sm-light.png';
     }
+    if (window.CP && window.CP.applyBrand) { window.CP.applyBrand(); }
   } catch (e) { }
 
   var ICONS = {

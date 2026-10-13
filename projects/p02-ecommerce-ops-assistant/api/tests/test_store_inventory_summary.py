@@ -45,7 +45,7 @@ def test_store_inventory_summary_counts_low_stock_and_available_quantity() -> No
         id=1,
         email="viewer@example.com",
         display_name="Viewer",
-        role=UserRole.VIEWER,
+        role=UserRole.CS,
     )
     try:
         response = TestClient(app).get(f"/api/v1/stores/{store_id}/inventory-summary")
@@ -100,7 +100,7 @@ def test_store_inventory_movements_include_product_and_sku_context() -> None:
         id=1,
         email="viewer@example.com",
         display_name="Viewer",
-        role=UserRole.VIEWER,
+        role=UserRole.CS,
     )
     try:
         response = TestClient(app).get(f"/api/v1/stores/{store_id}/inventory-movements")
@@ -165,7 +165,7 @@ def test_viewer_cannot_generate_store_inventory_advice() -> None:
         id=1,
         email="viewer@example.com",
         display_name="Viewer",
-        role=UserRole.VIEWER,
+        role=UserRole.CS,
     )
     try:
         response = TestClient(app).post(

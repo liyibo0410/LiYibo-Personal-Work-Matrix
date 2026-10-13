@@ -43,7 +43,7 @@ export default function ImportCenterPage() {
 
         <header className="rounded-lg border border-line bg-surface p-5">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-ink-1 text-white">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-white">
               <Upload className="h-6 w-6" aria-hidden="true" />
             </div>
             <div>

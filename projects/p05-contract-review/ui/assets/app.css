@@ -1,53 +1,54 @@
 /* ==========================================================================
-   衡鉴 V2.1.9 · 界面样式（v2.0 · 深空控制台）
+   衡鉴 V2.1.9 · 界面样式（v2.0 · 白底控制台）
    --------------------------------------------------------------------------
-   设计取向：深空蓝黑底 + 玻璃态面板 + 青/紫双色强调，数据可视化优先。
-   默认深色（控制台观感），保留浅色主题用于长文本阅读与打印。
+   设计取向：白底浅灰面 + 单一强调色（蓝），数据可视化优先，不用玻璃态。
+   默认浅色（与平台 tokens.css 一致），深色仍可通过 html[data-theme="dark"] 切换。
    风险语义色固定：高=红 / 中=琥珀 / 低=蓝，不随主题色偏移。
    动效与图表样式在同目录 fx.css（第二张样式表）。
    ========================================================================== */
 
 /* ---------------------------------------------------------------- 设计令牌 */
 :root {
-  /* 底层与面板 */
-  --bg: #070c17;
-  --bg-2: #0e1730;
-  --panel: rgba(14, 23, 44, .74);
-  --panel-solid: #0e172c;
-  --panel-2: rgba(20, 32, 58, .62);
-  --panel-3: rgba(255, 255, 255, .035);
+  /* 平台统一令牌桥接：优先使用 shared/ui-kit 的 --cp-* 变量，保证主题一致 */
+  --bg: var(--cp-bg);
+  --bg-2: var(--cp-elevated);
+  --panel: var(--cp-surface);
+  --panel-solid: var(--cp-surface);
+  --panel-2: var(--cp-elevated);
+  --panel-3: var(--cp-info-bg);
   /* 描边 */
-  --line: rgba(88, 132, 205, .18);
-  --line-2: rgba(88, 132, 205, .09);
-  --line-3: rgba(255, 255, 255, .06);
+  --line: var(--cp-line);
+  --line-2: var(--cp-elevated);
+  --line-3: var(--cp-info-bg);
   /* 文字 */
-  --ink: #e9eff9;
-  --ink-2: #bccbe4;
-  --sub: #8ba0c3;
-  --faint: #5f7499;
+  --ink: var(--cp-ink1);
+  --ink-2: var(--cp-ink2);
+  --sub: var(--cp-ink3);
+  --faint: var(--cp-ink3);
   /* 品牌 */
-  --brand: #4f8cff;
-  --brand-2: #7c5cff;
-  --brand-soft: rgba(79, 140, 255, .12);
-  --cyan: #22d3ee;
-  --teal: #2dd4bf;
+  --brand: var(--cp-brand);
+  --brand-2: var(--cp-brand-hover);
+  --brand-soft: var(--cp-brand-bg);
+  /* 青色/蓝绿强调已废弃：--cyan 归一到品牌蓝，--teal 归一到中性信息色 */
+  --cyan: var(--cp-brand);
+  --teal: var(--cp-info);
   /* 风险语义 */
-  --high: #ff7a7a;
-  --high-bg: rgba(255, 94, 94, .10);
-  --high-line: rgba(255, 94, 94, .34);
-  --mid: #fbbf24;
-  --mid-bg: rgba(251, 191, 36, .10);
-  --mid-line: rgba(251, 191, 36, .32);
-  --low: #5b9dff;
-  --low-bg: rgba(79, 140, 255, .10);
-  --low-line: rgba(79, 140, 255, .34);
-  --ok: #34d399;
-  --ok-bg: rgba(52, 211, 153, .10);
-  --mark: rgba(251, 191, 36, .26);
+  --high: var(--cp-danger);
+  --high-bg: var(--cp-danger-bg);
+  --high-line: var(--cp-danger-bg);
+  --mid: var(--cp-warning);
+  --mid-bg: var(--cp-warning-bg);
+  --mid-line: var(--cp-warning-bg);
+  --low: var(--cp-brand);
+  --low-bg: var(--cp-brand-bg);
+  --low-line: var(--cp-brand-bg);
+  --ok: var(--cp-success);
+  --ok-bg: var(--cp-success-bg);
+  --mark: var(--cp-warning-bg);
   /* 结构 */
-  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 18px 44px -22px rgba(0, 0, 0, .75);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .25);
-  --glow: 0 0 0 1px rgba(79, 140, 255, .18), 0 12px 40px -16px rgba(79, 140, 255, .45);
+  --shadow: var(--cp-shadow);
+  --shadow-sm: var(--cp-shadow-sm);
+  --glow: 0 0 0 1px rgba(51, 112, 255, .18), 0 12px 40px -16px rgba(51, 112, 255, .28);
   /* --radius / --radius-s / --hd 定义在文件后半段的「v2.0.1 配色重定」:root 里
      （那里才是生效值：14px / 9px / 62px）。此处原先还写着 12px / 8px / 58px，
      被后面的同名声明覆盖，等于死值 —— 只会让人误判实际取值，已删除。 */
@@ -56,40 +57,40 @@
           "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
-/* 浅色主题：只覆盖令牌 + 少量硬编码补丁 */
+/* 浅色主题：与文件开头的 :root 取值一致（全部引用平台 --cp-* 令牌，避免两处漂移） */
 html[data-theme="light"] {
-  --bg: #eff2f8;
-  --bg-2: #dde6f5;
-  --panel: #ffffff;
-  --panel-solid: #ffffff;
-  --panel-2: #f7f9fd;
-  --panel-3: rgba(20, 40, 90, .03);
-  --line: #dbe3f0;
-  --line-2: #edf1f8;
-  --line-3: rgba(20, 40, 90, .07);
-  --ink: #141c2e;
-  --ink-2: #3f4d68;
-  --sub: #66748e;
-  --faint: #93a0b8;
-  --brand: #2f54eb;
-  --brand-2: #6d4ae0;
-  --brand-soft: #eef2ff;
-  --cyan: #0e9aa7;
-  --teal: #0d9488;
-  --high: #d92d20;
-  --high-bg: #fef3f2;
-  --high-line: #f9d3cf;
-  --mid: #b45309;
-  --mid-bg: #fffaeb;
-  --mid-line: #f5dfae;
-  --low: #1d4ed8;
-  --low-bg: #eff4ff;
-  --low-line: #cddcfb;
-  --ok: #12805c;
-  --ok-bg: #ecfdf5;
-  --mark: rgba(246, 200, 80, .42);
-  --shadow: 0 1px 2px rgba(20, 24, 30, .05), 0 12px 28px -16px rgba(20, 30, 60, .18);
-  --glow: 0 0 0 1px rgba(47, 84, 235, .16), 0 12px 32px -18px rgba(47, 84, 235, .35);
+  --bg: var(--cp-bg);
+  --bg-2: var(--cp-elevated);
+  --panel: var(--cp-surface);
+  --panel-solid: var(--cp-surface);
+  --panel-2: var(--cp-elevated);
+  --panel-3: var(--cp-info-bg);
+  --line: var(--cp-line);
+  --line-2: var(--cp-elevated);
+  --line-3: var(--cp-info-bg);
+  --ink: var(--cp-ink1);
+  --ink-2: var(--cp-ink2);
+  --sub: var(--cp-ink3);
+  --faint: var(--cp-ink3);
+  --brand: var(--cp-brand);
+  --brand-2: var(--cp-brand-hover);
+  --brand-soft: var(--cp-brand-bg);
+  --cyan: var(--cp-brand);
+  --teal: var(--cp-info);
+  --high: var(--cp-danger);
+  --high-bg: var(--cp-danger-bg);
+  --high-line: var(--cp-danger-bg);
+  --mid: var(--cp-warning);
+  --mid-bg: var(--cp-warning-bg);
+  --mid-line: var(--cp-warning-bg);
+  --low: var(--cp-brand);
+  --low-bg: var(--cp-brand-bg);
+  --low-line: var(--cp-brand-bg);
+  --ok: var(--cp-success);
+  --ok-bg: var(--cp-success-bg);
+  --mark: var(--cp-warning-bg);
+  --shadow: var(--cp-shadow);
+  --glow: 0 0 0 1px rgba(51, 112, 255, .16), 0 12px 32px -18px rgba(51, 112, 255, .28);
 }
 
 /* ---------------------------------------------------------------- 基础 */
@@ -100,7 +101,7 @@ html {
   -webkit-text-size-adjust: 100%;
   /* 只写 html：写到 body 会被规范强制成独立滚动容器，全页 sticky 全部失效 */
   overflow-x: hidden;
-  scrollbar-color: #2b3a58 transparent;
+  scrollbar-color: var(--cp-line) transparent;
   scrollbar-width: thin;
 }
 
@@ -123,7 +124,7 @@ body {
   overflow-x: clip;
 }
 
-/* 深空底：网格 + 双色光斑（动画在 fx.css） */
+/* 底纹：网格 + 蓝色光斑（动画在 fx.css） */
 body::before {
   content: "";
   position: fixed;
@@ -132,18 +133,16 @@ body::before {
   pointer-events: none;
   background-image:
     radial-gradient(1100px 620px at 82% -8%, var(--bg-2) 0%, transparent 58%),
-    radial-gradient(900px 520px at 6% 102%, rgba(124, 92, 255, .16) 0%, transparent 60%),
-    linear-gradient(rgba(88, 132, 205, .055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(88, 132, 205, .055) 1px, transparent 1px);
+    radial-gradient(900px 520px at 6% 102%, rgba(51, 112, 255, .10) 0%, transparent 60%),
+    linear-gradient(rgba(51, 112, 255, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 112, 255, .04) 1px, transparent 1px);
   background-size: auto, auto, 44px 44px, 44px 44px;
 }
+/* 白底态：底纹整体压平 —— 用户要求「配色全部白底」，网格与蓝色光斑属于
+   深色时代的氛围层，在白底下会被读成「灰底 + 青蓝色块」。 */
 html[data-theme="light"] body::before {
-  background-image:
-    radial-gradient(1100px 620px at 82% -8%, var(--bg-2) 0%, transparent 58%),
-    radial-gradient(820px 500px at 4% 104%, rgba(109, 74, 224, .10) 0%, transparent 60%),
-    linear-gradient(rgba(47, 84, 235, .045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(47, 84, 235, .045) 1px, transparent 1px);
-  background-size: auto, auto, 44px 44px, 44px 44px;
+  background-image: none;
+  background-size: auto;
 }
 
 a { color: var(--brand); text-decoration: none; }
@@ -170,9 +169,7 @@ a:hover { text-decoration: underline; }
   position: sticky; top: 0; z-index: 60;
   display: flex; align-items: center; gap: 16px;
   padding: 0 20px; height: var(--hd);
-  background: color-mix(in srgb, var(--bg) 76%, transparent);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
 .topbar::after {
@@ -184,7 +181,7 @@ a:hover { text-decoration: underline; }
 .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
 .brand-logo {
   height: 36px; width: auto; display: block; flex: none;
-  filter: drop-shadow(0 2px 6px rgba(79, 140, 255, .35));
+  filter: drop-shadow(0 2px 6px rgba(51, 112, 255, .35));
 }
 .brand-txt { display: flex; flex-direction: column; line-height: 1.18; min-width: 0; }
 /* 下面「顶栏重做」块里还有一份 .brand-txt b/i 负责字号与省略号（唯一真源），
@@ -202,7 +199,7 @@ a:hover { text-decoration: underline; }
   display: inline-flex; align-items: center; justify-content: center;
   width: 22px; height: 22px; border-radius: var(--radius-s); flex: none;
   background: linear-gradient(135deg, var(--cyan), var(--brand));
-  color: #04101f; font-size: 12px; font-weight: 800;
+  color: var(--cp-on-brand, #FFFFFF); font-size: 12px; font-weight: 800;
 }
 
 .nav { display: flex; gap: 4px; margin-left: 8px; }
@@ -213,8 +210,8 @@ a:hover { text-decoration: underline; }
 .nav a:hover { background: var(--panel-3); color: var(--ink); text-decoration: none; }
 .nav a.active {
   color: var(--ink); font-weight: 600;
-  background: linear-gradient(135deg, rgba(79, 140, 255, .16), rgba(124, 92, 255, .12));
-  box-shadow: inset 0 0 0 1px rgba(79, 140, 255, .26);
+  background: linear-gradient(135deg, rgba(51, 112, 255, .16), rgba(51, 112, 255, .12));
+  box-shadow: inset 0 0 0 1px rgba(51, 112, 255, .26);
 }
 .nav a.active::after {
   content: ""; position: absolute; left: 15px; right: 15px; bottom: 3px; height: 2px;
@@ -258,16 +255,16 @@ a:hover { text-decoration: underline; }
   white-space: nowrap;
 }
 .btn:hover {
-  border-color: rgba(79, 140, 255, .55); color: var(--ink);
+  border-color: rgba(51, 112, 255, .55); color: var(--ink);
   background: var(--brand-soft);
 }
 .btn:active { transform: translateY(1px); }
 .btn.primary {
   background: linear-gradient(135deg, var(--brand), var(--brand-2));
   border-color: transparent; color: #fff; font-weight: 600;
-  box-shadow: 0 6px 20px -10px rgba(79, 140, 255, .9);
+  box-shadow: 0 6px 20px -10px rgba(51, 112, 255, .9);
 }
-.btn.primary:hover { filter: brightness(1.1); box-shadow: 0 10px 26px -10px rgba(79, 140, 255, 1); }
+.btn.primary:hover { filter: brightness(1.1); box-shadow: 0 10px 26px -10px rgba(51, 112, 255, 1); }
 .btn.ghost { background: transparent; }
 .btn.ghost:hover { background: var(--panel-3); }
 .btn.sm { height: 27px; padding: 0 10px; font-size: 12.5px; }
@@ -283,13 +280,11 @@ a:hover { text-decoration: underline; }
 .card {
   background: var(--panel); border: 1px solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
 }
 .panel {
   position: relative;
   background: var(--panel); border: 1px solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   overflow: hidden;
 }
 .panel::before {
@@ -321,7 +316,7 @@ select, textarea {
 textarea { height: auto; line-height: 1.72; resize: vertical; }
 input:focus, select:focus, textarea:focus {
   border-color: var(--brand); background: var(--panel-solid);
-  box-shadow: 0 0 0 3px rgba(79, 140, 255, .16);
+  box-shadow: 0 0 0 3px rgba(51, 112, 255, .16);
 }
 input::placeholder, textarea::placeholder { color: var(--faint); }
 select {
@@ -344,7 +339,7 @@ label { color: var(--ink-2); }
 .t-mid { color: var(--mid); background: var(--mid-bg); border-color: var(--mid-line); }
 .t-low { color: var(--low); background: var(--low-bg); border-color: var(--low-line); }
 .t-none { color: var(--sub); background: var(--panel-3); border-color: var(--line); }
-.t-ok { color: var(--ok); background: var(--ok-bg); border-color: rgba(52, 211, 153, .38); }
+.t-ok { color: var(--ok); background: var(--ok-bg); border-color: var(--ok-bg); }
 .t-plain { color: var(--sub); border-color: var(--line); background: transparent; }
 .tag .ic { width: 11px; height: 11px; flex: none; }
 
@@ -354,7 +349,7 @@ table.grid th {
   text-align: left; font-weight: 600; color: var(--sub); font-size: 12px;
   letter-spacing: .4px; padding: 10px 12px; border-bottom: 1px solid var(--line);
   background: var(--panel-2); position: sticky; top: 0; z-index: 2;
-  backdrop-filter: blur(8px); white-space: nowrap;
+  white-space: nowrap;
 }
 table.grid td { padding: 11px 12px; border-bottom: 1px solid var(--line-2); vertical-align: middle; }
 table.grid tbody tr { transition: background .16s; }
@@ -375,15 +370,14 @@ table.grid tbody tr[data-risk="none"] td:first-child { box-shadow: inset 3px 0 0
 
 /* ---------------------------------------------------------------- 弹层 */
 .mask {
-  position: fixed; inset: 0; background: rgba(4, 8, 16, .62);
-  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  position: fixed; inset: 0; background: rgba(16, 24, 40, .34);
   display: none; align-items: center; justify-content: center; z-index: 90; padding: 24px;
 }
 html[data-theme="light"] .mask { background: rgba(20, 30, 55, .34); }
 .mask.on { display: flex; }
 .modal {
   background: var(--panel-solid); border: 1px solid var(--line); border-radius: var(--radius);
-  box-shadow: 0 30px 70px -24px rgba(0, 0, 0, .8); width: 100%; max-width: 560px;
+  box-shadow: var(--shadow-lg, 0 12px 40px rgba(16, 24, 40, .12)); width: 100%; max-width: 560px;
   max-height: 88vh; overflow: auto;
 }
 .modal .mh {
@@ -431,7 +425,7 @@ html[data-theme="light"] .mask { background: rgba(20, 30, 55, .34); }
   position: fixed; top: 0; left: 0; height: 2px; z-index: 200;
   width: 0; background: linear-gradient(90deg, var(--cyan), var(--brand), var(--brand-2));
   opacity: 0; transition: width .25s ease, opacity .3s ease;
-  box-shadow: 0 0 12px rgba(79, 140, 255, .8);
+  box-shadow: 0 0 12px rgba(51, 112, 255, .8);
 }
 #topbar-progress.on { opacity: 1; }
 
@@ -448,8 +442,7 @@ html[data-theme="light"] .mask { background: rgba(20, 30, 55, .34); }
 .overlay {
   position: fixed; inset: 0; z-index: 150;
   display: none; align-items: center; justify-content: center;
-  background: color-mix(in srgb, var(--bg) 74%, transparent);
-  backdrop-filter: blur(3px);
+  background: var(--bg);
 }
 .overlay.on { display: flex; }
 .overlay .box {
@@ -490,14 +483,14 @@ html[data-theme="light"] .mask { background: rgba(20, 30, 55, .34); }
 
 /* 焦点与滚动条 */
 :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 5px; }
-::selection { background: rgba(79, 140, 255, .32); }
+::selection { background: rgba(51, 112, 255, .32); }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(88, 132, 205, .26); border-radius: 6px;
+  background: var(--cp-line, #DDE2EA); border-radius: 6px;
   border: 2px solid transparent; background-clip: padding-box;
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(88, 132, 205, .45); background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: #C0C8D6; background-clip: padding-box; }
 
 /* ==========================================================================
    页面骨架与业务组件
@@ -523,7 +516,6 @@ html[data-theme="light"] .mask { background: rgba(20, 30, 55, .34); }
   position: relative; overflow: hidden;
   background: var(--panel); border: 1px solid var(--line);
   border-radius: var(--radius); padding: 14px 16px 15px;
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   transition: transform .28s cubic-bezier(.22, .68, .36, 1), border-color .28s, box-shadow .28s;
 }
 .stat::before {
@@ -531,7 +523,7 @@ html[data-theme="light"] .mask { background: rgba(20, 30, 55, .34); }
   background: linear-gradient(90deg, transparent, var(--c, var(--brand)), transparent);
   opacity: .9;
 }
-.stat:hover { transform: translateY(-4px); border-color: rgba(79, 140, 255, .45); box-shadow: var(--glow); }
+.stat:hover { transform: translateY(-4px); border-color: rgba(51, 112, 255, .45); box-shadow: var(--glow); }
 .stat .k {
   font-size: 12px; color: var(--sub); letter-spacing: .3px;
   display: flex; align-items: center; gap: 6px;
@@ -566,7 +558,6 @@ html[data-theme="light"] .mask { background: rgba(20, 30, 55, .34); }
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   margin-bottom: 13px; padding: 12px 14px;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
 }
 
 /* ---------------------------------------------------------------- 工作台布局 */
@@ -655,12 +646,12 @@ mark.hl {
   color: inherit; transition: box-shadow .2s, filter .2s;
 }
 mark.hl:hover { filter: brightness(1.22); }
-mark.hl.high { background: color-mix(in srgb, var(--high) 24%, transparent); box-shadow: inset 0 -2px 0 var(--high); }
-mark.hl.medium { background: color-mix(in srgb, var(--mid) 26%, transparent); box-shadow: inset 0 -2px 0 var(--mid); }
-mark.hl.low { background: color-mix(in srgb, var(--low) 22%, transparent); box-shadow: inset 0 -2px 0 var(--low); }
+mark.hl.high { background: var(--high-bg); box-shadow: inset 0 -2px 0 var(--high); }
+mark.hl.medium { background: var(--mid-bg); box-shadow: inset 0 -2px 0 var(--mid); }
+mark.hl.low { background: var(--low-bg); box-shadow: inset 0 -2px 0 var(--low); }
 mark.hl.flash { animation: flash 1.15s ease-out 1; }
 @keyframes flash {
-  0% { background: rgba(79, 140, 255, .62); box-shadow: 0 0 0 3px rgba(79, 140, 255, .3); }
+  0% { background: rgba(51, 112, 255, .62); box-shadow: 0 0 0 3px rgba(51, 112, 255, .3); }
   100% { background: var(--mark); box-shadow: inset 0 -2px 0 var(--brand); }
 }
 
@@ -676,7 +667,7 @@ mark.hl.flash { animation: flash 1.15s ease-out 1; }
 .pager .pg.on {
   background: linear-gradient(135deg, var(--brand), var(--brand-2));
   border-color: transparent; color: #fff; font-weight: 700;
-  box-shadow: 0 4px 14px -6px rgba(79, 140, 255, .9);
+  box-shadow: 0 4px 14px -6px rgba(51, 112, 255, .9);
 }
 .pager.compact { gap: 3px; }
 .pager.compact .ellipsis { color: var(--faint); padding: 0 3px; font-size: 12px; }
@@ -716,7 +707,7 @@ mark.hl.flash { animation: flash 1.15s ease-out 1; }
 .risk-card.low { border-left-color: var(--low); }
 .risk-card.on {
   border-color: var(--brand); border-left-color: var(--brand);
-  background: linear-gradient(135deg, rgba(79, 140, 255, .12), rgba(124, 92, 255, .07));
+  background: linear-gradient(135deg, rgba(51, 112, 255, .12), rgba(51, 112, 255, .07));
   box-shadow: var(--glow);
 }
 .risk-card .rh { display: flex; align-items: baseline; gap: 8px; }
@@ -740,7 +731,7 @@ mark.hl.flash { animation: flash 1.15s ease-out 1; }
 .risk-card.collapsed .body { display: none; }
 .risk-card.done { opacity: .68; }
 .risk-card .rh .mark {
-  font-size: 11px; color: var(--ok); border: 1px solid rgba(52, 211, 153, .5);
+  font-size: 11px; color: var(--ok); border: 1px solid var(--ok-bg);
   background: var(--ok-bg); border-radius: 4px; padding: 0 6px; line-height: 17px;
   display: inline-flex; align-items: center; gap: 3px;
 }
@@ -760,7 +751,7 @@ mark.hl.flash { animation: flash 1.15s ease-out 1; }
 .field { margin-top: 10px; }
 .field .lab { font-size: 11.5px; color: var(--sub); letter-spacing: .3px; margin-bottom: 4px; }
 .sugg {
-  background: var(--ok-bg); border: 1px solid rgba(52, 211, 153, .22); border-radius: var(--radius-s);
+  background: var(--ok-bg); border: 1px solid var(--ok-bg); border-radius: var(--radius-s);
   padding: 9px 11px; font-size: 12.5px; line-height: 1.8; white-space: pre-wrap; color: var(--ink-2);
 }
 .alt-opt { font-size: 12px; color: var(--sub); margin-top: 6px; }
@@ -926,7 +917,7 @@ mark.hl.flash { animation: flash 1.15s ease-out 1; }
   content: ''; position: absolute; top: 2px; left: 2px; width: 19px; height: 19px;
   border-radius: 50%; background: var(--faint); transition: transform .18s, background .18s;
 }
-.sw.on { background: rgba(52, 211, 153, .18); border-color: var(--ok); }
+.sw.on { background: var(--ok-bg); border-color: var(--ok); }
 .sw.on::after { transform: translateX(21px); background: var(--ok); }
 .sw-row {
   display: flex; align-items: center; gap: 12px; padding: 11px 0;
@@ -997,68 +988,72 @@ mark.hl.flash { animation: flash 1.15s ease-out 1; }
    ========================================================================== */
 
 /* ---------------------------------------------------------------- 配色重定 */
+/* 本块是实际生效的一套（位于后方，覆盖文件开头的同名令牌）。
+   凡平台 tokens.css 有对应令牌的，一律引用 --cp-*，避免与平台配色脱节。 */
 :root {
-  --bg: #0a0f18;
-  --bg-2: #121b2b;
-  --panel: rgba(18, 26, 40, .80);
-  --panel-solid: #121a28;
-  --panel-2: rgba(24, 34, 52, .66);
-  --panel-3: rgba(255, 255, 255, .04);
-  --line: rgba(120, 155, 205, .17);
-  --line-2: rgba(120, 155, 205, .085);
-  --line-3: rgba(255, 255, 255, .06);
-  --ink: #eef4fc;
-  --ink-2: #c6d4e8;
-  --sub: #9aabc4;
-  --faint: #6e8199;
-  --brand: #8b5cf6;
-  --brand-2: #a78bfa;
-  --brand-soft: rgba(139, 92, 246, .13);
-  --cyan: #35c8e8;
-  --teal: #2fbfa8;
-  --high: #ff7b7b;
-  --mid: #f5b544;
-  --low: #6aa8ff;
-  --ok: #3fd39f;
+  --bg: var(--cp-bg);
+  --bg-2: var(--cp-elevated);
+  --panel: var(--cp-surface);
+  --panel-solid: var(--cp-surface);
+  --panel-2: var(--cp-elevated);
+  --panel-3: var(--cp-info-bg);
+  --line: var(--cp-line);
+  --line-2: var(--cp-elevated);
+  --line-3: var(--cp-info-bg);
+  --ink: var(--cp-ink1);
+  --ink-2: var(--cp-ink2);
+  --sub: var(--cp-ink3);
+  --faint: var(--cp-ink3);
+  --brand: var(--cp-brand);
+  --brand-2: var(--cp-brand-hover);
+  --brand-soft: var(--cp-brand-bg);
+  /* 青色/蓝绿强调废弃：--cyan 归品牌蓝，--teal 归中性信息灰 */
+  --cyan: var(--cp-brand);
+  --teal: var(--cp-info);
+  --high: var(--cp-danger);
+  --mid: var(--cp-warning);
+  --low: var(--cp-brand);
+  --ok: var(--cp-success);
   --radius: 14px;
   --radius-s: 9px;
-  --glow: 0 0 0 1px rgba(139, 92, 246, .20), 0 14px 42px -18px rgba(139, 92, 246, .42);
+  --glow: 0 0 0 1px rgba(51, 112, 255, .18), 0 14px 42px -18px rgba(51, 112, 255, .28);
   --hd: 62px;
 }
 html[data-theme="light"] {
-  --bg: #f2f5fa;
-  --bg-2: #e2e9f4;
-  --panel: #ffffff;
-  --panel-2: #f8fafd;
-  --panel-3: rgba(20, 40, 90, .035);
-  --line: #d5dfee;
-  --line-2: #e9eef7;
-  --ink: #101828;
-  --ink-2: #3a4761;
-  --sub: #5d6c86;
-  --faint: #8d9bb2;
-  --brand: #7c3aed;
-  --brand-2: #6d28d9;
-  --brand-soft: #f3f0ff;
-  --cyan: #0e8fa7;
-  --teal: #0d9488;
+  --bg: var(--cp-bg);
+  --bg-2: var(--cp-elevated);
+  --panel: var(--cp-surface);
+  --panel-2: var(--cp-elevated);
+  --panel-3: var(--cp-info-bg);
+  --line: var(--cp-line);
+  --line-2: var(--cp-elevated);
+  --ink: var(--cp-ink1);
+  --ink-2: var(--cp-ink2);
+  --sub: var(--cp-ink3);
+  --faint: var(--cp-ink3);
+  /* 强调色一律跟随平台单一强调色（蓝），不再另立一套紫色 */
+  --brand: var(--cp-brand);
+  --brand-2: var(--cp-brand-hover);
+  --brand-soft: var(--cp-brand-bg);
+  --cyan: var(--cp-brand);
+  --teal: var(--cp-info);
 }
 
-/* 背景：紫色辉光 + 淡网格 */
+/* 背景：蓝色辉光 + 淡网格（浅色态为默认；深色下同样的蓝色调仍可用） */
 body::before {
   background-image:
-    radial-gradient(1200px 680px at 78% -12%, rgba(139, 92, 246, .16) 0%, transparent 60%),
-    radial-gradient(900px 520px at 2% 104%, rgba(167, 139, 250, .10) 0%, transparent 62%),
-    linear-gradient(rgba(120, 155, 205, .04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(120, 155, 205, .04) 1px, transparent 1px);
+    radial-gradient(1200px 680px at 78% -12%, rgba(51, 112, 255, .10) 0%, transparent 60%),
+    radial-gradient(900px 520px at 2% 104%, rgba(51, 112, 255, .06) 0%, transparent 62%),
+    linear-gradient(rgba(51, 112, 255, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 112, 255, .035) 1px, transparent 1px);
   background-size: auto, auto, 48px 48px, 48px 48px;
 }
 html[data-theme="light"] body::before {
   background-image:
-    radial-gradient(1200px 680px at 78% -12%, rgba(47, 111, 235, .10) 0%, transparent 60%),
-    radial-gradient(860px 500px at 2% 104%, rgba(13, 148, 136, .07) 0%, transparent 62%),
-    linear-gradient(rgba(47, 84, 235, .035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(47, 84, 235, .035) 1px, transparent 1px);
+    radial-gradient(1200px 680px at 78% -12%, rgba(51, 112, 255, .10) 0%, transparent 60%),
+    radial-gradient(860px 500px at 2% 104%, rgba(51, 112, 255, .06) 0%, transparent 62%),
+    linear-gradient(rgba(51, 112, 255, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 112, 255, .035) 1px, transparent 1px);
   background-size: auto, auto, 48px 48px, 48px 48px;
 }
 
@@ -1234,7 +1229,7 @@ body { font-size: 15px; line-height: 1.7; }
 .live-dot {
   display: inline-flex; align-items: center; gap: 7px; font-size: 12.4px;
   color: var(--ok); background: var(--ok-bg);
-  border: 1px solid rgba(63, 211, 159, .3);
+  border: 1px solid var(--ok-bg);
   border-radius: 999px; padding: 4px 11px;
 }
 .live-dot i {
@@ -1555,17 +1550,17 @@ body { font-size: 15px; line-height: 1.7; }
   white-space: nowrap;
 }
 .vbadge.v-confirm {
-  color: #16a34a; background: rgba(22, 163, 74, 0.12);
-  border: 1px solid rgba(22, 163, 74, 0.3);
+  color: var(--cp-success); background: var(--cp-success-bg);
+  border: 1px solid var(--cp-success-bg);
 }
 .vbadge.v-fp {
-  color: var(--sub); background: rgba(100, 116, 139, 0.1);
-  border: 1px solid rgba(100, 116, 139, 0.25);
+  color: var(--sub); background: var(--cp-info-bg);
+  border: 1px solid var(--cp-line);
   text-decoration: line-through;
 }
 .vbadge.v-human {
-  color: #d97706; background: rgba(217, 119, 6, 0.1);
-  border: 1px solid rgba(217, 119, 6, 0.25);
+  color: var(--cp-warning); background: var(--cp-warning-bg);
+  border: 1px solid var(--cp-warning-bg);
 }
 /* 误报卡片视觉降权：降低不透明度 + 左边框变灰 */
 .risk-card.downgraded {
@@ -1577,12 +1572,12 @@ body { font-size: 15px; line-height: 1.7; }
   border-radius: 4px; line-height: 1.6;
 }
 .downgrade-note {
-  color: var(--sub); background: rgba(100, 116, 139, 0.06);
+  color: var(--sub); background: var(--cp-info-bg);
   border-left: 2px solid var(--sub);
 }
 .human-note {
-  color: #d97706; background: rgba(217, 119, 6, 0.06);
-  border-left: 2px solid #d97706;
+  color: var(--cp-warning); background: var(--cp-warning-bg);
+  border-left: 2px solid var(--cp-warning);
 }
 /* 复核统计摘要（工作台页头模式徽标扩展） */
 .verify-summary {

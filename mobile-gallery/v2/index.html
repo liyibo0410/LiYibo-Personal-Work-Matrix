@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云枢智能 · 界面速览 2026-10-13</title>
+<meta name="description" content="CloudPivot AI 电商运营中台 · 统一入口与十模块界面截图速览（2026-10-13 采集）">
+<style>
+  :root {
+    --bg: var(--cp-bg, #F5F7FA); --surface: var(--cp-surface, #FFFFFF); --surface2: var(--cp-elevated, #EEF1F6); --border: var(--cp-line, #DDE2EA);
+    --text: var(--cp-ink1, #1A1F2B); --text2: var(--cp-ink2, #5A6472); --accent: var(--cp-brand, #3370FF);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; -webkit-text-size-adjust: 100%; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 30px 0 6px; }
+  header h1 { font-size: 22px; font-weight: 600; letter-spacing: .2px; }
+  /* 品牌位：注入的自定义 logo 是 <img>、字母标是文本，两种都要框进 26px 方块 */
+  header .brandmark {
+    display: inline-flex; width: 26px; height: 26px; margin-right: 8px;
+    vertical-align: -7px; align-items: center; justify-content: center;
+    border-radius: 6px; overflow: hidden;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 11px;
+  }
+  header .brandmark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  header .sub { color: var(--text2); font-size: 13px; margin-top: 8px; line-height: 1.7; }
+  .note { margin: 14px 0 4px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; color: var(--text2); font-size: 12px; line-height: 1.7; }
+  section { margin-top: 30px; }
+  section h2 { font-size: 15px; font-weight: 600; color: var(--text); padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  section h2 small { color: var(--text2); font-weight: 400; font-size: 12px; margin-left: 8px; }
+  .grid { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; transition: border-color .15s, transform .15s; }
+  .card:hover, .card:active { border-color: var(--accent); }
+  .card img { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; object-position: top; background: #E8EBF0; }
+  .card .label { padding: 10px 12px; font-size: 13px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .card .label .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card .label .d { color: var(--text2); font-size: 11px; white-space: nowrap; }
+  .wide { grid-column: 1 / -1; }
+  .overlay { position: fixed; inset: 0; background: rgba(245,247,250,.96); display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 10; padding: 12px; }
+  .overlay.open { display: flex; }
+  .overlay img { max-width: 100%; max-height: 84vh; border-radius: 6px; }
+  .overlay .cap { color: var(--text2); font-size: 13px; margin-top: 12px; text-align: center; }
+  .overlay .close { position: absolute; top: 12px; right: 16px; color: var(--text); font-size: 30px; line-height: 1; background: none; border: none; cursor: pointer; }
+  .overlay .nav { position: absolute; bottom: 18px; left: 0; right: 0; display: flex; justify-content: center; gap: 14px; }
+  .overlay .nav button { background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 14px; padding: 8px 18px; border-radius: 6px; cursor: pointer; }
+  footer { margin: 34px 0 46px; color: var(--text2); font-size: 12px; line-height: 1.8; }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 12px; }
+    header { padding-top: 22px; }
+    header h1 { font-size: 19px; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .card .label { font-size: 11.5px; padding: 8px 9px; }
+    .card .label .d { display: none; }
+    .card img { aspect-ratio: 16/10; }
+  }
+</style>
+</head>
+<body data-cp-brand-src="../../shared/config/brand.json">
+<div class="wrap">
+  <header>
+    <h1><span class="brandmark" data-cp-brand="logo">CP</span><span data-cp-brand="company">云枢智能</span> · <span data-cp-brand="subtitle">AI 电商运营中台</span></h1>
+    <p class="sub">十模块统一平台界面速览 · 截图采集于 2026-10-13（本地环境） · 点击任意图看大图，可左右翻页</p>
+    <div class="note">说明：全部界面运行于本地，数据为内置 mock 演示数据，非真实生产数据；在线系统本体当前仅监听 127.0.0.1，本页为静态截图速览。</div>
+  </header>
+
+  <section>
+    <h2>统一入口 Shell <small>网关 8800 · 登录 / 分层导航 / 服务探活</small></h2>
+    <div class="grid" data-group="shell"></div>
+  </section>
+
+  <section>
+    <h2>十模块挂载 <small>在外壳内以 iframe 挂载各模块真实页面</small></h2>
+    <div class="grid" data-group="mount"></div>
+  </section>
+
+  <section>
+    <h2>模块独立界面 <small>构建型模块内联设计令牌后的独立访问态</small></h2>
+    <div class="grid" data-group="uni"></div>
+  </section>
+
+  <section>
+    <h2>品牌自定义 <small>brand.json 单一真源，改一处全站生效</small></h2>
+    <div class="grid" data-group="brand"></div>
+  </section>
+
+  <section>
+    <h2>作品集门户 <small>01-portfolio 深色静态站 · 移动端自适应</small></h2>
+    <div class="grid" data-group="site"></div>
+  </section>
+
+  <footer>云枢智能（CloudPivot）为作品集虚构公司设定，用于业务建模。</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <button class="close" id="close" aria-label="关闭">&times;</button>
+  <img id="big" alt="">
+  <div class="cap" id="cap"></div>
+  <div class="nav"><button id="prev">上一张</button><button id="next">下一张</button></div>
+</div>
+
+<script src="../../shared/config/services.js"></script>
+<script src="../../shared/ui-kit/ui-kit.js"></script>
+<script>
+  var groups = {
+    shell: [
+      ["home", "Shell 首页 · 分层导航", "13:05"],
+      ["login", "统一登录（JWT 签发）", "09:39"],
+      ["matrix", "服务探活矩阵（TCP 真实探测）", "09:38"]
+    ],
+    mount: [
+      ["m-p01", "P01 AI 电商客服", "L3"],
+      ["m-p02", "P02 电商运营助手 ★旗舰", "L3"],
+      ["m-p03", "P03 NL2SQL 问数", "L2"],
+      ["m-p04", "P04 RAG 知识库", "L2"],
+      ["m-p05", "P05 合同审批", "L3"],
+      ["m-p06", "P06 数据中台", "L0"],
+      ["m-p07", "P07 AI 素材中心", "L2"],
+      ["m-p08", "P08 直播切片", "L2"],
+      ["m-p09", "P09 AI 销售考核", "L3"],
+      ["m-p10", "P10 模型微调平台", "L1"]
+    ],
+    uni: [
+      ["u-p01", "P01 客服 · 独立 Web 态", "内联令牌"],
+      ["u-p01-chat", "P01 对话链路", "意图→检索→回复"],
+      ["u-p02", "P02 运营助手 · 独立 Web 态", "内联令牌"],
+      ["u-p03", "P03 问数 · 独立 Web 态", "内联令牌"],
+      ["u-p04", "P04 RAG 知识库", "静态挂载"],
+      ["u-p08", "P08 直播切片", "静态挂载"],
+      ["u-p09", "P09 销售考核", "静态挂载"],
+      ["u-p10", "P10 模型微调", "静态挂载"]
+    ],
+    brand: [
+      ["b-p01", "品牌替换后 · P01", "logo + 公司名"],
+      ["b-p07", "品牌替换后 · P07", "侧栏品牌位"],
+      ["b-p09", "品牌替换后 · P09", "侧栏品牌位"]
+    ],
+    site: [
+      ["portfolio-home", "作品集门户首页", "首屏"],
+      ["portfolio-full", "作品集门户整页", "长图"]
+    ]
+  };
+
+  var all = [];
+  Object.keys(groups).forEach(function (g) {
+    var box = document.querySelector('.grid[data-group="' + g + '"]');
+    groups[g].forEach(function (it) {
+      var idx = all.length;
+      all.push(it);
+      var card = document.createElement("div");
+      card.className = "card" + (g === "site" ? " wide" : "");
+      card.innerHTML = '<img src="img/' + it[0] + '.png" alt="' + it[1] + '" loading="lazy">' +
+        '<div class="label"><span class="t">' + it[1] + '</span><span class="d">' + it[2] + '</span></div>';
+      card.addEventListener("click", function () { openAt(idx); });
+      box.appendChild(card);
+    });
+  });
+
+  var overlay = document.getElementById("overlay");
+  var big = document.getElementById("big");
+  var cap = document.getElementById("cap");
+  var cur = 0;
+
+  function openAt(i) {
+    cur = i;
+    render();
+    overlay.classList.add("open");
+  }
+  function render() {
+    big.src = "img/" + all[cur][0] + ".png";
+    cap.textContent = all[cur][1] + "  ·  " + all[cur][2] + "  (" + (cur + 1) + "/" + all.length + ")";
+  }
+  document.getElementById("close").addEventListener("click", function () { overlay.classList.remove("open"); });
+  document.getElementById("prev").addEventListener("click", function (e) { e.stopPropagation(); cur = (cur - 1 + all.length) % all.length; render(); });
+  document.getElementById("next").addEventListener("click", function (e) { e.stopPropagation(); cur = (cur + 1) % all.length; render(); });
+  overlay.addEventListener("click", function (e) { if (e.target === overlay) overlay.classList.remove("open"); });
+  document.addEventListener("keydown", function (e) {
+    if (!overlay.classList.contains("open")) return;
+    if (e.key === "Escape") overlay.classList.remove("open");
+    if (e.key === "ArrowLeft") { cur = (cur - 1 + all.length) % all.length; render(); }
+    if (e.key === "ArrowRight") { cur = (cur + 1) % all.length; render(); }
+  });
+</script>
+</body>
+</html>
