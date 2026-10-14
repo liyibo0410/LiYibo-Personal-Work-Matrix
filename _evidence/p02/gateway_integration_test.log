@@ -1,0 +1,63 @@
+INFO httpx: HTTP Request: POST https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+INFO llm_gateway.cost: llm_gateway call | model=qwen3.8-flash endpoint=https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1 tokens=139 latency=5910ms mock=False
+INFO llm_gateway.cost: llm_gateway call | model=qwen3.8-flash endpoint=https://this-host-does-not-exist.invalid/v1 tokens=0 latency=1480ms mock=False
+WARNING llm_gateway: llm_gateway: endpoint https://this-host-does-not-exist.invalid/v1 failed (LLM provider request failed.), trying next
+INFO httpx: HTTP Request: POST https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+INFO llm_gateway.cost: llm_gateway call | model=qwen3.8-flash endpoint=https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1 tokens=146 latency=1873ms mock=False
+WARNING llm_gateway: llm_gateway: not configured (base_url=True, api_key=False, model=True) ¡ª returning mock
+INFO llm_gateway.cost: llm_gateway call | model=qwen3.8-flash endpoint=mock://local tokens=0 latency=0ms mock=True
+INFO llm_gateway.cost: llm_gateway call | model=qwen3.8-flash endpoint=https://this-host-does-not-exist.invalid/v1 tokens=0 latency=1313ms mock=False
+WARNING llm_gateway: llm_gateway: endpoint https://this-host-does-not-exist.invalid/v1 failed (LLM provider request failed.), trying next
+INFO llm_gateway.cost: llm_gateway call | model=qwen3.8-flash endpoint=https://also-broken.invalid/v1 tokens=0 latency=1492ms mock=False
+WARNING llm_gateway: llm_gateway: endpoint https://also-broken.invalid/v1 failed (LLM provider request failed.), trying next
+ERROR llm_gateway: llm_gateway: all endpoints exhausted ¡ª returning mock
+INFO llm_gateway.cost: llm_gateway call | model=qwen3.8-flash endpoint=mock://local tokens=0 latency=0ms mock=True
+
+============================================================
+SCENARIO 1: Normal call via primary endpoint
+============================================================
+  parsed: {'ok': True, 'test': 'hello'}
+  model:  qwen3.8-flash
+  tokens: prompt=75, completion=64, total=139
+  RESULT: PASS
+
+============================================================
+SCENARIO 2: Primary broken ¡ú failover to backup
+============================================================
+  parsed: {'ok': True, 'test': 'hello'}
+  model:  qwen3.8-flash
+  tokens: prompt=75, completion=71, total=146
+  RESULT: PASS (failover succeeded)
+
+============================================================
+SCENARIO 3: No API key ¡ú mock degradation
+============================================================
+  parsed: {'__mock__': True, 'mock_reason': 'not_configured', 'ok': True, 'message': 'Mock response ¡ª LLM not available (not_configured)'}
+  raw.choices[0].message.content: {"__mock__": true, "mock_reason": "not_configured", "ok": true, "message": "Mock response ¡ª LLM not 
+  tokens: all 0 (mock)
+  RESULT: PASS (mock returned, no exception)
+
+============================================================
+SCENARIO 4: All endpoints fail ¡ú mock degradation
+============================================================
+  parsed: {'__mock__': True, 'mock_reason': 'all_endpoints_failed', 'ok': True, 'message': 'Mock response ¡ª LLM not available (all_endpoints_failed)'}
+  RESULT: PASS (mock returned after all endpoints failed)
+
+============================================================
+COST REPORT (after all scenarios)
+============================================================
+  total_calls:              7
+  total_tokens:             285
+  total_latency_ms:         12069
+  mock_calls:               2
+  calls_by_model:           {'qwen3.8-flash': 7}
+
+============================================================
+SUMMARY
+============================================================
+  test_scenario_1: PASS
+  test_scenario_2: PASS
+  test_scenario_3: PASS
+  test_scenario_4_all_endpoints_fail: PASS
+
+All scenarios passed.

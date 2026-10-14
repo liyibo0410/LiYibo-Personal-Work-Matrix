@@ -1,0 +1,39 @@
+==========================================================================
+【一】创建 / 确认三个角色账号
+==========================================================================
+  [owner   ] created=False email=owner@cloudpivot.demo      role=owner
+  [operator] created=True  email=cs@cloudpivot.demo         role=operator
+  [viewer  ] created=True  email=viewer@cloudpivot.demo     role=viewer
+
+==========================================================================
+【二】登录并获取真实 token
+==========================================================================
+  [owner   ] HTTP 200  role=owner
+             permissions={"can_read": true, "can_edit": true, "can_manage_users": true, "can_confirm_ad_actions": true}
+  [operator] HTTP 200  role=operator
+             permissions={"can_read": true, "can_edit": true, "can_manage_users": false, "can_confirm_ad_actions": true}
+  [viewer  ] HTTP 200  role=viewer
+             permissions={"can_read": true, "can_edit": false, "can_manage_users": false, "can_confirm_ad_actions": false}
+
+==========================================================================
+【三】★核心验收：角色权限对照（同一接口，不同角色）
+==========================================================================
+  --- 用户管理（老板专属）  GET /api/v1/users
+      [owner   ] HTTP 200  ← 期望 200
+      [operator] HTTP 403  ← ✅ 正确拒绝
+      [viewer  ] HTTP 403  ← ✅ 正确拒绝
+
+  --- 无 token（权限基线）
+      [anonymous] HTTP 401  ← 期望 401/403
+
+==========================================================================
+【四】更细粒度：can_confirm_ad_actions 是否按角色区分
+==========================================================================
+  [owner   ] can_read=True  can_edit=True  can_manage_users=True  can_confirm_ad_actions=True
+  [operator] can_read=True  can_edit=True  can_manage_users=False  can_confirm_ad_actions=True
+  [viewer  ] can_read=True  can_edit=False  can_manage_users=False  can_confirm_ad_actions=False
+
+==========================================================================
+【结论】
+==========================================================================
+✅ 403 权限证据成立：老板可访问用户管理，运营/访客被拒

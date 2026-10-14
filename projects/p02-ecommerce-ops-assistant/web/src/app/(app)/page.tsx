@@ -259,7 +259,7 @@ export default async function Home({ searchParams }: HomeProps) {
             </div>
 
             <div className="mt-5 overflow-hidden rounded-lg border border-line">
-              <div className="hidden grid-cols-[1.3fr_0.9fr_0.8fr_0.7fr_1fr_96px] bg-fill-2 px-4 py-3 text-xs font-semibold text-ink-3 lg:grid">
+              <div className="hidden grid-cols-[1.3fr_0.9fr_0.8fr_0.7fr_1fr_144px] bg-fill-2 px-4 py-3 text-xs font-semibold text-ink-3 lg:grid">
                 <span>商品</span>
                 <span>店铺</span>
                 <span>平台</span>
@@ -281,6 +281,7 @@ export default async function Home({ searchParams }: HomeProps) {
                       store={
                         product.store_id ? storeById.get(product.store_id) : null
                       }
+                      canDelete={canEdit}
                     />
                   ))}
                 </div>

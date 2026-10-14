@@ -25,6 +25,7 @@ import { MainImagePlanEditForm } from "@/components/main-image-plan-edit-form";
 import { PerformanceImportForm } from "@/components/performance-import-form";
 import { PerformanceRecordForm } from "@/components/performance-record-form";
 import { PlatformMappingPanel } from "@/components/platform-mapping-panel";
+import { ProductDeleteButton } from "@/components/product-delete-button";
 import { ProductEditForm } from "@/components/product-edit-form";
 import { ReviewReportEditForm } from "@/components/review-report-edit-form";
 import { SkuCreateForm, SkuInventoryPanel } from "@/components/sku-inventory-forms";
@@ -133,10 +134,15 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
       <GenerationJobAutoRefresh active={hasActiveGenerationJobs} />
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         <header className="flex flex-col gap-4 border-b border-line pb-5">
-          <Link href="/" className="inline-flex w-fit items-center gap-2 text-sm font-medium text-ink-1 hover:text-ink-1">
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            返回商品池
-          </Link>
+          <div className="flex items-center justify-between gap-3">
+            <Link href="/" className="inline-flex w-fit items-center gap-2 text-sm font-medium text-ink-1 hover:text-ink-1">
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              返回商品池
+            </Link>
+            {canEdit ? (
+              <ProductDeleteButton productId={product.id} productName={product.name} />
+            ) : null}
+          </div>
 
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>

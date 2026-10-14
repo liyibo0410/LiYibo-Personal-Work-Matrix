@@ -22,6 +22,7 @@ type ProductsPageProps = {
     platform?: string;
     q?: string;
     page?: string;
+    product?: string;
   }>;
 };
 
@@ -105,6 +106,17 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </div>
       </Card>
 
+      {query.product === "deleted" ? (
+        <p className="text-xs font-medium text-success">
+          商品已删除，关联的诊断、创意、素材、投放与库存数据已一并清除。
+        </p>
+      ) : null}
+      {query.product === "delete_failed" ? (
+        <p className="text-xs font-medium text-danger">
+          商品删除失败，请确认当前账号有编辑权限或稍后重试。
+        </p>
+      ) : null}
+
       {unboundCount > 0 ? (
         <div className="rounded-lg border border-warning/30 bg-warning-bg px-4 py-3">
           <div className="flex items-center gap-3">
@@ -143,7 +155,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
       ) : (
         <>
           <Card className="overflow-hidden p-0">
-            <div className="hidden grid-cols-[1.3fr_0.9fr_0.8fr_0.7fr_1fr_96px] bg-fill-2 px-4 py-3 text-xs font-semibold text-ink-3 lg:grid">
+            <div className="hidden grid-cols-[1.3fr_0.9fr_0.8fr_0.7fr_1fr_144px] bg-fill-2 px-4 py-3 text-xs font-semibold text-ink-3 lg:grid">
               <span>商品</span>
               <span>店铺</span>
               <span>平台</span>
@@ -157,6 +169,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                   key={product.id}
                   product={product}
                   store={product.store_id ? storeById.get(product.store_id) : null}
+                  canDelete={editable}
                 />
               ))}
             </div>

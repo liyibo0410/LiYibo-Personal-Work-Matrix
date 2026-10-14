@@ -1,0 +1,21 @@
+
+> web@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://198.18.0.1:3000
+- Environments: .env.local
+✓ Ready in 801ms
+✓ Running next.config.ts took 90ms
+
+ GET / 200 in 592ms (next.js: 157ms, application-code: 435ms)
+ GET / 200 in 82ms (next.js: 3ms, application-code: 79ms)
+ GET /login 200 in 71ms (next.js: 25ms, application-code: 46ms)
+ GET /agent 200 in 578ms (next.js: 512ms, application-code: 65ms)
+ GET /imports 200 in 229ms (next.js: 172ms, application-code: 58ms)
+ GET /settings 200 in 263ms (next.js: 191ms, application-code: 72ms)
+ GET /stores/create 405 in 677ms (next.js: 641ms, application-code: 36ms)
+ GET /products/create 405 in 144ms (next.js: 138ms, application-code: 6ms)
+ GET /workspace 404 in 64ms (next.js: 30ms, application-code: 34ms)
+ GET / 200 in 81ms (next.js: 3ms, application-code: 78ms)

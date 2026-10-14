@@ -39,6 +39,26 @@ npm run dev -- -p 3001        # http://127.0.0.1:3001（端口取自 SERVICE_REG
 - 前端：Next.js 16.3.1 (Turbopack) 4.4 秒 Ready；`/` `/login` `/agent` `/imports` `/settings` 全部 200
 - 证据：`_evidence/p02/验收报告.md`
 
+### 商品池支持删除（2026-10-14）
+
+此前商品池**只有增改查、没有删除**（后端无 `DELETE` 路由，列表行也没有删除按钮）。本次补齐：
+
+- 接口：`DELETE /api/v1/products/{product_id}` → 204；需编辑权限（老板/运营/美工），客服 403，
+  未登录 401，跨 Workspace 或不存在 404。
+- 级联范围：SKU 与库存档案/流水、平台映射、竞品与监控快照、创意方案、生成任务、素材、
+  推广链接与点击、经营数据、复盘、广告建议与实验、诊断、公开链接解析任务随商品一并删除。
+- **保留**：`agent_runs` / `agent_approvals` 只把 `product_id` 置空。Agent 运行与人工审批是审计事实，
+  且 `agent_approvals.run_id` 没有外键级联，连带删除会触发约束错误。
+- 入口与确认方式：商品池列表行、工作台首页商品池行、商品详情页头部各有一个「删除」入口（只读角色不渲染），
+  点进 `/products/{id}/delete` 是**服务端渲染的两步确认页** —— 上面列出这次会连带清除的真实数量，
+  按下「确认删除商品」才 POST `/products/{id}/delete/confirm` → 回跳 `/products?product=deleted`。
+  不用 `window.confirm()`：统一外壳把模块挂在 `sandbox` iframe 里，缺 `allow-modals` 时 `confirm()`
+  直接返回 `false`，依赖它的按钮会「点了没反应」（外壳本次已补该项）。
+- 证据：`_evidence/p02/D23-商品池删除.md`、`product_delete_live.log`、`pytest-20261014.log`（166 passed）、
+  删除后只读 SQL 复核子表与全库孤儿行均为 0、两步链路含「取消」分支的零 JS 实测。
+- **未验证**：店铺删除仍是 `window.confirm()` 写法（本次只给它补了外壳 `allow-modals`），
+  「在外壳 iframe 里点店铺删除能弹窗」没实测；PostgreSQL 侧也未实机复跑，本机 P02 用 SQLite。
+
 ### 改造清单（对照 `AGENTS.md`）
 
 - [ ] A. 认证与权限验收（四角色 + 403 证据）

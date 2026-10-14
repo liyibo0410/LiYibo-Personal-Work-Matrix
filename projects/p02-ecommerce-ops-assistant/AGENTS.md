@@ -134,3 +134,4 @@ AI    LangGraph + shared/llm-gateway（禁止绕过网关直连模型）
 | 日期 | 完成 | 证据 | 未完成 |
 |---|---|---|---|
 | 2026-10-12 | 复制源项目（35.5MB/400 文件）；uv sync（21s）；后端跑通（health/登录/JWT/401）；npm install（368 包）；前端跑通（5 页 200） | `_evidence/p02/` 全套（验收报告 + 3 份日志 + 路由表 + home.html） | 列表页缺失；npm audit 12 漏洞；深色化未开始；合规检测未开始 |
+| 2026-10-14 | 商品池**删除**能力补齐（此前前后端两层都没有）：`DELETE /api/v1/products/{id}` + 三个入口（列表行 / 首页行 / 详情页头部），级联清除 18 张子表，`agent_runs`/`agent_approvals` 只置空 `product_id` 保留审计。第二轮修「点删除没反应」：外壳模块 iframe 的 `sandbox` 缺 `allow-modals`，沙箱内 `window.confirm()` 恒返回 false → 商品删除改成**服务端两步确认页**（`/products/{id}/delete` 读真实连带数量 → `.../delete/confirm` 才 POST，零 JS 依赖），外壳补 `allow-modals` 让店铺删除弹窗恢复可用 | `_evidence/p02/D23-商品池删除.md`、`product_delete_live.log`（实机 403/401/204/404 序列）、`pytest-20261014.log`（162 → **166 passed**，级联用例开 `PRAGMA foreign_keys=ON`）、删除后只读 SQL 子表与全库孤儿行全 0、两步链路含「取消」分支的零 JS 实测 | 店铺删除的 `confirm()` 写法未改，「在 iframe 里点店铺删除能弹窗」没实测；无截图（内置浏览器无可视 surface）；PostgreSQL 侧未实机复跑 |

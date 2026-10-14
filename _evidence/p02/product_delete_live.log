@@ -1,0 +1,14 @@
+# P02 商品删除实机验证 2026-10-14T01:25:18.658931+00:00
+BASE=http://127.0.0.1:8000  临时商品标记=删除验证-20261014012518
+1) 路由注册 /api/v1/products/{product_id} → ['DELETE', 'GET', 'PATCH']
+2) 创建临时商品 → 201 id=7
+3) 创建 SKU（连带库存档案与流水）→ 201 sku_id=6
+4) 创建竞品 → 201 competitor_id=4
+5) 删除前子资源：skus=1 competitors=1 库存流水=1
+6) 客服角色删除 → 403 {'detail': 'Edit permission required'}
+7) 未登录删除 → 401 {'detail': 'Missing auth token'}
+8) 老板角色删除 → 204 body=''
+9) 删除后详情 → 404 {'detail': 'Product not found'}
+10) 商品池里残留的验证商品：[]
+
+结论：DELETE /api/v1/products/{product_id} 实机跑通，级联子资源随聚合根清除，客服 403 / 未登录 401 / 越权后商品仍在。

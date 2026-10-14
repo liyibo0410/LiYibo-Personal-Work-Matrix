@@ -1,0 +1,92 @@
+[1] 导入成功：app.main.app
+[2] bootstrap: created=False email=owner@cloudpivot.demo role=owner
+[3] TestClient 启动完成（含 lifespan）
+[4] POST /api/v1/auth/login -> HTTP 200
+    token_type=bearer  len(token)=144
+    user=owner@cloudpivot.demo  role=owner
+[5] GET /api/v1/auth/me -> HTTP 200  {"email":"owner@cloudpivot.demo","display_name":"云枢 Owner","role":"owner","status":"active","id":2,"permissions":{"can_read":true,"can_edit":true,"can_manage_users":true,"can_confi
+[6] GET /api/v1/auth/me (无 token) -> HTTP 401  （期望 401/403）
+[7] GET /api/v1/stores -> HTTP 200  bytes=956
+[7] GET /api/v1/products -> HTTP 200  bytes=2240
+[7] GET /api/v1/workspace -> HTTP 404  bytes=22
+[8] openapi: title=Ecommerce Operation Assistant API  version=0.1.0  路径数=78
+      /api/v1/agent-runs/{run_id}
+      /api/v1/agent-runs/{run_id}/review
+      /api/v1/auth/login
+      /api/v1/auth/me
+      /api/v1/links/r/{short_code}
+      /api/v1/model-settings
+      /api/v1/model-settings/test
+      /api/v1/products
+      /api/v1/products/{product_id}
+      /api/v1/products/{product_id}/ad-experiments
+      /api/v1/products/{product_id}/ad-experiments/dashboard
+      /api/v1/products/{product_id}/ad-experiments/generate
+      /api/v1/products/{product_id}/ad-experiments/{experiment_id}
+      /api/v1/products/{product_id}/ad-recommendations/generate
+      /api/v1/products/{product_id}/ad-recommendations/{recommendation_id}/confirmation
+      /api/v1/products/{product_id}/agent-runs
+      /api/v1/products/{product_id}/assets/sync
+      /api/v1/products/{product_id}/competitor-monitors/{monitor_id}/run
+      /api/v1/products/{product_id}/competitors
+      /api/v1/products/{product_id}/competitors/import-url
+      /api/v1/products/{product_id}/competitors/import-url-tasks
+      /api/v1/products/{product_id}/competitors/{competitor_id}/monitor
+      /api/v1/products/{product_id}/creative-plans
+      /api/v1/products/{product_id}/creative-plans/main-images/generate
+      /api/v1/products/{product_id}/creative-plans/video-scripts/generate
+      /api/v1/products/{product_id}/creative-plans/{creative_plan_id}
+      /api/v1/products/{product_id}/creative-plans/{creative_plan_id}/assets
+      /api/v1/products/{product_id}/creative-plans/{creative_plan_id}/images/generate
+      /api/v1/products/{product_id}/creative-plans/{creative_plan_id}/videos/generate
+      /api/v1/products/{product_id}/diagnoses/generate
+      /api/v1/products/{product_id}/diagnoses/{diagnosis_id}
+      /api/v1/products/{product_id}/generation-jobs/{job_id}/cancel
+      /api/v1/products/{product_id}/generation-jobs/{job_id}/retry
+      /api/v1/products/{product_id}/link-parse-tasks/{task_id}/run
+      /api/v1/products/{product_id}/performance-records
+      /api/v1/products/{product_id}/performance-records/bulk
+      /api/v1/products/{product_id}/platform-mappings
+      /api/v1/products/{product_id}/promotion-links
+      /api/v1/products/{product_id}/promotion-links/generate
+      /api/v1/products/{product_id}/review-reports
+      /api/v1/products/{product_id}/review-reports/generate
+      /api/v1/products/{product_id}/review-reports/{review_report_id}
+      /api/v1/products/{product_id}/skus
+      /api/v1/products/{product_id}/skus/{sku_id}
+      /api/v1/products/{product_id}/skus/{sku_id}/inventory-movements
+      /api/v1/stores
+      /api/v1/stores/{store_id}
+      /api/v1/stores/{store_id}/inventory-advice
+      /api/v1/stores/{store_id}/inventory-movements
+      /api/v1/stores/{store_id}/inventory-summary
+      /api/v1/stores/{store_id}/platform-accounts
+      /api/v1/stores/{store_id}/platform-accounts/{account_id}/authorization/callback-placeholder
+      /api/v1/stores/{store_id}/platform-accounts/{account_id}/authorization/start
+      /api/v1/users
+      /api/v1/users/{user_id}
+      /api/v1/workspace/competitor-monitors/run-due
+      /api/v1/workspace/demo-data
+      /api/v1/workspace/generation-jobs/sweep-timeouts
+      /api/v1/workspace/imports/performance-records
+      /api/v1/workspace/imports/products
+      /api/v1/workspace/imports/sku-inventory
+      /api/v1/workspace/templates/field-mapping.csv
+      /api/v1/workspace/templates/performance-records.csv
+      /api/v1/workspace/templates/products.csv
+      /api/v1/workspace/templates/sku-inventory.csv
+      /api/v1/workspaces
+      /api/v1/workspaces/{workspace_id}/agent/approvals
+      /api/v1/workspaces/{workspace_id}/agent/approvals/{approval_id}/decision
+      /api/v1/workspaces/{workspace_id}/agent/catalog
+      /api/v1/workspaces/{workspace_id}/agent/conversations
+      /api/v1/workspaces/{workspace_id}/agent/conversations/{conversation_id}/messages
+      /api/v1/workspaces/{workspace_id}/agent/memories
+      /api/v1/workspaces/{workspace_id}/agent/memories/{memory_id}/revoke
+      /api/v1/workspaces/{workspace_id}/agent/tasks
+      /api/v1/workspaces/{workspace_id}/agent/tasks/{task_id}
+      /api/v1/workspaces/{workspace_id}/agent/tasks/{task_id}/cancel
+      /api/v1/workspaces/{workspace_id}/agent/tasks/{task_id}/runs
+      /health
+
+=== 结论：后端启动 + 认证 + 受保护接口 全部可达 ===

@@ -10,6 +10,7 @@ from app.db.session import get_db
 from app.models import (
     AdExperiment,
     AdRecommendation,
+    AgentRun,
     Competitor,
     CompetitorMonitor,
     CompetitorMonitorSnapshot,
@@ -344,6 +345,27 @@ def update_product(
     db.commit()
     db.refresh(product)
     return product
+
+
+@router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_product(
+    product_id: int,
+    db: SessionDep,
+    _current_user: Annotated[User, Depends(require_edit_permission)],
+) -> None:
+    """处理删除商品接口；诊断/创意/素材/投放/复盘/库存随聚合根级联删除，Agent 运行审计只解除关联。"""
+    # 先完成认证、Workspace 与资源归属校验，再进入会产生副作用的服务调用。
+    product = get_product_or_404(db, product_id)
+    # agent_runs 是人工审批与成本核算的审计事实，置空 product_id 保留记录；
+    # 直接级联删除会因为 agent_approvals.run_id 没有外键级联而触发约束错误。
+    db.query(AgentRun).filter(AgentRun.product_id == product.id).update(
+        {AgentRun.product_id: None},
+        synchronize_session=False,
+    )
+    db.commit()
+    db.refresh(product)
+    db.delete(product)
+    db.commit()
 
 
 @router.post(
