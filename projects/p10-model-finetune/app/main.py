@@ -10,6 +10,7 @@ P10 模型微调平台 - 云枢智能（CloudPivot AI）
 
 from __future__ import annotations
 
+import json
 import math
 import random
 import uuid
@@ -64,9 +65,14 @@ class DatasetCreate(BaseModel):
 class DatasetOut(DatasetCreate):
     id: str
     created_at: str
-    file_size_bytes: int
-    avg_tokens: float
+    file_size_bytes: int | None = None
+    avg_tokens: float | None = None
     validation_status: str  # valid | invalid | pending
+    # 口径标记：measured-from-upload = 按上传文件真实统计；seed_demo = 演示预置数据，不是测量值。
+    # 加这两个字段的原因：本模块原先对「用户上传的文件」也返回 random 造出来的大小/样本数，
+    # 而字节数和行数明明是可以真算的 —— 那是把可测的东西写成假数字，属于红线「禁止编造」。
+    provenance: str = "seed_demo"
+    measured_fields: list[str] = []
 
 
 class TrainingConfig(BaseModel):
@@ -127,6 +133,10 @@ class EvaluationResult(BaseModel):
     avg_response_quality: float
     sample_count: int
     details: dict[str, Any] = {}
+    # 本模块没有任何真实推理：下面所有分数都是模拟值。字段显式带出来，
+    # 免得接口被 curl 出去之后被当成实测指标（UI 的黄条只在页面内有效）。
+    simulated: bool = True
+    provenance: str = "seed_demo (simulated scores, no real inference run)"
 
 
 class CompareRequest(BaseModel):
@@ -139,6 +149,11 @@ class CompareOut(BaseModel):
     before: dict[str, float] | None
     after: dict[str, float]
     delta: dict[str, float] | None
+    simulated: bool = True
+    note: str = (
+        "before / after / delta 全部来自模拟评测，未做真实微调与真实推理，"
+        "不能作为「效果提升 X」的证据"
+    )
 
 
 class ModelVersion(BaseModel):
@@ -150,9 +165,11 @@ class ModelVersion(BaseModel):
     created_at: str
     metrics: dict[str, float]
     config: TrainingConfig
-    status: str  # registered | deployed | archived
+    status: str  # registered | deployed_simulated | archived
     endpoint_url: str | None = None
     endpoint_status: str | None = None
+    simulated: bool = True
+    metrics_note: str = "metrics 为模拟评测值，未做真实训练/推理，不是实测准确率"
 
 
 class DeployRequest(BaseModel):
@@ -166,6 +183,19 @@ class DeployRequest(BaseModel):
 
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _percentile(sorted_values: list[int], q: int) -> float:
+    """线性插值分位数（入参必须已排序）。用于把数据集样本长度分布算成真实数字。"""
+    if not sorted_values:
+        return 0.0
+    if len(sorted_values) == 1:
+        return float(sorted_values[0])
+    pos = (len(sorted_values) - 1) * (q / 100)
+    lo = math.floor(pos)
+    hi = min(lo + 1, len(sorted_values) - 1)
+    frac = pos - lo
+    return float(round(sorted_values[lo] * (1 - frac) + sorted_values[hi] * frac, 1))
 
 
 def _generate_loss_curve(total_steps: int, base_loss: float = 2.8, seed: int = 42) -> list[LossPoint]:
@@ -329,8 +359,11 @@ _sample_evaluations[_e1_id] = EvaluationResult(
         "bleu_score": 0.384,
         "rouge_l": 0.521,
         "hallucination_rate": 0.042,
-        "response_latency_p50_ms": 320,
-        "response_latency_p95_ms": 890,
+        # 延迟原先写死 320 / 890：本模块没有推理服务，这两个数不可能被测出来。
+        # 字段保留但置空，避免 curl 出去被当成实测 P50/P95。
+        "response_latency_p50_ms": None,
+        "response_latency_p95_ms": None,
+        "latency_note": "未测量：无真实推理服务，无法产生延迟",
     },
 )
 
@@ -350,8 +383,9 @@ _sample_evaluations[_e2_id] = EvaluationResult(
         "bleu_score": 0.312,
         "rouge_l": 0.478,
         "hallucination_rate": 0.061,
-        "response_latency_p50_ms": 410,
-        "response_latency_p95_ms": 1120,
+        "response_latency_p50_ms": None,
+        "response_latency_p95_ms": None,
+        "latency_note": "未测量：没有真实推理服务，无法产生延迟",
     },
 )
 
@@ -372,8 +406,9 @@ _sample_evaluations[_e0_id] = EvaluationResult(
         "bleu_score": 0.241,
         "rouge_l": 0.389,
         "hallucination_rate": 0.118,
-        "response_latency_p50_ms": 280,
-        "response_latency_p95_ms": 750,
+        "response_latency_p50_ms": None,
+        "response_latency_p95_ms": None,
+        "latency_note": "未测量：基座模型同样没有在本模块起服务",
     },
 )
 
@@ -390,9 +425,12 @@ _sample_models[_m1_id] = ModelVersion(
     created_at="2024-12-16T12:00:00+00:00",
     metrics={"accuracy": 0.847, "format_compliance": 0.963, "llm_judge_score": 4.12},
     config=_cfg1,
-    status="deployed",
-    endpoint_url="http://127.0.0.1:8101/v1",
-    endpoint_status="healthy",
+    # 原先这里是 status="deployed" + endpoint_url="http://127.0.0.1:8101/v1" + endpoint_status="healthy"。
+    # 8101 是 P10 自己的 FastAPI 端口，/v1/chat/completions 会直接 404 ——
+    # 那是「把一个不存在的服务标成 healthy」，属于把 mock 冒充真实，已改为显式 simulated。
+    status="deployed_simulated",
+    endpoint_url=None,
+    endpoint_status="simulated",
 )
 
 _m2_id = "model-002"
@@ -463,7 +501,8 @@ async def get_stats():
     total_trainings = len(_sample_trainings)
     total_models = len(_sample_models)
     completed = sum(1 for t in _sample_trainings.values() if t.status == "completed")
-    deployed = sum(1 for m in _sample_models.values() if m.status == "deployed")
+    # 本模块没有真实推理服务，所以只有「模拟部署」这一种状态，不存在真已部署的模型
+    deployed_simulated = sum(1 for m in _sample_models.values() if m.status == "deployed_simulated")
     total_samples = sum(d.sample_count for d in _sample_datasets.values())
     avg_accuracy = (
         sum(m.metrics.get("accuracy", 0) for m in _sample_models.values()) / total_models
@@ -475,10 +514,16 @@ async def get_stats():
         "training_runs": total_trainings,
         "completed_runs": completed,
         "model_versions": total_models,
-        "deployed_models": deployed,
+        "deployed_models": deployed_simulated,
+        "deployed_simulated_models": deployed_simulated,
+        "real_served_models": 0,
         "total_samples": total_samples,
         "avg_accuracy": round(avg_accuracy, 4),
         "mock_mode": True,
+        "metrics_provenance": (
+            "total_samples / avg_accuracy 是由预置演示数据算出来的聚合值，"
+            "其中模型 accuracy 是模拟评分、未上传数据集的样本数是预置常量，均非实测"
+        ),
     }
 
 
@@ -492,6 +537,11 @@ async def list_datasets():
     return list(_sample_datasets.values())
 
 
+# 用户上传文件的真实统计缓存：rows 用来现算样本数/重复数/标签分布，进程重启即失效
+# （本模块整体就是内存态演示，没有数据库）。
+_dataset_uploads: dict[str, dict[str, Any]] = {}
+
+
 @app.post("/api/v1/datasets")
 async def create_dataset(
     name: str = "",
@@ -503,16 +553,43 @@ async def create_dataset(
     _user_dataset_counter += 1
     ds_id = f"ds-{_user_dataset_counter:03d}"
 
-    # If file uploaded, generate mock stats
-    file_size = random.randint(5_000_000, 50_000_000)
-    sample_count = random.randint(1000, 30000)
-    avg_tokens = round(random.uniform(50, 300), 1)
-    # 未填写说明时给出中文默认描述，同时标明统计口径为模拟生成
-    default_desc = "用户上传数据集：样本数、Token 长度等统计为演示模拟生成"
+    # 能真算的一律真算：字节数、非空行数、完全重复行数。
+    # 没有接 tokenizer，所以 avg_tokens 显式为 null —— 原先它是 random.uniform(50, 300) 编出来的，
+    # 而上传的字节和行数明明就在手上，把可测的写成随机数属于红线「禁止编造」。
+    file_size: int | None = None
+    sample_count = 0
+    avg_tokens: float | None = None
+    duplicates_removed = 0
+    rows: list[str] = []
+    if file is not None:
+        content = await file.read()
+        file_size = len(content)
+        text = content.decode("utf-8", errors="replace")
+        rows = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        sample_count = len(rows)
+        seen: set[str] = set()
+        for ln in rows:
+            if ln in seen:
+                duplicates_removed += 1
+            else:
+                seen.add(ln)
+        _dataset_uploads[ds_id] = {
+            "rows": rows,
+            "duplicates_removed": duplicates_removed,
+            "avg_chars_per_sample": round(sum(len(r) for r in rows) / len(rows), 1) if rows else None,
+        }
+
+    measured = ["file_size_bytes", "sample_count", "duplicates_removed"] if rows else []
+    default_desc = (
+        "用户上传数据集：文件大小/样本行数/重复行数由上传内容真实统计；"
+        "未接 tokenizer，故不给 Token 长度估值"
+        if rows
+        else "未上传文件的数据集登记：只有名称与格式，没有任何统计口径，不可当实测数据引用"
+    )
 
     ds = DatasetOut(
         id=ds_id,
-        name=name or file.filename or f"dataset-{ds_id}",
+        name=name or (file.filename if file else "") or f"dataset-{ds_id}",
         description=description or default_desc,
         format=format,
         sample_count=sample_count,
@@ -520,7 +597,9 @@ async def create_dataset(
         created_at=_now(),
         file_size_bytes=file_size,
         avg_tokens=avg_tokens,
-        validation_status="valid",
+        validation_status="valid" if rows else "pending",
+        provenance="measured-from-upload" if rows else "metadata-only",
+        measured_fields=measured,
     )
     _sample_datasets[ds_id] = ds
     return ds
@@ -531,30 +610,61 @@ async def get_dataset(dataset_id: str):
     if dataset_id not in _sample_datasets:
         raise HTTPException(status_code=404, detail="数据集不存在")
     ds = _sample_datasets[dataset_id]
-    # Add extra stats
+    upload = _dataset_uploads.get(dataset_id)
+
+    label_distribution: dict[str, float] | None = None
+    char_length_percentiles: dict[str, float] | None = None
+    duplicates_removed: int | None = None
+    unmeasured = [
+        "avg_tokens（未接 tokenizer，不给估值）",
+        "token_histogram（同上）",
+    ]
+
+    if upload:
+        rows = upload["rows"]
+        duplicates_removed = upload["duplicates_removed"]
+        # 标签分布：只有当样本行里真的带 label/category/intent 字段时才统计出来，
+        # 统计不出来就返回 null，不再用一组写死的中文占比冒充分布。
+        counts: dict[str, int] = {}
+        for ln in rows:
+            try:
+                obj = json.loads(ln)
+            except (ValueError, TypeError):
+                continue
+            if not isinstance(obj, dict):
+                continue
+            label = obj.get("label") or obj.get("category") or obj.get("intent")
+            if isinstance(label, str) and label.strip():
+                counts[label.strip()] = counts.get(label.strip(), 0) + 1
+        labelled = sum(counts.values())
+        if labelled:
+            label_distribution = {
+                k: round(v / labelled, 4) for k, v in sorted(counts.items(), key=lambda kv: -kv[1])
+            }
+        else:
+            unmeasured.append("label_distribution（样本里没有可解析的 label/category/intent 字段）")
+        lengths = sorted(len(r) for r in rows)
+        if lengths:
+            char_length_percentiles = {
+                f"p{q}": _percentile(lengths, q) for q in (10, 25, 50, 75, 90, 99)
+            }
+    else:
+        unmeasured += [
+            "label_distribution（预置演示数据，没有真实样本可统计）",
+            "duplicates_removed（同上）",
+        ]
+
     extra = {
         **ds.model_dump(),
-        # 标签名会直接渲染给用户，因此用中文；分布占比数值保持真实口径
-        "label_distribution": {
-            "咨询": 0.35,
-            "投诉": 0.22,
-            "退货申请": 0.18,
-            "好评": 0.12,
-            "其他": 0.13,
-        },
+        "label_distribution": label_distribution,
         "language": "zh-CN",
-        "token_histogram": {
-            "p10": 28,
-            "p25": 65,
-            "p50": 142,
-            "p75": 280,
-            "p90": 420,
-            "p99": 680,
-        },
-        "duplicates_removed": random.randint(50, 500),
+        "token_histogram": None,
+        "char_length_percentiles": char_length_percentiles,
+        "duplicates_removed": duplicates_removed,
+        "unmeasured": unmeasured,
         "format_validation": {
-            "status": "valid",
-            "schema_checked": True,
+            "status": ds.validation_status,
+            "schema_checked": bool(upload),
             "encoding": "utf-8",
         },
     }
@@ -599,7 +709,9 @@ async def start_training(req: TrainingStart):
         current_step=total_steps,
         final_loss=loss_curve[-1].loss,
         final_eval_loss=loss_curve[-1].eval_loss,
-        duration_seconds=round(random.uniform(3600, 28800), 1),
+        # 原先写 random.uniform(3600, 28800) 冒充实测训练时长（1~8 小时）。
+        # 本函数是瞬时生成模拟曲线，真实耗时接近 0，报时长只会误导 GPU 成本。
+        duration_seconds=None,
         loss_curve=loss_curve,
     )
     _sample_trainings[t_id] = training
@@ -702,26 +814,34 @@ async def get_model(model_id: str):
 
 @app.post("/api/v1/models/{model_id}/deploy")
 async def deploy_model(model_id: str, req: DeployRequest | None = None):
-    """模拟部署：仅在模型仓库登记一个 OpenAI 兼容端点，不启动真实推理服务。"""
+    """模拟部署：只在模型仓库登记一条「已模拟部署」状态，不启动任何推理服务。
+
+    原先这里用 `random.randint(8101, 8199)` 拼一个 `http://127.0.0.1:<port>/v1` 并标成 healthy，
+    而那个端口上没有任何服务 —— 门禁要的是「微调后模型可通过 OpenAI 兼容接口调用成功（有 curl 证据）」，
+    在没有真实服务时必须显式回答「未服务」，不能给一个看起来能调的地址。
+    """
     if model_id not in _sample_models:
         raise HTTPException(status_code=404, detail="模型版本不存在")
 
     model = _sample_models[model_id]
-    mock_port = random.randint(8101, 8199)
     endpoint_name = (req.endpoint_name if req else "") or f"{model.name}-{model.version}"
 
-    model.status = "deployed"
-    model.endpoint_url = f"http://127.0.0.1:{mock_port}/v1"
-    model.endpoint_status = "healthy"
+    model.status = "deployed_simulated"
+    model.endpoint_url = None
+    model.endpoint_status = "simulated"
 
     return {
         "model_id": model_id,
-        "status": "deployed",
-        "endpoint_url": model.endpoint_url,
+        "status": model.status,
         "endpoint_name": endpoint_name,
-        "openai_compatible": True,
-        "mock": True,
-        "message": f"【模拟】模型已注册到 {model.endpoint_url}，实际没有推理服务在运行。",
+        "endpoint_url": None,
+        "simulated": True,
+        "openai_compatible": False,
+        "inference_served": False,
+        "message": (
+            "【模拟】只在模型仓库登记了部署状态，没有启动推理服务，"
+            "因此不存在可调用的 OpenAI 兼容端点（真实训练与服务化见 README「已知限制」）。"
+        ),
     }
 
 

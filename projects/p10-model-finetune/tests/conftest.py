@@ -30,6 +30,7 @@ def _restore_state():
     stores plus the id counters so tests stay independent.
     """
     datasets = copy.deepcopy(app_main._sample_datasets)
+    uploads = copy.deepcopy(app_main._dataset_uploads)
     trainings = copy.deepcopy(app_main._sample_trainings)
     evaluations = copy.deepcopy(app_main._sample_evaluations)
     models = copy.deepcopy(app_main._sample_models)
@@ -42,6 +43,8 @@ def _restore_state():
     yield
     app_main._sample_datasets.clear()
     app_main._sample_datasets.update(datasets)
+    app_main._dataset_uploads.clear()
+    app_main._dataset_uploads.update(uploads)
     app_main._sample_trainings.clear()
     app_main._sample_trainings.update(trainings)
     app_main._sample_evaluations.clear()

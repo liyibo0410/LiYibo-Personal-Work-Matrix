@@ -86,26 +86,31 @@ python app/main.py
 
 - **3 demo datasets**: customer-service-qa, product-description, intent-classification
 - **2 training runs**: LoRA run on CS-QA, QLoRA run on product descriptions, each with full loss curves
-- **3 model versions**: CS-QA v1.0 (deployed), CS-QA v1.1 (registered), Product-Desc v1.0 (registered)
+- **3 model versions**: CS-QA v1.0 (deployed_simulated), CS-QA v1.1 (registered), Product-Desc v1.0 (registered)
 - **3 evaluations**: baseline (base model) + 2 post-fine-tuning evaluations
 
 ## Mock Boundaries
 
 | Component | Mock Behavior | Real Behavior |
 |-----------|--------------|---------------|
-| **Training** | Simulated loss curves with exponential decay + noise. No GPU, no real model training. | Would use transformers + PEFT for actual LoRA/QLoRA training |
-| **Evaluation** | Rule-based mock scores derived from training loss. No real model inference. | Would run model on eval set and compute BLEU/ROUGE/LLM-as-Judge |
-| **Deployment** | Registers endpoint URL in memory. No real model serving. | Would use vLLM/TGI to serve OpenAI-compatible endpoint |
+| **Training** | Simulated loss curves with exponential decay + noise. No GPU, no real model training. `duration_seconds` is `null` — the curve is generated instantly, so reporting "1–8 h of GPU time" would be invented. | Would use transformers + PEFT for actual LoRA/QLoRA training |
+| **Evaluation** | Scores carry `simulated: true` and `provenance: "seed_demo (simulated scores, no real inference run)"`. Latency fields are `null` with a `latency_note` — there is no inference service, so no P50/P95 can exist. The compare API returns `simulated: true` + a note so the before/after delta cannot be quoted as an improvement. | Would run model on eval set and compute BLEU/ROUGE/LLM-as-Judge |
+| **Deployment** | Registers status `deployed_simulated` and **no endpoint URL at all** (`endpoint_url: null`, `endpoint_status: "simulated"`, `openai_compatible: false`, `inference_served: false`). Earlier versions returned a `http://127.0.0.1:<random port>/v1` marked `healthy`, which looked callable but was nothing. | Would use vLLM/TGI to serve OpenAI-compatible endpoint |
+| **Dataset stats** | Uploaded files are measured for real: byte size, non-empty line count, duplicate-line count, character-length percentiles, and label distribution when the rows carry a `label`/`category`/`intent` field. `avg_tokens` / `token_histogram` are `null` because no tokenizer is wired in — each response lists what is unmeasured in `unmeasured`. Seed datasets are marked `provenance: "seed_demo"`. | Would tokenize and profile the corpus |
 
-All mock boundaries are labeled in the UI (yellow banner) and this README.
+All mock boundaries are labeled in the UI (yellow banner + per-field 「未测量」), in every API response
+(`simulated` / `provenance` / `metrics_provenance`), and in this README.
 
 ## Known Limitations
 
+- **验收门禁未满足**（`.qoder/rules/04-验收门禁.md` P10 行）：没有真实训练跑批、没有 loss 曲线来自真实训练、
+  没有微调前后真实评测对比、微调后模型无法通过 OpenAI 兼容接口调用。本模块整体是「流程演示 + 口径诚实」，
+  不是可交付的微调平台。可行的一次本地训练方案（RTX 4060 8GB + Qwen2.5-0.5B LoRA）见
+  `00-总纲/07-P10微调算力方案.md`，**尚未执行**。
 - No persistent storage (all data resets on restart)
 - Loss curves are procedurally generated, not from real training
 - Evaluation scores are mock, not from real model inference
 - No authentication/authorization (single-user mock mode)
-- File upload generates random stats, does not parse actual file content
 
 ## Interview Q&A
 
@@ -113,7 +118,7 @@ All mock boundaries are labeled in the UI (yellow banner) and this README.
 
 2. **Q: How does the loss curve simulation work?** A: Exponential decay `base_loss * exp(-k * progress)` plus Gaussian noise, with cosine annealing for learning rate schedule.
 
-3. **Q: What metrics does evaluation track?** A: Accuracy, format compliance, LLM-as-Judge score (1-5), average response quality, BLEU, ROUGE-L, hallucination rate.
+3. **Q: What metrics does evaluation track?** A: The schema tracks accuracy, format compliance, LLM-as-Judge (1–5), average response quality, BLEU, ROUGE-L and hallucination rate — **but in this module every one of those values is simulated, and latency is deliberately `null` because nothing is served.** That is the point worth discussing: how you keep a demo honest.
 
 4. **Q: How would you extend this for real training?** A: Replace the mock training function with a Celery/async task that calls `transformers.Trainer` with PEFT config. Loss curve would come from actual training logs.
 
