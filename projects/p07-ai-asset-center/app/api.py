@@ -60,7 +60,7 @@ async def create_asset(
     if file is not None:
         content = await file.read()
         try:
-            stored = media.save_upload(content, file.content_type or "", file.filename or "", asset_id)
+            stored = media.save_upload(content, asset_id)
         except ValueError as exc:
             raise HTTPException(422, str(exc)) from exc
 
@@ -70,6 +70,7 @@ async def create_asset(
         "tags": repository.normalize_tags(tags),
         "description": description,
         "source": "upload",
+        "asset_id": asset_id,
     }
     if stored:
         fields.update(

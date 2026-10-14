@@ -35,10 +35,11 @@ def _endpoint_host_label(base_url: str) -> str:
 
 
 def chat_json(prompt_file: str, user_content: str, *, variables: dict[str, str] | None = None,
-              max_tokens: int = 900, temperature: float = 0.3, timeout: float = 40.0) -> LLMResult:
+              prefer_fast: bool = False, max_tokens: int = 900, temperature: float = 0.3,
+              timeout: float = 40.0) -> LLMResult:
     """以 JSON 模式调用一次模型。prompt 从 prompts/ 版本化文件读取，变量在文件内占位。"""
     settings = config.get_settings()
-    endpoint = settings.llm_endpoint()
+    endpoint = settings.llm_endpoint(prefer_fast=prefer_fast)
     if endpoint is None:
         return LLMResult(ok=False, source="mock", reason="not_configured",
                          prompt_version=prompt_file)

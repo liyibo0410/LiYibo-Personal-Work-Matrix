@@ -1,0 +1,391 @@
+{
+  "evaluated_at": "2026-10-13",
+  "llm_status": {
+    "configured": true,
+    "model": "qwen3.8-max",
+    "endpoint": "token-plan.cn-beijing.maas.aliyuncs.com",
+    "reason": ""
+  },
+  "assets": 12,
+  "llm_concept_coverage": 0.97,
+  "rule_concept_coverage": 0.879,
+  "avg_tags_per_asset": 5.42,
+  "ungrounded_tag_count": 16,
+  "avg_tokens_per_call": 671.5,
+  "avg_latency_ms": 7370.5,
+  "max_latency_ms": 14546.8,
+  "gateway_cost_snapshot": {
+    "total_calls": 0,
+    "total_tokens": 0,
+    "mock_calls": 0,
+    "total_latency_ms": 0.0,
+    "calls_by_model": {}
+  },
+  "per_asset": [
+    {
+      "asset_id": "AST-001",
+      "name": "春季护肤主图A",
+      "source": "llm",
+      "llm_tags": [
+        "护肤品",
+        "主图",
+        "春季",
+        "图片"
+      ],
+      "rule_tags": [
+        "护肤",
+        "主图",
+        "春季",
+        "清爽"
+      ],
+      "manual_tags": [
+        "护肤",
+        "春季",
+        "主图",
+        "清爽"
+      ],
+      "concepts_covered": "3/3",
+      "missing_concepts": [],
+      "ungrounded_tags": [],
+      "tokens": 1059,
+      "latency_ms": 14546.8
+    },
+    {
+      "asset_id": "AST-002",
+      "name": "口红试色短视频脚本",
+      "source": "llm",
+      "llm_tags": [
+        "口红",
+        "试色",
+        "短视频",
+        "脚本",
+        "种草",
+        "美妆"
+      ],
+      "rule_tags": [
+        "口红",
+        "短视频",
+        "脚本",
+        "种草"
+      ],
+      "manual_tags": [
+        "口红",
+        "试色",
+        "短视频",
+        "种草"
+      ],
+      "concepts_covered": "3/3",
+      "missing_concepts": [],
+      "ungrounded_tags": [
+        "美妆"
+      ],
+      "tokens": 586,
+      "latency_ms": 5419.2
+    },
+    {
+      "asset_id": "AST-003",
+      "name": "618大促Banner",
+      "source": "llm",
+      "llm_tags": [
+        "Banner",
+        "主图",
+        "活动",
+        "促销",
+        "电商"
+      ],
+      "rule_tags": [
+        "Banner",
+        "618"
+      ],
+      "manual_tags": [
+        "618",
+        "大促",
+        "Banner",
+        "红色"
+      ],
+      "concepts_covered": "2/3",
+      "missing_concepts": [
+        "视觉"
+      ],
+      "ungrounded_tags": [
+        "主图",
+        "电商"
+      ],
+      "tokens": 582,
+      "latency_ms": 6558.5
+    },
+    {
+      "asset_id": "AST-004",
+      "name": "运动鞋详情页长图",
+      "source": "llm",
+      "llm_tags": [
+        "运动鞋",
+        "详情页",
+        "长图",
+        "科技卖点",
+        "图片"
+      ],
+      "rule_tags": [
+        "运动鞋",
+        "详情页",
+        "科技感"
+      ],
+      "manual_tags": [
+        "运动鞋",
+        "详情页",
+        "长图",
+        "科技"
+      ],
+      "concepts_covered": "3/3",
+      "missing_concepts": [],
+      "ungrounded_tags": [],
+      "tokens": 665,
+      "latency_ms": 7435.3
+    },
+    {
+      "asset_id": "AST-005",
+      "name": "直播间背景板",
+      "source": "llm",
+      "llm_tags": [
+        "背景板",
+        "直播间",
+        "品牌",
+        "设计",
+        "主视觉",
+        "电商素材"
+      ],
+      "rule_tags": [
+        "直播间"
+      ],
+      "manual_tags": [
+        "直播",
+        "背景板",
+        "品牌"
+      ],
+      "concepts_covered": "3/3",
+      "missing_concepts": [],
+      "ungrounded_tags": [
+        "主视觉",
+        "电商素材"
+      ],
+      "tokens": 642,
+      "latency_ms": 6431.0
+    },
+    {
+      "asset_id": "AST-006",
+      "name": "面膜种草文案",
+      "source": "llm",
+      "llm_tags": [
+        "面膜",
+        "文案",
+        "保湿",
+        "种草",
+        "详情页"
+      ],
+      "rule_tags": [
+        "面膜",
+        "文案",
+        "保湿",
+        "种草"
+      ],
+      "manual_tags": [
+        "面膜",
+        "种草",
+        "文案",
+        "保湿"
+      ],
+      "concepts_covered": "3/3",
+      "missing_concepts": [],
+      "ungrounded_tags": [
+        "详情页"
+      ],
+      "tokens": 548,
+      "latency_ms": 4992.3
+    },
+    {
+      "asset_id": "AST-007",
+      "name": "防晒霜对比图",
+      "source": "llm",
+      "llm_tags": [
+        "防晒霜",
+        "对比图",
+        "SPF50",
+        "SPF30",
+        "美妆",
+        "夏季"
+      ],
+      "rule_tags": [
+        "防晒",
+        "对比",
+        "夏季",
+        "清爽"
+      ],
+      "manual_tags": [
+        "防晒",
+        "对比",
+        "夏天",
+        "清爽"
+      ],
+      "concepts_covered": "3/3",
+      "missing_concepts": [],
+      "ungrounded_tags": [
+        "SPF50",
+        "SPF30",
+        "美妆"
+      ],
+      "tokens": 778,
+      "latency_ms": 9158.1
+    },
+    {
+      "asset_id": "AST-008",
+      "name": "品牌故事短视频",
+      "source": "llm",
+      "llm_tags": [
+        "短视频脚本",
+        "品牌故事",
+        "情感叙事",
+        "品牌宣传",
+        "视频素材"
+      ],
+      "rule_tags": [
+        "短视频",
+        "脚本",
+        "情感"
+      ],
+      "manual_tags": [
+        "品牌",
+        "故事",
+        "情感",
+        "短视频"
+      ],
+      "concepts_covered": "2/2",
+      "missing_concepts": [],
+      "ungrounded_tags": [],
+      "tokens": 630,
+      "latency_ms": 6258.5
+    },
+    {
+      "asset_id": "AST-009",
+      "name": "双11预售海报",
+      "source": "llm",
+      "llm_tags": [
+        "双11",
+        "预售",
+        "海报",
+        "启动",
+        "促销",
+        "电商"
+      ],
+      "rule_tags": [
+        "海报",
+        "双11"
+      ],
+      "manual_tags": [
+        "双11",
+        "预售",
+        "海报",
+        "狂欢"
+      ],
+      "concepts_covered": "2/2",
+      "missing_concepts": [],
+      "ungrounded_tags": [
+        "促销",
+        "电商"
+      ],
+      "tokens": 664,
+      "latency_ms": 6649.6
+    },
+    {
+      "asset_id": "AST-010",
+      "name": "洗发水成分解析图",
+      "source": "llm",
+      "llm_tags": [
+        "洗发水",
+        "成分解析",
+        "科普图",
+        "洗护",
+        "详情页",
+        "图文"
+      ],
+      "rule_tags": [
+        "洗发水",
+        "科普"
+      ],
+      "manual_tags": [
+        "洗发水",
+        "成分",
+        "解析",
+        "科普"
+      ],
+      "concepts_covered": "2/2",
+      "missing_concepts": [],
+      "ungrounded_tags": [
+        "详情页"
+      ],
+      "tokens": 832,
+      "latency_ms": 11770.6
+    },
+    {
+      "asset_id": "AST-011",
+      "name": "零食大礼包主图",
+      "source": "llm",
+      "llm_tags": [
+        "零食大礼包",
+        "主图",
+        "组合装",
+        "丰盛",
+        "详情页",
+        "食品"
+      ],
+      "rule_tags": [
+        "零食",
+        "主图"
+      ],
+      "manual_tags": [
+        "零食",
+        "大礼包",
+        "主图",
+        "美食"
+      ],
+      "concepts_covered": "3/3",
+      "missing_concepts": [],
+      "ungrounded_tags": [
+        "组合装",
+        "丰盛",
+        "详情页"
+      ],
+      "tokens": 444,
+      "latency_ms": 3151.0
+    },
+    {
+      "asset_id": "AST-012",
+      "name": "家电以旧换新Banner",
+      "source": "llm",
+      "llm_tags": [
+        "家电",
+        "以旧换新",
+        "Banner",
+        "活动页",
+        "促销"
+      ],
+      "rule_tags": [
+        "家电",
+        "Banner",
+        "以旧换新"
+      ],
+      "manual_tags": [
+        "家电",
+        "以旧换新",
+        "Banner",
+        "绿色"
+      ],
+      "concepts_covered": "3/3",
+      "missing_concepts": [],
+      "ungrounded_tags": [
+        "促销"
+      ],
+      "tokens": 628,
+      "latency_ms": 6074.8
+    }
+  ]
+}

@@ -92,12 +92,41 @@ def _migrate(conn: sqlite3.Connection) -> None:
         conn.execute("UPDATE assets SET created_at=?, updated_at=? WHERE id=?", (ts, ts, r["id"]))
 
 
+def _backfill_demo_previews(conn: sqlite3.Connection) -> None:
+    """给缺文件的演示素材补上程序化演示图（只动 source='demo' 的行，不碰用户上传文件）。
+
+    旧版本播种时没有落盘文件，素材库整屏只有「IMG」文字块 —— 用户看不到任何图，
+    也无法演示「上传→预览→检索」闭环。
+    """
+    lookup = {a[0]: a for a in _DEMO_ASSETS}
+    rows = conn.execute(
+        "SELECT asset_id, name, asset_type, width, height FROM assets"
+        " WHERE source='demo' AND (file_path='' OR file_path IS NULL)"
+    ).fetchall()
+    if not rows:
+        return
+    config.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    for r in rows:
+        spec = lookup.get(r["asset_id"])
+        if not spec or not spec[7]:  # 无主色 = 文案类素材，本就没有图
+            continue
+        w, h = spec[5], spec[6]
+        path = config.UPLOAD_DIR / f"{r['asset_id']}.png"
+        draw_demo_card(path, r["name"], (w, h), spec[7])
+        conn.execute(
+            "UPDATE assets SET file_path=?, file_size=?, width=?, height=?, mime_type='image/png'"
+            " WHERE asset_id=?",
+            (str(path), path.stat().st_size, w, h, r["asset_id"]),
+        )
+
+
 def init_db() -> None:
     conn = get_db()
     conn.executescript(SCHEMA)
     _migrate(conn)
     if conn.execute("SELECT COUNT(*) FROM assets").fetchone()[0] == 0:
         seed_demo_data(conn)
+    _backfill_demo_previews(conn)
     conn.commit()
     conn.close()
 
@@ -134,13 +163,17 @@ def draw_demo_card(path: Path, name: str, size: tuple[int, int], color: str) -> 
     """程序化绘制演示素材图（纯色卡片 + 名称），不依赖外部图片资源。"""
     from PIL import Image, ImageDraw
 
+    from app.services.media import load_font
+
     w, h = size
     img = Image.new("RGB", (w, h), color)
     draw = ImageDraw.Draw(img)
     draw.rectangle([0, int(h * 0.6), w, h], fill="#FFFFFF")
-    draw.text((int(w * 0.06), int(h * 0.08)), "CloudPivot demo asset", fill="#FFFFFF")
-    draw.text((int(w * 0.06), int(h * 0.66)), name, fill="#111826")
-    draw.text((int(w * 0.06), int(h * 0.8)), f"{w}x{h} / programmatic placeholder", fill="#5A6472")
+    big, small = load_font(max(18, w // 22)), load_font(max(14, w // 34))
+    draw.text((int(w * 0.06), int(h * 0.08)), "云枢智能 · 演示素材", fill="#FFFFFF", font=small)
+    draw.text((int(w * 0.06), int(h * 0.66)), name, fill="#111826", font=big)
+    draw.text((int(w * 0.06), int(h * 0.8)), f"{w}×{h} · 程序化占位图，非真实商品图",
+              fill="#5A6472", font=small)
     img.save(path, "PNG")
 
 

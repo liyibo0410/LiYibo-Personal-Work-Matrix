@@ -93,10 +93,12 @@ def create_asset(
     content: str = "",
     source: str = "upload",
     tag_source: str = "manual",
+    asset_id: str | None = None,
 ) -> dict[str, Any]:
+    """`asset_id` 可由调用方预先分配 —— 上传落盘时文件名必须与最终行 ID 一致，否则磁盘上会留下孤儿文件。"""
     ts = now_iso()
     conn = get_db()
-    asset_id = new_asset_id()
+    asset_id = asset_id or new_asset_id()
     conn.execute(
         "INSERT INTO assets (asset_id, name, asset_type, tags, description, content, file_path,"
         " file_size, width, height, source, status, created_at, updated_at, mime_type, tag_source)"

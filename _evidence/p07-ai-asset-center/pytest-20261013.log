@@ -1,0 +1,34 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p07-ai-asset-center\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\software\PycharmProjects\面试项目\projects\p07-ai-asset-center
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 18 items
+
+tests/test_api.py::test_health PASSED                                    [  5%]
+tests/test_api.py::test_stats_has_demo_seed PASSED                       [ 11%]
+tests/test_api.py::test_list_assets_pagination PASSED                    [ 16%]
+tests/test_api.py::test_list_assets_filter_by_type PASSED                [ 22%]
+tests/test_api.py::test_list_assets_keyword_filter PASSED                [ 27%]
+tests/test_api.py::test_get_asset_with_performance PASSED                [ 33%]
+tests/test_api.py::test_get_asset_404 PASSED                             [ 38%]
+tests/test_api.py::test_create_asset_upload_and_delete PASSED            [ 44%]
+tests/test_api.py::test_create_asset_without_file PASSED                 [ 50%]
+tests/test_api.py::test_delete_asset_404 PASSED                          [ 55%]
+tests/test_api.py::test_search_by_text_hits PASSED                       [ 61%]
+tests/test_api.py::test_search_filter_by_type PASSED                     [ 66%]
+tests/test_api.py::test_search_no_match_returns_empty PASSED             [ 72%]
+tests/test_api.py::test_generate_image_mock PASSED                       [ 77%]
+tests/test_api.py::test_generate_video_mock PASSED                       [ 83%]
+tests/test_api.py::test_generate_copy_mock PASSED                        [ 88%]
+tests/test_api.py::test_performance_report PASSED                        [ 94%]
+tests/test_api.py::test_performance_report_filter_platform PASSED        [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\software\PycharmProjects\面试项目\projects\p07-ai-asset-center\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 18 passed, 1 warning in 0.74s ========================

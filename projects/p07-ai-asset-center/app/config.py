@@ -67,27 +67,32 @@ class Settings(BaseSettings):
     LLM_BASE_URL: str = ""
     LLM_API_KEY: str = ""
     LLM_MODEL: str = ""
+    LLM_MODEL_FAST: str = ""
     LLM_BASE_URL_FALLBACK: str = ""
     LLM_API_KEY_FALLBACK: str = ""
     LLM_MODEL_ALT: str = ""
     P07_INGEST_TOKEN: str = ""
 
-    def llm_endpoint(self) -> LLMEndpoint | None:
+    def llm_endpoint(self, *, prefer_fast: bool = False) -> LLMEndpoint | None:
         """第一个凭证齐全的端点；都不齐返回 None（调用方据此走降级并标注）。
 
         百炼 sk- / sk-sp- 凭证互认自己的端点，主用 Key 为空时自动落到备用端点。
+        `prefer_fast` 用 LLM_MODEL_FAST：打标这类短结构化输出没必要走推理模型（实测 8.2s vs 1s 级）。
         """
-        primary = LLMEndpoint(self.LLM_BASE_URL, self.LLM_API_KEY, self.LLM_MODEL, "primary")
+        primary = LLMEndpoint(self.LLM_BASE_URL, self.LLM_API_KEY, self._model_for(prefer_fast), "primary")
         fallback = LLMEndpoint(
             self.LLM_BASE_URL_FALLBACK,
             self.LLM_API_KEY_FALLBACK,
-            self.LLM_MODEL or self.LLM_MODEL_ALT,
+            self._model_for(prefer_fast) or self.LLM_MODEL_ALT,
             "fallback",
         )
         for ep in (primary, fallback):
             if ep.base_url.startswith("http") and is_usable(ep.api_key) and ep.model:
                 return ep
         return None
+
+    def _model_for(self, prefer_fast: bool) -> str:
+        return (self.LLM_MODEL_FAST or self.LLM_MODEL) if prefer_fast else self.LLM_MODEL
 
     @property
     def llm_ready(self) -> bool:

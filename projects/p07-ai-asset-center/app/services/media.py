@@ -26,21 +26,40 @@ _EXT_BY_MIME = {
 }
 _IMAGE_MIMES = {"image/png", "image/jpeg", "image/webp", "image/gif"}
 _MAX_BYTES = 32 * 1024 * 1024
+_FONT_CANDIDATES = (
+    "C:/Windows/Fonts/msyh.ttc",
+    "C:/Windows/Fonts/msyh.ttf",
+    "C:/Windows/Fonts/simhei.ttf",
+    "C:/Windows/Fonts/Deng.ttf",
+)
 
 
-def save_upload(content: bytes, declared_type: str, filename: str, asset_id: str) -> dict[str, Any]:
-    """校验并落盘。返回 path/size/mime_type/width/height/asset_type。
+def load_font(size: int):
+    """优先用系统中文字体；Pillow 自带的点阵字体画不出中文。"""
+    from PIL import ImageFont
 
-    以文件头嗅探出的 MIME 为准，客户端声明的 Content-Type 不可信。
-    """
+    for path in _FONT_CANDIDATES:
+        if Path(path).exists():
+            try:
+                return ImageFont.truetype(path, size)
+            except OSError:
+                continue
+    return ImageFont.load_default()
+
+
+def save_upload(content: bytes, asset_id: str) -> dict[str, Any]:
+    """校验并落盘，返回 path/size/mime_type/width/height/asset_type。"""
     if not content:
         raise ValueError("空文件")
     if len(content) > _MAX_BYTES:
         raise ValueError(f"文件超过上限 {_MAX_BYTES // 1024 // 1024}MB")
 
-    mime = _sniff(content) or declared_type or ""
+    mime = _sniff(content)
+    if not mime:
+        # 客户端声明的 Content-Type 不可信：认不出文件头一律拒绝
+        raise ValueError("无法识别的文件类型（仅接受 png/jpeg/webp/gif/mp4/mov/webm）")
     if mime not in _ALLOWED:
-        raise ValueError(f"不支持的文件类型：{mime or '未知'}（仅接受 png/jpeg/webp/gif/mp4/mov/webm）")
+        raise ValueError(f"不支持的文件类型：{mime}")
 
     config.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     path = (config.UPLOAD_DIR / f"{asset_id}{_EXT_BY_MIME.get(mime, '.bin')}").resolve()
@@ -54,7 +73,6 @@ def save_upload(content: bytes, declared_type: str, filename: str, asset_id: str
     return {
         "path": str(path), "size": len(content), "mime_type": mime,
         "width": width, "height": height, "asset_type": _ALLOWED[mime],
-        "original_name": Path(filename or "").name,
     }
 
 

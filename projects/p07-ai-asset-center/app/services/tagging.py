@@ -69,7 +69,7 @@ def _validate_llm_tags(parsed: dict[str, Any]) -> list[str]:
     cleaned: list[str] = []
     for item in raw:
         tag = str(item).strip().replace("，", ",")
-        if not tag or len(tag) > 12 or "," in tag:
+        if not tag or len(tag) > 12 or "," in tag or tag.isdigit():
             continue
         if tag not in cleaned:
             cleaned.append(tag)
@@ -82,7 +82,7 @@ def tag_asset(name: str, description: str, asset_type: str = "image") -> dict[st
     result = llm.chat_json(
         "tag_asset_v1.md",
         f"素材名称：{name}\n素材描述：{description or '（无）'}\n素材类型：{asset_type}",
-        max_tokens=700,
+        prefer_fast=True, max_tokens=700, timeout=25.0,
     )
     fallback = rule_tags(text)
 

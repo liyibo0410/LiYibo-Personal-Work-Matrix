@@ -1,0 +1,49 @@
+{
+  "evaluated_at": "2026-10-13",
+  "corpus_size": 12,
+  "dataset": "projects\\p07-ai-asset-center\\eval\\queries_labeled.json",
+  "new_engine": {
+    "queries_evaluated": 26,
+    "recall_at_5": 1.0,
+    "precision_at_1": 1.0,
+    "mrr": 1.0,
+    "refusal_accuracy": 1.0,
+    "missed_queries": [],
+    "latency_ms_avg": 0.78,
+    "latency_ms_p95": 0.87
+  },
+  "legacy_engine": {
+    "queries_evaluated": 26,
+    "recall_at_5": 0.05,
+    "precision_at_1": 0.05,
+    "mrr": 0.05,
+    "refusal_accuracy": 1.0,
+    "missed_queries": [
+      "春天用的护肤品主图",
+      "夏天清爽的防晒霜",
+      "有没有直播用的背景板",
+      "双十一预售的海报",
+      "科技感运动鞋详情",
+      "口红的种草视频",
+      "补水面膜的文案",
+      "洗发水成分科普图",
+      "零食大礼包的头图",
+      "家电换新活动广告图",
+      "618红色促销banner",
+      "品牌故事片子",
+      "控油清爽的防晒",
+      "直播间品牌背景",
+      "详情页长图科技",
+      "双11大促海报",
+      "美妆种草短视频脚本",
+      "护肤主图对比",
+      "绿色家电banner"
+    ],
+    "latency_ms_avg": 0.01,
+    "latency_ms_p95": 0.01
+  },
+  "engine_labels": {
+    "new_engine": "cn-ngram + 同义组归一 + 字段加权 + IDF + 阈值拒答",
+    "legacy_engine": "query.split() + 子串包含（改造前）"
+  }
+}

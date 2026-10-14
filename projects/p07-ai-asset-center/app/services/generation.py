@@ -7,12 +7,13 @@
 """
 from __future__ import annotations
 
+import base64
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from app import config
-from app.services import llm
+from app.services import llm, media
 
 # 各类型的投放规格（宽, 高）与卡片主色
 _SPEC = {
@@ -20,24 +21,6 @@ _SPEC = {
     "video": (1080, 1920, "#7B5CFA"),
     "copy": (1200, 400, "#16A34A"),
 }
-_FONT_CANDIDATES = (
-    "C:/Windows/Fonts/msyh.ttc",
-    "C:/Windows/Fonts/msyh.ttf",
-    "C:/Windows/Fonts/simhei.ttf",
-    "C:/Windows/Fonts/Deng.ttf",
-)
-
-
-def _load_font(size: int):
-    from PIL import ImageFont
-
-    for path in _FONT_CANDIDATES:
-        if Path(path).exists():
-            try:
-                return ImageFont.truetype(path, size)
-            except OSError:
-                continue
-    return ImageFont.load_default()
 
 
 def render_spec_card(prompt: str, asset_type: str, style: str, out_path: Path) -> dict[str, int]:
@@ -51,8 +34,8 @@ def render_spec_card(prompt: str, asset_type: str, style: str, out_path: Path) -
     draw.rectangle([0, 0, w, band_h], fill=color)
     draw.line([0, band_h, w, band_h], fill="#DDE2EA", width=max(2, w // 300))
 
-    title_font = _load_font(max(20, w // 18))
-    small_font = _load_font(max(14, w // 30))
+    title_font = media.load_font(max(20, w // 18))
+    small_font = media.load_font(max(14, w // 30))
 
     def wrap(text: str, width_chars: int) -> list[str]:
         return [text[i:i + width_chars] for i in range(0, len(text), width_chars)][:4]
@@ -101,7 +84,7 @@ def generate(prompt: str, asset_type: str, style: str) -> dict[str, Any]:
         result = llm.chat_json(
             "generate_copy_v1.md",
             f"素材主题：{prompt}\n投放位置：商品主图详情/信息流\n风格：{style}",
-            variables={"style": style}, max_tokens=800,
+            variables={"style": style}, max_tokens=800, timeout=75.0,
         )
         payload = result.data if result.ok and result.data.get("title") else _rule_copy(prompt, style)
         source = "llm" if (result.ok and result.data.get("title")) else "rule"
@@ -113,7 +96,7 @@ def generate(prompt: str, asset_type: str, style: str) -> dict[str, Any]:
         result = llm.chat_json(
             "generate_video_script_v1.md",
             f"视频主题：{prompt}\n风格：{style}",
-            variables={"style": style}, max_tokens=1200,
+            variables={"style": style}, max_tokens=1200, timeout=75.0,
         )
         payload = result.data if result.ok and result.data.get("scenes") else _rule_script(prompt)
         source = "llm" if (result.ok and result.data.get("scenes")) else "rule"
@@ -128,6 +111,7 @@ def generate(prompt: str, asset_type: str, style: str) -> dict[str, Any]:
     path = config.UPLOAD_DIR / f"{asset_id}.png"
     config.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     dims = render_spec_card(prompt, "image", style, path)
+    data_url = "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode()
     return {
         "content_type": "image",
         "source": "programmatic",
@@ -138,6 +122,7 @@ def generate(prompt: str, asset_type: str, style: str) -> dict[str, Any]:
             "preview_asset_id": asset_id,
         },
         "file": {"path": str(path), "size": path.stat().st_size, "mime_type": "image/png", **dims},
+        "preview_data_url": data_url,
         "meta": {"model": "", "endpoint": ""},
         "note": "非真实 AI 出图：Pillow 按投放规格绘制的占位卡片。真实图像模型（wan2.7-image 等）"
                 "的调用接口形状尚未在本环境验证，未验证不宣称已跑通。",

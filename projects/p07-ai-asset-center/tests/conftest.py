@@ -8,25 +8,60 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-import app.main as app_main  # noqa: E402
+from app import config  # noqa: E402
 
 
 @pytest.fixture
-def client(tmp_path, monkeypatch):
-    """把 SQLite 与上传目录重定向到临时路径，保证测试与真实 data/assets.db 隔离。
+def env(tmp_path, monkeypatch):
+    """把 SQLite / 上传目录重定向到 tmp_path，并把模型与跨模块调用打桩。
 
-    app.main 在 import 时已执行过一次 init_db()（针对真实 DB_PATH），
-    这里改写 DB_PATH / UPLOAD_DIR 后再次 init_db()，在临时库里重建表并播种 demo 数据。
-    get_db() 每次调用都读取模块级 DB_PATH，因此重定向对所有后续请求生效。
+    测试进程**绝不发出真实网络请求**：`llm.chat_json` 默认桩成「未配置」，
+    P06 取数桩成「不可用」；需要走成功路径的用例显式覆盖这两个桩。
     """
-    db_file = tmp_path / "assets_test.db"
-    upload_dir = tmp_path / "uploads"
-    upload_dir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(config, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(config, "UPLOAD_DIR", tmp_path / "uploads")
+    monkeypatch.setattr(config, "DB_PATH", tmp_path / "assets.db")
+    (tmp_path / "uploads").mkdir(parents=True, exist_ok=True)
 
-    monkeypatch.setattr(app_main, "DB_PATH", db_file)
-    monkeypatch.setattr(app_main, "UPLOAD_DIR", upload_dir)
+    from app.services import data_platform, llm
 
-    app_main.init_db()
+    monkeypatch.setattr(
+        data_platform, "fetch_platform_metrics",
+        lambda timeout=4.0: {"available": False, "metrics": [], "source_url": "http://stub",
+                             "fetched_at": "2026-10-13T00:00:00", "reason": "测试桩：未启动 P06"},
+    )
+    monkeypatch.setattr(llm, "chat_json", lambda *a, **kw: llm.LLMResult(
+        ok=False, source="mock", reason="not_configured", prompt_version="stub"))
 
-    with TestClient(app_main.app) as test_client:
-        yield test_client
+    # 凭证置空：/llm/status 在任何开发机 .env 下都应报「降级」而不是误读真实 Key
+    empty = config.Settings(_env_file=None, LLM_BASE_URL="", LLM_API_KEY="", LLM_MODEL="",
+                            LLM_MODEL_FAST="", LLM_BASE_URL_FALLBACK="", LLM_API_KEY_FALLBACK="",
+                            LLM_MODEL_ALT="", P07_INGEST_TOKEN="")
+    monkeypatch.setattr(config, "get_settings", lambda: empty)
+    return tmp_path
+
+
+@pytest.fixture
+def client(env):
+    from app.main import app
+
+    with TestClient(app) as c:  # with → 触发 lifespan → 在临时库上建表播种
+        yield c
+
+
+def _stub_llm(monkeypatch, payload: dict):
+    """让 llm.chat_json 返回给定的「模型成功」结果，用于覆盖 LLM 分支。"""
+    from app.services import llm
+
+    def fake(prompt_file, user_content, **kw):
+        return llm.LLMResult(ok=True, data=payload, source="llm", model="stub-model",
+                             endpoint="stub", latency_ms=12.3, prompt_tokens=10,
+                             completion_tokens=20, total_tokens=30, prompt_version=prompt_file)
+
+    monkeypatch.setattr(llm, "chat_json", fake)
+
+
+@pytest.fixture
+def fake_llm(monkeypatch):
+    """`fake_llm({"tags": [...]})` —— 在本条测试里把模型调用换成成功返回。"""
+    return lambda payload: _stub_llm(monkeypatch, payload)

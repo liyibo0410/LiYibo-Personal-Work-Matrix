@@ -1,0 +1,32 @@
+{
+  "_comment": "P07 以文搜图评测集：expected 为该查询应命中的素材（12 条 demo 素材内人工标注）；expect_refuse=true 表示库内没有对应素材，检索必须拒答而不是硬凑。",
+  "corpus": "projects/p07-ai-asset-center 初始化播种的 12 条 demo 素材（AST-001..AST-012）",
+  "queries": [
+    {"query": "春天用的护肤品主图", "expected": ["AST-001"]},
+    {"query": "夏天清爽的防晒霜", "expected": ["AST-007"]},
+    {"query": "有没有直播用的背景板", "expected": ["AST-005"]},
+    {"query": "双十一预售的海报", "expected": ["AST-009"]},
+    {"query": "科技感运动鞋详情", "expected": ["AST-004"]},
+    {"query": "口红的种草视频", "expected": ["AST-002"]},
+    {"query": "补水面膜的文案", "expected": ["AST-006"]},
+    {"query": "洗发水成分科普图", "expected": ["AST-010"]},
+    {"query": "零食大礼包的头图", "expected": ["AST-011"]},
+    {"query": "家电换新活动广告图", "expected": ["AST-012"]},
+    {"query": "618红色促销banner", "expected": ["AST-003"]},
+    {"query": "品牌故事片子", "expected": ["AST-008"]},
+    {"query": "控油清爽的防晒", "expected": ["AST-007", "AST-001"]},
+    {"query": "直播间品牌背景", "expected": ["AST-005"]},
+    {"query": "春季主推护肤", "expected": ["AST-001"]},
+    {"query": "详情页长图科技", "expected": ["AST-004"]},
+    {"query": "双11大促海报", "expected": ["AST-009"]},
+    {"query": "美妆种草短视频脚本", "expected": ["AST-002"]},
+    {"query": "护肤主图对比", "expected": ["AST-001", "AST-007"]},
+    {"query": "绿色家电banner", "expected": ["AST-012"]},
+    {"query": "库里没有的无人机航拍素材", "expected": [], "expect_refuse": true},
+    {"query": "办公室绿植摆放指南", "expected": [], "expect_refuse": true},
+    {"query": "工业润滑油桶包装", "expected": [], "expect_refuse": true},
+    {"query": "航空发动机剖面结构图", "expected": [], "expect_refuse": true},
+    {"query": "山地自行车骑行路线地图", "expected": [], "expect_refuse": true},
+    {"query": "外语口语外教课程", "expected": [], "expect_refuse": true}
+  ]
+}

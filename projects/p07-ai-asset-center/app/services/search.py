@@ -51,19 +51,29 @@ def _synonym_key(term: str) -> str:
     return term
 
 
-def tokenize(text: str) -> set[str]:
-    """CJK 二元组 + 整词（≤4 字）+ 拉丁词，统一走同义组归一。"""
+def tokenize_pairs(text: str) -> list[tuple[str, str]]:
+    """返回 (原词, 归一词) 对 —— 归一词用于匹配，原词用于给人看的命中理由。"""
     lowered = (text or "").lower()
-    terms: set[str] = set()
+    pairs: list[tuple[str, str]] = []
     for run in _CJK.findall(lowered):
         if len(run) == 1:
-            terms.add(run)
+            pairs.append((run, _synonym_key(run)))
             continue
-        terms.update(run[i:i + 2] for i in range(len(run) - 1))
+        pairs.extend((run[i:i + 2], _synonym_key(run[i:i + 2])) for i in range(len(run) - 1))
         if len(run) <= 4:
-            terms.add(run)
-    terms.update(t for t in _LATIN.findall(lowered) if len(t) >= 2)
-    return {_synonym_key(t) for t in terms}
+            pairs.append((run, _synonym_key(run)))
+    pairs.extend((t, _synonym_key(t)) for t in _LATIN.findall(lowered) if len(t) >= 2)
+    # 中英混排（双11）与跨脚本词会被上面的正则拆开，这里按同义词表整词补一遍
+    pairs.extend((member, _synonym_key(member))
+                 for group in SYNONYM_GROUPS
+                 for member in group
+                 if len(member) >= 2 and member in lowered)
+    return pairs
+
+
+def tokenize(text: str) -> set[str]:
+    """CJK 二元组 + 整词（≤4 字）+ 拉丁词，统一走同义组归一。"""
+    return {c for _, c in tokenize_pairs(text)}
 
 
 def _idf(query_terms: set[str], docs: list[dict[str, Any]]) -> dict[str, float]:
@@ -74,7 +84,8 @@ def _idf(query_terms: set[str], docs: list[dict[str, Any]]) -> dict[str, float]:
     return {t: math.log(1 + n / (1 + df[t])) for t in query_terms}
 
 
-def _score(doc: dict[str, Any], query_terms: set[str], idf: dict[str, float]) -> tuple[float, list[dict[str, Any]]]:
+def _score(doc: dict[str, Any], query_terms: set[str], idf: dict[str, float],
+           display: dict[str, str]) -> tuple[float, list[dict[str, Any]]]:
     fields = {name: tokenize(doc.get(name) if name != "tags" else " ".join(doc.get("tags") or []))
               for name in _FIELD_WEIGHT}
     matched: list[dict[str, Any]] = []
@@ -86,17 +97,25 @@ def _score(doc: dict[str, Any], query_terms: set[str], idf: dict[str, float]) ->
             continue
         best = max(_FIELD_WEIGHT[f] for f in hit_fields)
         earned += idf.get(term, 1.0) * best / max(_FIELD_WEIGHT.values())
-        matched.append({"term": term, "fields": hit_fields})
+        matched.append({"term": display.get(term, term), "fields": hit_fields})
     return earned / total_weight, matched
 
 
 def search(assets: list[dict[str, Any]], query: str, top_k: int = 5,
            asset_type: str | None = None) -> dict[str, Any]:
-    query_terms = tokenize(query or "")
+    pairs = tokenize_pairs(query)
+    query_terms = {canon for _, canon in pairs}
+    surfaces: dict[str, list[str]] = {}
+    for surface, canon in pairs:
+        bucket = surfaces.setdefault(canon, [])
+        if surface not in bucket:
+            bucket.append(surface)
+    # 同一个同义组可能被多个原词命中（如「直播背景板」→ 直播 + 背景板），一并回显
+    display = {c: "/".join(v[:3]) for c, v in surfaces.items()}
     base = {
         "engine": "cn-ngram+synonym+weighted-field（文本检索，非 CLIP 多模态向量）",
         "query": query,
-        "query_terms": sorted(query_terms),
+        "query_terms": sorted(display[c] for c in query_terms),
     }
     if not query_terms:
         return {**base, "refused": True, "reason": "查询为空或无法切出有效词，未执行检索",
@@ -110,7 +129,7 @@ def search(assets: list[dict[str, Any]], query: str, top_k: int = 5,
 
     scored: list[tuple[float, dict[str, Any], list[dict[str, Any]]]] = []
     for doc in docs:
-        score, matched = _score(doc, query_terms, idf)
+        score, matched = _score(doc, query_terms, idf, display)
         if score > 0:
             scored.append((score, doc, matched))
     scored.sort(key=lambda x: (-x[0], x[1]["asset_id"]))
