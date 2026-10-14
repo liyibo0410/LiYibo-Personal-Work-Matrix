@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-cp-brand-title="P09 人工质检评分台 · {company}">P09 人工质检评分台 - 云枢智能</title>
+<!-- 统一设计系统：tokens.css 是配色唯一真源；ui-kit.js 提供主题桥与品牌位下发 -->
+<link rel="stylesheet" href="/shared/ui-kit/tokens.css">
+<script src="/shared/config/services.js"></script>
+<script src="/shared/ui-kit/ui-kit.js"></script>
+<style>
+:root {
+  --bg: var(--cp-bg);
+  --surface: var(--cp-surface);
+  --surface2: var(--cp-elevated);
+  --border: var(--cp-line);
+  --accent: var(--cp-brand);
+  --accent-dim: var(--cp-brand-bg);
+  /* 正文一律用 ink1/ink2；ink3 只用于分隔线与图标，避免踩「对比度 ≥ 4.5:1」门禁 */
+  --text: var(--cp-ink1);
+  --text2: var(--cp-ink2);
+  --muted: var(--cp-ink2);
+  --green: var(--cp-success);
+  --red: var(--cp-danger);
+  --orange: var(--cp-warning);
+  --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:14px; line-height:1.6; }
+a { color:var(--accent); text-decoration:none; }
+.wrap { max-width:1240px; margin:0 auto; padding:20px; }
+header.top { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+h1 { font-size:20px; font-weight:700; }
+.sub { color:var(--text2); font-size:13px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+.grid { display:grid; grid-template-columns:300px 1fr; gap:16px; align-items:start; }
+@media (max-width:900px){ .grid { grid-template-columns:1fr; } }
+.btn { display:inline-block; padding:8px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:13px; cursor:pointer; }
+.btn:hover { border-color:var(--accent); color:var(--accent); }
+.btn-primary { background:var(--accent); border-color:var(--accent); color:#FFFFFF; font-weight:600; }
+.btn-primary:hover { color:#FFFFFF; filter:brightness(1.05); }
+.btn:disabled { opacity:.5; cursor:not-allowed; }
+.banner { background:var(--cp-warning-bg); border:1px solid var(--cp-warning); color:var(--cp-ink1); border-radius:var(--radius); padding:10px 14px; margin-bottom:16px; font-size:13px; }
+.queue { max-height:70vh; overflow-y:auto; }
+.q-item { padding:10px 12px; border-radius:8px; cursor:pointer; border:1px solid transparent; margin-bottom:6px; }
+.q-item:hover { background:var(--surface2); }
+.q-item.active { background:var(--accent-dim); border-color:var(--accent); }
+.q-item .q-id { font-family:ui-monospace,SFMono-Regular,monospace; font-size:12px; color:var(--text2); }
+.q-item .q-main { font-weight:600; }
+.tag { display:inline-block; padding:1px 8px; border-radius:10px; font-size:12px; background:var(--surface2); color:var(--text2); border:1px solid var(--border); }
+.tag-done { background:var(--cp-success-bg); color:var(--cp-ink1); border-color:var(--cp-success); }
+.msgs { display:flex; flex-direction:column; gap:10px; margin:12px 0 18px; }
+.msg { max-width:82%; padding:9px 12px; border-radius:10px; }
+.msg-customer { align-self:flex-start; background:var(--surface2); border:1px solid var(--border); }
+.msg-agent { align-self:flex-end; background:var(--accent-dim); border:1px solid var(--border); }
+.msg-system { align-self:center; background:transparent; color:var(--text2); font-size:12px; }
+.msg .who { font-size:12px; font-weight:600; color:var(--text2); margin-bottom:2px; }
+.dim { display:grid; grid-template-columns:96px 1fr 120px; gap:10px; align-items:center; margin-bottom:10px; }
+.dim label { font-weight:600; }
+.dim .hint { font-size:12px; color:var(--text2); margin-top:2px; }
+.dim input[type=range] { width:100%; accent-color:var(--accent); }
+.dim .num { display:flex; align-items:center; gap:6px; }
+.dim input[type=number] { width:72px; padding:6px 8px; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text); font-size:14px; }
+textarea { width:100%; min-height:64px; padding:9px 12px; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text); font-family:inherit; font-size:13px; resize:vertical; }
+input[type=text] { padding:7px 10px; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text); font-size:13px; }
+.row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.spacer { flex:1 1 auto; }
+.reveal { margin-top:14px; padding:12px 14px; border-radius:10px; background:var(--surface2); border:1px solid var(--border); }
+.big { font-size:22px; font-weight:700; }
+.prog { font-variant-numeric:tabular-nums; }
+.err { color:var(--cp-danger); }
+h3 { font-size:15px; margin-bottom:8px; }
+hr { border:0; border-top:1px solid var(--border); margin:14px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>人工质检评分台（盲评）</h1>
+      <div class="sub">逐条读会话后按五维独立打分 · <b>评分时不显示 AI 分数</b>，提交后才揭示，避免被锚定</div>
+    </div>
+    <div class="row">
+      <span class="tag prog" id="progress">加载中…</span>
+      <a class="btn" href="/#agreement">一致性报告</a>
+      <a class="btn" href="/">返回考核台</a>
+    </div>
+  </header>
+
+  <div class="banner">
+    口径说明：人工分沿用与 AI 评分<b>完全相同的五维权重</b>（服务态度 25% / 专业度 25% / 需求挖掘 15% /
+    促成转化 20% / 合规性 15%），否则两边分数不可比。评分结果落盘在 <code>data/human_labels.json</code>，
+    重启不丢。<b>一致性报告只在真人评满 5 条后才出数</b>。
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>待评队列</h3>
+      <div class="row" style="margin-bottom:10px">
+        <button class="btn" id="btn-unlabeled" onclick="loadQueue(false)">只看未评</button>
+        <button class="btn" id="btn-all" onclick="loadQueue(true)">全部</button>
+      </div>
+      <div class="queue" id="queue"></div>
+    </div>
+
+    <div>
+      <div class="card" id="panel">
+        <div class="sub">从左侧选一条会话开始评分。</div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>评分者</h3>
+        <div class="row">
+          <input type="text" id="rater" placeholder="署名（会写进评分记录）" style="width:220px">
+          <span class="sub">评分标准锚点：90+ 优秀 / 75–89 良好 / 60–74 及格 / &lt;60 不合格</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+const DIMS = [
+  { key:'服务态度', w:0.25, hint:'开场问候、共情安抚、结束送别；有无违规用语（如「不关我的事」「保证」「百分百」）' },
+  { key:'专业度',   w:0.25, hint:'回答是否准确详实、是否真解决了客户问题、有没有答非所问或反复推诿' },
+  { key:'需求挖掘', w:0.15, hint:'是否主动追问使用场景、预算、数量、时效等关键信息' },
+  { key:'促成转化', w:0.20, hint:'是否给出可选方案、关联推荐、推动客户做决定（不是硬推销）' },
+  { key:'合规性',   w:0.15, hint:'有无过度承诺、夸大功效、泄露他人信息或诱导好评' },
+];
+let currentId = null;
+let showAll = false;
+
+function esc(s) {
+  return String(s === null || s === undefined ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+async function api(path, opts) {
+  const r = await fetch(API + path, opts);
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(body.detail || ('HTTP ' + r.status));
+  return body;
+}
+
+function renderProgress(st) {
+  document.getElementById('progress').textContent =
+    `已评 ${st.labeled_count} / ${st.total_conversations} 条 · 待评 ${st.pending_count} 条`;
+}
+
+async function loadQueue(all) {
+  showAll = !!all;
+  document.getElementById('btn-unlabeled').className = 'btn' + (all ? '' : ' btn-primary');
+  document.getElementById('btn-all').className = 'btn' + (all ? ' btn-primary' : '');
+  const data = await api('/api/v1/labeling/queue?limit=200');
+  renderProgress(data);
+  const items = all ? data.queue : data.queue.filter(i => !i.labeled);
+  document.getElementById('queue').innerHTML = items.length ? items.map(i => `
+    <div class="q-item ${i.id === currentId ? 'active' : ''}" onclick="openItem('${esc(i.id)}')">
+      <div class="q-main">${esc(i.agent_name)} · ${esc(i.topic)}</div>
+      <div class="q-id">${esc(i.id)} · ${i.message_count} 条消息 · ${esc((i.created_at || '').slice(0,10))}</div>
+      <div>${i.labeled ? '<span class="tag tag-done">已评</span>' : '<span class="tag">未评</span>'}</div>
+    </div>`).join('') : '<div class="sub">队列已清空，全部会话都评完了。</div>';
+}
+
+async function openItem(id) {
+  currentId = id;
+  document.querySelectorAll('.q-item').forEach(el => el.classList.toggle('active', el.onclick && el.getAttribute('onclick').includes(`'${id}'`)));
+  const conv = await api('/api/v1/labeling/' + encodeURIComponent(id));
+  document.getElementById('panel').innerHTML = `
+    <div class="row" style="justify-content:space-between;margin-bottom:6px">
+      <h3>${esc(conv.agent_name)} · ${esc(conv.store)}</h3>
+      <span class="sub">${esc(conv.id)} · 时长 ${conv.duration_seconds}s</span>
+    </div>
+    <div class="sub">场景：${esc(conv.topic)} · 会话日期 ${esc((conv.created_at || '').slice(0,10))}</div>
+    <div class="msgs">${conv.messages.map(m => `
+      <div class="msg msg-${esc(m.role)}">
+        <div class="who">${m.role === 'customer' ? '客户' : (m.role === 'agent' ? '客服' : '系统')}</div>
+        <div>${esc(m.content)}</div>
+      </div>`).join('')}</div>
+    <hr>
+    <h3>五维评分（0–100）</h3>
+    ${DIMS.map(d => `
+      <div class="dim">
+        <div>
+          <label for="dim-${esc(d.key)}">${esc(d.key)}</label>
+          <div class="hint">权重 ${(d.w*100).toFixed(0)}%</div>
+        </div>
+        <div>
+          <input type="range" id="rng-${esc(d.key)}" min="0" max="100" step="1" value="75"
+                 oninput="syncFrom('${esc(d.key)}','range')">
+          <div class="hint">${esc(d.hint)}</div>
+        </div>
+        <div class="num">
+          <input type="number" id="dim-${esc(d.key)}" min="0" max="100" step="1" value="75"
+                 oninput="syncFrom('${esc(d.key)}','number')">
+          <span class="sub">分</span>
+        </div>
+      </div>`).join('')}
+    <div class="row" style="margin:6px 0 12px">
+      <span class="sub">人工综合分（按权重自动算）：</span><span class="big" id="live-overall">—</span>
+    </div>
+    <h3>评语（可选，会随记录落盘）</h3>
+    <textarea id="note" placeholder="例如：促成转化偏弱，给了两个方案但没推动客户做决定。"></textarea>
+    <div class="row" style="margin-top:14px">
+      <button class="btn btn-primary" onclick="submitLabel()">提交评分并揭示 AI 分</button>
+      ${conv.existing_label ? '<button class="btn" onclick="deleteLabel()">撤销这条人工评分</button>' : ''}
+      <span class="spacer"></span>
+      <span class="sub" id="submit-msg"></span>
+    </div>
+    <div id="reveal">${conv.existing_label ? revealBlock(conv.existing_label, null) : ''}</div>`;
+  DIMS.forEach(d => {
+    const v = conv.existing_label && conv.existing_label.dimensions ? conv.existing_label.dimensions[d.key] : 75;
+    setDim(d.key, v);
+  });
+  if (conv.existing_label && conv.existing_label.note) document.getElementById('note').value = conv.existing_label.note;
+  updateOverall();
+}
+
+function setDim(key, val) {
+  const n = document.getElementById('dim-' + key);
+  const r = document.getElementById('rng-' + key);
+  if (n) n.value = val;
+  if (r) r.value = val;
+}
+
+function syncFrom(key, from) {
+  const n = document.getElementById('dim-' + key);
+  const r = document.getElementById('rng-' + key);
+  let v = parseInt(from === 'range' ? r.value : n.value, 10);
+  if (isNaN(v)) v = 0;
+  v = Math.max(0, Math.min(100, v));
+  setDim(key, v);
+  updateOverall();
+}
+
+function currentDims() {
+  const out = {};
+  DIMS.forEach(d => { out[d.key] = parseInt(document.getElementById('dim-' + d.key).value, 10) || 0; });
+  return out;
+}
+
+function updateOverall() {
+  const d = currentDims();
+  const total = DIMS.reduce((s, x) => s + (d[x.key] || 0) * x.w, 0);
+  document.getElementById('live-overall').textContent = total.toFixed(1);
+}
+
+function revealBlock(label, ai) {
+  const diff = (ai === null || ai === undefined) ? null : (label.overall - ai);
+  return `<div class="reveal">
+    <div class="sub">已记录：人工综合分 <b>${label.overall}</b>${ai !== null && ai !== undefined ? ` · AI 综合分 <b>${ai}</b> · 差值 <b>${diff > 0 ? '+' : ''}${diff.toFixed(1)}</b>` : ''}</div>
+    <div class="sub">评分者 ${esc(label.rater || '未署名')} · ${esc((label.labeled_at || '').slice(0,19).replace('T',' '))}</div>
+    <div class="sub">维度分：${DIMS.map(x => `${esc(x.key)} ${label.dimensions ? label.dimensions[x.key] : '—'}`).join(' · ')}</div>
+    ${label.note ? `<div class="sub">评语：${esc(label.note)}</div>` : ''}
+  </div>`;
+}
+
+async function submitLabel() {
+  const rater = document.getElementById('rater').value.trim() || localStorage.getItem('cp_p09_rater') || '';
+  localStorage.setItem('cp_p09_rater', rater);
+  const msg = document.getElementById('submit-msg');
+  msg.textContent = '提交中…';
+  msg.className = 'sub';
+  try {
+    const res = await api('/api/v1/labeling/' + encodeURIComponent(currentId), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dimensions: currentDims(), note: document.getElementById('note').value, rater }),
+    });
+    renderProgress(res);
+    document.getElementById('reveal').innerHTML = revealBlock(
+      { overall: res.human_overall, rater: rater || '未署名', labeled_at: new Date().toISOString(),
+        dimensions: currentDims(), note: document.getElementById('note').value },
+      res.ai_overall);
+    msg.textContent = `已保存（AI 分 ${res.ai_overall}，差 ${res.diff > 0 ? '+' : ''}${res.diff}）`;
+    document.getElementById('progress').textContent =
+      `已评 ${res.labeled_count} / ${res.total_conversations} 条 · 待评 ${res.pending_count} 条`;
+    await loadQueue(showAll);
+    if (res.pending_count > 0) {
+      const next = (await api('/api/v1/labeling/queue?limit=200')).queue.find(i => !i.labeled);
+      if (next) openItem(next.id);
+    }
+  } catch (e) {
+    msg.textContent = '提交失败：' + e.message;
+    msg.className = 'sub err';
+  }
+}
+
+async function deleteLabel() {
+  if (!confirm('撤销本条人工评分？')) return;
+  try {
+    const res = await api('/api/v1/labeling/' + encodeURIComponent(currentId), { method: 'DELETE' });
+    renderProgress(res);
+    document.getElementById('reveal').innerHTML = '';
+    await loadQueue(showAll);
+  } catch (e) { alert('撤销失败：' + e.message); }
+}
+
+(async function init() {
+  document.getElementById('rater').value = localStorage.getItem('cp_p09_rater') || '';
+  document.getElementById('btn-unlabeled').className = 'btn btn-primary';
+  try { await loadQueue(false); } catch (e) {
+    document.getElementById('queue').innerHTML = '<div class="sub err">加载失败：' + esc(e.message) + '</div>';
+  }
+})();
+</script>
+</body>
+</html>

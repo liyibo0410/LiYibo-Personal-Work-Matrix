@@ -1,0 +1,57 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p09-ai-sales-assessment\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\software\PycharmProjects\面试项目\projects\p09-ai-sales-assessment
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 41 items
+
+tests/test_api.py::test_health PASSED                                    [  2%]
+tests/test_api.py::test_stats_overview PASSED                            [  4%]
+tests/test_api.py::test_leaderboard_sorted_and_ranked PASSED             [  7%]
+tests/test_api.py::test_agent_report PASSED                              [  9%]
+tests/test_api.py::test_agent_report_unknown_404 PASSED                  [ 12%]
+tests/test_api.py::test_list_conversations_pagination PASSED             [ 14%]
+tests/test_api.py::test_list_conversations_filter_by_agent PASSED        [ 17%]
+tests/test_api.py::test_list_conversations_filter_by_score PASSED        [ 19%]
+tests/test_api.py::test_conversation_detail PASSED                       [ 21%]
+tests/test_api.py::test_conversation_detail_unknown_404 PASSED           [ 24%]
+tests/test_api.py::test_evaluate_returns_mock_notice_and_score PASSED    [ 26%]
+tests/test_api.py::test_evaluate_empty_messages_400 PASSED               [ 29%]
+tests/test_api.py::test_list_rules PASSED                                [ 31%]
+tests/test_api.py::test_update_rule_toggle_and_penalty PASSED            [ 34%]
+tests/test_api.py::test_update_unknown_rule_404 PASSED                   [ 36%]
+tests/test_api.py::test_agreement_refuses_without_real_human_labels PASSED [ 39%]
+tests/test_api.py::test_no_conversation_carries_a_fabricated_human_score PASSED [ 41%]
+tests/test_api.py::test_agreement_statistics PASSED                      [ 43%]
+tests/test_api.py::test_import_json PASSED                               [ 46%]
+tests/test_api.py::test_import_csv PASSED                                [ 48%]
+tests/test_api.py::test_import_unsupported_format_400 PASSED             [ 51%]
+tests/test_labeling.py::test_queue_is_blind PASSED                       [ 53%]
+tests/test_labeling.py::test_submit_label_uses_shared_weights_and_persists PASSED [ 56%]
+tests/test_labeling.py::test_label_validation_rejects_bad_payloads PASSED [ 58%]
+tests/test_labeling.py::test_delete_label_clears_state_and_file PASSED   [ 60%]
+tests/test_labeling.py::test_kappa_matches_confusion_matrix PASSED       [ 63%]
+tests/test_p01_integration.py::test_p01_status_endpoint PASSED           [ 65%]
+tests/test_p01_integration.py::test_import_from_p01_happy_path PASSED    [ 68%]
+tests/test_p01_integration.py::test_import_from_p01_degradation_does_not_fabricate PASSED [ 70%]
+tests/test_p01_integration.py::test_import_from_p01_empty_sender_ids_rejected PASSED [ 73%]
+tests/test_scoring.py::test_score_has_all_five_dimensions PASSED         [ 75%]
+tests/test_scoring.py::test_overall_is_weighted_sum_of_dimensions PASSED [ 78%]
+tests/test_scoring.py::test_every_dimension_score_clamped PASSED         [ 80%]
+tests/test_scoring.py::test_low_scoring_dimensions_produce_suggestions PASSED [ 82%]
+tests/test_scoring.py::test_forbidden_words_recorded_as_violations PASSED [ 85%]
+tests/test_scoring.py::test_false_promise_drops_compliance PASSED        [ 87%]
+tests/test_scoring.py::test_competitor_mention_drops_compliance PASSED   [ 90%]
+tests/test_scoring.py::test_greeting_empathy_closing_boost_attitude PASSED [ 92%]
+tests/test_scoring.py::test_upsell_attempt_boosts_conversion PASSED      [ 95%]
+tests/test_scoring.py::test_multi_turn_engagement_boosts_demand_mining PASSED [ 97%]
+tests/test_scoring.py::test_detailed_long_response_boosts_expertise PASSED [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\software\PycharmProjects\面试项目\projects\p09-ai-sales-assessment\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 41 passed, 1 warning in 0.35s ========================

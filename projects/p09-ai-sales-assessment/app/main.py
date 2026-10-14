@@ -8,10 +8,11 @@ from __future__ import annotations
 
 import csv
 import io
+import json
 import math
 import random
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -331,10 +332,10 @@ def _generate_conversations() -> list[Conversation]:
                 duration_seconds=max(duration, 30),
             )
             conv.score = _rule_based_score(conv)
-            # Human scores: correlated with AI but with some variance
-            if conv.score:
-                noise = random.uniform(-12, 12)
-                conv.human_score = max(0, min(100, conv.score.overall + noise))
+            # 人工评分一律留空：原先这里是 `AI 分 + random.uniform(-12, 12)`，
+            # 用「AI 分加噪声」当人工分算 Kappa，等于让 AI 和自己一致性 100%，
+            # 属于把模拟数据冒充真实质检结论。改为只能由真人从 /api/v1/labeling 写入。
+            conv.human_score = None
             convos.append(conv)
 
     return convos
@@ -492,6 +493,71 @@ def _rule_based_score(conv: Conversation) -> ConversationScore:
 
 
 CONVERSATIONS: list[Conversation] = _generate_conversations()
+
+
+# ---------------------------------------------------------------------------
+# 真人质检评分（人工标注）落盘与回填
+# ---------------------------------------------------------------------------
+# 门禁要求「与人工评分一致性报告可出具」。一致性必须是真人逐条读会话后打的分，
+# 不能是「AI 分 + 噪声」—— 那等于让 AI 和它自己比。
+# 评分台：web/label.html；落盘：data/human_labels.json（纯文本，可进 git 当证据）。
+# 人工分沿用与 AI 评分完全相同的五维权重，保证两个分数在同一口径下可比。
+
+HUMAN_WEIGHTS: dict[str, float] = {
+    "服务态度": 0.25, "专业度": 0.25, "需求挖掘": 0.15, "促成转化": 0.20, "合规性": 0.15,
+}
+LABELS_PATH = Path(__file__).resolve().parent.parent / "data" / "human_labels.json"
+
+
+class HumanLabelIn(BaseModel):
+    dimensions: dict[str, float] = Field(default_factory=dict)
+    note: str = ""
+    rater: str = ""
+
+
+def _load_human_labels() -> dict[str, dict[str, Any]]:
+    if not LABELS_PATH.exists():
+        return {}
+    try:
+        raw = json.loads(LABELS_PATH.read_text(encoding="utf-8"))
+    except (ValueError, OSError):
+        return {}
+    return raw if isinstance(raw, dict) else {}
+
+
+def _save_human_labels(labels: dict[str, dict[str, Any]]) -> None:
+    LABELS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    LABELS_PATH.write_text(
+        json.dumps(labels, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+HUMAN_LABELS: dict[str, dict[str, Any]] = _load_human_labels()
+
+
+def _human_overall(dimensions: dict[str, float]) -> float:
+    return round(sum(dimensions[d] * HUMAN_WEIGHTS[d] for d in HUMAN_WEIGHTS), 1)
+
+
+def _apply_human_labels() -> int:
+    """把已落盘的真人评分回填到会话上，使重启后一致性报告依然成立。"""
+    applied = 0
+    for conv in CONVERSATIONS:
+        label = HUMAN_LABELS.get(conv.id)
+        if not label or label.get("overall") is None:
+            conv.human_score = None
+            continue
+        conv.human_score = float(label["overall"])
+        applied += 1
+    return applied
+
+
+_apply_human_labels()
+
+# 启动时就存在的会话都是演示预置（合成）数据；之后经 /api/v1/import 或
+# /api/v1/import/from-p01 进来的才是真实会话。一致性报告要按这个口径交代来源。
+_SEED_IDS: frozenset[str] = frozenset(c.id for c in CONVERSATIONS)
 
 
 # ---------------------------------------------------------------------------
@@ -805,12 +871,140 @@ async def update_rule(rule_id: str, body: dict):
     return {"rule": rule.model_dump(), "message": "质检规则已更新"}
 
 
+# ---------------------------------------------------------------------------
+# 真人评分台（人工标注）
+# ---------------------------------------------------------------------------
+
+MIN_LABELS_FOR_AGREEMENT = 5
+
+
+def _label_status() -> dict[str, Any]:
+    labeled = [cid for cid in HUMAN_LABELS if HUMAN_LABELS[cid].get("overall") is not None]
+    raters = sorted({str(HUMAN_LABELS[cid].get("rater") or "未署名") for cid in labeled})
+    stamps = sorted(str(HUMAN_LABELS[cid].get("labeled_at") or "") for cid in labeled)
+    return {
+        "labeled_count": len(labeled),
+        "total_conversations": len(CONVERSATIONS),
+        "pending_count": len(CONVERSATIONS) - len(labeled),
+        "raters": raters,
+        "first_labeled_at": stamps[0] if stamps else None,
+        "last_labeled_at": stamps[-1] if stamps else None,
+        "min_labels_for_agreement": MIN_LABELS_FOR_AGREEMENT,
+        "weights": HUMAN_WEIGHTS,
+    }
+
+
+def _blind_view(conv: Conversation) -> dict[str, Any]:
+    """盲评视图：刻意不含任何 AI 分数，避免真人评分被锚定。"""
+    return {
+        "id": conv.id,
+        "agent_name": conv.agent_name,
+        "store": conv.store,
+        "topic": conv.topic,
+        "created_at": conv.created_at,
+        "duration_seconds": conv.duration_seconds,
+        "message_count": len(conv.messages),
+        "messages": [m.model_dump() for m in conv.messages],
+    }
+
+
+@app.get("/api/v1/labeling")
+async def labeling_status():
+    return _label_status()
+
+
+@app.get("/api/v1/labeling/queue")
+async def labeling_queue(limit: int = Query(30, ge=1, le=200)):
+    """待盲评队列（未打过的排前面，已打过的带 labeled=true 供复核）。"""
+    pending = [c for c in CONVERSATIONS if c.id not in HUMAN_LABELS]
+    done = [c for c in CONVERSATIONS if c.id in HUMAN_LABELS]
+    items = [_blind_view(c) | {"labeled": False} for c in pending[:limit]]
+    items += [_blind_view(c) | {"labeled": True} for c in done[: max(0, limit - len(items))]]
+    return _label_status() | {"queue": items}
+
+
+@app.get("/api/v1/labeling/{conv_id}")
+async def labeling_get_one(conv_id: str):
+    conv = next((c for c in CONVERSATIONS if c.id == conv_id), None)
+    if not conv:
+        raise HTTPException(status_code=404, detail="会话不存在")
+    existing = HUMAN_LABELS.get(conv_id)
+    return _blind_view(conv) | {
+        "existing_label": existing,
+        "labeled": existing is not None,
+    }
+
+
+@app.post("/api/v1/labeling/{conv_id}")
+async def labeling_submit(conv_id: str, body: HumanLabelIn):
+    conv = next((c for c in CONVERSATIONS if c.id == conv_id), None)
+    if not conv:
+        raise HTTPException(status_code=404, detail="会话不存在")
+
+    unknown = [d for d in body.dimensions if d not in HUMAN_WEIGHTS]
+    if unknown:
+        raise HTTPException(status_code=422, detail=f"未知评分维度：{unknown}")
+    missing = [d for d in HUMAN_WEIGHTS if d not in body.dimensions]
+    if missing:
+        raise HTTPException(status_code=422, detail=f"缺少维度评分：{missing}")
+    for dim, val in body.dimensions.items():
+        if not 0 <= float(val) <= 100:
+            raise HTTPException(status_code=422, detail=f"{dim} 分数须在 0~100 之间")
+
+    dimensions = {d: float(body.dimensions[d]) for d in HUMAN_WEIGHTS}
+    overall = _human_overall(dimensions)
+    HUMAN_LABELS[conv_id] = {
+        "dimensions": dimensions,
+        "overall": overall,
+        "note": body.note.strip(),
+        "rater": (body.rater.strip() or "未署名"),
+        "labeled_at": datetime.now(timezone.utc).isoformat(),
+    }
+    _save_human_labels(HUMAN_LABELS)
+    conv.human_score = overall
+
+    ai_overall = conv.score.overall if conv.score else None
+    return {
+        "ok": True,
+        "conversation_id": conv_id,
+        "human_overall": overall,
+        "ai_overall": ai_overall,
+        "diff": round(overall - ai_overall, 1) if ai_overall is not None else None,
+        "revealed": True,
+        **_label_status(),
+    }
+
+
+@app.delete("/api/v1/labeling/{conv_id}")
+async def labeling_delete(conv_id: str):
+    if conv_id not in HUMAN_LABELS:
+        raise HTTPException(status_code=404, detail="该会话还没有人工评分")
+    HUMAN_LABELS.pop(conv_id)
+    _save_human_labels(HUMAN_LABELS)
+    conv = next((c for c in CONVERSATIONS if c.id == conv_id), None)
+    if conv:
+        conv.human_score = None
+    return {"ok": True, **_label_status()}
+
+
 @app.get("/api/v1/agreement")
 async def get_agreement():
-    """Human-AI agreement statistics with Kappa coefficient."""
+    """人工评分与 AI 评分的一致性：Cohen's Kappa + 混淆矩阵 + 皮尔逊相关。
+
+    只统计 `data/human_labels.json` 里真实存在的人工评分（由真人从评分台逐条盲评写入）。
+    样本不足 `MIN_LABELS_FOR_AGREEMENT` 条时不出数 —— 小样本 Kappa 极易失真，不能当结论讲。
+    """
     pairs = [(c.human_score, c.score.overall) for c in CONVERSATIONS if c.human_score is not None and c.score]
-    if not pairs:
-        return {"error": "暂无可用于比对的人工评分与 AI 评分"}
+    if len(pairs) < MIN_LABELS_FOR_AGREEMENT:
+        return {
+            "error": (
+                f"真人评分不足：当前 {len(pairs)} 条，至少需要 {MIN_LABELS_FOR_AGREEMENT} 条才出具一致性报告"
+            ),
+            "kappa": None,
+            "labeled_count": len(pairs),
+            "min_labels_required": MIN_LABELS_FOR_AGREEMENT,
+            "how_to_label": "打开评分台 /label.html（或 POST /api/v1/labeling/{conversation_id}）逐条盲评",
+        }
 
     # Discretize into categories for Kappa
     # 注意：以下 excellent/good/average/poor 是机器可读的分类键（前端用它们索引 confusion_matrix），
@@ -871,6 +1065,10 @@ async def get_agreement():
                 "avg_diff": round(sum(abs(h - a) for h, a in cat_pairs) / len(cat_pairs), 1),
             }
 
+    labeled_ids = [c.id for c in CONVERSATIONS if c.human_score is not None]
+    imported_labeled = sum(1 for cid in labeled_ids if cid not in _SEED_IDS)
+    status = _label_status()
+
     return {
         "kappa": round(kappa, 4),
         "kappa_interpretation": (
@@ -886,7 +1084,24 @@ async def get_agreement():
         "sample_size": n,
         "confusion_matrix": matrix,
         "category_breakdown": cat_breakdown,
-        "mock_notice": "Kappa 系数由演示数据计算得出，人工评分为模拟值，并非真实质检会话。",
+        "provenance": {
+            "human_scores_are": "real_human_labels",
+            "raters": status["raters"],
+            "first_labeled_at": status["first_labeled_at"],
+            "last_labeled_at": status["last_labeled_at"],
+            "blind": True,
+            "weights": HUMAN_WEIGHTS,
+            "conversation_source": {
+                "imported_or_p01_live": imported_labeled,
+                "seed_demo": n - imported_labeled,
+            },
+        },
+        "limitations": [
+            "评分者是单人，未做双评分者 inter-rater 校验，Kappa 只反映「该评分者与规则引擎」的一致程度",
+            "人工分与 AI 分都被切成 excellent≥85 / good≥70 / average≥55 / poor 四档后再算 Kappa，"
+            "阈值本身会影响结果",
+            f"样本量 {n} 条，小样本 Kappa 的置信区间很宽，不能当成上线依据",
+        ] + ([] if imported_labeled else ["本批次被评的会话全部是演示预置会话，不是线上真实客服记录"]),
     }
 
 
@@ -1034,6 +1249,12 @@ async def import_from_p01(body: P01ImportRequest):
 @app.get("/")
 async def serve_index():
     return FileResponse(WEB_DIR / "index.html")
+
+
+@app.get("/label.html")
+async def serve_label():
+    """人工质检评分台（盲评）。一致性报告依赖这里产生的真人评分。"""
+    return FileResponse(WEB_DIR / "label.html")
 
 
 # ---------------------------------------------------------------------------

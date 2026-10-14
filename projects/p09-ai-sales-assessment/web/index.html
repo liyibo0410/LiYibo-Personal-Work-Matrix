@@ -317,7 +317,9 @@ tr:hover td { background:var(--surface2); }
         <p>对比 AI 评分与人工评分</p>
       </div>
       <div class="mock-notice">
-        &#9888; 演示说明：Kappa 系数基于演示数据计算，使用模拟人工评分，而非真实评估会话。
+        &#9888; 口径说明：本页的<b>人工分必须是真人在评分台逐条盲评出来的</b>（早先用「AI 分 + 随机噪声」
+        冒充人工分算 Kappa 的做法已删除 —— 那等于让 AI 和自己比）。评分未满最小样本前本页不出数。
+        <a href="/label.html" style="color:var(--accent);font-weight:600;">去人工评分台 →</a>
       </div>
       <div id="agreement-content"></div>
     </div>
@@ -717,6 +719,18 @@ async function toggleRule(id, enabled) {
 // --- Agreement ---
 async function loadAgreement() {
   const data = await api('/api/v1/agreement');
+  const box = document.getElementById('agreement-content');
+
+  // 真人评分不足时不出数：小样本 Kappa 极易失真
+  if (data.kappa === null || data.kappa === undefined) {
+    box.innerHTML = `<div class="card">
+      <div class="card-title">暂无人机一致性报告</div>
+      <p style="color:var(--cp-ink2);margin:8px 0 12px;">${data.error || '尚未录入真人评分'}</p>
+      <p style="color:var(--cp-ink2);font-size:13px;">${data.how_to_label || ''}</p>
+      <a class="btn btn-primary" href="/label.html" style="margin-top:12px;display:inline-block;">去人工评分台</a>
+    </div>`;
+    return;
+  }
 
   let html = `<div class="stats-grid">
     <div class="stat-card" style="text-align:center;">
@@ -775,6 +789,21 @@ async function loadAgreement() {
     }
     html += '</tbody></table></div>';
   }
+
+  // 这份 Kappa 的口径：一致性数字必须自带来源与局限，否则又只剩一个孤零零的系数
+  const pv = data.provenance || {};
+  const src = pv.conversation_source || {};
+  html += `<div class="card" style="margin-top:16px;"><div class="card-title">这份一致性报告的口径</div>
+    <table><tbody>
+      <tr><td>人工分来源</td><td>${pv.human_scores_are === 'real_human_labels' ? '真人在评分台逐条盲评（data/human_labels.json）' : '未知'}</td></tr>
+      <tr><td>评分者</td><td>${(pv.raters || []).join('、') || '未署名'}</td></tr>
+      <tr><td>评分时间</td><td>${(pv.first_labeled_at || '').slice(0, 10)} ~ ${(pv.last_labeled_at || '').slice(0, 10)}</td></tr>
+      <tr><td>被评会话来源</td><td>P01 真实导入 ${src.imported_or_p01_live || 0} 条 · 演示预置 ${src.seed_demo || 0} 条</td></tr>
+      <tr><td>是否盲评</td><td>${pv.blind ? '是（评分时不显示 AI 分，提交后才揭示）' : '否'}</td></tr>
+      <tr><td>人工分权重</td><td>${pv.weights ? Object.entries(pv.weights).map(([k, v]) => `${k} ${(v * 100).toFixed(0)}%`).join(' / ') : '与 AI 评分一致'}</td></tr>
+    </tbody></table>
+    <div style="margin-top:10px;color:var(--cp-ink2);font-size:13px;">已知局限：${(data.limitations || []).join('；')}</div>
+  </div>`;
 
   // Scatter chart
   html += '<div class="chart-box" style="margin-top:16px;"><div class="card-title">人工 vs AI 评分散点图</div><div id="chart-scatter" class="chart-container"></div></div>';

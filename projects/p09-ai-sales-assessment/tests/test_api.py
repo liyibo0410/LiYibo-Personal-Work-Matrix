@@ -131,23 +131,70 @@ def test_update_unknown_rule_404(client):
 
 # ── Human-AI agreement ───────────────────────────────────────────
 
+DIMENSIONS = ("服务态度", "专业度", "需求挖掘", "促成转化", "合规性")
+
+
+def _label_first_conversations(client, score: float, count: int = 6) -> list[str]:
+    """用评分台接口给前 count 条会话打真人分（五维同分 → 加权综合分即该分）。"""
+    queue = client.get("/api/v1/labeling/queue?limit=50").json()["queue"]
+    ids = [q["id"] for q in queue if not q["labeled"]][:count]
+    assert len(ids) == count, "演示会话不足，无法构造一致性样本"
+    for cid in ids:
+        resp = client.post(
+            f"/api/v1/labeling/{cid}",
+            json={
+                "dimensions": {d: score for d in DIMENSIONS},
+                "rater": "测试评分员",
+                "note": "自动化测试写入",
+            },
+        )
+        assert resp.status_code == 200
+    return ids
+
+
+def test_agreement_refuses_without_real_human_labels(client):
+    """没有真人评分时不许出 Kappa —— 早先的「AI 分 + 噪声」假一致性不再存在。"""
+    data = client.get("/api/v1/agreement").json()
+    assert data["kappa"] is None
+    assert "真人评分不足" in data["error"]
+    assert data["labeled_count"] == 0
+    assert data["min_labels_required"] >= 5
+    assert "label" in data["how_to_label"]
+
+
+def test_no_conversation_carries_a_fabricated_human_score(client):
+    """不变式：任何非空的人工分都必须能在真人标注里找到，杜绝噪声造分回归。"""
+    from app import main as app_main
+
+    for conv in app_main.CONVERSATIONS:
+        if conv.human_score is not None:
+            assert conv.id in app_main.HUMAN_LABELS, f"{conv.id} 的人工分没有标注来源"
+
+
 def test_agreement_statistics(client):
+    _label_first_conversations(client, score=70.0, count=6)
     data = client.get("/api/v1/agreement").json()
     assert -1 <= data["kappa"] <= 1
     assert 0 <= data["observed_agreement"] <= 1
     assert 0 <= data["expected_agreement"] <= 1
     assert -1 <= data["pearson_correlation"] <= 1
     assert data["mean_absolute_error"] >= 0
-    assert data["sample_size"] == 22
+    assert data["sample_size"] == 6
     assert data["kappa_interpretation"] in {
         "近乎完全一致", "高度一致", "中度一致", "一般一致", "微弱一致"
     }
     # Confusion matrix cells must sum to the sample size.
     total = sum(sum(row.values()) for row in data["confusion_matrix"].values())
     assert total == data["sample_size"]
-    # The mock/demo boundary must be disclosed in the response.
-    notice = data["mock_notice"]
-    assert "演示数据" in notice or "模拟" in notice
+    # 口径必须自带：真人盲评 + 评分者 + 会话来源 + 局限
+    prov = data["provenance"]
+    assert prov["human_scores_are"] == "real_human_labels"
+    assert prov["raters"] == ["测试评分员"]
+    assert prov["blind"] is True
+    assert sum(prov["conversation_source"].values()) == data["sample_size"]
+    assert data["limitations"]
+    # 旧的「模拟人工分」声明必须彻底消失
+    assert "mock_notice" not in data
 
 
 # ── Import ───────────────────────────────────────────────────────
