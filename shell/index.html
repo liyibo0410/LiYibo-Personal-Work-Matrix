@@ -140,7 +140,7 @@
         <div class="cp-muted" style="font-size:var(--cp-fs-sm)"><span data-cp-brand="name_en">CloudPivot</span> · <span data-cp-brand="tagline">AI 电商运营中台</span></div>
       </div>
     </div>
-    <div class="cp-hint" id="login-reason" style="margin-bottom:var(--cp-sp-4)">登录后可点开任意模块做真实操作。演示账号如下，点一下即填充。</div>
+    <div class="cp-hint" id="login-reason" style="margin-bottom:var(--cp-sp-4)">五个演示账号对应五种业务角色（老板 / 运营 / 法务 / 销售 / 管理员）。登录后模块里的数据、拦截与降级标注都是本机真实行为，不是录屏。点下方账号即填充。</div>
     <form id="login-form" autocomplete="on">
       <div class="cp-field">
         <label class="cp-label" for="login-user">账号</label>
@@ -204,10 +204,10 @@
       </a>
       <div class="lp-nav-links">
         <a href="#lp-modules">十大模块</a>
-        <a href="#lp-arch">架构</a>
-        <a href="#lp-evidence">评测证据</a>
+        <a href="#lp-arch">架构与取舍</a>
+        <a href="#lp-evidence">实测数据</a>
         <a href="#lp-boundary">真实边界</a>
-        <a href="#lp-about">关于作者</a>
+        <a href="#lp-about">关于我</a>
       </div>
       <div class="lp-nav-actions">
         <button class="cp-icon-btn" id="btn-theme-public" title="切换主题" type="button">◐</button>
@@ -220,30 +220,32 @@
       <div class="lp-wrap">
 
         <header class="lp-hero">
-          <span class="lp-eyebrow"><i></i>十个模块 · 四层架构 · 506 项测试实跑 · 2026</span>
-          <h1 class="lp-h1">一套<span class="accent">能点开就跑</span>的 AI 电商运营中台</h1>
+          <span class="lp-eyebrow"><i></i>AI-FDE / AI 应用开发作品集 · 十个模块本机实跑 · 2026</span>
+          <h1 class="lp-h1">十个 AI 能力模块，跑在<span class="accent">同一套</span>电商运营中台里</h1>
           <p class="lp-lead">
-            不是十个各自为战的 demo，而是合并成<b>一套统一系统</b>：统一认证、服务注册、设计令牌、
-            跨模块真实调用，每个模块带评测集与证据文件。本页每个数字都能在本仓库复核，
-            跑不通的地方直接写「未跑通 + 原因」。
+            做给品牌电商与 MCN：<b>数据中台定口径，能力层供弹药，四条业务线组装落地，低分样本回流微调层</b>。
+            十个模块共用一份服务注册、一套设计令牌、一个登录入口，可以在同一台机器上连着操作，不是十个互不相干的 demo。
+          </p>
+          <p class="lp-lead" style="margin-top:var(--cp-sp-3)">
+            本页每个指标都能在 <code>_evidence/</code> 找到对应的日志或截图；没测过的（并发 P95、覆盖率）就明写「未测」。
           </p>
           <div class="lp-ctas">
             <a class="cp-btn primary" id="cta-demo" href="#/workspace/ecommerce-ops">进入在线演示 · 旗舰 P02</a>
-            <a class="cp-btn" href="#lp-modules">先看十大模块 ↓</a>
+            <a class="cp-btn" href="#lp-modules">看十大模块与实测数据 ↓</a>
           </div>
         </header>
 
         <div class="cp-statbar" id="statbar" style="justify-content:center"></div>
 
         <section class="lp-section" id="lp-modules">
-          <h2 class="lp-h2">十大能力模块</h2>
-          <p class="lp-sub">按四层架构排列。卡片黄框是这个模块的 <b>Mock 边界</b>，与 README 第六节一一对应；灰点是网关对各端口的真实 TCP 探活，不是写死的「已运行」。</p>
+          <h2 class="lp-h2">十大能力模块 · 四层架构</h2>
+          <p class="lp-sub">自下而上读：L0 定口径，L1 沉淀模型，L2 把能力做成可调用的服务，L3 组装成业务线。每张卡三行硬信息 —— 技术选型、实测数字、<b style="color:var(--cp-ink1)">Mock 边界</b>（真实到哪一步、哪里是模拟）。灰点是网关对各端口的真实 TCP 探活，不是写死的「已运行」；没起来的模块会给一条可复制的启动命令而不是一个空白 iframe。</p>
           <div id="matrix"></div>
         </section>
 
         <section class="lp-section" id="lp-arch">
-          <h2 class="lp-h2">数据流闭环与六个工程决策</h2>
-          <p class="lp-sub">四条业务线共用同一份口径，低分样本回流到微调层 —— 这是「一套系统」区别于十个 demo 的地方。</p>
+          <h2 class="lp-h2">一条数据闭环，六个工程决策</h2>
+          <p class="lp-sub">闭环的意义是<b style="color:var(--cp-ink1)">口径只有一份</b>：同一个「GMV」在数据中台、运营看板、销售考核里算的是同一个数；低分会话回流微调层，新模型再回到 P01 / P02 的回复里。下面六条 ADR 是这套合并形态里我认为最该被追问的决策，每条都连同代价一起写 —— 收益谁都会讲。</p>
           <div class="cp-flow">
             <span class="cp-flow-node">P06 数据中台</span><span class="cp-flow-arrow">→</span>
             <span class="cp-flow-node">P04 知识库 / P07 素材</span><span class="cp-flow-arrow">→</span>
@@ -252,28 +254,28 @@
             <span class="cp-flow-node">P10 微调</span><span class="cp-flow-arrow">↺</span>
           </div>
           <div class="cp-grid cols-auto" style="margin-top:var(--cp-sp-4)">
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">入口 · ADR-0001</b><br>微前端外壳 + iframe 挂载，而非单体合并</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">认证 · ADR-0003</b><br>外壳签发 HS256 令牌、postMessage 下发；P02 保留自身 Cookie RBAC（有意识例外）</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">端口 · ADR-0002</b><br>SERVICE_REGISTRY 是唯一真源，跨模块调用禁止硬编码端口</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">取数 · ADR-0004</b><br>P02→P06、P09→P01 真实 HTTP；降级标 degraded 且不伪造字段</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">视觉 · ADR-0005</b><br>ui-kit 令牌单一真源：静态模块运行时挂 /shared，构建型构建期内联 + 主题桥</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">例外 · ADR-0006</b><br>P05 零第三方依赖：内网客户 <code>python run.py</code> 即跑，不必先装 Docker</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">入口 · ADR-0001</b><br>微前端外壳 + iframe 挂载，不做单体合并。三类前端栈异构（Next.js / Vue 3 + Vite / FastAPI 直挂静态页），合并等于重写四个前端；代价是主题与令牌只能运行时尽力同步。</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">认证 · ADR-0003</b><br>外壳用 shared/auth 签发 HS256、postMessage 下发，模块只校验不重造登录。P02 保留自身 Cookie RBAC —— 改它会绕过它已有的权限模型，这是<b style="color:var(--cp-ink1)">有意识的例外</b>。</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">端口 · ADR-0002</b><br>SERVICE_REGISTRY 是端口唯一真源，跨模块调用禁止硬编码对方端口。起因是一次真实故障：P03 前端把后端写成 8000，实为 8030，平台内直接不可用。</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">取数 · ADR-0004</b><br>P02→P06、P09→P01 真实 HTTP。降级态用「少返回」而不是「编一个」：<code>degraded=True</code> 且响应里直接不含 metrics 字段。</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">视觉 · ADR-0005</b><br>ui-kit 令牌单一真源。静态模块运行时挂 <code>/shared</code>，构建型模块构建期内联 + 主题桥；代价是改色后必须重新构建才生效。</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">例外 · ADR-0006</b><br>P05 只用标准库：客户机 <code>python run.py</code> 即跑，不必先装 Docker。风险打分要的是确定性与可复现，这一点比「栈统一」更重要。</div></div>
           </div>
         </section>
 
         <section class="lp-section" id="lp-evidence">
-          <h2 class="lp-h2">可复核的评测与测试</h2>
-          <p class="lp-sub">每张卡下面写着证据文件路径；报告都附可复现的 <code>verify_*.py</code>。</p>
+          <h2 class="lp-h2">实测数据，以及它从哪来</h2>
+          <p class="lp-sub">面试里最常被追问的一句是「这个数字怎么来的」，所以每张卡下面都留着证据文件路径，多数报告还带可复跑的 <code>verify_*.py</code>。测试通过数是各模块<b style="color:var(--cp-ink1)">最近一次 pytest 实跑</b>的结果，是「通过数」而不是覆盖率；全平台没做过并发压测，这条写在下一节而不是藏起来。</p>
           <div class="lp-ev-grid">
-            <div class="lp-ev-card"><div class="lp-ev-num">506</div><div class="lp-ev-lbl">十模块 pytest 实跑通过数（2026-10-12/13 采集）<br>P01 62 · P02 162 · P03 61 · P04 23 · P05 46 · P06 44 · P07 18 · P08 30 · P09 34 · P10 26</div><div class="lp-ev-src">README 第五节 · _evidence/*/INDEX.md</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-num">18/18</div><div class="lp-ev-lbl">P02 广告法合规高危召回 100%，带 span、建议替换词与<b>法条</b>；合规文案误报 0/10，对抗绕过 0/6（36 条用例 / 108 条规则词库）</div><div class="lp-ev-src">_evidence/p02/合规检测评测报告.md · verify_compliance.py</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-num">36 题</div><div class="lp-ev-lbl">P04 RAG 评测集（easy 22 · medium 11 · hard 3，覆盖 21 维度），ground_truth 逐条对照源文档、零编造，跑 Ragas 五指标</div><div class="lp-ev-src">_evidence/p04/rag_compare_report.json</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-num">66/66</div><div class="lp-ev-lbl">P05 零依赖自检测通过，另有 46 项 pytest；LLM 二阶段语义复核实测 confirm 2 / need_human 1 / false_positive 0</div><div class="lp-ev-src">_evidence/p05/D4任务卡2-3验收报告-P1复核.md · verify_llm_review.json</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-num">7 项</div><div class="lp-ev-lbl">P02→P06 真实指标（GMV/订单/转化率/客单价/退货率/UV/PV），<code>metrics_source=p06-live</code>；指向死端口则 <code>degraded=True</code> 且响应里<b>不带</b> metrics 字段</div><div class="lp-ev-src">_evidence/p02-ecommerce-ops-assistant/cross-module-p06-20261013.md</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-num">65.5 / 70.5</div><div class="lp-ev-lbl">P09→P01 真实拉取会话后按 session 聚合的质检评分；P01 不可用时 <code>imported=0</code>，不编样本</div><div class="lp-ev-src">_evidence/p09-ai-sales-assessment/cross-module-p01-20261013.md</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-num">565</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">十个模块的 pytest 通过总数</b><br>逐模块取最新一次运行，日志已入仓库可查<br>P01 62 · P02 162 · P03 61 · P04 23 · P05 46 · P06 44 · P07 68 · P08 30 · P09 41 · P10 28</div><div class="lp-ev-src">_evidence/*/pytest-*.log · _evidence/*/INDEX.md</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-num">18/18</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P02 广告法合规：高危表述全部召回</b><br>命中项带 span、建议替换词与<b style="color:var(--cp-ink1)">法条</b>；合规文案误报 0/10，对抗样本 0/6 绕过（零宽字符 / 全角空格 / 形近字归一化后仍命中；36 条用例 / 108 条规则词库）</div><div class="lp-ev-src">_evidence/p02/合规检测评测报告.md · verify_compliance.py</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-num">36 题</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P04 RAG 评测集</b><br>easy 22 · medium 11 · hard 3，覆盖 21 个维度；ground_truth 逐条对照源文档、零编造，跑 Ragas 五指标</div><div class="lp-ev-src">_evidence/p04/rag_compare_report.json</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-num">66/66</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P05 零依赖自检通过</b><br>纯标准库，另跑 46 项 pytest；LLM 二阶段语义复核实测 confirm 2 / need_human 1 / false_positive 0</div><div class="lp-ev-src">_evidence/p05/D4任务卡2-3验收报告-P1复核.md · verify_llm_review.json</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-num">7 项</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P02→P06 真实跨模块取数</b><br>GMV / 订单 / 转化率 / 客单价 / 退货率 / UV / PV，响应标 <code>metrics_source=p06-live</code>；指向死端口则 <code>degraded=True</code> 且响应里<b style="color:var(--cp-ink1)">不带</b> metrics 字段</div><div class="lp-ev-src">_evidence/p02-ecommerce-ops-assistant/cross-module-p06-20261013.md</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-num">65.5 / 70.5</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P09→P01 真实拉取会话后的质检评分</b><br>按 session 聚合再打分；P01 不可用时 <code>imported=0</code>，不编样本充数</div><div class="lp-ev-src">_evidence/p09-ai-sales-assessment/cross-module-p01-20261013.md</div></div>
           </div>
 
-          <h3 class="cp-section-title">P04 检索质量：本地重排 vs 云端重排（零降级对照）</h3>
+          <h3 class="cp-section-title">P04 检索质量：本地重排 vs 云端重排（同一评测集，零降级）</h3>
           <table class="cp-table">
             <thead><tr><th>Ragas 指标</th><th class="num">本地 BGE-reranker-large</th><th class="num">云端 qwen3.7-text-rerank</th></tr></thead>
             <tbody>
@@ -287,14 +289,16 @@
             </tbody>
           </table>
           <p class="lp-honest" style="margin-top:var(--cp-sp-4)">
-            结论：<b>私有化不是免费的</b>。修掉本地重排的量纲缺陷（logits 未归一 → 断崖截断把正分文档静默砍掉）后重跑，
-            本地 5 项指标仍全面低于云端（Context Precision 差 23.8 pp）、平均延迟慢 2.7 倍，换来的是敏感文档零出网。
+            <b>结论：私有化不是免费的。</b>先修掉本地重排的量纲缺陷（logits 未归一 → 断崖截断把正分文档静默砍掉，
+            这是修 bug 不是调参），重跑后本地 5 项指标仍全面低于云端（Context Precision 差 23.8 pp）、平均延迟慢 2.7 倍，
+            换来的是敏感文档零出网。所以这一题没有「哪个数字更好看」的答案 —— <b>看客户的数据合规要求把哪条线划死</b>，
+            我把两端都跑出来，是为了让那个选择有依据。
           </p>
         </section>
 
         <section class="lp-section" id="lp-boundary">
-          <h2 class="lp-h2">真实 / 模拟边界（双处标注）</h2>
-          <p class="lp-sub">作品集里最该被追问的部分，先自己交代清楚。</p>
+          <h2 class="lp-h2">真实 / 模拟边界</h2>
+          <p class="lp-sub">交付里最容易翻车的不是功能少，是「演示能跑、上线不跑」。所以每个模块我先把线划死：<b style="color:var(--cp-ink1)">哪条链路是真的、哪里是模拟、以及为什么在这一处主动选模拟</b>。同样的话在各模块的 UI 标注、接口字段与 <code>_evidence/</code> 里都能对上（如 P08 的 <code>/health</code> 自陈 mock_boundaries、P10 的 <code>endpoint_url: null</code>）—— 双处标注是硬规则，不是我挑给面试官看的话术。</p>
           <div class="lp-bound">
             <div class="lp-bound-item"><b>P01 客服</b> 真实：意图三轨道、对话状态机、转人工建单（62 单测）。模拟：订单与商品来自随附的 mock 商城中台 :18081。</div>
             <div class="lp-bound-item"><b>P02 运营</b> 真实：登录、RBAC、合规、广告实验、跨模块取数全链路。降级：无 Key 时网关降级 mock 生成，前端标「演示」。</div>
@@ -305,29 +309,32 @@
             <div class="lp-bound-item"><b>P07 素材</b> 真实：打标、素材×投放关联报表。模拟：以文搜图用 TF-IDF 而非 CLIP；生图为 mock，UI 挂「Mock 模式」。</div>
             <div class="lp-bound-item"><b>P08 切片</b> 真实：批量队列与进度、四维得分构成可解释。模拟：ASR 为模拟文本、评分为规则，<b>无 ffmpeg 真实出片</b>。</div>
             <div class="lp-bound-item"><b>P09 考核</b> 真实：会话导入、评分与排行榜。模拟：评分器是规则引擎（Mock LLM），页面挂 Mock Notice。</div>
-            <div class="lp-bound-item"><b>P10 微调</b> 真实：数据集→训练→评测→注册表生命周期编排、OpenAI 兼容部署形态。模拟：<b>未真实训练</b>（无 GPU），loss 曲线由公式生成，页面与本 README 双处标注。</div>
+            <div class="lp-bound-item"><b>P10 微调</b> 真实：数据集→训练→评测→注册表生命周期编排、接口与状态机。模拟：<b>未真实训练</b>（无 GPU 余量），loss 曲线由公式生成；<b>没有可调用端点</b>（部署仅登记状态，<code>endpoint_url</code> 返回 null），无测量来源的延迟/统计一律为 null —— 页面、接口与 README 三处标注。</div>
           </div>
           <p class="lp-honest" style="margin-top:var(--cp-sp-4)">
-            没有测过的数字就不写：全平台<b>未做并发压测</b>（无 P95 / 错误率）、<b>未测覆盖率</b>；
-            P02 浅色态在 <code>/</code>→<code>/login</code> 跳转时会丢 <code>?cp-theme</code>（尚未修）。
+            <b>没有测过的数字就不写。</b>全平台<b>未做并发压测</b>（无 P95 / 错误率）、<b>未测覆盖率</b>；
+            P10 的四条微调门禁（真实训练 / loss 曲线 / 前后评测对比 / 可调用端点）<b>全部为空</b>，接口里没有测量来源的字段一律返回 <code>null</code>；
+            P09 的人机一致性 Kappa 要真人评满 ≥5 条才出数 —— 早先用「AI 分 + 随机噪声」冒充人工分的代码已删除，这一项宁可空着。
           </p>
         </section>
 
         <section class="lp-section" id="lp-about">
           <h2 class="lp-h2">关于作者与阅读路线</h2>
-          <p class="lp-sub"><b style="color:var(--cp-ink1)">李奕波</b> · 求职方向 AI 应用开发 / AI-FDE ·
-            从需求拆解到工程落地全程主导：后端编排、RAG 检索、前端界面与统一设计系统。
-            仓库：<a href="https://github.com/liyibo0410" target="_blank" rel="noopener">github.com/liyibo0410</a></p>
+          <p class="lp-sub"><b style="color:var(--cp-ink1)">李奕波</b> · 求职方向 <b style="color:var(--cp-ink1)">AI-FDE / AI 应用开发</b>。
+            这一套从需求拆解到进程托管由我一人完成：业务建模与四层拆分、后端编排、RAG 检索与评测、前端界面与设计令牌、服务注册与静默启动，
+            以及「什么才算跑通」的验收门禁本身。仓库：<a href="https://github.com/liyibo0410" target="_blank" rel="noopener">github.com/liyibo0410</a> ·
+            证据：<code>_evidence/</code>，进度登记 D1–D20。</p>
           <div class="cp-grid cols-3">
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">AI-FDE 视角</b><br>P05 零依赖 vs P02 云原生的取舍、本地/云端评测对照、私有化与凭据边界</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">AI 应用开发视角</b><br>llm-gateway 故障转移与降级、rerank 双后端与断崖截断、合规检测的法条与 span</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">工程化视角</b><br>6 条 ADR、SERVICE_REGISTRY 单一真源、<code>_evidence/</code> 证据门禁、两个缺陷的根因分析</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">按 AI-FDE 聊 · 取舍</b><br>P05 为什么敢不装依赖、P02 为什么不并进外壳认证（ADR-0006 / 0003）、私有化那张对照表该按什么标准拍板。现场可以让我从登录一路走到广告实验对比 —— 走的就是验收门禁里那条路径。</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">按 AI 应用开发聊 · 链路</b><br>llm-gateway 的双端点故障转移与无 Key 降级、rerank 断崖截断的根因分析（量纲，不是阈值）、合规检测为什么必须落到法条与 span，而不是给一个「风险分」。</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">按工程化聊 · 约束</b><br>SERVICE_REGISTRY 单一真源、设计令牌的两类注入方式与构建期耦合代价、<code>_tools/supervisor.py</code> 进程托管与静默启动，以及 <code>_evidence/</code> 证据门禁是怎么挡住「假完成」的。</div></div>
           </div>
         </section>
 
         <footer class="lp-foot">
           <div><span data-cp-brand="company">云枢智能</span> <span data-cp-brand="name_en">CloudPivot</span> · <span data-cp-brand="tagline">AI 电商运营中台</span></div>
-          <div class="cp-hint">公司名为作品集业务建模设定；本页所有指标来自本地实测，可在 <code>_evidence/</code> 逐条复核。</div>
+          <div class="cp-hint">公司名与业务场景是这套作品集的业务建模设定（登录后用侧栏「⚙ 品牌设置」可换成任意品牌，全站生效）；<br>
+            本页指标来自本机实跑与本地评测，逐条可在 <code>_evidence/</code> 复核 —— 跑不通的地方一律写「未跑通 + 原因」，不粉饰。</div>
         </footer>
       </div>
     </div>
@@ -337,7 +344,9 @@
       <div class="cp-svc-banner" id="svc-banner" style="display:none"></div>
       <div class="cp-frame-host">
         <div class="cp-frame-loading" id="frame-loading"><div class="cp-spinner"></div></div>
-        <iframe id="module-frame" title="模块" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-downloads"></iframe>
+        <!-- allow-modals 不能省：沙箱里缺这一项时 window.confirm()/alert() 被直接判 false，
+             模块内「二次确认后才提交」的按钮（如店铺删除）会变成点了没反应。 -->
+        <iframe id="module-frame" title="模块" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-downloads allow-modals"></iframe>
       </div>
     </div>
   </div>
@@ -459,7 +468,7 @@
   function openLogin(target, reason){
     pendingRoute = target || null;
     els["login-reason"].textContent = reason
-      || "登录后可点开任意模块做真实操作。演示账号如下，点一下即填充。";
+      || "五个演示账号对应五种业务角色（老板 / 运营 / 法务 / 销售 / 管理员）。登录后模块里的数据、拦截与降级标注都是本机真实行为，不是录屏。点下方账号即填充。";
     els["login-err"].textContent = "";
     els["login-modal"].classList.remove("cp-hidden");
     renderDemoAccounts();
@@ -519,44 +528,46 @@
   function renderStatbar(){
     var total=Object.keys(REG.services).length;
     var layers=Object.keys(idsByLayer()).length;
-    var stats=[["AI 能力模块",total],["架构分层",layers],["pytest 实跑通过","506"],
-               ["技术选型 ADR","6"],["服务探活",'<span id="svc-online">检测中</span>']];
+    var stats=[["能力模块 · 本机实跑",total],["架构分层 L0–L3",layers],
+               ["pytest 实跑通过","565"],["跨模块真实取数","3"],
+               ["工程决策 ADR","6"],["服务探活 · 实时",'<span id="svc-online">检测中</span>']];
     els["statbar"].innerHTML=stats.map(function(s){
       return '<div class="cp-stat"><div class="cp-stat-value">'+s[1]+'</div><div class="cp-stat-label">'+s[0]+'</div></div>';
     }).join("");
   }
-  /* 卡片文案取自 README 第四/五/六节的实测记录：技术要点、通过数、以及这个模块的 Mock 边界。 */
+  /* 卡片三行硬信息取自各项目 README 的技术栈、实测数字与「已知限制与 mock 边界」一节：
+     metric = 实测数字，mock = 真实链路与模拟链路的分界。数字一律照抄证据文件，不做美化。 */
   var MODULE_INFO = {
     p01: { tech:"FastAPI · LangChain · MySQL · Vue 3",
-           metric:"<b>62</b> 项单测 · 意图三轨道判定 + 幻觉流程名拦截 + 中断压栈恢复",
-           mock:"订单与商品来自随附的 mock 商城中台 :18081。" },
+           metric:"<b>62</b> 项单测 · 意图三轨道判定、幻觉流程名拦截、中断压栈恢复",
+           mock:"真实：意图识别、对话状态机、负面情绪自动建单转人工。模拟：订单与商品来自随附的 mock 商城中台 :18081。" },
     p02: { tech:"FastAPI · LangGraph · SQLAlchemy · Next.js",
            metric:"<b>162</b> 项测试 · 合规高危召回 <b>18/18</b> · 误报 0/10 · 对抗绕过 0/6",
-           mock:"无 Key 时网关降级 mock 生成，前端标「演示」。" },
+           mock:"真实：登录与四角色 RBAC、合规拦截、广告实验、跨模块取数全链路。降级：无 Key 时网关退回 mock 生成，前端标「演示」。" },
     p03: { tech:"DeepAgents · LangChain · FastAPI · Vue 3",
-           metric:"<b>61</b> 项测试 · 只读 SQL 护栏：DROP / DELETE / 多语句 / 注释绕过执行前全拦",
-           mock:"MySQL(3306)、RAGFlow(9380) 未启动，联网搜索仍是 mock Key；库里没有的数据会明确拒答。" },
+           metric:"<b>61</b> 项测试 · 只读护栏在执行前拦下 DROP / DELETE / 多语句 / 注释绕过",
+           mock:"真实：SQL 护栏与执行链路，模型层已真实接通。未闭环：MySQL(3306)、RAGFlow(9380) 未启动，联网搜索仍是 mock Key；问库里没有的数据会明确拒答而不是编。" },
     p04: { tech:"LangGraph · FastAPI · Milvus · MongoDB · BGE-M3",
-           metric:"<b>23</b> 项测试 · <b>36</b> 题评测集 · Ragas 五指标本地/云端对照",
-           mock:"入库/检索/重排/评测链路全真实；云端重排对外演示建议换按量付费 Key。" },
+           metric:"<b>23</b> 项测试 · <b>36</b> 题评测集 · Ragas 五指标本地/云端对照（见下方表格）",
+           mock:"真实：入库、检索、重排、评测四段全真，BGE-M3 本地嵌入。边界：云端重排要出网，对外演示建议换按量付费 Key。" },
     p05: { tech:"纯标准库 · ThreadingHTTPServer · SQLite",
-           metric:"<b>66/66</b> 自检 + <b>46</b> 项 pytest · 零第三方依赖 · LLM 二阶段 confirm 2 / need_human 1",
-           mock:"审批「模拟回写」是刻意设计；LLM 二阶段默认 enabled=false。" },
+           metric:"<b>66/66</b> 零依赖自检 + <b>46</b> 项 pytest · LLM 二阶段复核 confirm 2 / need_human 1",
+           mock:"真实：规则风险判定、审批流与报告出具。刻意设计：审批「模拟回写」子系统；LLM 二阶段默认 enabled=false。" },
     p06: { tech:"FastAPI · DuckDB · ECharts",
            metric:"<b>44</b> 项测试 · ODS/DWD/DWS/ADS 分层 + 指标口径 + 血缘 + 质量校验抓脏数据",
-           mock:"样例数据自动 seed，是演示数据集，不是真实店铺。" },
+           mock:"真实：DuckDB 分层与指标计算。演示数据：自动 seed 的样例集，不是真实店铺流水。" },
     p07: { tech:"FastAPI · SQLite · ECharts",
-           metric:"<b>18</b> 项测试 · 打标 → 以文搜图 → 素材×投放关联报表",
-           mock:"以文搜图用 TF-IDF 而非 CLIP；生图为 mock，UI 挂「Mock 模式」。" },
+           metric:"<b>68</b> 项测试 · 检索 Recall@5 从 0.05 提到 1.0（中文 n-gram + 同义归一 + 字段加权，带拒答）",
+           mock:"真实：打标、以文搜图、素材×投放关联报表。模拟：生图是 Pillow 程序化规格卡（非 AI 出图）；检索是文本层，不是 CLIP 向量。" },
     p08: { tech:"FastAPI · Pydantic v2",
-           metric:"<b>30</b> 项测试 · 四维得分构成可解释（文本理由 + 同进程确定性）+ 批量队列",
-           mock:"ASR 为模拟文本、评分为规则，无 ffmpeg 真实出片（/health 自陈 mock_boundaries）。" },
+           metric:"<b>30</b> 项测试 · 四维得分每段给出构成（文本理由 + 同进程确定性）+ 批量队列",
+           mock:"真实：批量队列与进度、打点结果可解释。模拟：ASR 为模拟文本、评分为规则，无 ffmpeg 真实出片（/health 自陈 mock_boundaries）。" },
     p09: { tech:"FastAPI · ECharts · LLM 结构化",
-           metric:"<b>34</b> 项测试（含 P09→P01 集成 4 例）· 实测评分 65.5 / 70.5",
-           mock:"评分器是规则引擎（Mock LLM），页面挂「Mock Notice」。" },
+           metric:"<b>41</b> 项测试（含 P09→P01 集成 4 例）· 真实会话按 session 聚合评分 65.5 / 70.5",
+           mock:"真实：会话导入、评分、排行榜与个人报告。模拟：评分器是规则引擎（Mock LLM），页面挂 Mock Notice。未完成：人机一致性 Kappa 需真人评满 ≥5 条才出数。" },
     p10: { tech:"FastAPI · LoRA 生命周期编排",
-           metric:"<b>26</b> 项测试 · 数据集 → 训练 → 评测 → 注册表 → OpenAI 兼容部署",
-           mock:"未真实训练（本机无 GPU），loss 曲线由公式生成，页面写明「模拟演示，未真实训练」。" }
+           metric:"<b>28</b> 项测试 · 数据集 → 训练 → 评测 → 注册表 全生命周期编排与状态机",
+           mock:"真实：生命周期编排、接口与状态机。模拟：未真实训练（本机无 GPU 余量），loss 曲线由公式生成；不存在可调用的 OpenAI 兼容端点（接口返回 endpoint_url: null），无测量来源的延迟一律为 null。" }
   };
   function renderMatrix(){
     var groups=idsByLayer(), html="";
@@ -667,7 +678,7 @@
           // 必须清掉 hash：否则关掉弹窗后再点同一张卡，hash 未变化不会触发 hashchange，弹窗再也不出来
           try{ history.replaceState(null, "", location.pathname + location.search + "#/"); }
           catch(e){ location.hash = "#/"; }
-          openLogin(h, "「"+svc(id).name+"」是本机在跑的真实系统，登录后即可动手操作。");
+          openLogin(h, "「"+svc(id).name+"」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。");
           return;
         }
         mountModule(id); return;
@@ -878,10 +889,10 @@
     var cta = els["cta-demo"]; if(!cta) return;
     if(getToken()){
       cta.removeAttribute("data-open-login");
-      cta.textContent = "进入在线演示 · 旗舰 P02";
+      cta.textContent = "进入演示 · 旗舰 P02 运营助手";
     } else {
       cta.setAttribute("data-open-login", cta.getAttribute("href"));
-      cta.textContent = "登录，进入在线演示";
+      cta.textContent = "登录，进入演示 · 旗舰 P02";
     }
   }
   function renderChrome(){

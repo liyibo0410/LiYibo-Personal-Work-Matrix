@@ -131,7 +131,7 @@ window.CP_REGISTRY = {
       "web_port": 8101,
       "api_prefix": "/api/v1",
       "status": "ready",
-      "desc": "数据 → 训练 → 评测 → OpenAI 兼容部署"
+      "desc": "数据 → 训练 → 评测 → 模型注册表（训练与部署均为模拟，无可调用端点）"
     }
   }
 };

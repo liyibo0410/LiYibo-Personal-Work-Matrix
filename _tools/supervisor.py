@@ -192,6 +192,14 @@ def resolve_python(entry: dict) -> str:
         for cand in (cwd / ".venv" / "Scripts" / "python.exe", cwd / ".venv" / "bin" / "python"):
             if cand.exists():
                 return str(cand)
+    # 桌面应用走 pythonw 进来，服务却要用 python.exe：控制台子系统 + CREATE_NO_WINDOW
+    # 才有那个隐藏 conhost，崩溃 traceback 能稳稳落到日志；pythonw 是 GUI 子系统，
+    # 标志位不参与，异常可能只剩一个看不见的死进程。
+    exe = Path(sys.executable)
+    if exe.name.lower() == "pythonw.exe":
+        console = exe.with_name("python.exe")
+        if console.exists():
+            return str(console)
     return sys.executable
 
 
@@ -207,17 +215,23 @@ def spawn(entry: dict) -> subprocess.Popen:
     cmd = render_cmd(entry)
     log = open(LOG_DIR / f"{entry['id']}.log", "ab", buffering=0)
     log.write(b"\n===== %s  %s =====\n" % (time.strftime("%Y-%m-%d %H:%M:%S").encode(), cmd.encode("utf-8", "replace")))
+    env = dict(os.environ, PYTHONIOENCODING="utf-8")
     flags = 0
     if IS_WIN:
-        # DETACHED_PROCESS：不继承本进程控制台，父脚本退出后服务继续活着。
-        flags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+        # 必须用 CREATE_NO_WINDOW，不能用 DETACHED_PROCESS。
+        # 本机 Win11「默认终端 = Windows Terminal」会在 DETACHED_PROCESS 下照样
+        # 给每个服务接管出一个可见窗口（实测 10 个服务 → 11 个窗口）；
+        # CREATE_NO_WINDOW 走隐藏 conhost，不参与默认终端接管，且子进程有独立
+        # 控制台 —— 父脚本退出后服务照样活着。
+        flags = subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP
         # 必须传字符串：传 list 时 list2cmdline 会把引号转成 \"，cmd.exe 不认。
         proc = subprocess.Popen(f'cmd /c {cmd}', cwd=str(cwd), shell=False,
                                 creationflags=flags, stdout=log, stderr=subprocess.STDOUT,
-                                stdin=subprocess.DEVNULL)
+                                stdin=subprocess.DEVNULL, env=env)
     else:
         proc = subprocess.Popen(cmd, cwd=str(cwd), shell=True, start_new_session=True,
-                                stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
+                                stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                env=env)
     pid_file(entry["id"]).write_text(str(proc.pid))
     return proc
 

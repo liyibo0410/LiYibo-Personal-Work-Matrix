@@ -1,314 +1,407 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>云枢智能 CloudPivot · 全栈 AI 作品集</title>
-<meta name="description" content="云枢智能 CloudPivot —— 李奕波的全栈 AI 作品集：十大 AI 能力模块、四层统一架构、数据闭环。" />
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="../shared/config/services.js"></script>
-<script src="../shared/ui-kit/ui-kit.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>十个 AI 能力模块 · 一套电商运营中台 · 李奕波的作品集</title>
+<meta name="description" content="面向品牌电商与 MCN 的 AI 运营中台：数据中台定口径，能力层供弹药，四条业务线组装落地。十个模块共用一份服务注册、一套设计令牌，每个数字都能在 _evidence/ 复核，没测过的明写未测。">
 <style>
-  /* 唯一真源：共享设计令牌 + 组件库（禁止在页面内硬编码颜色/魔法数字） */
+  /* 设计令牌与组件库单一真源（docs/adr/0005）。发布时由 _tools/build_portfolio.py 内联进 dist/。 */
   @import url('../shared/ui-kit/tokens.css');
   @import url('../shared/ui-kit/components.css');
 
-  /* ---------- 落地页专属视觉（基于 cp- 令牌，克制使用品牌色）---------- */
-  body.cp-app { overflow-x: hidden; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--cp-bg); color: var(--cp-ink1);
+    font-family: var(--cp-font); font-size: var(--cp-fs-base); line-height: var(--cp-lh); }
+  img { display: block; max-width: 100%; }
+  code { font-family: var(--cp-font-mono); font-size: .92em; }
 
-  /* 顶栏：纯白实底，不用毛玻璃 */
-  .site-nav {
-    position: sticky; top: 0; z-index: 50;
-    background: var(--cp-surface);
-    border-bottom: 1px solid var(--cp-line);
-  }
-  .nav-link { color: var(--cp-ink2); font-size: var(--cp-fs-base); transition: color var(--cp-dur) var(--cp-ease); }
-  .nav-link:hover { color: var(--cp-ink1); }
+  .pf-nav { position: sticky; top: 0; z-index: 30; display: flex; align-items: center;
+    justify-content: space-between; gap: var(--cp-sp-4); flex-wrap: wrap;
+    padding: var(--cp-sp-3) var(--cp-sp-5); background: var(--cp-surface);
+    border-bottom: 1px solid var(--cp-line); }
+  .pf-brand { display: flex; align-items: center; gap: var(--cp-sp-3);
+    color: var(--cp-ink1); text-decoration: none; }
+  .pf-brand-mark { width: 34px; height: 34px; border-radius: var(--cp-radius-sm);
+    background: var(--cp-brand); color: var(--cp-on-brand); display: flex;
+    align-items: center; justify-content: center; font-weight: 700; font-size: var(--cp-fs-sm); flex-shrink: 0; }
+  .pf-brand b { font-size: var(--cp-fs-md); }
+  .pf-brand span span { display: block; font-size: var(--cp-fs-xs); color: var(--cp-ink2); font-weight: 400; }
+  .pf-links { display: flex; align-items: center; gap: var(--cp-sp-5); flex-wrap: wrap; }
+  .pf-links a { color: var(--cp-ink2); font-size: var(--cp-fs-sm); text-decoration: none; }
+  .pf-links a:hover { color: var(--cp-brand); }
+  .pf-links a.cta { color: var(--cp-on-brand); background: var(--cp-brand);
+    padding: 5px var(--cp-sp-4); border-radius: var(--cp-radius-sm); font-weight: 500; }
+  .pf-links a.cta:hover { background: var(--cp-brand-hover); color: var(--cp-on-brand); }
 
-  /* Hero：白底，不做品牌辉光与网格装饰 */
-  .hero {
-    position: relative; overflow: hidden;
-    background: var(--cp-surface);
-    border-bottom: 1px solid var(--cp-line);
-  }
-  .hero-inner { position: relative; }
+  .pf-wrap { max-width: 1080px; margin: 0 auto; padding: 0 var(--cp-sp-5); }
+  .pf-sec { padding: var(--cp-sp-7) 0; border-top: 1px solid var(--cp-line); }
+  .pf-h1 { font-size: clamp(1.9rem, 5vw, 2.9rem); line-height: 1.16; letter-spacing: -1px;
+    font-weight: 700; margin: var(--cp-sp-5) 0 var(--cp-sp-4); }
+  .pf-h1 em { color: var(--cp-brand); font-style: normal; }
+  .pf-h2 { font-size: var(--cp-fs-xl); font-weight: 700; margin: 0 0 var(--cp-sp-1); }
+  .pf-sub { font-size: var(--cp-fs-sm); color: var(--cp-ink2); margin: 0 0 var(--cp-sp-5); max-width: 780px; }
+  .pf-lead { font-size: var(--cp-fs-md); color: var(--cp-ink2); max-width: 780px; margin: 0 auto; }
+  .pf-eyebrow { display: inline-flex; align-items: center; gap: var(--cp-sp-2); padding: 3px var(--cp-sp-4);
+    border: 1px solid var(--cp-line); border-radius: var(--cp-radius-pill); background: var(--cp-elevated);
+    font-size: var(--cp-fs-sm); color: var(--cp-ink2); }
+  .pf-eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: var(--cp-success); }
+  .pf-hero { padding: var(--cp-sp-7) 0 var(--cp-sp-6); text-align: center; }
+  .pf-ctas { display: flex; justify-content: center; gap: var(--cp-sp-3); flex-wrap: wrap; margin-top: var(--cp-sp-6); }
+  .pf-btn { display: inline-flex; align-items: center; height: 40px; padding: 0 var(--cp-sp-5);
+    border-radius: var(--cp-radius-sm); font-size: var(--cp-fs-base); font-weight: 500;
+    text-decoration: none; border: 1px solid var(--cp-line); background: var(--cp-surface); color: var(--cp-ink1); }
+  .pf-btn:hover { border-color: var(--cp-brand); color: var(--cp-brand); }
+  .pf-btn.primary { background: var(--cp-brand); border-color: var(--cp-brand); color: var(--cp-on-brand); }
+  .pf-btn.primary:hover { background: var(--cp-brand-hover); border-color: var(--cp-brand-hover); color: var(--cp-on-brand); }
 
-  .eyebrow {
-    display: inline-flex; align-items: center; gap: var(--cp-sp-2);
-    padding: var(--cp-sp-1) var(--cp-sp-4);
-    border: 1px solid var(--cp-line); border-radius: var(--cp-radius-pill);
-    background: var(--cp-elevated);
-    font-size: var(--cp-fs-sm); color: var(--cp-ink2);
-  }
-  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cp-success); box-shadow: 0 0 0 3px var(--cp-success-bg); }
+  .pf-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--cp-sp-4); padding: var(--cp-sp-5) 0; }
+  .pf-stat { text-align: center; }
+  .pf-stat b { display: block; font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700;
+    letter-spacing: -1px; color: var(--cp-brand); font-variant-numeric: tabular-nums; }
+  .pf-stat span { font-size: var(--cp-fs-sm); color: var(--cp-ink2); }
 
-  .display {
-    font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.08; letter-spacing: -.02em; font-weight: 800;
-  }
-  .display .accent { color: var(--cp-brand); }
+  .pf-grid { display: grid; gap: var(--cp-sp-4); grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .pf-mod { display: flex; flex-direction: column; background: var(--cp-surface);
+    border: 1px solid var(--cp-line); border-radius: var(--cp-radius); overflow: hidden; }
+  .pf-mod-shot { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left;
+    border-bottom: 1px solid var(--cp-line); background: var(--cp-elevated); }
+  .pf-mod-body { padding: var(--cp-sp-4); display: flex; flex-direction: column; gap: var(--cp-sp-2); }
+  .pf-mod-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--cp-sp-2); }
+  .pf-mod-name { font-size: var(--cp-fs-md); font-weight: 600; }
+  .pf-mod-tech { font-family: var(--cp-font-mono); font-size: var(--cp-fs-xs); color: var(--cp-info); margin: 0; }
+  .pf-mod-desc { font-size: var(--cp-fs-sm); color: var(--cp-ink2); margin: 0; }
+  .pf-mod-metric { font-size: var(--cp-fs-sm); color: var(--cp-ink1); background: var(--cp-bg);
+    border: 1px solid var(--cp-line); border-radius: var(--cp-radius-sm); padding: var(--cp-sp-2) var(--cp-sp-3); margin: 0; }
+  .pf-mod-metric b { color: var(--cp-brand); }
+  .pf-mod-mock { font-size: var(--cp-fs-xs); color: var(--cp-ink2); line-height: 1.6; background: var(--cp-warning-bg);
+    border-left: 2px solid var(--cp-warning); border-radius: var(--cp-radius-sm); padding: var(--cp-sp-2) var(--cp-sp-3); margin: 0; }
+  .pf-mod-mock b { color: var(--cp-warning); }
+  .pf-layer { font-size: var(--cp-fs-base); font-weight: 600; color: var(--cp-ink1);
+    margin: var(--cp-sp-5) 0 var(--cp-sp-3); display: flex; align-items: center; gap: var(--cp-sp-2); }
 
-  .cta {
-    display: inline-flex; align-items: center; gap: var(--cp-sp-2);
-    height: 44px; padding: 0 var(--cp-sp-5); border-radius: var(--cp-radius);
-    font-size: var(--cp-fs-md); font-weight: 600; cursor: pointer; text-decoration: none;
-    transition: all var(--cp-dur) var(--cp-ease);
-  }
-  .cta.primary { background: var(--cp-brand); color: var(--cp-on-brand); border: 1px solid var(--cp-brand); }
-  .cta.primary:hover { background: var(--cp-brand-hover); border-color: var(--cp-brand-hover); }
-  .cta.ghost { background: var(--cp-surface); color: var(--cp-ink1); border: 1px solid var(--cp-line); }
-  .cta.ghost:hover { border-color: var(--cp-brand); color: var(--cp-brand); }
+  .pf-flow { display: flex; align-items: center; gap: var(--cp-sp-2); flex-wrap: wrap; padding: var(--cp-sp-4);
+    background: var(--cp-surface); border: 1px solid var(--cp-line); border-radius: var(--cp-radius); }
+  .pf-node { padding: var(--cp-sp-2) var(--cp-sp-3); border-radius: var(--cp-radius-sm);
+    background: var(--cp-brand-bg); color: var(--cp-brand); font-size: var(--cp-fs-sm); font-weight: 500; }
+  .pf-arrow { color: var(--cp-ink2); }
+  .pf-cards { display: grid; gap: var(--cp-sp-3); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    margin-top: var(--cp-sp-4); }
+  .pf-card { border: 1px solid var(--cp-line); border-radius: var(--cp-radius);
+    background: var(--cp-surface); padding: var(--cp-sp-4); }
+  .pf-card > b { color: var(--cp-ink1); font-size: var(--cp-fs-sm); }
+  .pf-card p { margin: var(--cp-sp-1) 0 0; font-size: var(--cp-fs-sm); color: var(--cp-ink2); line-height: 1.65; }
+  .pf-num { font-size: var(--cp-fs-2xl); font-weight: 700; color: var(--cp-brand); letter-spacing: -1px; }
+  .pf-src { font-family: var(--cp-font-mono); font-size: var(--cp-fs-xs); color: var(--cp-info);
+    margin-top: var(--cp-sp-2); word-break: break-all; }
 
-  /* 统计条 */
-  .stat-strip { border-top: 1px solid var(--cp-line); border-bottom: 1px solid var(--cp-line); background: var(--cp-surface); }
-  .stat-num { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -.02em; color: var(--cp-brand); font-variant-numeric: tabular-nums; }
-  .stat-lbl { font-size: var(--cp-fs-sm); color: var(--cp-ink3); margin-top: 2px; }
+  .pf-table { width: 100%; border-collapse: collapse; background: var(--cp-surface);
+    border: 1px solid var(--cp-line); font-size: var(--cp-fs-sm); }
+  .pf-table th, .pf-table td { padding: var(--cp-sp-2) var(--cp-sp-3); border-bottom: 1px solid var(--cp-line);
+    text-align: left; }
+  .pf-table th { color: var(--cp-ink2); font-weight: 500; background: var(--cp-elevated); }
+  .pf-table td.n, .pf-table th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .pf-table tr:last-child td { border-bottom: none; }
+  .pf-note { font-size: var(--cp-fs-sm); color: var(--cp-ink2); line-height: 1.7; background: var(--cp-info-bg);
+    border: 1px solid var(--cp-line); border-radius: var(--cp-radius); padding: var(--cp-sp-3) var(--cp-sp-4); }
 
-  /* 旗舰 spotlight：纯白卡 + 边框，不做渐变 */
-  .flagship {
-    border: 1px solid var(--cp-line); border-radius: var(--cp-radius-lg);
-    background: var(--cp-surface);
-    box-shadow: var(--cp-shadow-sm);
-    overflow: hidden;
-  }
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: var(--cp-radius-pill); background: var(--cp-elevated); border: 1px solid var(--cp-line); font-size: var(--cp-fs-sm); color: var(--cp-ink2); }
-
-  /* 模块卡（复用 cp- 设计语言，hover 微交互） */
-  .mod-card {
-    display: flex; flex-direction: column; gap: var(--cp-sp-2);
-    background: var(--cp-surface); border: 1px solid var(--cp-line);
-    border-radius: var(--cp-radius); padding: var(--cp-sp-4);
-    transition: border-color var(--cp-dur) var(--cp-ease), transform var(--cp-dur) var(--cp-ease), box-shadow var(--cp-dur) var(--cp-ease);
-  }
-  .mod-card:hover { border-color: var(--cp-brand); transform: translateY(-3px); box-shadow: var(--cp-shadow); }
-  .mod-ico { width: 42px; height: 42px; border-radius: var(--cp-radius-sm); background: var(--cp-brand-bg); color: var(--cp-brand); display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-  .mod-name { font-size: var(--cp-fs-md); font-weight: 600; color: var(--cp-ink1); }
-  .mod-desc { font-size: var(--cp-fs-sm); color: var(--cp-ink3); line-height: 1.55; }
-  .mod-tech { font-size: var(--cp-fs-xs); color: var(--cp-ink3); font-family: var(--cp-font-mono); }
-
-  /* 架构流 */
-  .arch-box { border: 1px solid var(--cp-line); border-radius: var(--cp-radius); background: var(--cp-surface); padding: var(--cp-sp-4); text-align: center; }
-  .arch-arrow { color: var(--cp-ink3); font-size: var(--cp-fs-lg); display: flex; align-items: center; justify-content: center; }
-
-  /* 滚动入场 */
-  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--cp-ease), transform .6s var(--cp-ease); }
-  .reveal.in { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) {
-    .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-  }
+  .pf-foot { padding: var(--cp-sp-6) 0 var(--cp-sp-7); border-top: 1px solid var(--cp-line);
+    text-align: center; font-size: var(--cp-fs-sm); color: var(--cp-ink2); line-height: 1.8; }
+  .pf-foot a, .pf-sub a { color: var(--cp-brand); text-decoration: none; }
+  .pf-foot a:hover, .pf-sub a:hover { text-decoration: underline; }
+  @media (max-width: 640px) { .pf-sec { padding: var(--cp-sp-6) 0; } }
 </style>
 </head>
-<body class="cp-app" data-cp-brand-src="../shared/config/brand.json">
+<body>
 
-<!-- 顶栏 -->
-<nav class="site-nav">
-  <div class="mx-auto flex max-w-6xl items-center justify-between px-6" style="height:var(--cp-topbar-h)">
-    <a href="#top" class="flex items-center gap-3">
-      <span class="cp-logo" data-cp-brand="logo">云</span>
-      <span class="cp-brand-text">
-        <span class="cp-brand-name"><span data-cp-brand="company">云枢智能</span> <span class="text-[var(--cp-brand)]" data-cp-brand="name_en">CloudPivot</span></span>
-        <span class="cp-brand-sub">全栈 AI 作品集</span>
-      </span>
-    </a>
-    <div class="hidden items-center gap-7 md:flex">
-      <a href="#modules" class="nav-link">能力模块</a>
-      <a href="#architecture" class="nav-link">架构</a>
-      <a href="#stack" class="nav-link">技术栈</a>
-      <a href="#about" class="nav-link">关于作者</a>
-    </div>
-    <a href="#about" class="cta primary" style="height:34px;padding:0 16px;font-size:var(--cp-fs-sm)">联系我</a>
-  </div>
-</nav>
-
-<!-- Hero -->
-<header id="top" class="hero">
-  <div class="hero-inner mx-auto max-w-6xl px-6 py-24 text-center sm:py-28">
-    <div class="eyebrow reveal"><span class="dot"></span>AI 原生 · 全栈工程作品集 · 2026</div>
-    <h1 class="display mt-6 reveal">用 AI 重构<span class="accent">电商运营</span>的每一个环节</h1>
-    <p class="mx-auto mt-5 max-w-2xl reveal" style="font-size:var(--cp-fs-md);color:var(--cp-ink2)">
-      从客服、运营、合同到素材与直播——十大 AI 能力模块，统一架构、数据闭环、可量化验证。
-    </p>
-    <div class="mt-9 flex flex-wrap justify-center gap-3 reveal">
-      <a href="#modules" class="cta primary">探索能力模块 ↓</a>
-      <a href="#flagship" class="cta ghost">查看旗舰项目 P02</a>
-    </div>
-  </div>
+<header class="pf-nav">
+  <a class="pf-brand" href="#top">
+    <span class="pf-brand-mark">CP</span>
+    <span><b>云枢智能 CloudPivot</b><span>AI 电商运营中台 · 作品集</span></span>
+  </a>
+  <nav class="pf-links">
+    <a href="#modules">十大模块</a>
+    <a href="#arch">架构与取舍</a>
+    <a href="#evidence">实测数据</a>
+    <a href="#boundary">真实边界</a>
+    <a href="#about">关于我</a>
+    <a class="cta" href="https://github.com/liyibo0410" target="_blank" rel="noopener">GitHub</a>
+  </nav>
 </header>
 
-<!-- 统计条 -->
-<section class="stat-strip">
-  <div class="mx-auto grid max-w-6xl grid-cols-2 gap-px px-6 py-8 sm:grid-cols-4">
-    <div class="px-2 text-center reveal"><div class="stat-num">10</div><div class="stat-lbl">AI 能力模块</div></div>
-    <div class="px-2 text-center reveal"><div class="stat-num">4</div><div class="stat-lbl">层统一架构</div></div>
-    <div class="px-2 text-center reveal"><div class="stat-num">36</div><div class="stat-lbl">P04 评测用例（3→36）</div></div>
-    <div class="px-2 text-center reveal"><div class="stat-num">180</div><div class="stat-lbl">Ragas 评测指标</div></div>
-  </div>
-</section>
+<main class="pf-wrap">
 
-<!-- 旗舰 spotlight -->
-<section id="flagship" class="mx-auto max-w-6xl px-6 py-16">
-  <div class="flagship reveal p-6 sm:p-8">
-    <div class="grid gap-8 lg:grid-cols-5">
-      <div class="lg:col-span-3">
-        <div class="flex items-center gap-3">
-          <span class="mod-ico">📊</span>
-          <div>
-            <div class="mod-name" style="font-size:var(--cp-fs-lg)">P02 · 电商运营助手 <span class="cp-tag">★ 旗舰</span></div>
-            <div class="mod-tech mt-1">FastAPI · LangGraph · Next.js</div>
-          </div>
-        </div>
-        <p class="mod-desc mt-4" style="font-size:var(--cp-fs-base)">
-          面向品牌电商与 MCN 的 AI 原生运营中台：商品诊断、创意策划、合规检测、广告实验，
-          四角色 RBAC 权限体系，多智能体编排驱动端到端任务。
-        </p>
-        <div class="mt-5 flex flex-wrap gap-2">
-          <span class="chip">🔍 商品诊断</span>
-          <span class="chip">✍️ 创意策划</span>
-          <span class="chip">🛡️ 合规检测</span>
-          <span class="chip">🧪 广告实验</span>
-          <span class="chip">👥 四角色 RBAC</span>
-        </div>
-      </div>
-      <div class="lg:col-span-2 flex flex-col justify-center gap-4 rounded-lg border border-[var(--cp-line)] bg-[var(--cp-bg)] p-5">
-        <div>
-          <div class="stat-num" style="font-size:1.6rem">+25.7%</div>
-          <div class="stat-lbl">D5-01 修复后 Answer Relevancy 提升（P04 RAG）</div>
-        </div>
-        <div>
-          <div class="stat-num" style="font-size:1.6rem">66 项</div>
-          <div class="stat-lbl">P05 合同审批零依赖自检用例</div>
-        </div>
-        <div>
-          <div class="stat-num" style="font-size:1.6rem">99+</div>
-          <div class="stat-lbl">跨模块统一设计令牌 / 组件</div>
-        </div>
-      </div>
+  <section class="pf-hero" id="top">
+    <span class="pf-eyebrow"><i></i>AI-FDE / AI 应用开发作品集 · 十个模块本机实跑 · 2026</span>
+    <h1 class="pf-h1">十个 AI 能力模块，跑在<em>同一套</em>电商运营中台里</h1>
+    <p class="pf-lead">
+      做给品牌电商与 MCN：<b>数据中台定口径，能力层供弹药，四条业务线组装落地，低分样本回流微调层</b>。
+      十个模块共用一份服务注册、一套设计令牌、一个登录入口，在同一台机器上连着操作，不是十个互不相干的 demo。
+    </p>
+    <p class="pf-lead" style="margin-top:var(--cp-sp-3)">
+      本页每个指标都能在 <code>_evidence/</code> 找到对应的日志或截图；没测过的（并发 P95、覆盖率）就明写「未测」。
+    </p>
+    <div class="pf-ctas">
+      <a class="pf-btn primary" href="#modules">看十大模块</a>
+      <a class="pf-btn" href="#evidence">看实测数据与出处</a>
     </div>
-  </div>
-</section>
+    <p class="pf-note" style="margin-top:var(--cp-sp-6);text-align:left">
+      关于「在线演示」：十个模块与统一外壳跑在我这台机器上（15 个进程由 <code>_tools/supervisor.py</code> 托管），
+      <b>没有公网部署</b> —— 所以这里不放一个会 502 的假链接。要看真实操作，面试时共享屏幕我现场点；要自己跑，
+      按 README 用 <code>start-all.bat</code> 一条命令起。下面每张截图都是当前代码的真实渲染，不是设计稿。
+    </p>
+  </section>
 
-<!-- 能力模块 -->
-<section id="modules" class="mx-auto max-w-6xl px-6 py-8">
-  <h2 class="reveal" style="font-size:var(--cp-fs-2xl);font-weight:700">十大能力模块</h2>
-  <p class="reveal" style="color:var(--cp-ink3);margin-top:6px">四层架构 · 数据闭环 · 全链路 AI 赋能</p>
-
-  <!-- L3 -->
-  <h3 class="reveal mt-8 mb-4 flex items-center gap-2" style="font-size:var(--cp-fs-base);color:var(--cp-ink2)"><span class="cp-tag">L3 应用层</span> 直接面向业务的 AI 应用</h3>
-  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">💬</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P01 AI 电商客服</div><div class="mod-desc">意图识别 → 知识检索 → 生成回复 → 负面情绪自动转人工</div><div class="mod-tech mt-auto pt-2">FastAPI · LangChain · Vue 3</div></div>
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">📊</span><span class="cp-tag">★ 旗舰</span></div><div class="mod-name mt-2">P02 电商运营助手</div><div class="mod-desc">商品诊断 · 创意策划 · 合规检测 · 广告实验 · 四角色 RBAC</div><div class="mod-tech mt-auto pt-2">FastAPI · LangGraph · Next.js</div></div>
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">📝</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P05 合同审批</div><div class="mod-desc">规则引擎 + LLM 二阶段语义复核 · 零第三方依赖 · 66 项自检</div><div class="mod-tech mt-auto pt-2">Pure Python · SQLite · 原生 HTML</div></div>
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🏆</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P09 AI 销售考核</div><div class="mod-desc">会话质检 · 多维评分 · 排行榜 · 人工一致性分析</div><div class="mod-tech mt-auto pt-2">FastAPI · ECharts · LLM 结构化</div></div>
-  </div>
-
-  <!-- L2 -->
-  <h3 class="reveal mt-8 mb-4 flex items-center gap-2" style="font-size:var(--cp-fs-base);color:var(--cp-ink2)"><span class="cp-tag">L2 能力层</span> 可复用的 AI 中台能力</h3>
-  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🔍</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P03 NL2SQL 问数</div><div class="mod-desc">自动出 SQL → 执行 → 图表 → 带溯源报告 · 恶意 SQL 拦截</div><div class="mod-tech mt-auto pt-2">DeepAgents · LangChain · Vue 3</div></div>
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">📚</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P04 RAG 知识库</div><div class="mod-desc">HyDE + RRF 多路融合 · BGE-M3 · Reranker · 四指标评测</div><div class="mod-tech mt-auto pt-2">FastAPI · Milvus · LangGraph</div></div>
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🎨</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P07 AI 素材中心</div><div class="mod-desc">素材管理 · 智能打标 · 以文搜图 · AI 生成 · 投放关联</div><div class="mod-tech mt-auto pt-2">FastAPI · SQLite · ECharts</div></div>
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🎬</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P08 直播切片</div><div class="mod-desc">ASR 转写 · 高光打分 · 自动切片 · 批量任务队列</div><div class="mod-tech mt-auto pt-2">FastAPI · ffmpeg · faster-whisper</div></div>
+  <div class="pf-stats">
+    <div class="pf-stat"><b>10</b><span>能力模块 · 本机实跑</span></div>
+    <div class="pf-stat"><b>4</b><span>架构分层 L0–L3</span></div>
+    <div class="pf-stat"><b>565</b><span>pytest 实跑通过</span></div>
+    <div class="pf-stat"><b>3</b><span>跨模块真实取数</span></div>
+    <div class="pf-stat"><b>6</b><span>工程决策 ADR</span></div>
+    <div class="pf-stat"><b>36 + 36</b><span>RAG / 合规评测用例</span></div>
   </div>
 
-  <!-- L1 + L0 -->
-  <div class="mt-8 grid gap-4 lg:grid-cols-2">
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🧠</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P10 模型微调平台 <span class="cp-tag">L1 模型层</span></div><div class="mod-desc">数据集管理 · LoRA 训练 · 评测对比 · 模型注册 · OpenAI 兼容部署</div><div class="mod-tech mt-auto pt-2">PyTorch · PEFT · FastAPI</div></div>
-    <div class="mod-card reveal"><div class="flex items-center justify-between"><span class="mod-ico">🗄️</span><span class="cp-tag success">已运行</span></div><div class="mod-name mt-2">P06 数据中台 <span class="cp-tag">L0 数据层</span></div><div class="mod-desc">数据接入 · 数仓分层 · 指标口径 · 血缘可视化 · 质量校验</div><div class="mod-tech mt-auto pt-2">FastAPI · DuckDB · ECharts</div></div>
-  </div>
-</section>
+  <section class="pf-sec" id="modules">
+    <h2 class="pf-h2">十大能力模块 · 四层架构</h2>
+    <p class="pf-sub">自下而上读：L0 定口径，L1 沉淀模型，L2 把能力做成可调用的服务，L3 组装成业务线。
+      每张卡三行硬信息 —— 技术选型、实测数字、<b>Mock 边界</b>（真实到哪一步、哪里是模拟）；
+      指标后面跟着它的证据文件，不是形容词。截图是这套系统在本机跑起来后的真实画面。</p>
 
-<!-- 架构 -->
-<section id="architecture" class="border-t border-[var(--cp-line)] bg-[var(--cp-surface)]">
-  <div class="mx-auto max-w-6xl px-6 py-16">
-    <h2 class="reveal" style="font-size:var(--cp-fs-2xl);font-weight:700">数据闭环架构</h2>
-    <p class="reveal" style="color:var(--cp-ink3);margin-top:6px">底层数据统一口径 → 模型层沉淀能力 → 能力层提供服务 → 应用层组装业务 → 数据回流形成闭环</p>
-    <div class="mt-8 grid items-center gap-4 lg:grid-cols-7">
-      <div class="arch-box reveal"><p style="font-size:var(--cp-fs-xs);color:var(--cp-brand);font-weight:600">L0 数据</p><p class="mt-2" style="font-weight:600">P06 数据中台</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3)">统一口径</p></div>
-      <div class="arch-arrow reveal">→</div>
-      <div class="arch-box reveal"><p style="font-size:var(--cp-fs-xs);color:var(--cp-brand);font-weight:600">L1 模型</p><p class="mt-2" style="font-weight:600">P10 微调平台</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3)">能力沉淀</p></div>
-      <div class="arch-arrow reveal">→</div>
-      <div class="arch-box reveal"><p style="font-size:var(--cp-fs-xs);color:var(--cp-brand);font-weight:600">L2 能力</p><p class="mt-2" style="font-weight:600">P04 / P07 / P08</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3)">RAG · 素材 · 切片</p></div>
-      <div class="arch-arrow reveal">→</div>
-      <div class="arch-box reveal"><p style="font-size:var(--cp-fs-xs);color:var(--cp-brand);font-weight:600">L3 应用</p><p class="mt-2" style="font-weight:600">P01 / P02 / P05 / P09</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3)">客服 · 运营 · 合同 · 考核</p></div>
-    </div>
-    <div class="mt-6 flex flex-wrap items-center justify-center gap-2 reveal" style="font-size:var(--cp-fs-sm);color:var(--cp-ink3)">
-      <span>低分样本回流</span><span style="color:var(--cp-brand);font-weight:600">→ P10 微调 →</span><span>新模型回到 P01 / P02</span>
-    </div>
-    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="arch-box reveal" style="text-align:left"><p style="font-weight:600">shell · 统一外壳</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3);margin-top:4px">微前端整合：登录 + 智能体矩阵 + 分层导航 + iframe 挂载，十模块一套系统</p></div>
-      <div class="arch-box reveal" style="text-align:left"><p style="font-weight:600">shared/llm-gateway</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3);margin-top:4px">统一模型网关 · 多端点故障转移 · 成本统计 · Mock 降级</p></div>
-      <div class="arch-box reveal" style="text-align:left"><p style="font-weight:600">shared/auth + config</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3);margin-top:4px">统一 JWT 认证 · SERVICE_REGISTRY 端口单一真源 · 跨模块真实取数</p></div>
-      <div class="arch-box reveal" style="text-align:left"><p style="font-weight:600">shared/ui-kit</p><p style="font-size:var(--cp-fs-xs);color:var(--cp-ink3);margin-top:4px">统一深色设计令牌 · 组件库（本页即实例）</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- 技术栈 -->
-<section id="stack" class="mx-auto max-w-6xl px-6 py-16">
-  <h2 class="reveal" style="font-size:var(--cp-fs-2xl);font-weight:700">技术栈</h2>
-  <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="mod-card reveal"><p style="font-weight:600">后端</p><p class="mod-desc mt-1">Python 3.11+ · FastAPI · SQLAlchemy 2.0 · Pydantic v2 · uv</p></div>
-    <div class="mod-card reveal"><p style="font-weight:600">前端</p><p class="mod-desc mt-1">Next.js · React · TypeScript · Tailwind · Vue 3</p></div>
-    <div class="mod-card reveal"><p style="font-weight:600">AI</p><p class="mod-desc mt-1">LangGraph · LangChain · BGE-M3 · Milvus · PEFT/LoRA</p></div>
-    <div class="mod-card reveal"><p style="font-weight:600">基础设施</p><p class="mod-desc mt-1">Docker · DuckDB · SQLite · Redis · ECharts</p></div>
-  </div>
-</section>
-
-<!-- 关于作者 -->
-<section id="about" class="border-t border-[var(--cp-line)] bg-[var(--cp-surface)]">
-  <div class="mx-auto max-w-6xl px-6 py-16">
-    <div class="flagship reveal p-6 sm:p-8">
-      <div class="grid gap-8 md:grid-cols-3">
-        <div class="md:col-span-2">
-          <h2 style="font-size:var(--cp-fs-xl);font-weight:700">关于作者</h2>
-          <p class="mod-desc mt-3" style="font-size:var(--cp-fs-base);color:var(--cp-ink2)">
-            <strong style="color:var(--cp-ink1)">李奕波</strong> · 2026 届 · AI 应用工程师方向。
-            从需求拆解到工程落地全程主导：后端编排、RAG 检索、前端界面与统一设计系统。
-            作品集强调<strong style="color:var(--cp-ink1)">可量化验证</strong>——每个模块都有评测集与指标闭环。
-          </p>
-          <div class="mt-5 flex flex-wrap gap-2">
-            <span class="chip">🐍 Python / FastAPI</span>
-            <span class="chip">🕸️ LangGraph / RAG</span>
-            <span class="chip">⚛️ React / Next.js</span>
-            <span class="chip">🎨 统一设计系统</span>
-          </div>
-          <div class="mt-6 flex flex-wrap gap-3">
-            <a href="#" class="cta primary" style="height:38px;font-size:var(--cp-fs-sm)">GitHub</a>
-            <a href="#" class="cta ghost" style="height:38px;font-size:var(--cp-fs-sm)">下载简历</a>
-          </div>
+    <h3 class="pf-layer">应用层 <span class="cp-tag">L3</span></h3>
+    <div class="pf-grid">
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p01.png" alt="P01 AI 电商客服真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P01 AI 电商客服</span><span class="pf-mod-tech">:5173</span></div>
+          <p class="pf-mod-desc">提问 → 意图识别 → 知识检索 → 生成回复 → 负面情绪自动建单转人工</p>
+          <p class="pf-mod-tech">FastAPI · LangChain · MySQL · Vue 3</p>
+          <p class="pf-mod-metric"><b>62</b> 项单测 · 意图三轨道判定 + 幻觉流程名拦截 + 中断压栈恢复</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · 订单与商品来自随附的 mock 商城中台 :18081。</p>
         </div>
-        <div class="flex flex-col justify-center gap-4 rounded-lg border border-[var(--cp-line)] bg-[var(--cp-bg)] p-5">
-          <div><div class="stat-num" style="font-size:1.5rem">3→36</div><div class="stat-lbl">P04 评测集扩充（10×）</div></div>
-          <div><div class="stat-num" style="font-size:1.5rem">+24.5%</div><div class="stat-lbl">Answer Correctness 提升（D5-01）</div></div>
-          <div><div class="stat-num" style="font-size:1.5rem">0</div><div class="stat-lbl">P05 第三方依赖</div></div>
+      </article>
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p02.png" alt="P02 电商运营助手工作台真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P02 电商运营助手 <span class="cp-tag">★ 旗舰</span></span><span class="pf-mod-tech">:3001</span></div>
+          <p class="pf-mod-desc">商品诊断 · 创意策划 · 合规检测拦截 · 广告实验 · 四角色 RBAC</p>
+          <p class="pf-mod-tech">FastAPI · LangGraph · SQLAlchemy · Next.js</p>
+          <p class="pf-mod-metric"><b>162</b> 项测试 · 合规高危召回 <b>18/18</b> · 误报 0/10 · 对抗绕过 0/6</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · 无 Key 时网关降级 mock 生成，前端标「演示」。</p>
         </div>
-      </div>
+      </article>
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p05.png" alt="P05 合同审批系统登录与角色分流真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P05 合同审批（衡鉴）</span><span class="pf-mod-tech">:8770</span></div>
+          <p class="pf-mod-desc">上传 → 条款抽取 → 规则风险打分 → LLM 二阶段语义复核 → 报告 + 审批留痕</p>
+          <p class="pf-mod-tech">纯标准库 · ThreadingHTTPServer · SQLite</p>
+          <p class="pf-mod-metric"><b>66/66</b> 自检 + <b>46</b> 项 pytest · 零第三方依赖 · LLM 复核 confirm 2 / need_human 1</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · 审批「模拟回写」是刻意设计；LLM 二阶段默认 enabled=false。</p>
+        </div>
+      </article>
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p09.png" alt="P09 AI 销售考核排行榜真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P09 AI 销售考核</span><span class="pf-mod-tech">:8090</span></div>
+          <p class="pf-mod-desc">导入会话 → 自动评分 → 排行榜与个人报告，规则命中与评分可追溯</p>
+          <p class="pf-mod-tech">FastAPI · ECharts · LLM 结构化</p>
+          <p class="pf-mod-metric"><b>41</b> 项测试（含 P09→P01 集成 4 例）· 真实会话按 session 聚合评分 65.5 / 70.5</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · 真实：会话导入、评分、排行榜与个人报告。模拟：评分器是规则引擎（Mock LLM），页面挂「Mock Notice」。未完成：人机一致性 Kappa 需真人评满 ≥5 条才出数。</p>
+        </div>
+      </article>
     </div>
-  </div>
-</section>
 
-<!-- 页脚 -->
-<footer class="border-t border-[var(--cp-line)] bg-[var(--cp-surface)]">
-  <div class="mx-auto max-w-6xl px-6 py-8 text-center" style="font-size:var(--cp-fs-sm);color:var(--cp-ink3)">
-    <p><span data-cp-brand="company">云枢智能</span> <span data-cp-brand="name_en">CloudPivot</span> · 全栈 AI 作品集</p>
-    <p class="mt-1">李奕波 · 2026 · 基于统一设计系统 shared/ui-kit 构建</p>
-  </div>
+    <h3 class="pf-layer">能力层 <span class="cp-tag">L2</span></h3>
+    <div class="pf-grid">
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p03.png" alt="P03 NL2SQL 问数真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P03 NL2SQL 问数</span><span class="pf-mod-tech">:5174</span></div>
+          <p class="pf-mod-desc">自然语言 → SQL → 执行 → 图表 → 溯源报告，含只读护栏与拒答</p>
+          <p class="pf-mod-tech">DeepAgents · LangChain · FastAPI · Vue 3</p>
+          <p class="pf-mod-metric"><b>61</b> 项测试 · 只读 SQL 护栏：DROP / DELETE / 多语句 / 注释绕过执行前全拦</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · MySQL(3306)、RAGFlow(9380) 未启动，联网搜索仍是 mock Key；库里没有的数据会明确拒答。</p>
+        </div>
+      </article>
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p04.png" alt="P04 RAG 知识库控制台真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P04 RAG 知识库</span><span class="pf-mod-tech">:8041</span></div>
+          <p class="pf-mod-desc">文档入库 → 检索问答带引用 → 召回/精确/拒答/忠实度四指标评测</p>
+          <p class="pf-mod-tech">LangGraph · FastAPI · Milvus · MongoDB · BGE-M3</p>
+          <p class="pf-mod-metric"><b>23</b> 项测试 · <b>36</b> 题评测集 · Ragas 五指标本地/云端对照（见下方实测表）</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · 入库/检索/重排/评测链路全真实；云端重排对外演示建议换按量付费 Key。</p>
+        </div>
+      </article>
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p07.png" alt="P07 AI 素材中心真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P07 AI 素材中心</span><span class="pf-mod-tech">:8070</span></div>
+          <p class="pf-mod-desc">上传 → 智能打标 → 以文搜图（带命中理由与拒答）→ 素材×投放关联报表</p>
+          <p class="pf-mod-tech">FastAPI · SQLite · ECharts</p>
+          <p class="pf-mod-metric"><b>68</b> 项测试（2026-10-14 重做，改造前 18）· 以文搜图 Recall@5 0.05 → 1.0</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · 图片是程序化规格卡不是 AI 出图；检索是中文 n-gram 文本层不是 CLIP 向量。两处边界写进接口与页面。</p>
+        </div>
+      </article>
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p08.png" alt="P08 直播切片真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P08 直播切片</span><span class="pf-mod-tech">:8080</span></div>
+          <p class="pf-mod-desc">样例直播 → 分段打点（每段给出得分构成）→ 批量任务队列 + 进度</p>
+          <p class="pf-mod-tech">FastAPI · Pydantic v2</p>
+          <p class="pf-mod-metric"><b>30</b> 项测试 · 四维得分构成可解释（文本理由 + 同进程确定性）+ 批量队列</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · ASR 为模拟文本、评分为规则，无 ffmpeg 真实出片（/health 自陈 mock_boundaries）。</p>
+        </div>
+      </article>
+    </div>
+
+    <h3 class="pf-layer">模型层 <span class="cp-tag">L1</span> · 数据层 <span class="cp-tag">L0</span></h3>
+    <div class="pf-grid">
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p10.png" alt="P10 模型微调平台真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P10 模型微调平台 <span class="cp-tag">L1</span></span><span class="pf-mod-tech">:8101</span></div>
+          <p class="pf-mod-desc">数据集 → 训练 → 评测 → 模型注册表的生命周期编排（训练与部署均为模拟，无可调用端点）</p>
+          <p class="pf-mod-tech">FastAPI · LoRA 生命周期编排</p>
+          <p class="pf-mod-metric"><b>28</b> 项测试 · 数据集 → 训练 → 评测 → 注册表 全生命周期编排与状态机</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · 真实：生命周期编排、接口与状态机。模拟：<b>未真实训练</b>（本机无 GPU 余量），loss 曲线由公式生成；<b>不存在可调用的 OpenAI 兼容端点</b>（部署仅登记状态，接口返回 <code>endpoint_url: null</code>），无测量来源的延迟一律为 null —— 页面、接口与 README 三处标注。</p>
+        </div>
+      </article>
+      <article class="pf-mod">
+        <img class="pf-mod-shot" src="img/p06.png" alt="P06 数据中台真实界面">
+        <div class="pf-mod-body">
+          <div class="pf-mod-head"><span class="pf-mod-name">P06 数据中台 <span class="cp-tag">L0</span></span><span class="pf-mod-tech">:8060</span></div>
+          <p class="pf-mod-desc">接入 → ODS/DWD/DWS/ADS 分层 → 指标口径 → 血缘可视化 → 质量校验</p>
+          <p class="pf-mod-tech">FastAPI · DuckDB · ECharts</p>
+          <p class="pf-mod-metric"><b>44</b> 项测试 · 质量校验实测抓到注入的脏数据（120/129 通过，失败项可下钻）</p>
+          <p class="pf-mod-mock"><b>Mock 边界</b> · 样例数据自动 seed，是演示数据集，不是真实店铺。</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="pf-sec" id="arch">
+    <h2 class="pf-h2">一条数据闭环，六个工程决策</h2>
+    <p class="pf-sub">闭环的意义是<b>口径只有一份</b>：同一个「GMV」在数据中台、运营看板、销售考核里算的是同一个数；
+      低分会话回流微调层，新模型再回到 P01 / P02 的回复里。下面六条 ADR 是这套合并形态里我认为最该被追问的决策，
+      每条都连同代价一起写 —— 收益谁都会讲。</p>
+    <div class="pf-flow">
+      <span class="pf-node">P06 数据中台</span><span class="pf-arrow">→</span>
+      <span class="pf-node">P04 知识库 / P07 素材</span><span class="pf-arrow">→</span>
+      <span class="pf-node">P01 客服 / P02 运营</span><span class="pf-arrow">→</span>
+      <span class="pf-node">P09 销售考核</span><span class="pf-arrow">→</span>
+      <span class="pf-node">P10 微调</span><span class="pf-arrow">↺ 新模型回到 P01 / P02</span>
+    </div>
+    <div class="pf-cards">
+      <div class="pf-card"><b>入口 · ADR-0001</b><p>微前端外壳 + iframe 挂载，不做单体合并。三类前端栈异构（Next.js / Vue 3 + Vite / FastAPI 直挂静态页），合并等于重写四个前端；代价是主题与令牌只能运行时尽力同步。</p></div>
+      <div class="pf-card"><b>认证 · ADR-0003</b><p>外壳用 shared/auth 签发 HS256、postMessage 下发，模块只校验不重造登录。P02 保留自身 Cookie RBAC —— 改它会绕过它已有的权限模型，这是<b>有意识的例外</b>。</p></div>
+      <div class="pf-card"><b>端口 · ADR-0002</b><p>SERVICE_REGISTRY 是端口唯一真源，跨模块调用禁止硬编码对方端口。起因是一次真实故障：P03 前端把后端写成 8000，实为 8030，平台内直接不可用。</p></div>
+      <div class="pf-card"><b>取数 · ADR-0004</b><p>P02→P06、P07→P06、P09→P01 真实 HTTP。降级态用「少返回」而不是「编一个」：<code>degraded=True</code> 且响应里直接不含 metrics 字段。</p></div>
+      <div class="pf-card"><b>视觉 · ADR-0005</b><p>ui-kit 令牌单一真源：静态模块运行时挂 <code>/shared</code>，构建型模块构建期内联 + 主题桥；代价是改色后必须重新构建。本页与在线系统用的是同一套令牌。</p></div>
+      <div class="pf-card"><b>例外 · ADR-0006</b><p>P05 只用标准库：客户机 <code>python run.py</code> 即跑，不必先装 Docker。风险打分要的是确定性与可复现，这一点比「栈统一」更重要。</p></div>
+    </div>
+  </section>
+
+  <section class="pf-sec" id="evidence">
+    <h2 class="pf-h2">实测数据，以及它从哪来</h2>
+    <p class="pf-sub">面试里最常被追问的一句是「这个数字怎么来的」，所以每张卡下面都留着证据文件路径，
+      多数报告还带可复跑的 <code>verify_*.py</code>。测试通过数是各模块<b>最近一次 pytest 实跑</b>的结果，
+      是「通过数」而不是覆盖率；全平台没做过并发压测，这条写在下一节而不是藏起来。</p>
+    <div class="pf-cards">
+      <div class="pf-card"><div class="pf-num">565</div>
+        <p>十模块 pytest 实跑通过数（逐模块取最新一次运行，日志已入仓可复核）。P01 62 · P02 162 · P03 61 · P04 23 · P05 46 · P06 44 ·
+          P07 68 · P08 30 · P09 41 · P10 28（采集 2026-10-12 ~ 10-14）</p>
+        <p class="pf-src">_evidence/*/pytest-*.log · _evidence/*/INDEX.md</p></div>
+      <div class="pf-card"><div class="pf-num">18/18</div>
+        <p>P02 广告法合规高危召回 100%，带 span、建议替换词与<b>法条</b>；合规文案误报 0/10，
+          对抗绕过 0/6（36 条用例 / 108 条规则词库，含零宽字符、全角空格、形近字、符号插入）</p>
+        <p class="pf-src">_evidence/p02/合规检测评测报告.md · verify_compliance.py</p></div>
+      <div class="pf-card"><div class="pf-num">36 题</div>
+        <p>P04 RAG 评测集（easy 22 · medium 11 · hard 3，覆盖 21 维度），ground_truth 逐条对照源文档、
+          零编造，跑 Ragas 五指标</p>
+        <p class="pf-src">_evidence/p04/rag_compare_report.json</p></div>
+      <div class="pf-card"><div class="pf-num">66/66</div>
+        <p>P05 零依赖自检测通过，另有 46 项 pytest；LLM 二阶段语义复核实测 confirm 2 / need_human 1 /
+          false_positive 0，其中 need_human 那条模型明确回答「需依赖外部法律标准」</p>
+        <p class="pf-src">_evidence/p05/verify_llm_review.json · D4验收报告-P1复核.md</p></div>
+      <div class="pf-card"><div class="pf-num">7 项</div>
+        <p>P02→P06 真实指标（GMV/订单/转化率/客单价/退货率/UV/PV），<code>metrics_source=p06-live</code>；
+          指向死端口则 <code>degraded=True</code> 且响应里<b>不带</b> metrics 字段</p>
+        <p class="pf-src">_evidence/p02-ecommerce-ops-assistant/cross-module-p06-20261013.md</p></div>
+      <div class="pf-card"><div class="pf-num">1.0</div>
+        <p>P07 以文搜图 Recall@5 由 0.05 提升到 1.0（5 条中文自然语言查询 + 拒答用例），
+          命中可回显原词与理由；测试从 18 项扩到 68 项</p>
+        <p class="pf-src">_evidence/p07-ai-asset-center/pytest-20261014.log</p></div>
+    </div>
+
+    <h3 class="pf-layer">P04 检索质量：本地重排 vs 云端重排（零降级对照）</h3>
+    <table class="pf-table">
+      <thead><tr><th>Ragas 指标</th><th class="n">本地 BGE-reranker-large</th><th class="n">云端 qwen3.7-text-rerank</th></tr></thead>
+      <tbody>
+        <tr><td>Faithfulness</td><td class="n">0.9651</td><td class="n"><b>0.9777</b></td></tr>
+        <tr><td>Answer Relevancy</td><td class="n">0.8152</td><td class="n"><b>0.8178</b></td></tr>
+        <tr><td>Context Precision</td><td class="n">0.6810</td><td class="n"><b>0.9190</b></td></tr>
+        <tr><td>Context Recall</td><td class="n">0.8681</td><td class="n"><b>0.9583</b></td></tr>
+        <tr><td>Answer Correctness</td><td class="n">0.6900</td><td class="n"><b>0.7217</b></td></tr>
+        <tr><td>平均延迟</td><td class="n">51.37 s</td><td class="n"><b>18.69 s</b></td></tr>
+        <tr><td>是否出网</td><td class="n">否</td><td class="n">是</td></tr>
+      </tbody>
+    </table>
+    <p class="pf-note" style="margin-top:var(--cp-sp-4)">
+      结论：<b>私有化不是免费的</b>。修掉本地重排的量纲缺陷（BGE 输出 logits 未归一 → 断崖截断把正分文档静默砍掉，
+      并让上一版对比评测给出相反结论）后重跑，本地 5 项指标仍全面低于云端（Context Precision 差 23.8 pp）、
+      平均延迟慢 2.7 倍，换来的是敏感文档零出网。这是能直接拿去谈的取舍，而不是「本地也差不多」。
+    </p>
+  </section>
+
+  <section class="pf-sec" id="boundary">
+    <h2 class="pf-h2">真实 / 模拟边界</h2>
+    <p class="pf-sub">交付里最容易翻车的不是功能少，是「演示能跑、上线不跑」。所以每个模块我先把线划死：
+      <b>哪条链路是真的、哪里是模拟、以及为什么在这一处主动选模拟</b>。同样的话在系统 UI 标注、接口字段与
+      <code>_evidence/</code> 里都能对上（如 P08 的 <code>/health</code> 自陈 mock_boundaries、P10 的
+      <code>endpoint_url: null</code>）—— 双处标注是硬规则，不是我挑给面试官看的话术。</p>
+    <div class="pf-cards">
+      <div class="pf-card"><b>P01 客服</b><p>真实：意图三轨道、对话状态机、转人工建单。模拟：订单与商品来自随附的 mock 商城中台 :18081。</p></div>
+      <div class="pf-card"><b>P02 运营</b><p>真实：登录、RBAC、合规、广告实验、跨模块取数全链路。降级：无 Key 时网关降级 mock 生成，前端标「演示」。</p></div>
+      <div class="pf-card"><b>P03 问数</b><p>真实：只读 SQL 护栏、执行链路，模型层已接通。未闭环：MySQL(3306) 与 RAGFlow(9380) 未启动、联网搜索仍是 mock Key。</p></div>
+      <div class="pf-card"><b>P04 知识库</b><p>真实：入库/检索/重排/评测，BGE-M3 本地嵌入 + 本地或云端重排双后端。已修：MCP 联网搜索曾恒 0（异常被静默吞掉）。</p></div>
+      <div class="pf-card"><b>P05 合同</b><p>真实：规则风险判定、审批流、报告。刻意设计：审批「模拟回写」子系统；LLM 二阶段默认 <code>enabled=false</code>。</p></div>
+      <div class="pf-card"><b>P06 数据中台</b><p>真实：DuckDB 分层与指标计算。演示数据：自动 seed 的样例集，不是真实店铺。</p></div>
+      <div class="pf-card"><b>P07 素材</b><p>真实：打标（走统一网关）、检索与拒答、素材×投放关联。模拟：图片是程序化规格卡不是 AI 出图；检索是文本层不是 CLIP 向量。</p></div>
+      <div class="pf-card"><b>P08 切片</b><p>真实：批量队列与进度、四维得分构成。模拟：ASR 为模拟文本、评分为规则，<b>无 ffmpeg 真实出片</b>。</p></div>
+      <div class="pf-card"><b>P09 考核</b><p>真实：会话导入、评分与排行榜。模拟：评分器是规则引擎（Mock LLM），页面挂 Mock Notice。</p></div>
+      <div class="pf-card"><b>P10 微调</b><p>真实：生命周期编排、接口与状态机。模拟：<b>未真实训练</b>（本机无 GPU 余量），loss 曲线由公式生成；<b>无可调用端点</b>（部署仅登记状态，接口返回 <code>endpoint_url: null</code>），无测量来源的延迟一律为 null。</p></div>
+    </div>
+    <p class="pf-note" style="margin-top:var(--cp-sp-4)">
+      <b>没有测过的数字就不写。</b>全平台<b>未做并发压测</b>（无 P95 / 错误率）、<b>未测覆盖率</b>；
+      P10 的四条微调门禁（真实训练 / loss 曲线 / 前后评测对比 / 可调用端点）<b>全部为空</b>；
+      P09 的人机一致性 Kappa 要真人评满 ≥5 条才出数 —— 早先用「AI 分 + 随机噪声」冒充人工分的代码已删除，这一项宁可空着。<br>
+      另：公司名「云枢智能 / CloudPivot」与其客户规模是<b>虚构的业务建模设定</b>，不是真实客户数据。
+    </p>
+  </section>
+
+  <section class="pf-sec" id="about">
+    <h2 class="pf-h2">关于作者与阅读路线</h2>
+    <p class="pf-sub"><b>李奕波</b> · 求职方向 <b>AI-FDE / AI 应用开发</b>。
+      这一套从需求拆解到进程托管由我一人完成：业务建模与四层拆分、后端编排、RAG 检索与评测、前端界面与设计令牌、
+      服务注册与静默启动，以及「什么才算跑通」的验收门禁本身。
+      仓库 <a href="https://github.com/liyibo0410" target="_blank" rel="noopener">github.com/liyibo0410</a> ·
+      证据 <code>_evidence/</code>，进度登记 D1–D20。</p>
+    <div class="pf-cards">
+      <div class="pf-card"><b>按 AI-FDE 聊 · 取舍</b><p>P05 为什么敢不装依赖、P02 为什么不并进外壳认证（ADR-0006 / 0003）、私有化那张对照表该按什么标准拍板。门禁里那条路径 —— 登录 → 生成文案 → 违规词被拦 → 建广告实验 → 看对比数据 —— 现场可以完整点一遍。</p></div>
+      <div class="pf-card"><b>按 AI 应用开发聊 · 链路</b><p>llm-gateway 的双端点故障转移与无 Key 降级、rerank 断崖截断的根因分析（量纲，不是阈值）、合规检测为什么必须落到法条与 span，而不是给一个「风险分」。</p></div>
+      <div class="pf-card"><b>按工程化聊 · 约束</b><p>SERVICE_REGISTRY 单一真源、设计令牌的两类注入方式与构建期耦合代价、<code>_tools/supervisor.py</code> 进程托管与静默启动，以及 <code>_evidence/</code> 证据门禁是怎么挡住「假完成」的。</p></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pf-foot">
+  <div>李奕波 · AI-FDE / AI 应用开发作品集 · 2026</div>
+  <div>本页与在线系统用同一套设计令牌 <code>shared/ui-kit</code> 构建 · 每个指标来自本机实跑与本地评测，可在 <code>_evidence/</code> 逐条复核 · 跑不通的地方一律写「未跑通 + 原因」，不粉饰</div>
 </footer>
 
-<script>
-  // 滚动入场（尊重 prefers-reduced-motion）
-  (function () {
-    var els = document.querySelectorAll('.reveal');
-    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      els.forEach(function (e) { e.classList.add('in'); });
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
-      });
-    }, { threshold: 0.12 });
-    els.forEach(function (e) { io.observe(e); });
-  })();
-</script>
 </body>
 </html>
