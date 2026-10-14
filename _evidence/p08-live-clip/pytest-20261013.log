@@ -1,0 +1,46 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p08-live-clip\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\software\PycharmProjects\面试项目\projects\p08-live-clip
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 30 items
+
+tests/test_api.py::test_health_reports_mock_boundaries PASSED            [  3%]
+tests/test_api.py::test_list_streams PASSED                              [  6%]
+tests/test_api.py::test_list_streams_filter_platform PASSED              [ 10%]
+tests/test_api.py::test_list_streams_filter_status PASSED                [ 13%]
+tests/test_api.py::test_get_stream_detail_with_asr PASSED                [ 16%]
+tests/test_api.py::test_get_stream_404 PASSED                            [ 20%]
+tests/test_api.py::test_list_clips_and_score_breakdown_explainable PASSED [ 23%]
+tests/test_api.py::test_list_clips_filter_by_stream PASSED               [ 26%]
+tests/test_api.py::test_list_clips_min_score_excludes_all_when_impossible PASSED [ 30%]
+tests/test_api.py::test_list_clips_sort_desc PASSED                      [ 33%]
+tests/test_api.py::test_list_clips_pagination PASSED                     [ 36%]
+tests/test_api.py::test_get_clip_detail_and_404 PASSED                   [ 40%]
+tests/test_api.py::test_process_creates_completed_task PASSED            [ 43%]
+tests/test_api.py::test_process_multi_stream PASSED                      [ 46%]
+tests/test_api.py::test_process_invalid_stream_400 PASSED                [ 50%]
+tests/test_api.py::test_tasks_list_includes_seed_and_new PASSED          [ 53%]
+tests/test_api.py::test_get_task_seed PASSED                             [ 56%]
+tests/test_api.py::test_get_task_404 PASSED                              [ 60%]
+tests/test_api.py::test_stats PASSED                                     [ 63%]
+tests/test_scoring.py::test_ts_seconds_format PASSED                     [ 66%]
+tests/test_scoring.py::test_ts_hours_format PASSED                       [ 70%]
+tests/test_scoring.py::test_score_clip_deterministic_within_process PASSED [ 73%]
+tests/test_scoring.py::test_score_clip_components_in_range PASSED        [ 76%]
+tests/test_scoring.py::test_score_clip_keyword_hits_match_theme PASSED   [ 80%]
+tests/test_scoring.py::test_score_clip_interaction_and_promo_boost_isolated PASSED [ 83%]
+tests/test_scoring.py::test_score_clip_explanation_nonempty PASSED       [ 86%]
+tests/test_scoring.py::test_gen_asr_segments_respects_duration PASSED    [ 90%]
+tests/test_scoring.py::test_gen_asr_segments_unknown_theme_falls_back_to_beauty PASSED [ 93%]
+tests/test_scoring.py::test_gen_asr_segments_speaker_and_confidence PASSED [ 96%]
+tests/test_scoring.py::test_generate_clips_structure PASSED              [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\software\PycharmProjects\面试项目\projects\p08-live-clip\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 30 passed, 1 warning in 0.11s ========================

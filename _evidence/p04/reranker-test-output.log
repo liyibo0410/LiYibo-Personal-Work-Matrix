@@ -1,0 +1,91 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base
+configfile: pyproject.toml
+plugins: anyio-4.15.1, langsmith-0.14.7
+collecting ... collected 15 items
+
+tests/test_reranker.py::TestRerankPassthrough::test_passthrough_returns_correct_length PASSED
+tests/test_reranker.py::TestRerankPassthrough::test_passthrough_preserves_order PASSED
+tests/test_reranker.py::TestRerankPassthrough::test_passthrough_scores_are_positive PASSED
+tests/test_reranker.py::TestRerankPassthrough::test_empty_documents PASSED
+tests/test_reranker.py::TestRerankLocalNormalPath::test_local_rerank_returns_correct_length You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  query: 如何检测主板短路
+  [0] score=5.5977 | 主板短路通常表现为通电后风扇转一下就停，可以使用万用表测量。...
+  [1] score=-9.4766 | 今天天气很好，适合出去散步。...
+  [2] score=3.4082 | 使用万用表的蜂鸣档测量各供电电感对地阻值，阻值偏低即为短路。...
+PASSED
+tests/test_reranker.py::TestRerankLocalNormalPath::test_local_rerank_semantic_ordering You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  query: 如何检测主板短路
+  Top-1: score=5.5977 | [1] 主板短路通常表现为通电后风扇转一下就停，可以使用万用表测量。...
+  Top-2: score=3.4121 | [3] 使用万用表的蜂鸣档测量各供电电感对地阻值，阻值偏低即为短路。...
+  Top-3: score=-2.9199 | [4] 主板维修需要先了解电路原理，建议参考维修手册。...
+  Top-4: score=-6.4961 | [0] 今天中午去吃猪脚饭吧，这块主板外观很漂亮。...
+  Top-5: score=-9.4844 | [2] 苹果发布新款手机，A系列芯片性能提升20%。...
+PASSED
+tests/test_reranker.py::TestRerankLocalNormalPath::test_rerank_documents_with_local_backend You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  backend=local, scores=[4.0547, -6.2734, 1.0176]
+PASSED
+tests/test_reranker.py::TestLocalToCloudDegradation::test_nonexistent_model_path_falls_back 
+  降级路径: local(路径不存在) → cloud(无Key) → passthrough
+  降级原因: cloud 也失败（未配置 MCP_API_KEY（DashScope API Key）），降级到 passthrough
+PASSED
+tests/test_reranker.py::TestLocalToCloudDegradation::test_local_fails_cloud_succeeds 
+  降级: local → cloud, scores=[0.95, 0.3, 0.7]
+PASSED
+tests/test_reranker.py::TestCloudToPassthroughDegradation::test_cloud_backend_fails_falls_to_passthrough 
+  降级: cloud(网络超时) → passthrough, scores=[1.0, 0.99, 0.98]
+PASSED
+tests/test_reranker.py::TestCloudToPassthroughDegradation::test_unknown_backend_falls_to_passthrough 
+  非法 backend → passthrough
+PASSED
+tests/test_reranker.py::TestSingletonCache::test_model_loaded_only_once You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  首次调用（含模型加载）: 1.44 秒
+  后续 99 次总耗时: 2.68 秒
+  后续单次平均耗时: 0.0271 秒
+  加速比: 53x
+PASSED
+tests/test_reranker.py::TestDependencyMissing::test_flagembedding_import_error_graceful 
+  FlagEmbedding 缺失 → 降级到 passthrough
+  原因: cloud 也失败（未配置 MCP_API_KEY（DashScope API Key）），降级到 passthrough
+PASSED
+tests/test_reranker.py::TestDependencyMissing::test_module_import_does_not_crash 
+  FlagEmbedding 缺失时模块 import 正常，不崩溃
+PASSED
+tests/test_reranker.py::TestLocalCloudConsistency::test_top1_consistency You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  query: 合同违约赔偿标准
+  local 排序:
+    Top-1: score=1.9160 | [2] 违约金一般不超过实际损失的30%，但当事人可以约定。...
+    Top-2: score=0.2922 | [0] 根据民法典第577条，违约方应承担继续履行、采取补救措施或赔偿损失等责任。...
+    Top-3: score=-2.5234 | [4] 合同解除后，尚未履行的部分终止履行。...
+    Top-4: score=-9.4844 | [1] 今天天气不错，适合户外运动。...
+    Top-5: score=-9.4844 | [3] 公司年会将于下周五举行，请各部门做好准备。...
+
+  local Top-1: [2]（语义最相关文档）
+PASSED
+
+============================== warnings summary ===============================
+tests\test_reranker.py:90
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:90: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_reranker.py:312
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:312: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_reranker.py:437
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:437: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests/test_reranker.py::TestLocalToCloudDegradation::test_nonexistent_model_path_falls_back
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Lib\site-packages\dashscope\__init__.py:63: DeprecationWarning: The Assistants API (dashscope.assistants) is deprecated and will be removed in a future release. Please migrate to the Responses API. See https://help.aliyun.com/zh/model-studio/synchronous-call-api-reference for migration details.
+    from dashscope.assistants import Assistant, AssistantList, Assistants
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 15 passed, 4 warnings in 19.06s =======================

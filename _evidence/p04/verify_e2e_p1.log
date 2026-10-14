@@ -1,0 +1,230 @@
+======================================================================
+P1 独立端到端取证 · P04 RAG（不复用 Qoder 脚本）
+======================================================================
+
+----------------------------------------------------------------------
+问题1（带产品名）: hak 180 烫金机：为什么不建议把设备放在加热器、空调、电风扇或水附近？
+----------------------------------------------------------------------
+[32m2026-10-12 19:44:16 - root - INFO - node_item_name_confirm 开始执行[0m
+[32m2026-10-12 19:44:16 - root - INFO - 步骤1：参数校验通过[0m
+[32m2026-10-12 19:44:16 - root - INFO - 步骤2：获取到 0 条历史消息[0m
+[32m2026-10-12 19:44:16 - root - INFO - 步骤3：用户消息已初始保存, ID: [0m
+[32m2026-10-12 19:44:16 - langchain_openai.chat_models._client_utils - INFO - langchain-openai detected HTTP_PROXY, HTTPS_PROXY, http_proxy, https_proxy and no explicit `http_socket_options` / `http_client` / `http_async_client` / `openai_proxy`; skipping the custom `httpx` transport so httpx's env-proxy auto-detection applies. Pass `http_socket_options=[...]` to opt back into kernel-level TCP keepalive tuning on top of the env proxy.[0m
+[32m2026-10-12 19:44:27 - httpx2 - INFO - HTTP Request: POST https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"[0m
+[32m2026-10-12 19:44:32 - FlagEmbedding.finetune.embedder.encoder_only.m3.runner - INFO - loading existing colbert_linear and sparse_linear---------[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[32m2026-10-12 19:44:34 - root - INFO - Milvus混合搜索完成，集合[kb_item_names]共检索到5条结果[0m
+[32m2026-10-12 19:44:34 - root - INFO - 步骤6：获得待处理的数据源：[{'extracted_name': 'hak 180 烫金机', 'matches': [{'item_name': 'Brother HAK 180 烫金机', 'score': 0.8821267485618591}, {'item_name': 'Brother HAK 180 烫金机', 'score': 0.8821204304695129}, {'item_name': 'H3C LA2608千兆以太网交换机', 'score': 0.6705495715141296}, {'item_name': '华为擎云B530台式机', 'score': 0.6551950573921204}, {'item_name': 'H3C LA2608室内无线网关', 'score': 0.575020432472229}]}][0m
+[32m2026-10-12 19:44:34 - root - INFO - node_item_name_confirm 结束执行[0m
+[32m2026-10-12 19:44:34 - root - INFO - node_search_embedding 开始执行[0m
+[32m2026-10-12 19:44:34 - root - INFO - node_search_embedding_hyde 开始执行[0m
+[32m2026-10-12 19:44:34 - root - INFO - 步骤1：开始生成假设性文档[0m
+[32m2026-10-12 19:44:34 - root - INFO - node_web_search_mcp 开始执行[0m
+[33m2026-10-12 19:44:34 - root - WARNING - MCP 联网搜索失败，已降级跳过（不影响主流程）: AttributeError: 'MCPServerStreamableHttp' object has no attribute 'cleanup'[0m
+[32m2026-10-12 19:44:34 - root - INFO - node_web_search_mcp 结束执行[0m
+[32m2026-10-12 19:44:34 - root - INFO - 过滤条件: item_name in ["Brother HAK 180 烫金机"] and (owner == "public" or owner == "public")[0m
+[32m2026-10-12 19:44:34 - root - INFO - 开始执行 Milvus 混合检索...[0m
+[32m2026-10-12 19:44:34 - root - INFO - Milvus混合搜索完成，集合[kb_chunks]共检索到5条结果[0m
+[32m2026-10-12 19:44:34 - root - INFO - node_search_embedding 结束执行[0m
+[32m2026-10-12 19:44:38 - httpx2 - INFO - HTTP Request: POST https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"[0m
+[32m2026-10-12 19:44:38 - root - INFO - 步骤2：过滤条件：item_name in ['Brother HAK 180 烫金机'][0m
+[32m2026-10-12 19:44:38 - root - INFO - 步骤2：开始执行 Milvus 混合检索...[0m
+[32m2026-10-12 19:44:38 - root - INFO - Milvus混合搜索完成，集合[kb_chunks]共检索到5条结果[0m
+[32m2026-10-12 19:44:38 - root - INFO - node_search_embedding_hyde 结束执行[0m
+[32m2026-10-12 19:44:38 - root - INFO - node_rrf 开始执行[0m
+[32m2026-10-12 19:44:38 - root - INFO - node_rrf 结束执行[0m
+[32m2026-10-12 19:44:38 - root - INFO - node_rerank 开始执行[0m
+[32m2026-10-12 19:44:38 - utils.reranker_http_utils - INFO - 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True[0m
+[32m2026-10-12 19:44:39 - utils.reranker_http_utils - INFO - 本地重排模型加载完成，耗时 0.9 秒[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[32m2026-10-12 19:44:41 - root - INFO - node_rerank 结束执行[0m
+[32m2026-10-12 19:44:41 - root - INFO - node_answer_output 开始执行[0m
+[32m2026-10-12 19:44:41 - root - INFO - 组装后的提示词为：你是一个智能助手，请根据参考内容回答用户的问题。
+要求：
+1 尽量基于【参考内容】和【用户问题】 作答，不要编造不存在的事实。
+2 如果用户的问题需要通过图片来辅助说明（例如：外观、结构、接线、示意图等）,图片只能来自于本地切片文本中的图片，请在答案最后追加一个独立的图片区块，格式严格如下：
+【图片】
+<图片URL1>
+<图片URL2>
+（每行一个URL；如果没有合适图片则不要输出【图片】区块）
+
+【参考内容】
+[1] [source=local] [chunk_id=469710648860739387] [url=None] [title=# HAK 180 烫金机] [score=3.8613]
+# HAK 180 烫金机
+
+
+# 产品安全手册（简体中文）
+
+•	请勿将本设备放在化学品附近，或者将本设备放置在可能会泼溅到化学品的位置。万一化学品接触本设备，则存在火灾或触电的风险。特别是有机溶剂或液体（如苯、油漆稀释剂、抛光剂或除臭剂）可能导致塑料盖和/或电缆溶解或分解，从而产生火灾或触电的风险。这些化学品或其他化学品可能导致本设备故障或褪色。
+
+•	本设备的包装中使用了塑料袋。塑料袋并不是玩具。为避免窒息的危险，请将这些塑料袋远离婴儿和儿童，并正确弃置这些塑料袋。
+
+•	对于使用起搏器的用户：
+
+感谢您购买 HAK 180 烫金机。
+
+在使用本设备之前，请先阅读本手册，包括所有预防措施。阅读本手册后，请妥善保管。
+
+本设备可能会产生弱磁场。如果您在本设备附近感觉到起搏器工作不正常，请远离本设备，并立即咨询医生。
+
+有关使用本设备的更多信息，请参阅使用说明书，其可在兄弟 (中国)商业有限公司技术服务支持网站 http://www.95105369.com/Web/Manuals.aspx 上找到。建议您先通读使用说明书，再使用本设备。如需获得常见问题解答、故障排除和说明书，请访问http://www.95105369.com。
+
+•	使用本设备之后短时间内，本设备的一些内部零件仍然处于极热状态。打开前盖时，请勿触摸以灰色标记的区域。存在烧伤的风险。先等待设备冷却下来，再触摸设备的内部零件。
+
+对于本设备所有者不遵守本指南中规定的说明操作而导致的损害，Brother 不承担任何责任。
+
+
+[2] [source=local] [chunk_id=469705686179905874] [url=None] [title=## 警告] [score=1.5439]
+## 警告
+
+不遵守说明和警告可能导致人员死亡或严重受伤。遵守这些指引以避免冒烟、发热、爆炸、火灾或人员受伤的风险。
+
+
+## 设备
+
+•	请先阅读这本手册，再尝试操作本设备或尝试进行任何维护。不按照这些说明操作可能会提高发生人员受伤或财产损坏（包括火灾、触电、烧伤或窒息所致）的风险。对于本设备所有者不遵守本指南中规定的说明操作而导致的损害，Brother 不承担任何责任。
+
+•	请勿在未去除所有包装材料的情况下使用本设备，包括本设备内部的任何附加的包装材料。否则可能会产生火灾的风险。
+
+•	请勿拆解本设备。拆解本设备可能会导致火灾或触电。
+
+•	请勿尝试自行维修本设备。打开或拆下盖子可能使您接触到危险电压点以及带来其他风险，并且可能使您的保修失效。对于所有维修事宜，请联系 Brother 呼叫中心或您当地的 Brother 经销商。
+
+•	请在以下环境使用本设备：温度保持在 10 °C 和 32 °C 之间，湿度保持在 20% 和 80% 之间，无冷凝。
+
+•	请勿使本设备受到阳光直射、过热、接触明火、腐蚀性气体、湿气或灰尘。否则可能产生触电、短路或火灾的风险，从而导致损坏设备和/ 或导致设备无法运行。
+
+•	请勿将设备放在加热器、空调、电风扇或水附近。
+
+否则当水（包括加热/空调/通风设备所产生的冷凝水）接触本设备时可能产生短路或火灾的风险。
+
+•	如果设备变得异常高温、冒烟、产生任何强烈味道，或者如果您意外在设备上倒入任何液体，请立即从电源插座拔掉设备的插头。请联系 Brother 呼叫中心或您当地的 Brother 经销商。
+
+•	如果设备跌落或者已损坏，则有触电的可能性。请从电源插座中拔掉设备的插头，然后联系 Brother 呼叫中心或您当地的 Brother 经销商。
+
+•	如果水、其他液体或金属物体进入设备内部，请立即从电源插座中拔掉设备的插头，然后联系 Brother 呼叫中心或您当地的 Brother经销商。
+
+•	请勿在卡纸或有纸张散落在设备内部的情况下尝试使用本设备。纸张与定影单元长时间接触可能导致火灾。
+
+•	请勿使用任何易燃物品、任何类型的喷雾剂包含酒精或氨水的有机溶剂/液体来清洁本设备的内部或外部。否则可能导致火灾。请改用无绒干抹布。有关如何清洁本设备的说明，请参阅使用说明书。
+
+•	请勿将本设备放在化学品附近，或者将本设备放置在可能会泼溅到化学品的位置。万一化学品接触本设备，则存在火灾或触电的风险。特别是有机溶剂或液体（如苯、油漆稀释剂、抛光剂或除臭剂）可能导致塑料盖和/或电缆溶解或分解，从而产生火灾或触电的风险。这些化学品或其他化学品可能导致本设备故障或褪色。
+
+•	本设备的包装中使用了塑料袋。塑料袋并不是玩具。为避免窒息的危险，请将这些塑料袋远离婴儿和儿童，并正确弃置这些塑料袋。
+
+•	对于使用起搏器的用户：
+
+本设备可能会产生弱磁场。如果您在本设备附近感觉到起搏器工作不正常，请远离本设备，并立即咨询医生。
+
+•	使用本设备之后短时间内，本设备的一些内部零件仍然处于极热状态。打开前盖时，请勿触摸以灰色标记的区域。存在烧伤的风险。先等待设备冷却下来，再触摸设备的内部零件。
+
+![hak180产品安全手册](http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/37eecd8ac02745dac415a628b51c26974067062c9b9747c069579fdaa99dbae9.jpg)
+儎⑟ഴḽ䆜઀ᛞ࠽व䀜᪮儎⑟Ⲻ䇴༽䜞ԬȾ
+
+![hak180产品安全手册](http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/71f9e17a760882436455f7ddc3a5fd358ce821ceb6e598b76d013d93dc26c943.jpg)
+
+
+[3] [source=local] [chunk_id=469705686179905876] [url=None] [title=## 设备] [score=0.7036]
+## 设备
+
+•	将本设备放置在平整、水平且稳定的表面上（如桌面），避免震动和冲击。
+
+•	将本设备放置在通风良好的环境中。
+
+•	为了防止人员受伤，请谨慎操作，避免将手指放置在图中所示的区域中。
+
+![hak180产品安全手册](http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/944ad0b1ae642d4a65bc1b40c979beeb12bc30e6a409b9d9666ee013ff48cc60.jpg)
+
+![hak180产品安全手册](http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/3bf3b3639360a2c43c223a6ee46c44b27d54f4a79506a17a8b99e6ba4703df40.jpg)
+
+
+## 电源线
+
+•	如果您长时间不会使用本设备，请从电源插座中拔掉电源线以确保安全。
+
+•	本设备必须安装在可轻松使用电源插座的位置附近。如果发生意外情况，必须从电源插座中拔掉电源线以完全关闭电源。
+
+•	请勿将手放在纸张边缘。纸张锋利的边缘可能导致受伤。
+
+
+【历史对话】
+暂无历史对话
+
+【相关商品/实体】
+Brother HAK 180 烫金机
+
+【用户问题】
+为什么不建议把hak 180烫金机放在加热器、空调、电风扇或水附近？
+
+请回答：[0m
+[32m2026-10-12 19:44:41 - root - INFO - ---Step 3: 开始生成回答 (LLM Generation)---[0m
+[32m2026-10-12 19:44:41 - root - INFO - 模式: 非流式输出 (Blocking), Session: p1-8914880ceae2497ca035aa80cb76d4b9[0m
+[32m2026-10-12 19:44:43 - httpx2 - INFO - HTTP Request: POST https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"[0m
+[32m2026-10-12 19:44:43 - root - INFO - 生成回答完成，长度: 119[0m
+[32m2026-10-12 19:44:43 - root - INFO - 开始提取图片，待处理文档数: 3[0m
+[32m2026-10-12 19:44:43 - root - INFO - 图片提取完成，共找到 4 张唯一图片: ['http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/37eecd8ac02745dac415a628b51c26974067062c9b9747c069579fdaa99dbae9.jpg', 'http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/71f9e17a760882436455f7ddc3a5fd358ce821ceb6e598b76d013d93dc26c943.jpg', 'http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/944ad0b1ae642d4a65bc1b40c979beeb12bc30e6a409b9d9666ee013ff48cc60.jpg', 'http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/3bf3b3639360a2c43c223a6ee46c44b27d54f4a79506a17a8b99e6ba4703df40.jpg'][0m
+[32m2026-10-12 19:44:43 - root - INFO - ---写入MongoDB历史记录---[0m
+[32m2026-10-12 19:44:43 - root - INFO - ---发送 final 事件---图片为：['http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/37eecd8ac02745dac415a628b51c26974067062c9b9747c069579fdaa99dbae9.jpg', 'http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/71f9e17a760882436455f7ddc3a5fd358ce821ceb6e598b76d013d93dc26c943.jpg', 'http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/944ad0b1ae642d4a65bc1b40c979beeb12bc30e6a409b9d9666ee013ff48cc60.jpg', 'http://localhost:9000/knowledge-base/upload-images/hak180产品安全手册/3bf3b3639360a2c43c223a6ee46c44b27d54f4a79506a17a8b99e6ba4703df40.jpg'][0m
+[32m2026-10-12 19:44:43 - root - INFO - ---node_answer_output 节点处理结束---[0m
+[32m2026-10-12 19:44:43 - root - INFO - node_answer_output 结束执行[0m
+  耗时 26.9s
+  rerank 前候选: rrf_chunks=5 + web=0 = 5 条
+  断崖后保留   : reranked_docs = 3 条
+  ★ 被断崖砍掉 : 2 条
+  rerank backend = local  degrade=''
+  答案前 150 字: 根据参考内容，不建议将 HAK 180 烫金机放在加热器、空调、电风扇或水附近的原因如下：
+
+当水（包括由加热、空调或通风设备产生的冷凝水）接触本设备时，可能会产生**短路**或**火灾**的风险，从而导致设备损坏和/或导致设备无法运行。
+  ── 完整分数与断崖位置（共 5 条）──
+    [0] score=+4.3398 保留 | # HAK 180 烫金机
+
+
+# 产品安全手册（简体中文）
+
+•	请勿将本设备放在化学品附...
+    [1] score=+1.9697 保留 | ## 警告
+
+不遵守说明和警告可能导致人员死亡或严重受伤。遵守这些指引以避免冒烟、发热、爆炸...
+    [2] score=+0.9482 保留 | # 注意
+
+不遵守说明和警告可能导致人员中度或严重受伤。
+遵守这些指引以避免人员受伤。
+•	...
+    [3] score=+0.6719 ✂ 砍掉 | ## 设备
+
+•	将本设备放置在平整、水平且稳定的表面上（如桌面），避免震动和冲击。
+
+•	...
+    [4] score=+0.0752 ✂ 砍掉 | ## 为设备选择一个安全的位置
+
+•	提起本设备时，请使用双手抓稳本设备的两侧。如果抓住的是...
+  → 断崖保留 3 / 5 条（RERANK_MIN_TOPK=3 为下限）
+
+----------------------------------------------------------------------
+问题2（不带产品名，Qoder 报称走消歧）: HAK180 附近有起搏器的用户应该注意什么？
+----------------------------------------------------------------------
+[32m2026-10-12 19:44:43 - root - INFO - node_item_name_confirm 开始执行[0m
+[32m2026-10-12 19:44:43 - root - INFO - 步骤1：参数校验通过[0m
+[32m2026-10-12 19:44:43 - root - INFO - 步骤2：获取到 0 条历史消息[0m
+[32m2026-10-12 19:44:43 - root - INFO - 步骤3：用户消息已初始保存, ID: [0m
+[32m2026-10-12 19:44:51 - httpx2 - INFO - HTTP Request: POST https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"[0m
+[32m2026-10-12 19:44:51 - root - INFO - Milvus混合搜索完成，集合[kb_item_names]共检索到5条结果[0m
+[32m2026-10-12 19:44:51 - root - INFO - 步骤6：获得待处理的数据源：[{'extracted_name': 'HAK180', 'matches': [{'item_name': 'Brother HAK 180 烫金机', 'score': 0.7891335487365723}, {'item_name': 'Brother HAK 180 烫金机', 'score': 0.7890777587890625}, {'item_name': '华为擎云B530台式机', 'score': 0.6705710291862488}, {'item_name': 'H3C LA2608室内无线网关', 'score': 0.5753880143165588}, {'item_name': 'H3C LA2608千兆以太网交换机', 'score': 0.5671381950378418}]}][0m
+[32m2026-10-12 19:44:51 - root - INFO - node_item_name_confirm 结束执行[0m
+[32m2026-10-12 19:44:51 - root - INFO - node_answer_output 开始执行[0m
+[32m2026-10-12 19:44:51 - root - INFO - ---写入MongoDB历史记录---[0m
+[32m2026-10-12 19:44:51 - root - INFO - ---发送 final 事件---图片为：[][0m
+[32m2026-10-12 19:44:51 - root - INFO - ---node_answer_output 节点处理结束---[0m
+[32m2026-10-12 19:44:51 - root - INFO - node_answer_output 结束执行[0m
+  耗时 8.1s
+  rerank 前候选: rrf_chunks=0 + web=0 = 0 条
+  断崖后保留   : reranked_docs = 0 条
+  ★ 被断崖砍掉 : 0 条
+  rerank backend = local  degrade=''
+  答案前 150 字: 您是想问以下哪个产品：华为擎云B530台式机、Brother HAK 180 烫金机？请明确一下型号。
+
+======================================================================
+汇总
+======================================================================
+  query_1: 候选 5 → 保留 3（砍 2 条） | backend=local | 消歧=False
+  query_2: 候选 0 → 保留 0（砍 0 条） | backend=local | 消歧=True

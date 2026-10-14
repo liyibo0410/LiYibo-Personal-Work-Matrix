@@ -6,7 +6,7 @@
 ![python](https://img.shields.io/badge/Python-3.11%20%C2%B7%203.12-3776AB?logo=python&logoColor=white)
 ![fastapi](https://img.shields.io/badge/FastAPI-Pydantic%20v2-009688?logo=fastapi&logoColor=white)
 ![uv](https://img.shields.io/badge/uv-锁定依赖-4c9a3a?style=flat)
-![tests](https://img.shields.io/badge/tests-506%20passed-4c9a3a)
+![tests](https://img.shields.io/badge/tests-565%20passed-4c9a3a)
 ![modules](https://img.shields.io/badge/模块-10%20%C2%B7%204%20层-3370FF)
 ![entry](https://img.shields.io/badge/统一入口-127.0.0.1%3A8800-1f2530)
 
@@ -80,13 +80,18 @@ flowchart LR
 ## 三、快速开始
 
 ```bat
-start-all.bat                                :: = python _tools\supervisor.py start
+云枢智能 一键启动                              :: 桌面图标，静默零窗口，门户就绪自动开浏览器
+start-all.bat                                :: = python _tools\supervisor.py start（带一个进度窗口）
 python _tools\supervisor.py status           :: 15 个进程逐个 TCP 实测，不是猜的
 python _tools\supervisor.py status --verbose :: 没起来的，顺带打它自己的日志尾部
-stop-all.bat
+stop-all.bat                                 :: 桌面「停止服务 / 服务状态」图标等价
 ```
 
 服务不靠「开十几个黑窗口」：`_tools/supervisor.py` 以分离进程托管 15 个服务（10 个模块 API + 3 个构建型前端 + P01 商城中台 + 外壳网关），日志落 `_runtime/logs/`、PID 落 `_runtime/pids/`，端口全部从 SERVICE_REGISTRY 解析。`--takeover` 可以把手工启动的旧进程接管过来 —— **「代码改了但页面还是老样子」基本都是端口上跑着旧进程**。
+
+托管必须用 `CREATE_NO_WINDOW` 而不是 `DETACHED_PROCESS`：本机 Win11 的「默认终端 = Windows Terminal」会在后者下照样给每个服务接管出一个黑窗口（实测 10 服务 = 11 窗口，见 `_evidence/shell/D20-silent-launch-desktop-app.md`）。桌面图标由 `_tools/make_desktop_app.py` 生成 —— 品牌 logo 出自 `shared/config/brand.json`，exe 用系统自带 `csc.exe` 编译（无额外运行时），仓库搬家或换 Python 版本后重跑一次即可。
+
+> 图标各自做什么、演示账号、15 个端口对照表、排障表、开机自启与换品牌后如何刷新图标 —— 见 [`docs/使用手册-静默启动与桌面应用.md`](docs/使用手册-静默启动与桌面应用.md)。
 
 打开 **<http://127.0.0.1:8800>**（不要 `file://` 打开静态页）。
 
@@ -116,7 +121,7 @@ stop-all.bat
 | L2 | P04 RAG 知识库 | `knowledge` | 8041 | 上传 → 切片 → 检索问答**带引用** → 召回/精确/拒答/忠实度评测 | LangGraph + FastAPI + Milvus + MongoDB + 本地 BGE-M3/BGE-reranker |
 | L2 | P07 AI 素材中心 | `asset-center` | 8070 | 上传 → 打标 → 以文搜图 → 与投放效果关联 | FastAPI + SQLite + ECharts |
 | L2 | P08 直播切片 | `live-clip` | 8080 | 样例直播 → 分段打点（**每段给出得分构成**）→ 批量队列 + 进度 | FastAPI + Pydantic v2 |
-| L1 | P10 模型微调平台 | `finetune` | 8101 | 数据集 → 训练 → 评测 → OpenAI 兼容部署 | FastAPI + LoRA 生命周期编排 |
+| L1 | P10 模型微调平台 | `finetune` | 8101 | 数据集 → 训练 → 评测 → 模型注册表（**无可调用端点**） | FastAPI + LoRA 生命周期编排 |
 | L0 | P06 数据中台 | `data-platform` | 8060 | 接入 → ODS/DWD/DWS/ADS 分层 → 指标口径 → 血缘 → 质量校验 | FastAPI + DuckDB |
 
 P05 是刻意做的**第二条技术路线**：内网客户不希望为了跑一个工具先装 Docker，所以它 `python run.py` 即跑（[ADR-0006](docs/adr/0006-p05-零依赖例外.md)）。P02 走云原生全栈。面试可讲「因地制宜」的取舍。
@@ -135,11 +140,15 @@ P05 是刻意做的**第二条技术路线**：内网客户不希望为了跑一
 | P04 | 23 | 2026-10-12 | 本地 reranker + **断崖量纲回归**（全相关不被砍到下限） |
 | P05 | 46 | 2026-10-13 | 规则风险判定、版本唯一真源、审批回写 |
 | P06 | 44 | 2026-10-13 | 指标口径、血缘、质量校验抓脏数据 |
-| P07 | 18 | 2026-10-13 | 打标、以文搜图、素材×投放关联 |
+| P07 | 68 | 2026-10-14 | 打标、以文搜图（带拒答）、素材×投放关联、上传真实宽高与删除连带 |
 | P08 | 30 | 2026-10-13 | **打点可解释**（四维得分 + 文本理由 + 同进程确定性）、批量队列 |
-| P09 | 34 | 2026-10-13 | 评分规则、排行榜、**P09→P01 跨模块集成 4 例** |
-| P10 | 26 | 2026-10-13 | 数据集/训练/评测/注册表生命周期 |
-| **合计** | **506** | | |
+| P09 | 41 | 2026-10-14 | 评分规则、排行榜、**P09→P01 跨模块集成 4 例**、真人盲评与 Kappa 口径 5 例 |
+| P10 | 28 | 2026-10-14 | 数据集/训练/评测/注册表生命周期 + **不造假端点/上传统计真实测量** 防回归 |
+| **合计** | **565** | | |
+
+> 每一行的数字都有对应日志在仓库里可复核：`_evidence/<模块>/pytest-*.log`。
+> （此前 `.gitignore` 的全局 `*.log` 把这些日志全部挡在仓库外，2026-10-14 收尾复核时已修。）
+> 逐模块取**最新一次**运行结果；P09 旧登记写的「34」与实际日志（30）不符，已按日志纠正。
 
 > 另：P05 自带自检 66/66、P1 独立冒烟 37/37（`_evidence/p05/D4任务卡2-3验收报告-P1复核.md`）。
 > P04 那一行取的是 **2026-10-12 归档日志**（`_evidence/p04/full_testsuite_p1.log`）：断崖回归用例会真实加载本地 reranker，本次在开发机复跑时 `torch` 载入权重触发 Windows `access violation` 崩溃，属环境相关项，**未复现即不谎称今日复跑**。
@@ -191,10 +200,10 @@ P05 是刻意做的**第二条技术路线**：内网客户不希望为了跑一
 | P04 | 入库 / 检索 / 重排 / 评测：Embedding 本地 BGE-M3 + Rerank 本地或云端双后端，全真实 | 「三路召回」中 MCP 联网搜索曾恒 0（`cleanup` 属性错误），已修复并复跑 |
 | P05 | 规则风险判定、审批流、报告 | 审批「模拟回写」子系统是**刻意设计**；LLM 二阶段默认 `enabled=false` |
 | P06 | DuckDB 分层与指标计算 | 样例数据自动 seed（演示数据集，非真实店铺） |
-| P07 | 打标 / 关联报表 | 以文搜图用 **TF-IDF 而非 CLIP**；生图为 mock，UI 挂「Mock 模式」 |
+| P07 | 上传（真实宽高）/ 打标 / 检索带拒答 / 关联报表 | 生图是 **Pillow 程序化规格卡（非 AI 出图）**；检索是文本层 n-gram **而非 CLIP 向量** |
 | P08 | 队列与进度、得分构成 | ASR 为模拟文本、评分为规则、**无 ffmpeg 真实出片**（`/health` 里 `mock_boundaries` 自陈） |
-| P09 | 会话导入、评分与排行榜 | 评分器是规则引擎（Mock LLM），页面挂「Mock Notice」 |
-| P10 | 生命周期编排、OpenAI 兼容部署形态 | **无真实训练**，loss 曲线由公式生成，页面写明「模拟演示，未真实训练」 |
+| P09 | 会话导入、评分与排行榜 | 评分器是规则引擎（Mock LLM），页面挂「Mock Notice」；**人机一致性 Kappa 尚未出具** —— 原先「AI 分 + 随机噪声」冒充人工分已删除，改由真人盲评（`/label.html`），评满 ≥5 条才出数 |
+| P10 | 数据集/训练/评测/注册表 生命周期编排 | **无真实训练**，loss 曲线由公式生成；**没有可调用端点**（部署仅登记状态，`endpoint_url` 返回 null），无测量来源的延迟与统计一律 null |
 
 ## 七、两个踩过的坑（比功能更值得讲）
 

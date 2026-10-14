@@ -1,0 +1,12 @@
+1) 上传探针文档 qoder_cascade_probe.md（唯一标记 QD-CASCADE-3be0b4f3）
+   task_id = fc5864e5-1f6e-4ac4-8c72-3f0eeca14740
+2) 等待导入流程完成（本地 BGE-M3 首次加载可能要几十秒）
+   最终状态： completed
+3) 切片数：Mongo chunk_count=1，Milvus 实测=1
+4) 删除前：向量库中含唯一标记的切片 1 条
+5) 调用 DELETE /documents/fc5864e5-1f6e-4ac4-8c72-3f0eeca14740
+   HTTP 200 -> {"code": 200, "message": "文档删除成功", "file_title": "qoder_cascade_probe", "removed_chunks": 1, "removed_item_names": 0}
+6) 删除后：Mongo 记录 已清除，Milvus 残留向量 0 条
+7) 删除后：向量库中含该标记的切片 0 条
+
+PASS：文档删除已做到向量与记录一并清理，检索不再命中。

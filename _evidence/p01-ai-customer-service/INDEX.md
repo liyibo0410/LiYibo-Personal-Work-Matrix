@@ -29,3 +29,22 @@
   属人工演示项；当前 pytest 只覆盖确定性规划/校验/状态机逻辑，**未对 LLM 生成质量做自动化评测**
 - **50 并发压测 P95 / 错误率**：未在本轮执行，需真实服务起来后用压测工具单独跑
 - **RAG/FAQ 检索召回质量**：knowledge/providers 走外部知识库，未做检索评测
+
+## P01-mysql-restored.png · 客服页「加载历史消息失败 / 加载订单列表失败」根因与修复（2026-10-14 上午）
+
+- **现象**：外壳挂载 P01 后，中间历史消息区与右侧「业务对象 → 订单」两处同时报错。
+- **根因**：P01 后端(18082) 与商城中台(18081) 都连 MySQL 容器 `customer-service-mysql`
+  （`external/docker/docker-compose.yml` 发布 `127.0.0.1:3307:3306`）。而桌面「一键启动」/ `start-all.bat`
+  只管 SERVICE_REGISTRY 里那 15 个业务进程，**不管 Docker** —— 本轮 Docker Desktop 引擎没运行，
+  3307 无人监听，两个接口全部 500。日志 `_runtime/logs/p01-api.log` 与 `p01-commerce.log`：
+  `sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1'")`。
+  与 `_evidence/shell/INDEX.md:90` 那条历史记录同源但反过来：那次是 18081 没被启动而 MySQL 在听，这次是 18081 在听而 MySQL 没起。
+- **处置**：拉起 Docker Desktop（引擎 15.9s 就绪）→ 容器因 `restart: unless-stopped` 自动回到 3307；
+  并把这一步并进启动器（`_tools/launcher.py::ensure_mysql`，宿主端口从 compose 解析、不抄常量），见 `_evidence/INDEX.md` D21。
+- **复验走的是浏览器同一条 vite 代理路径**（不是直连后端）：
+  - `GET http://127.0.0.1:5173/api/chat/history?sender_id=u1001` → **200，106 条**真实历史消息
+  - `GET http://127.0.0.1:5173/commerce/users/u1001/orders` → **200**，iPhone 15 Pro ¥8999（待发货）、
+    小米恒温电热水壶 ¥149（运输中）、Apple Watch Series 9 ¥2999、美的空气炸锅 ¥399 等
+  - 页面 DOM 断言：`err_history=false, err_orders=false, has_iPhone=true` → 截图 `P01-mysql-restored.png`
+  - 对照：`/commerce/users/1/orders` 返回 404「用户 1 不存在。」—— 那是中台自己的业务响应（真实 user_id 是 u1001/u1002/u1003），不是故障
+- **仍未闭环（与本轮无关，不变）**：50 并发压测 P95 / 错误率、LLM 生成质量自动评测。

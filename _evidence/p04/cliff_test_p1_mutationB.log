@@ -1,0 +1,76 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base
+configfile: pyproject.toml
+plugins: anyio-4.15.1, langsmith-0.14.7
+collecting ... collected 7 items
+
+tests/test_node_rerank_cliff.py::TestCliffAllRelated::test_all_related_not_over_truncated [32m2026-10-12 22:03:10 - reranker_http_utils.py - INFO - 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True[0m
+[32m2026-10-12 22:03:11 - reranker_http_utils.py - INFO - 本地重排模型加载完成，耗时 0.9 秒[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  分数（降序）: ['0.9707', '0.9578', '0.9548', '0.9546', '0.9340', '0.2754']
+  span = 0.6953
+  gap[0→1] abs=0.0129  rel=0.0186  
+  gap[1→2] abs=0.0029  rel=0.0042  
+  gap[2→3] abs=0.0002  rel=0.0002  
+  gap[3→4] abs=0.0206  rel=0.0296  
+  gap[4→5] abs=0.6586  rel=0.9473  ← TRIGGER
+  断崖后保留: 5 / 6 条
+PASSED
+tests/test_node_rerank_cliff.py::TestSigmoidNormalization::test_raw_logits_and_sigmoid_range [32m2026-10-12 22:03:13 - reranker_http_utils.py - INFO - 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True[0m
+[32m2026-10-12 22:03:14 - reranker_http_utils.py - INFO - 本地重排模型加载完成，耗时 0.8 秒[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  原始 logits: ['3.3457', '-9.4844', '2.4160', '-9.4844', '-2.0352']
+  logits 范围: [-9.48, 3.35]
+  sigmoid 后:  ['0.9660', '0.0001', '0.9180', '0.0001', '0.1156']
+  [OK] _rerank_local 返回的分数与手动 sigmoid 一致，归一化生效
+PASSED
+tests/test_node_rerank_cliff.py::TestCliffTriggersTruncation::test_real_cliff_triggers_truncation [32m2026-10-12 22:03:16 - reranker_http_utils.py - INFO - 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True[0m
+[32m2026-10-12 22:03:17 - reranker_http_utils.py - INFO - 本地重排模型加载完成，耗时 0.8 秒[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  分数（降序）: ['0.9863', '0.6642', '0.6014', '0.0001', '0.0001', '0.0001', '0.0001', '0.0001', '0.0001', '0.0001']
+  span = 0.9862
+  gap[0→1] abs=0.3221  rel=0.3266  ← TRIGGER
+  gap[1→2] abs=0.0629  rel=0.0637  
+  gap[2→3] abs=0.6013  rel=0.6097  ← TRIGGER
+  gap[3→4] abs=0.0000  rel=0.0000  
+  gap[4→5] abs=0.0000  rel=0.0000  
+  gap[5→6] abs=0.0000  rel=0.0000  
+  gap[6→7] abs=0.0000  rel=0.0000  
+  gap[7→8] abs=0.0000  rel=0.0000  
+  gap[8→9] abs=0.0000  rel=0.0000  
+  最大 gap: 位置 2→3, abs=0.6013, rel=0.6097
+  断崖后保留: 3 / 10 条
+PASSED
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_equal_scores_no_nan_no_crash 
+  等分场景（score=0.7333×8）: 保留 8 条，无 NaN/Inf [OK]
+PASSED
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_near_equal_scores_small_span 
+  近似等分场景（span=0.007）: 保留 8 条，无 NaN/Inf [OK]
+PASSED
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_two_docs_equal_scores PASSED
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_all_none_scores PASSED
+
+============================== warnings summary ===============================
+tests\test_node_rerank_cliff.py:56
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:56: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_node_rerank_cliff.py:118
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:118: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_node_rerank_cliff.py:192
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:192: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_node_rerank_cliff.py:288
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:288: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 7 passed, 4 warnings in 17.73s ========================

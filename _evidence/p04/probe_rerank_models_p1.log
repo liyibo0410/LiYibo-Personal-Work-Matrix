@@ -1,0 +1,24 @@
+[1] Token Plan 共 16 个模型：
+    auto
+    decision-model-preview
+    deepseek-v4-flash-0731
+    deepseek-v4-pro
+    deepseek-v4.1-flash
+    glm-5.2
+    glm-5.3
+    qwen-audio-3.0-realtime-plus
+    qwen-audio-3.0-tts-plus
+    qwen3.6-flash
+    qwen3.7-max
+    qwen3.7-plus
+    qwen3.8-flash
+    qwen3.8-max
+    wan2.7-image
+    wan2.7-image-pro
+
+[2] rerank/embedding 候选: []
+
+[3] 逐个实测 /rerank：
+    qwen3-rerank                 HTTP 404  {"code":"InvalidParameter","message":"Model not exist.","request_id":"92b13860-9f4d-438d-96c0-74d38d5bcd3d"}
+    text-rerank-v1               HTTP 404  {"code":"InvalidParameter","message":"Model not exist.","request_id":"7359286f-fbc0-4ff1-a816-f2c12e6bc3b1"}
+    gte-rerank                   HTTP 404  {"code":"InvalidParameter","message":"Model not exist.","request_id":"8a17791d-9b00-44c0-8cc9-e184d7ae7976"}

@@ -1,0 +1,23 @@
+[0] 走真实 boot()：.env → llm 配置映射
+    boot.llm = {"applied": true, "source": "fallback", "changed": ["base_url", "OPENAI_API_KEY"], "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1", "model": "qwen3.8-flash"}
+    [通过] boot 完成且返回 llm 映射 ｜ source=fallback changed=['base_url', 'OPENAI_API_KEY']
+    [通过] base_url 已被自动填充 ｜ base_url=https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+    [通过] OPENAI_API_KEY 已被自动填充 ｜ 长度 115
+    [通过] llm.available() 为真（配置通路打通） ｜ mode=rule+llm reason=
+
+[1] 真实审查：samples/01_软件采购合同_风险用例.docx（purchase，风险用例）
+    case_id=2 duplicated=False 耗时 43506ms
+    [通过] 审查完成且非去重复用
+    llm_verify: source=llm stats={'confirm': 2, 'false_positive': 0, 'need_human': 1, 'total': 3}
+    [通过] 端到端复核真实生效（source=llm） ｜ reason=
+    [通过] 至少一条 confirm（违约责任不对等应为真风险） ｜ stats={'confirm': 2, 'false_positive': 0, 'need_human': 1, 'total': 3}
+      PU-H-001 → confirm conf=0.96 ｜ 原文明确约定定制开发成果及其后续改进的全部知识产权归乙方，甲方仅获得内部使用许可，符合该风险。
+      PU-H-002 → confirm conf=0.92 ｜ 付款条款约定交付签收或到货后5个工作日内一次性支付全额款项，未将验收合格作为付款前置条件。
+      PU-M-001 → need_human conf=0.72 ｜ 合同文本显示违约金累计上限为合同总金额30%，但是否超出法定合理范围需依赖外部法律标准，无法仅凭原文确定。
+    结果行 verify_verdict: ['confirm', 'confirm', 'need_human']
+    [通过] 复核结论已落库（verify_verdict 非空）
+    报告断言跳过：build_report_md() missing 2 required positional arguments: 'coverage' and 'clauses'
+
+──────────────────────────────────────────────────────────────────────────
+  P1 端到端 · 二阶段语义复核配置通路   8 / 8 通过
+──────────────────────────────────────────────────────────────────────────

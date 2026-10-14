@@ -1,0 +1,51 @@
+
+======================================================================
+场景：全相关6条
+======================================================================
+[32m2026-10-12 19:37:58 - reranker_http_utils.py - INFO - 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True[0m
+[32m2026-10-12 19:37:59 - reranker_http_utils.py - INFO - 本地重排模型加载完成，耗时 0.9 秒[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+  [local]  分数 [4.305, 2.475, -0.664, -0.869, -5.965, -1.798]
+  [local]  断崖保留 3 / 6 条
+    local 排序后的相邻 gap：
+      idx=0: +4.3047 -> +2.4746 | abs=1.8301 rel=0.4251  <== 触发
+      idx=1: +2.4746 -> -0.6636 | abs=3.1382 rel=1.2682  <== 触发
+      idx=2: -0.6636 -> -0.8687 | abs=0.2051 rel=0.3091  <== 触发
+      idx=3: -0.8687 -> -1.7979 | abs=0.9292 rel=1.0697  <== 触发
+      idx=4: -1.7979 -> -5.9648 | abs=4.1670 rel=2.3178  <== 触发
+  [cloud] 失败（真实 API）: RuntimeError: DashScope rerank 调用失败: Invalid API-key provided.
+  [local+sigmoid] 分数 [0.987, 0.922, 0.34, 0.296, 0.003, 0.142]
+  [local+sigmoid] 断崖保留 4 / 6 条
+    sigmoid 排序后的相邻 gap：
+      idx=0: +0.9867 -> +0.9223 | abs=0.0643 rel=0.0652
+      idx=1: +0.9223 -> +0.3399 | abs=0.5824 rel=0.6314  <== 触发
+      idx=2: +0.3399 -> +0.2955 | abs=0.0444 rel=0.1306
+      idx=3: +0.2955 -> +0.1421 | abs=0.1534 rel=0.5191  <== 触发
+      idx=4: +0.1421 -> +0.0026 | abs=0.1396 rel=0.9820  <== 触发
+
+======================================================================
+场景：混合6条
+======================================================================
+  [local]  分数 [5.055, -7.688, 3.264, -9.484, -1.851, -1.318]
+  [local]  断崖保留 3 / 6 条
+    local 排序后的相邻 gap：
+      idx=0: +5.0547 -> +3.2637 | abs=1.7910 rel=0.3543  <== 触发
+      idx=1: +3.2637 -> -1.3184 | abs=4.5820 rel=1.4039  <== 触发
+      idx=2: -1.3184 -> -1.8506 | abs=0.5322 rel=0.4037  <== 触发
+      idx=3: -1.8506 -> -7.6875 | abs=5.8369 rel=3.1541  <== 触发
+      idx=4: -7.6875 -> -9.4844 | abs=1.7969 rel=0.2337  <== 触发
+  [cloud] 失败（真实 API）: RuntimeError: DashScope rerank 调用失败: Invalid API-key provided.
+  [local+sigmoid] 分数 [0.994, 0.0, 0.963, 0.0, 0.136, 0.211]
+  [local+sigmoid] 断崖保留 3 / 6 条
+    sigmoid 排序后的相邻 gap：
+      idx=0: +0.9937 -> +0.9632 | abs=0.0305 rel=0.0307
+      idx=1: +0.9632 -> +0.2111 | abs=0.7521 rel=0.7808  <== 触发
+      idx=2: +0.2111 -> +0.1358 | abs=0.0753 rel=0.3567  <== 触发
+      idx=3: +0.1358 -> +0.0005 | abs=0.1353 rel=0.9966  <== 触发
+      idx=4: +0.0005 -> +0.0001 | abs=0.0004 rel=0.8323  <== 触发
+
+======================================================================
+结论表：断崖保留条数（总数 6，下限 RERANK_MIN_TOPK=3）
+======================================================================
+  全相关6条: local=3 | cloud=None | local+sigmoid=4
+  混合6条: local=3 | cloud=None | local+sigmoid=3

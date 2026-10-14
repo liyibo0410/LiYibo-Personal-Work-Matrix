@@ -1,0 +1,36 @@
+D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\check_env.py:59: PyMilvusDeprecationWarning: `connections.connect` is an ORM-style PyMilvus API and will be removed in PyMilvus 3.1. Use `MilvusClient` instead.
+  connections.connect(uri=os.getenv("MILVUS_URL", ""))
+D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\check_env.py:61: PyMilvusDeprecationWarning: `connections.disconnect` is an ORM-style PyMilvus API and will be removed in PyMilvus 3.1. Use `MilvusClient` instead.
+  connections.disconnect("default")
+
+============================================================
+P04 RAG 知识库 环境自检
+============================================================
+  [PASS] .env 文件存在
+  [PASS] ENV: OPENAI_API_KEY (sk-sp-***(redacted: key prefix removed before publishing))
+  [PASS] ENV: OPENAI_API_BASE (https://token-plan.c...)
+  [PASS] ENV: LLM_DEFAULT_MODEL (qwen3.7-plus)
+  [PASS] ENV: BGE_M3_PATH (D:\software\ai_model...)
+  [PASS] ENV: BGE_RERANKER_LARGE (D:\ai_models\models\...)
+  [PASS] ENV: MILVUS_URL (http://localhost:195...)
+  [PASS] ENV: MONGO_URL (mongodb://localhost:...)
+  [PASS] ENV: MINIO_ENDPOINT (localhost:9000)
+  [PASS] ENV: MCP_API_KEY (sk-sp-***(redacted: key prefix removed before publishing))
+  [PASS] ENV: TEXT_RERANK_MODEL (qwen3-rerank)
+  [PASS] ENV: EMBEDDING_DIM (1024)
+  [PASS] ENV: RERANK_BACKEND (local)
+  [PASS] BGE-M3 模型路径存在 (D:\software\ai_models\BAAI\bge-m3)
+  [PASS] BGE-reranker 模型路径存在 (D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master)
+  [PASS] EMBEDDING_DIM=1024（匹配 BGE-M3） (当前值: 1024)
+  [PASS] EMBEDDING_MODEL 已移除（死配置） (已清除)
+  [PASS] Milvus 连接 (OK)
+  [PASS] MongoDB 连接 (OK)
+  [PASS] MinIO 连接 (OK)
+  [PASS] 依赖: FlagEmbedding
+  [PASS] 依赖: dashscope
+  [PASS] 依赖: langgraph
+  [PASS] 依赖: pymilvus
+  [FAIL] 依赖: ragas (未安装)
+
+总计: 24 通过, 1 失败
+============================================================

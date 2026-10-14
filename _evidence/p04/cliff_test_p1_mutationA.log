@@ -1,0 +1,177 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base
+configfile: pyproject.toml
+plugins: anyio-4.15.1, langsmith-0.14.7
+collecting ... collected 7 items
+
+tests/test_node_rerank_cliff.py::TestCliffAllRelated::test_all_related_not_over_truncated [32m2026-10-12 22:02:13 - reranker_http_utils.py - INFO - 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True[0m
+[32m2026-10-12 22:02:15 - reranker_http_utils.py - INFO - 本地重排模型加载完成，耗时 1.3 秒[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  分数（降序）: ['3.5000', '3.1211', '3.0508', '3.0469', '2.6504', '-0.9673']
+  span = 4.4673
+  gap[0→1] abs=0.3789  rel=0.0848  
+  gap[1→2] abs=0.0703  rel=0.0157  
+  gap[2→3] abs=0.0039  rel=0.0009  
+  gap[3→4] abs=0.3965  rel=0.0888  
+  gap[4→5] abs=3.6177  rel=0.8098  ← TRIGGER
+FAILED
+tests/test_node_rerank_cliff.py::TestSigmoidNormalization::test_raw_logits_and_sigmoid_range [32m2026-10-12 22:02:17 - reranker_http_utils.py - INFO - 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True[0m
+[32m2026-10-12 22:02:18 - reranker_http_utils.py - INFO - 本地重排模型加载完成，耗时 0.7 秒[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  原始 logits: ['3.3457', '-9.4844', '2.4160', '-9.4844', '-2.0352']
+  logits 范围: [-9.48, 3.35]
+  sigmoid 后:  ['0.9660', '0.0001', '0.9180', '0.0001', '0.1156']
+FAILED
+tests/test_node_rerank_cliff.py::TestCliffTriggersTruncation::test_real_cliff_triggers_truncation [32m2026-10-12 22:02:19 - reranker_http_utils.py - INFO - 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True[0m
+[32m2026-10-12 22:02:20 - reranker_http_utils.py - INFO - 本地重排模型加载完成，耗时 1.4 秒[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  分数（降序）: ['4.2773', '0.6821', '0.4111', '-9.4766', '-9.4844', '-9.4844', '-9.4844', '-9.4844', '-9.4844', '-9.4844']
+  span = 13.7617
+  gap[0→1] abs=3.5952  rel=0.2612  ← TRIGGER
+  gap[1→2] abs=0.2710  rel=0.0197  
+  gap[2→3] abs=9.8877  rel=0.7185  ← TRIGGER
+  gap[3→4] abs=0.0078  rel=0.0006  
+  gap[4→5] abs=0.0000  rel=0.0000  
+  gap[5→6] abs=0.0000  rel=0.0000  
+  gap[6→7] abs=0.0000  rel=0.0000  
+  gap[7→8] abs=0.0000  rel=0.0000  
+  gap[8→9] abs=0.0000  rel=0.0000  
+  最大 gap: 位置 2→3, abs=9.8877, rel=0.7185
+  断崖后保留: 3 / 10 条
+PASSED
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_equal_scores_no_nan_no_crash 
+  等分场景（score=0.7333×8）: 保留 8 条，无 NaN/Inf [OK]
+PASSED
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_near_equal_scores_small_span 
+  近似等分场景（span=0.007）: 保留 8 条，无 NaN/Inf [OK]
+PASSED
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_two_docs_equal_scores PASSED
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_all_none_scores PASSED
+
+================================== FAILURES ===================================
+___________ TestCliffAllRelated.test_all_related_not_over_truncated ___________
+
+self = <tests.test_node_rerank_cliff.TestCliffAllRelated object at 0x0000024C7D60EC90>
+
+    def test_all_related_not_over_truncated(self):
+        from utils.reranker_http_utils import _rerank_local
+        from processor.query_processor.nodes.node_rerank import NodeRerank
+    
+        query = "hak 180 烫金机安全操作规范"
+        docs = [
+            "烫金机操作前必须检查设备接地是否可靠，防止漏电事故。",
+            "使用烫金机时应佩戴防护手套，避免高温烫伤。",
+            "烫金机工作时严禁将手伸入加热区域，防止严重烫伤。",
+            "设备维护前必须断开电源，等待加热元件完全冷却后再操作。",
+            "烫金机应放置在通风干燥的环境中，远离易燃易爆物品。",
+            "操作烫金机前需阅读产品安全手册，了解应急处置方法。",
+        ]
+    
+        # ── 真实 BGE 打分（内部已做 sigmoid 归一到 [0,1]） ──
+        scores = _rerank_local(query, docs)
+        ranked_docs = _build_ranked_docs(docs, scores)
+    
+        _print_score_profile(ranked_docs)
+    
+        # 前置校验：sigmoid 确实在 [0,1] 内（若此处失败说明 sigmoid 缺失）
+>       assert all(0.0 <= s <= 1.0 for s in scores), (
+            f"sigmoid 归一后分数超出 [0,1]: {scores}。"
+            f"原因：_rerank_local 缺少 sigmoid 步骤，断崖阈值在 logits 空间失效"
+        )
+E       AssertionError: sigmoid 归一后分数超出 [0,1]: [3.12109375, 3.05078125, 3.5, -0.96728515625, 2.650390625, 3.046875]。原因：_rerank_local 缺少 sigmoid 步骤，断崖阈值在 logits 空间失效
+E       assert False
+E        +  where False = all(<generator object TestCliffAllRelated.test_all_related_not_over_truncated.<locals>.<genexpr> at 0x0000024CCC3E82E0>)
+
+tests\test_node_rerank_cliff.py:95: AssertionError
+------------------------------ Captured log call ------------------------------
+INFO     utils.reranker_http_utils:reranker_http_utils.py:86 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True
+INFO     utils.reranker_http_utils:reranker_http_utils.py:97 本地重排模型加载完成，耗时 1.3 秒
+_________ TestSigmoidNormalization.test_raw_logits_and_sigmoid_range __________
+
+self = <tests.test_node_rerank_cliff.TestSigmoidNormalization object at 0x0000024C7D60C810>
+
+    def test_raw_logits_and_sigmoid_range(self):
+        from utils.reranker_http_utils import _get_local_reranker, _rerank_local
+    
+        query = "电磁炉不加热故障排查步骤"
+        docs = [
+            "电磁炉不加热可能是 IGBT 管损坏，需要检查并更换。",
+            "今天天气很好，适合出去散步放松心情。",
+            "检查电磁炉保险丝是否熔断，谐振电容是否漏电。",
+            "苹果发布新款手机，A 系列芯片性能提升 20%。",
+            "电磁炉加热 intermittently 可能是温度传感器接触不良。",
+        ]
+    
+        # ── 直接调用模型获取原始 logits（不经过 sigmoid） ──
+        reranker = _get_local_reranker()
+        assert reranker is not None, "BGE reranker 加载失败，无法获取原始 logits"
+    
+        pairs = [[query, doc] for doc in docs]
+        raw_logits = reranker.compute_score(pairs)
+        if isinstance(raw_logits, (int, float)):
+            raw_logits = [float(raw_logits)]
+        else:
+            raw_logits = [float(s) for s in raw_logits]
+    
+        print(f"\n  原始 logits: {[f'{s:.4f}' for s in raw_logits]}")
+        print(f"  logits 范围: [{min(raw_logits):.2f}, {max(raw_logits):.2f}]")
+    
+        # 验证原始 logits 确实超出 [0,1]（证明 sigmoid 是必要的）
+        assert min(raw_logits) < 0 or max(raw_logits) > 1, (
+            f"原始 logits 已在 [0,1] 内: {raw_logits}，"
+            f"无法验证 sigmoid 的必要性（BGE 通常输出 -10~+10 的 logits）"
+        )
+    
+        # ── 手动 sigmoid 并验证范围 ──
+        sigmoid_scores = [1.0 / (1.0 + math.exp(-s)) for s in raw_logits]
+        print(f"  sigmoid 后:  {[f'{s:.4f}' for s in sigmoid_scores]}")
+    
+        assert all(0.0 < s < 1.0 for s in sigmoid_scores), (
+            f"sigmoid 后分数超出 (0,1): {sigmoid_scores}。"
+            f"旧实现直接使用 raw logits，断崖阈值在错误量纲上生效"
+        )
+    
+        # ── 验证 _rerank_local 的返回值与手动 sigmoid 一致 ──
+        normalized = _rerank_local(query, docs)
+        for i, (expected, actual) in enumerate(zip(sigmoid_scores, normalized)):
+>           assert abs(expected - actual) < 1e-6, (
+                f"doc[{i}] sigmoid 不一致: 手动={expected:.6f}, "
+                f"_rerank_local={actual:.6f}。"
+                f"原因：_rerank_local 可能未执行 sigmoid 归一化"
+            )
+E           AssertionError: doc[0] sigmoid 不一致: 手动=0.965964, _rerank_local=3.345703。原因：_rerank_local 可能未执行 sigmoid 归一化
+E           assert 2.379739277994371 < 1e-06
+E            +  where 2.379739277994371 = abs((0.965963847005629 - 3.345703125))
+
+tests\test_node_rerank_cliff.py:180: AssertionError
+------------------------------ Captured log call ------------------------------
+INFO     utils.reranker_http_utils:reranker_http_utils.py:86 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True
+INFO     utils.reranker_http_utils:reranker_http_utils.py:97 本地重排模型加载完成，耗时 0.7 秒
+WARNING  transformers.tokenization_utils_base:logging.py:313 You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+============================== warnings summary ===============================
+tests\test_node_rerank_cliff.py:56
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:56: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_node_rerank_cliff.py:118
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:118: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_node_rerank_cliff.py:192
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:192: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_node_rerank_cliff.py:288
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:288: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_node_rerank_cliff.py::TestCliffAllRelated::test_all_related_not_over_truncated
+FAILED tests/test_node_rerank_cliff.py::TestSigmoidNormalization::test_raw_logits_and_sigmoid_range
+================== 2 failed, 5 passed, 4 warnings in 20.18s ===================

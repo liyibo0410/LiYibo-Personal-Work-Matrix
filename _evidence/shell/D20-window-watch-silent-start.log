@@ -1,0 +1,10 @@
+baseline=9 windows @ 08:47:52
+
+[其他] class=wetype.statusbar.window title='StatusBarWnd' pid=19648
+[其他] class=Chrome_WidgetWin_1 title='GitHub' pid=12660
+[其他] class=Chrome_WidgetWin_2 title='翻译 英语 页面?' pid=12660
+[其他] class=#32770 title='打开' pid=22376
+[其他] class=#32770 title='打开' pid=36996
+[其他] class=SysDragImage title='Drag' pid=36996
+
+合计新窗口 6，其中控制台类 0

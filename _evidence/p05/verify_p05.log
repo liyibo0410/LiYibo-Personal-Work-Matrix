@@ -1,0 +1,64 @@
+==========================================================================
+  P05 衡鉴 V2.1.7 独立冒烟验证  端口=8781  启动=102ms
+==========================================================================
+
+[1] 未登录访问页面
+    GET /            -> 302  Location=/login?next=/
+    GET /workbench   -> 302  Location=/login?next=/workbench
+    GET /twin        -> 302  Location=/login?next=/twin
+    GET /rules       -> 302  Location=/login?next=/rules
+    GET /login     -> 200  (9744 bytes)
+    GET /api/health -> HTTP 200 / biz 0  app=衡鉴 V2.1.9 version=2.1.9
+      pdf_channels=browser  ocr=ocr-win  gzip=True
+      rules_types=['labor', 'purchase', 'sales', 'service']
+      samples=8 个  auth.accounts=3
+    GET /api/auth/me -> HTTP 401  msg=未登录或会话已过期，请先登录后再操作
+
+[2] 登录与角色
+    POST /api/auth/login admin     -> HTTP 200  role=admin  cookie=True
+    POST /api/auth/login legal     -> HTTP 200  role=legal  cookie=True
+    POST /api/auth/login applicant -> HTTP 200  role=applicant  cookie=True
+    POST /api/auth/login 错口令 -> HTTP 401 / biz 401  msg=账号或口令不正确
+    POST /api/auth/login 不存在用户 -> HTTP 401 / biz 401
+
+[3] 已登录页面（admin）
+    GET /            -> 200  (55100 bytes)
+    GET /workbench   -> 200  (51897 bytes)
+    GET /twin        -> 200  (23774 bytes)
+    GET /rules       -> 200  (21199 bytes)
+    GET /mock        -> 200  (12213 bytes)
+
+[4] 页面级权限隔离（/rules 仅管理员）
+    admin     GET /rules -> HTTP 200 / biz None
+    legal     GET /rules -> HTTP 403 / biz None
+    applicant GET /rules -> HTTP 403 / biz None
+
+[5] 关键 API（admin）
+    GET /api/stats             -> 200  (283 bytes)  keys=['amount_by_risk', 'amount_total', 'blocked', 'by_risk', 'by_status', 'by_writeback', 'high_risk_amount', 'total']
+    GET /api/cases             -> 200  (2230 bytes)  审查任务=2
+    GET /api/rules             -> 200  (19306 bytes)
+    GET /api/twin              -> 200  (19446 bytes)
+    GET /api/queue             -> 200  (399 bytes)
+    GET /api/metrics           -> 200  (1226 bytes)
+    GET /api/audit             -> 200  (44013 bytes)  审计条数=200
+    GET /api/samples           -> 200  (5105 bytes)
+    GET /api/assistant/kb      -> 200  (321 bytes)
+    GET /api/scheduler         -> 200  (426 bytes)
+    GET /api/notify/status     -> 200  (719 bytes)
+    GET /api/auth/accounts     -> 200  (643 bytes)
+
+[6] API 级权限
+    legal     GET /api/auth/accounts -> 403（预期 403）
+    applicant GET /api/auth/accounts -> 403（预期 403）
+    applicant POST /api/cases/1/writeback -> 403（预期 403 越权）
+
+[7] 模拟审批系统对接
+    GET /mock/feishu/api/todo -> HTTP 200  待办=8
+
+[8] 静态资源与 404（已登录）
+    GET /no-such-page-xyz -> 404（预期 404）
+    GET /assets/          -> 404
+
+──────────────────────────────────────────────────────────────────────────
+  结果：37 / 37 通过    服务启动耗时 102 ms
+──────────────────────────────────────────────────────────────────────────

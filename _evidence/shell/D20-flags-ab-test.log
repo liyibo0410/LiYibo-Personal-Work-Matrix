@@ -1,0 +1,7 @@
+time=2026-10-14 08:54:07  python=C:\Users\23329\AppData\Local\Programs\Python\Python312\python.exe
+Win11 默认终端接管验证 —— 同一命令、只换标志位
+旧 DETACHED_PROCESS|CREATE_NEW_PROCESS_GROUP: 新增控制台窗口 1
+    class=CASCADIA_HOSTING_WINDOW_CLASS title='ping  -n 12 127.0.0.1 ' pid=36240
+新 CREATE_NO_WINDOW|CREATE_NEW_PROCESS_GROUP: 新增控制台窗口 0
+
+结论：DETACHED_PROCESS 弹 1 个黑窗口，CREATE_NO_WINDOW 弹 0 个

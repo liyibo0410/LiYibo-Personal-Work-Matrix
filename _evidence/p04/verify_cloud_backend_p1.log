@@ -1,0 +1,36 @@
+====================================================================
+P1 验证 · 第 ⑥ 项 .env 配置修正后 cloud 重排是否真通
+====================================================================
+
+[1] 配置读取
+    backend            = cloud
+    text_rerank_model  = qwen3.7-text-rerank
+    api_key            = sk-ws-H...(len=116)
+    模型名正确: True   Key 为 sk-ws-: True
+
+[2] 调用 rerank_documents(backend=cloud)
+    backend        = cloud
+    degrade_reason = ''
+    scores         = [0.9219, 0.0004, 0.4283]
+
+    真走 cloud: True
+    分数落在 0~1: True   （云端 relevance_score 量纲）
+    排序符合语义: True   （最相关 0.9219 > 最不相关 0.4283）
+
+[3] 回归检查：切回 local
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+    backend = local   scores = [4.582, -7.7969, 2.4766]
+
+[4] 安全红线：敏感文件是否被 gitignore
+    projects/p04-rag-knowledge-base/.env                 ignored=True
+        规则: projects/p04-rag-knowledge-base/.gitignore:6:.env	projects/p04-rag-knowledge-base/.env
+    projects/p04-rag-knowledge-base/.env.p1bak           ignored=True
+        规则: .gitignore:3:.env.*	projects/p04-rag-knowledge-base/.env.p1bak
+
+====================================================================
+汇总
+====================================================================
+  配置正确      : True
+  cloud 真通    : True
+  local 无回归  : True
+  敏感文件已忽略: {'projects/p04-rag-knowledge-base/.env': True, 'projects/p04-rag-knowledge-base/.env.p1bak': True}

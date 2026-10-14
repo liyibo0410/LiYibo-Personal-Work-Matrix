@@ -1,0 +1,50 @@
+======================================================================
+P1 独立验证 · P04 Reranker 双后端（卡 A）
+======================================================================
+PASS | 1 真实配置: backend=local 且模型路径存在 | backend=local, device=cuda:0, fp16=True, path_exists=True, cloud_key_set=True(len=115)
+PASS | 1b CUDA 自动检测生效（4060 应得 cuda:0） | device=cuda:0
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+  query: 员工报销差旅费需要提交哪些凭证
+  Top-1: score=+5.0547 | [0] 差旅费报销需提供机票行程单、酒店发票、打车票据，并填写报销单经部门负...
+  Top-2: score=+3.2637 | [2] 报销凭证包括增值税发票、行程单和付款记录，发票抬头须与公司税号一致。...
+  Top-3: score=-1.6885 | [5] 报销流程：员工提交 → 部门审批 → 财务复核 → 出纳打款，全流程...
+  Top-4: score=-1.8506 | [4] 差旅报销标准按职级划分，一线城市住宿上限每晚六百元。...
+  Top-5: score=-7.6875 | [1] 公司年会将于下周五举行，请各部门提前安排好工作并报名参会。...
+  Top-6: score=-9.4844 | [3] 园区食堂本周起供应夜宵，营业时间延长至晚上十点。...
+PASS | 2 local 语义排序：高相关全体 > 不相关全体 | 最弱高相关 -1.6885 > 最强不相关 -7.6875
+
+  ── 量纲与断崖检测 ──
+  local 分数范围: -9.4844 ~ +5.0547（logits，非 0~1）
+PASS | 3 local 输出为 logits 量纲（绝对值可 >1） | range=[-9.4844, +5.0547]；云端 relevance_score 恒在 0~1
+  真实 NodeRerank 断崖截断: 输入 6 条 → 保留 4 条
+    idx=0: +5.0547 -> +3.2637 | abs_gap=1.7910 rel_gap=0.3543  <== 触发断崖
+    idx=1: +3.2637 -> -1.6885 | abs_gap=4.9521 rel_gap=1.5174  <== 触发断崖
+    idx=2: -1.6885 -> -1.8506 | abs_gap=0.1621 rel_gap=0.0960
+    idx=3: -1.8506 -> -7.6875 | abs_gap=5.8369 rel_gap=3.1541  <== 触发断崖
+    idx=4: -7.6875 -> -9.4844 | abs_gap=1.7969 rel_gap=0.2337  <== 触发断崖
+
+  ── 场景：6 条全部语义相关（检验是否误截）──
+  分数: [4.305, 2.475, -0.664, -0.869, -5.965, -1.798]
+  全相关 6 条 → 断崖保留 3 条
+    idx=0: +4.3047 -> +2.4746 | abs_gap=1.8301 rel_gap=0.4251  <== 触发断崖
+    idx=1: +2.4746 -> -0.6636 | abs_gap=3.1382 rel_gap=1.2682  <== 触发断崖
+    idx=2: -0.6636 -> -0.8687 | abs_gap=0.2051 rel_gap=0.3091  <== 触发断崖
+    idx=3: -0.8687 -> -1.7979 | abs_gap=0.9292 rel_gap=1.0697  <== 触发断崖
+    idx=4: -1.7979 -> -5.9648 | abs_gap=4.1670 rel_gap=2.3178  <== 触发断崖
+FAIL | 4 全相关场景未被过度截断（期望 >=4 条） | 6 条全相关 → 保留 3 条
+
+PASS | 5 单例缓存：首次加载显著慢于后续 | 首次 11.70s（含加载） vs 后续平均 0.0324s，加速 361x
+
+[33m2026-10-12 19:36:43 - reranker_http_utils.py - WARNING - 本地重排模型路径无效: D:\this\path\does\not\exist，将降级到 cloud[0m
+[33m2026-10-12 19:36:43 - reranker_http_utils.py - WARNING - 重排降级: local 失败（本地模型路径不存在: D:\this\path\does\not\exist），降级到 cloud[0m
+[33m2026-10-12 19:36:43 - reranker_http_utils.py - WARNING - 重排降级: cloud 也失败（未配置 MCP_API_KEY（DashScope API Key）），降级到 passthrough[0m
+PASS | 6 降级路径：local 失败 → passthrough，不抛异常 | backend=passthrough, reason=cloud 也失败（未配置 MCP_API_KEY（DashScope API Key）），降级到 passthroug
+[32m2026-10-12 19:36:43 - reranker_http_utils.py - INFO - 正在加载本地重排模型: path=D:\ai_models\models\BAAI--bge-reranker-large\snapshots\master, device=cuda:0, fp16=True[0m
+[32m2026-10-12 19:36:44 - reranker_http_utils.py - INFO - 本地重排模型加载完成，耗时 0.8 秒[0m
+You're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+PASS | 7 真实 .env 配置下主入口走 local | backend=local, degrade=''
+
+======================================================================
+汇总: PASS=7 FAIL=1 UNKNOWN=0 / 共 8
+======================================================================

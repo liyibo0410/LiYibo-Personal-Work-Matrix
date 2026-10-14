@@ -1,0 +1,33 @@
+[0] 静态核查：.env → llm 配置映射
+    [失败] 任务卡要求的 .env→llm 配置映射存在 ｜ 若失败：base_url 留空时 LLM 永远不会被启用，Key 白配了
+
+[1] 未配 Key 回归（确保复核不破坏原流程）
+    ingest_upload 返回：ok=True case_id=1
+    [通过] 未配 Key 时审查流程正常完成 
+    快照 verify: source=rule-only reason=llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置
+    [通过] 快照 llm_verify.source == rule-only 
+    [通过] 快照 llm_verify.reason 非空 
+    [通过] 审计留痕包含 review.llm_verify 
+    [通过] 未配 Key 时命中数 > 0（违约责任不对等用例应有命中） ｜ hits=1
+    结果行 verify keys: ['verify_reason', 'verify_verdict']
+    [通过] 结果表持久化 verify 字段 
+
+[2] 配置 LLM 后端到端（Token Plan 通道，qwen3.8-flash）
+    [通过] Token Plan Key 可读取 ｜ 长度 115
+    review_hits 返回 source=llm reason= stats={'confirm': 1, 'false_positive': 0, 'need_human': 0, 'total': 1} 耗时 9477ms
+    [通过] LLM 真实调用成功（source=llm） ｜ reason=
+    [通过] 复核 stats 字段完整 ｜ stats={'confirm': 1, 'false_positive': 0, 'need_human': 0, 'total': 1}
+    [通过] 所有命中都有复核结论 ｜ 覆盖 1/1
+    [通过] 违约责任不对等用例至少一条 confirm ｜ confirm=1
+      SA-H-001 → confirm (conf=0.96) 上下文明确约定甲方逾期付款滞纳金总额不超过逾期金额5%，而乙方违约赔偿包括间接损失且不设上限，符合对方封顶、我方无上限的
+    [健壮性] 模拟 LLM 返回非法 JSON
+    [通过] 非法 JSON → 整体降级 rule-only ｜ reason=LLM 输出非法 JSON，整体降级
+    [健壮性] 模拟返回 ```json 围栏
+    [通过] ```json 围栏 → 正确解析 source=llm ｜ stats={'confirm': 1, 'false_positive': 0, 'need_human': 0, 'total': 1}
+    [健壮性] 低置信度 false_positive 处理
+    [通过] 低置信度 false_positive → need_human ｜ need_human=1
+
+──────────────────────────────────────────────────────────────────────────
+  P1 独立验证 · LLM 二阶段语义复核   14 / 15 通过
+──────────────────────────────────────────────────────────────────────────
+  [失败] 任务卡要求的 .env→llm 配置映射存在 ｜ 若失败：base_url 留空时 LLM 永远不会被启用，Key 白配了

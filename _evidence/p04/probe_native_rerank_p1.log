@@ -1,0 +1,37 @@
+[info] Key prefix='sk-ws-H' len=116  (不打印明文)
+
+======================================================================
+  A 原生 rerank（官方标准端点） | 代理=开
+  POST https://dashscope.aliyuncs.com/api/v1/services/rerank/text-rerank/text-rerank
+======================================================================
+  HTTP 200
+  响应: {"output":{"results":[{"index":0,"relevance_score":0.9155227445360937},{"index":2,"relevance_score":0.6220676564328348},{"index":1,"relevance_score":0.001010391441496894}]},"usage":{"prompt_tokens":283,"total_tokens":283},"request_id":"81be21a8-534b-9e3e-8814-7269331b2bc7"}
+
+======================================================================
+  A 原生 rerank（官方标准端点） | 代理=关
+  POST https://dashscope.aliyuncs.com/api/v1/services/rerank/text-rerank/text-rerank
+======================================================================
+  HTTP 200
+  响应: {"output":{"results":[{"index":0,"relevance_score":0.9155227445360937},{"index":2,"relevance_score":0.6220676564328348},{"index":1,"relevance_score":0.001010391441496894}]},"usage":{"prompt_tokens":283,"total_tokens":283},"request_id":"ee3cf068-4f15-97f2-ba54-bfeeef10b001"}
+
+======================================================================
+  B 兼容端点 /rerank（已确认 404，复现） | 代理=开
+  POST https://ws-amdqcpdtt4gdo5ax.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/rerank
+======================================================================
+  HTTP 404
+  响应: 
+
+======================================================================
+  B 兼容端点 /rerank（已确认 404，复现） | 代理=关
+  POST https://ws-amdqcpdtt4gdo5ax.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/rerank
+======================================================================
+  HTTP 404
+  响应: 
+
+======================================================================
+结论
+======================================================================
+  A 原生 rerank（官方标准端点） | 代理=开: HTTP 200
+  A 原生 rerank（官方标准端点） | 代理=关: HTTP 200
+  B 兼容端点 /rerank（已确认 404，复现） | 代理=开: HTTP 404
+  B 兼容端点 /rerank（已确认 404，复现） | 代理=关: HTTP 404

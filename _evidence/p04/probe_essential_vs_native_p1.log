@@ -1,0 +1,27 @@
+[info] Essential(sk-sp-): prefix='sk-sp-H' len=115
+[info] Coding   (sk-ws-): prefix='sk-ws-H' len=116
+       (Key 明文不打印)
+
+====================================================================
+  A. Essential(sk-sp-) 打原生 rerank
+  POST https://dashscope.aliyuncs.com/api/v1/services/rerank/text-rerank/text-rerank   model=qwen3.7-text-rerank
+====================================================================
+  代理=关 -> HTTP 401
+    响应: {"code":"InvalidApiKey","message":"Invalid API-key provided.","request_id":"b8b608fd-d12a-9d9e-9be6-1d5ff191bcbe"}
+  代理=开 -> HTTP 401
+    响应: {"code":"InvalidApiKey","message":"Invalid API-key provided.","request_id":"6142d8cc-feb7-95ae-8851-bccdf0f69e18"}
+
+====================================================================
+  B. Coding(sk-ws-)   打原生 rerank（对照组，已知成功）
+  POST https://dashscope.aliyuncs.com/api/v1/services/rerank/text-rerank/text-rerank   model=qwen3.7-text-rerank
+====================================================================
+  代理=关 -> HTTP 200
+    响应: {"output":{"results":[{"index":0,"relevance_score":0.9155227445360937},{"index":2,"relevance_score":0.6220676564328348},{"index":1,"relevance_score":0.001010391441496894}]},"usage":{"prompt_tokens":283,"total_tokens":283},"request_id":"5b363ff3-6434-9641-92de-
+  代理=开 -> HTTP 200
+    响应: {"output":{"results":[{"index":0,"relevance_score":0.9155227445360937},{"index":2,"relevance_score":0.6220676564328348},{"index":1,"relevance_score":0.001010391441496894}]},"usage":{"prompt_tokens":283,"total_tokens":283},"request_id":"f982aae4-266a-91fe-89b0-
+
+====================================================================
+结论对照
+====================================================================
+  A. Essential(sk-sp-) 打原生 rerank: HTTP 401
+  B. Coding(sk-ws-)   打原生 rerank（对照组，已知成功）: HTTP 200

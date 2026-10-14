@@ -1,0 +1,12 @@
+query: 2024年国内新能源车企销量排名前三是哪些？简要说明依据。
+thread_id: 11f32ca5ef26
+events: 8  elapsed: 128.7s
+
+[session_created] 工作目录已创建: D:/software/PycharmProjects/面试项目/projects/p03-deep-research/output/session_11f32ca5ef26 
+[assistant_call] 正在调用助手: 网络搜索助手 网络搜索助手
+[tool_start] 开始执行工具: 网络搜索工具 网络搜索工具
+[tool_start] 开始执行工具: 网络搜索工具 网络搜索工具
+[tool_start] 开始执行工具: 网络搜索工具 网络搜索工具
+[tool_start] 开始执行工具: 网络搜索工具 网络搜索工具
+[tool_start] 开始执行工具: 网络搜索工具 网络搜索工具
+[error] Execution failed: Connection error. 

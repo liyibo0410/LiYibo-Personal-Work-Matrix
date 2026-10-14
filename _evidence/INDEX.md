@@ -51,6 +51,12 @@ _evidence/
 **复核结论**：157 → **162 tests passed**（P1 补 5 条防回归测试）；评测集 36/36 一致；
 召回 100% / 误报 0% / F1 100%。
 
+> ⚠️ **这条结论原先只有数字、没有日志**（P02 是十个模块里唯一没有 pytest 运行记录的）。
+> 2026-10-13 23:52 在 `api/` 内用 `.venv/Scripts/python.exe -m pytest tests -v` 真实重跑复核：
+> **162 passed / 0 failed / 24.13s**，与结论一致。完整输出归档到
+> `p02/pytest-20261013.log`，跑法/隔离方式/未测量项登记在 `p02/INDEX.md`。
+> 未测量：覆盖率（无 coverage 插件）、前端套件（不存在）、门禁「部署上线可访问」（无公网入口）。
+
 P1 修复 3 个问题：
 1. 批量替换破坏的字符串引号 —— `creative_plans.py` 规则兜底卖点（3 卖点被并成 1 个乱码串）
 2. **`matched_text` 返回归一化文本而非原文** —— 前端用 span 切原文时高亮会失配（未爆隐患）
@@ -93,12 +99,20 @@ P1 修复 3 个问题：
 
 | 文件 | 内容 | 采集时间 |
 |---|---|---|
-| `p04/e2e_result.json` | 端到端验证结果：导入 8 chunks + 2 条问答（含溯源） | 2026-10-12 |
-| `p04/e2e_test.log` | 端到端验证日志 | 2026-10-12 |
-| `p04/rag_compare_report.json` | Local vs Cloud 重排对比评测报告（Ragas 5 指标 + 延迟） | 2026-10-12 |
+| `p04/rag_compare_report.json` | **Local vs Cloud 重排对比评测报告（36 条评测集，Ragas 5 指标 + 延迟）** | 2026-10-12 22:08 |
 | `p04/rag_compare_result_local.csv` | Local 后端 RAG + Ragas 单条结果 | 2026-10-12 |
 | `p04/rag_compare_result_cloud.csv` | Cloud 后端 RAG + Ragas 单条结果 | 2026-10-12 |
-| `p04/rag_compare_latency.csv` | 6 条请求的逐条延迟与实际后端记录 | 2026-10-12 |
+| `p04/rag_compare_latency.csv` | **72 条请求**（36×2 后端）的逐条延迟与实际后端记录 | 2026-10-12 |
+| `p04/eval_compare_run.log` | 对比评测完整运行输出（2.1 MB） | 2026-10-12 |
+| `p04/verify_eval_compare_p1.py` / `_out.txt` | P1 独立复核脚本与输出 | 2026-10-12 |
+| `p04/stream-query-evidence.log` | **端到端流式问答真实证据**（317 个 SSE 事件 + 4 条引用） | 2026-10-13 21:18 |
+| `p04/verify-cascade-delete.log` | 删除重建/级联清理验证 | 2026-10-13 21:17 |
+| `p04/console-tab-{upload,docs,dashboard,qa}.png` | 管理后台四个页签真实渲染截图 | 2026-10-13 21:16 |
+| `p04/_archive_D5-01_baseline/` | **已废弃的 3 条样本基线**（Key 未通、Cloud 降级 passthrough 那一版） | 2026-10-12 |
+
+> ⚠️ **登记修正（2026-10-13 深夜复核）**：本表原先列的 `p04/e2e_result.json` **文件不存在**、
+> `p04/e2e_test.log` **是 0 字节空文件**（10-13 10:56 被清空），却写着"端到端验证结果"。
+> 现改为指向上面真实存在的流式问答与级联删除证据。空日志留在目录里仅作故障记录，不再当证据引用。
 
 **四容器健康检查**：milvus-standalone(healthy) / milvus-minio(healthy) / milvus-etcd(healthy) / kb-mongo(running)
 
@@ -106,24 +120,29 @@ P1 修复 3 个问题：
 - 导入 `eval/hak180产品安全手册_new.md` → **8 chunks**，识别主体 "Brother HAK 180 烫金机"，耗时 8.4s
 - 问题1（加热器/水附近）→ 正确答案 + 3 条溯源（Top-1 score=3.90），Rerank=**local**，耗时 17.9s
 - 问题2（起搏器）→ 系统正确反问确认型号（多商品歧义），Rerank=**local**
+- 2026-10-13 重采：一次真实问答收到 **317 个 SSE 事件**、回答带 **4 条引用**（`stream-query-evidence.log`）
 
-**对比评测结论**：
+**对比评测结论（36 条评测集，两侧 `actual_backend` 均为真实后端，`degrade_notes` 为空）**：
 
-| 指标 | Local (BGE-reranker-large) | Cloud (DashScope) | 备注 |
+| 指标 | Local (BGE-reranker-large) | Cloud (DashScope qwen3.7-text-rerank) | 备注 |
 |---|---|---|---|
-| Faithfulness | **0.9778** | 0.9722 | Local 略优 |
-| Answer Relevancy | **0.5585** | 0.5430 | Local 略优 |
-| Context Precision | **0.5000** | 0.4167 | Local 多 8.3pp |
-| Context Recall | 0.6667 | 0.6667 | 持平 |
-| Answer Correctness | 0.4450 | **0.5126** | Cloud 略优 |
-| 平均延迟 | 20.78s | 16.30s | Cloud 快 4.5s |
+| Faithfulness | 0.9651 | **0.9777** | Cloud 高 1.3pp |
+| Answer Relevancy | 0.8152 | **0.8178** | 基本持平 |
+| Context Precision | 0.6810 | **0.9190** | Cloud 多 23.8pp |
+| Context Recall | 0.8681 | **0.9583** | Cloud 多 9.0pp |
+| Answer Correctness | 0.6900 | **0.7217** | Cloud 高 3.2pp |
+| 平均延迟 | 51.37s | **18.69s** | Cloud 快 2.75× |
 | 是否出网 | **否** | 是 | Local 全链路私有化 |
 
-> ⚠️ **Cloud 对比限制**：Cloud 后端因 `MCP_API_KEY` 为 `sk-sp-` Token Plan 密钥，
-> 不支持 DashScope TextReRank API（需 `sk-` 按量付费密钥），实际降级到 passthrough（无重排）。
-> 因此 Cloud 列的指标反映的是「无重排」基线，而非真正的云端重排效果。
-> Local 的 Ragas 指标全面优于「无重排」基线，验证了本地 BGE-reranker-large 的有效性。
-> 待配置 `sk-` 按量付费密钥后可重新执行公平对比：`RERANK_BACKEND=cloud uv run python eval_compare.py`
+> **结论与早期版本相反**：Cloud 侧 Key 换成 `sk-ws-` 免费工作空间端点、重排真正生效后，
+> **五项 Ragas 指标全部优于 Local，且延迟只有本地的 1/2.75**；Local 唯一保留的优势是
+> **不出网（全链路私有化）**。早期"Local 略优"的说法来自 3 条样本 + Cloud 降级成 passthrough
+> 的基线（已归档在 `p04/_archive_D5-01_baseline/`），不能作为结论对外讲。
+>
+> **仍未满足的门禁项**：① 规则 04 要的**拒答率**在 `eval/eval.py` 里根本没有计算
+> （只有 faithfulness / answer_relevancy / context_precision / context_recall / answer_correctness）；
+> ② **父子分块 vs 定长分块的策略对比实验从未做过**（分块只有一种长度配置）。
+
 
 **🔴 方向修正**：原定 D5 = "接本地 BGE（EMBED_BACKEND=local|cloud）"。
 勘察发现 **Embedding 早已是本地 BGE-M3**（`utils/embedding_utils.py` +
@@ -922,7 +941,7 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
   （iframe 内是 P02 自己的登录页，属 ADR-0003 的有意识例外，不是回归）
 - `p02/2026-10-13_工作台_对比度探针.png` —— 修复后工作台整页（探针同时输出的位图）
 
-### ⚠️ 探针顺带量出来的存量欠账（未动，需用户定口径）
+### ⚠️ 探针顺带量出来的存量欠账（**已定口径：暂不动，登记为已知欠账**）
 
 `.qoder/rules/02-技术规范.md` 的门禁是「任何文字色在其底色上对比度 ≥ 4.5:1」。
 修复后的 P02 工作台仍有 **64 个元素不达标**，全部来自**令牌本身**而不是这次的改动：
@@ -932,9 +951,16 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
 | `--cp-ink3 #8A94A3` 当正文/表头字色 | 2.71:1（灰底）/ 2.86:1（白底） | 商品池表头、页面副标题、登录页演示账号邮箱 |
 | `--cp-success #16A34A` 叠 `--cp-success-bg #E7F6EC` 的标签 | 2.95:1 | 店铺「启用」、商品「性价比」等状态 Tag |
 
-改这两个令牌会同时动到外壳与十个模块（含 P05 的强调色回指），属全站视觉决策，**本轮没有擅自改**。
-要收口的话，建议方向是：`--cp-ink3` 只留给禁用态，正文弱文本一律 `--cp-ink2`；
-成功/警告 Tag 改用更深的字色配浅底。
+**2026-10-14 用户定口径：本轮不改。** 理由是改这两个令牌会同时动到外壳与十个模块（含 P05 的强调色回指），
+属全站视觉决策，不该塞进收尾窗口。
+
+- **触发条件**（何时必须回来收口）：任何一次涉及 `shared/ui-kit/tokens.css` 的改动，
+  或作品集对外发布/换肤前 —— 届时按下面方向一次改对，并全站重截图复验；
+- **收口方向**：`--cp-ink3` 只留给禁用态，正文弱文本一律 `--cp-ink2`；
+  成功/警告 Tag 改用更深的字色配浅底；
+- **约束生效范围**：欠账只允许「维持现状」，**不允许扩大** ——
+  本轮新增页面一律不得用 `--cp-ink3` 当文字色（例：P09 `web/label.html` 的正文/次要文本
+  统一用 `--cp-ink1` / `--cp-ink2`，`--cp-ink3` 只出现在注释里说明该约定）。
 
 ### 本轮顺带发现 / 遗留
 
@@ -1004,3 +1030,304 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
 **取证**：临时改名「启明科技 / Qiming Tech」→ 13 个入口逐张出图（`D16-brand-*.png`，含 `file://` 打开的门户与画廊）→ 脚本自动还原；P01/P02/P03/P06 另做 `cp:brand` 实时下发实测（DOM 与标题即时更新）。
 
 **遗留**：外壳 iframe 内的下发只能靠代码路径证明（跨源读不到 iframe DOM）；P01/P03 网关端口是构建期注入，改端口需重启 dev server；P02 容器化未挂 `shared/` 时回落默认值；**`shared/config/brand.json` 至今不在 git 里**（内含用户上传的 logo dataURL，是否入库待用户定口径）。
+
+
+## D17 · P07 AI 素材中心功能返工：补齐上传/打标/检索/预览/生成入库全链路（2026-10-14 凌晨）
+
+用户反馈「AI 素材中心有些功能不完善」。先做实测诊断（隔离临时库跑探针，不碰真实 `data/assets.db`），确认不是「不完善」而是**三处关键环节根本不存在**：
+
+| 诊断结论 | 证据 |
+|---|---|
+| 前端零上传入口：后端有 multipart 上传与删除，`web/index.html` 里 `type="file"` 出现 **0 次**，fetch 只有 search/generate | 代码实测 + 门禁「上传素材→打标→以文搜图」当时只有 pytest 能证明，人点不出来 |
+| **「智能打标」端点不存在**：README 架构图与 `services.json` 描述都写着打标，routes 实测只有 assets/search/generate/stats/reports | 探针打印 `app.routes` |
+| 上传的文件无法预览：落盘了但无任何读取路由，`/uploads/…`、`/files/…`、`/data/uploads/…` 全 404；素材库整屏只有「IMG」文字块 | 探针 4 条 GET 全 404 |
+| 检索是 `query.lower().split()` + 子串包含 → 中文只有字面连写命中 | 8 条自然语言查询实测 6 条 0 命中（`春季护肤品`/`夏天清爽的防晒霜`/`有没有直播用的背景板`…） |
+| `created_at` 写死 `2026-10-12T10:00:00`；上传不读宽高（`width=None`）；`tags` 原样入库 → 用户输 `护肤,夏季` 时前端 `JSON.parse` 抛错、素材库整块空白 | 上传真实 1×1 PNG 后回读接口 |
+| `generate` 是写死模板且引用 `via.placeholder.com` 外链，结果不落库（检索「AI生成」0 命中）；未走 `shared/llm-gateway` | 响应体 + 库内检索 |
+| P02↔P07 联动只存在于 README 架构图里，P02 侧对应项仍是未勾选的 `[ ]` | 两仓交叉 grep |
+| README 三个「量化指标」（`<100ms`/`1000+`/`关联覆盖率>80%`）无任何测量依据，实际关联覆盖率 58% | 违反红线 2，已删 |
+
+**修复**（`projects/p07-ai-asset-center/`）：
+
+- 后端从单文件 `app/main.py` 拆成分层：`config`（根 `.env` + 端点解析）/`db`（建表 + 就地列迁移 + 演示图回填）/`repository`/`services/{search,tagging,generation,media,data_platform,llm}`/`api`，prompt 版本化进 `prompts/*.md`；
+- **智能打标接真模型**：`shared/llm-gateway` + 主 Key 为空自动落备用端点；凭证不齐退回词表规则并返回 `tag_source=rule` + `degraded_reason`；
+- **检索重写**：中文 n-gram + 同义组归一 + tags/name/description 字段加权 + IDF + 0.18 拒答阈值，命中理由回显用户原词与字段；
+- **上传链路补全**：文件头嗅探（不信客户端 Content-Type）、Pillow 读真实宽高、`GET /api/v1/assets/{id}/file` 预览、删除连带磁盘文件、真实时间戳、`tags` 读侧统一为数组；
+- **生成补全**：文案与视频分镜走真实 LLM（结构化 JSON），图片为 Pillow 投放规格卡并在接口/页面/README 三处标注「非 AI 出图」，两者均可 `save_to_library` 直接入库；
+- **跨模块**：报表新增真实调用 P06 `/api/v1/metrics/summary` 的大盘对照（端口经 SERVICE_REGISTRY），P06 不可达时返回原因不编造；新增 `POST /api/v1/ingest` 供 P02 推送（来源白名单 + 可选令牌）；
+- 前端补齐上传面板（拖拽 + 自动打标勾选）、缩略图与大图预览、删除、打标覆盖/追加、投放数据录入（漏斗校验）、生成入库、检索命中理由与拒答态、动态 LLM 徽章与网关成本、`#asset/ID`/`#search/<词>` 深链；所有动态文本经 `esc()` 转义。
+
+**评测与测试**（数字全部实测，条件写进 README）：
+
+- `eval/search_eval.py` 新旧策略对照（26 条人工标注查询）：Recall@5 **1.0 vs 0.05**、Precision@1 1.0 vs 0.05、MRR 1.0 vs 0.05、拒答准确率 1.0，延迟 avg 0.78ms / P95 0.87ms（12 条语料、本机进程内，不外推）；
+- `eval/tagging_eval.py`（12 次真实网关调用、7963 tokens、0 mock）：LLM 概念覆盖率 **0.97** vs 词表规则 0.879，平均 7.4s/次（qwen3.8-flash）；
+- pytest **18 → 68 passed**，模型与 P06 全部打桩，测试进程不发真实请求。
+
+**取证**：`_evidence/p07-ai-asset-center/` 七张无头 Edge 截图（概览 / 上传与缩略图 / 详情打标 / 检索命中 / 检索拒答 / 生成入库 / 报表含 P06 大盘）+ `pytest-20261014.log` + 两份评测 json/md，逐条对应门禁见该目录 `INDEX.md`。上传→打标→预览→检索→删除也在浏览器里用真实文件跑过一轮（`upload_file` + 点击），入库素材 `AST-B1AB14` 即截图中的「本地上传」卡。
+
+**未闭环（不当成已完成）**：① 图片仍非 AI 出图（`wan2.7-image` 接口形状未验证，验证需消耗配额）；② 以文搜图仍是文本检索，非 CLIP 向量（token-plan 端点 embeddings 实测 404）；③ **P02 侧「一键推送到素材中心」仍未接线**（P07 的 ingest 已就绪）；④ P07 API 未接统一鉴权，与 P06/P08/P09/P10 一致属平台级待办；⑤ 无并发压测。
+
+**改动均在工作区，未 commit、未 push。**
+
+---
+
+## D18 · 收尾前诚信复核：P02 测试补证 / P04 指标口径 / D7 反向错误 / P10 去编造指标（2026-10-14 凌晨）
+
+用户要求「看看还有什么需要优化的地方，明天收尾」。先做全仓复核（15 端口探活全在线），
+把问题按「面试官一戳就破的诚信硬伤 / 门禁真缺口 / 收尾卫生」分档，本条记录已动手的第一档。
+
+**判据统一**：凡是「没有测量来源的数字」，要么改成真实测量，要么显式变成 `null` + 原因，
+不允许继续以数字形式出现在接口或文档里（红线 2、红线 3）。
+
+### A1 · P02 旗舰的测试数字终于有日志了
+
+`INDEX.md:51` 长期写着「157 → 162 tests passed」，而 P02 是**十个模块里唯一没有 pytest 运行日志**的
+（其余 9 个都有 `pytest-*.log`）。2026-10-13 23:52 在 `api/` 内真实重跑：
+**162 passed / 0 failed / 24.13s**，与结论一致 → `p02/pytest-20261013.log` + 新建 `p02/INDEX.md`
+（含跑法、内存库隔离方式、以及「覆盖率未测 / 前端无套件 / 部署上线未满足」三项声明）。
+
+### A2 · P04 评测口径三处对齐
+
+- `_evidence/INDEX.md` 与 P04 README 原先引用的是 **3 条样本 + Cloud 降级 passthrough** 那一版
+  （Faithfulness 0.9778 / Relevancy 0.5585，结论「Local 略优」）；
+- 现行报告 `_evidence/p04/rag_compare_report.json` 是 **36 条 × 2 后端 = 72 次请求、两侧均为真实后端**：
+  Cloud 五项指标全部更高（Context Precision 0.919 vs 0.681、Recall 0.9583 vs 0.8681），
+  延迟 18.69s vs 51.37s（**快 2.75×**），Local 唯一优势是**不出网** → 结论与旧版相反，已改写；
+  旧版归档在 `p04/_archive_D5-01_baseline/`。
+- 顺带修掉两处**指向不存在文件的登记**：`p04/e2e_result.json` 根本不存在、`p04/e2e_test.log` 是 0 字节，
+  却登记为「端到端验证结果」；改指真实的 `stream-query-evidence.log`（317 个 SSE 事件 + 4 条引用）等。
+- README 补记两项门禁未满足：**拒答率从未被计算**（`eval/eval.py` 只有 5 个 Ragas 指标）、
+  **父子分块 vs 定长的策略对比实验没做过**（只有一种分块长度）。
+
+### A5 · `D7-全服务验证报告.md` 的反向错误（把自己写得更假）
+
+Mock 边界表里「**P04 向量化 mock（随机向量）**」是错的：`utils/embedding_utils.py` 用
+`pymilvus.model.hybrid.BGEM3EmbeddingFunction`，全文件 `random` 命中数为 0；
+运行日志 `eval_compare_run.log:22` 有 `FlagEmbedding...loading existing colbert_linear and sparse_linear`，
+`:69` 有本地 `BAAI--bge-reranker-large` 加载记录。同表另两处一并更正：
+P03「LLM 为占位 Key 会失败」（D12 已接通，仍缺的是 3306 数据源）、
+P05「全功能真实运行」（审批侧是 `mock/feishu.py` 模拟实现）。报告末尾新增「更正记录」一节，保留审计痕迹。
+
+### A4 · P10 去掉全部无测量来源的数字
+
+| 位置 | 改前 | 改后 |
+|---|---|---|
+| 种子评测 `details` | 写死 `response_latency_p50/p95_ms = 320/890、410/1120、280/750` | `null` + `latency_note`，整条带 `simulated: true` |
+| 种子模型 `model-001` | `status="deployed"` + `endpoint_url="http://127.0.0.1:8101/v1"` + `endpoint_status="healthy"`（8101 是 P10 自己的 FastAPI 端口，`/v1/*` 只会 404） | `deployed_simulated` + `endpoint_url=null` + `endpoint_status="simulated"`，`openai_compatible: false` |
+| `POST /models/{id}/deploy` | `random.randint(8101,8199)` 拼一个看起来能调的地址 | 不返回任何地址，响应里写明「没有启动推理服务」 |
+| 数据集统计 | 上传了文件仍返回 `random.randint(5_000_000,50_000_000)` 等假统计；标签分布/Token 分位是写死常量（注释还称「保持真实口径」） | 真算字节数、非空行数、重复行数、字符长度分位、可解析时的标签分布；`avg_tokens`/`token_histogram` 为 `null` 并列入 `unmeasured`；预置数据带 `provenance="seed_demo"`，UI 数字后加 `*` + 图例 |
+| 训练时长 | `random.uniform(3600, 28800)` 冒充实测 GPU 时长 | `null`（曲线是瞬时生成的，报时长只会误导成本） |
+| `/api/v1/stats` | `avg_accuracy` 无口径说明 | 加 `real_served_models: 0` + `metrics_provenance` |
+
+**证据**：`p10-model-finetune/pytest-20261014.log`（**26 → 28 passed**，新增 3 条防回归：
+真测上传统计 / 不造假端点 / 无真实服务）、`live-verify-20261014.md`（**运行中 8101 端口**的接口输出，
+服务经 `supervisor.py restart p10 --takeover` 重启）、两张无头截图（评测页模拟声明、模型卡「服务地址：无」）、
+新建 `p10-model-finetune/INDEX.md` 逐条对应门禁。顺带补了 `#evaluation` 这类页签深链。
+
+**P10 门禁仍未满足**（真实训练 / loss 曲线 / 前后评测对比 / OpenAI 兼容接口调通，四项全空），
+按红线 8 保持「明确未完成」，不做假系统 —— 方案在 `00-总纲/07-P10微调算力方案.md`。
+
+### 复核中确认「已不需要动」的两条旧账
+
+- `agents.md`「已知未闭环 ②」（P02 浅色态被 `/`→`/login` 丢掉 `?cp-theme`）**已修复**：
+  `web/src/app/layout.tsx:29` 从 Cookie 读主题供 SSR，`src/middleware.ts:21-31` 在重定向里显式带 `cp-theme`。
+- P07 的「未提交且证据过期」由 D17 那轮返工解决（68 passed + 7 张截图 + 2 份评测），本轮不再触碰。
+
+### 本轮未做（用户已定口径）
+
+- P02 的 64 处令牌级对比度欠账（`--cp-ink3` 2.71:1、`--cp-success` 叠底 2.95:1）：**暂不动，登记为已知欠账**；
+- P01 50 并发压测、P08 真实 ffmpeg 出片、P03 数据源、P04 拒答率与分块对比：本轮未排进；
+- P09「与人工评分一致性」：改为**真人评分出真 Kappa**，工具与脚本见 D19。
+
+---
+
+## D19 · P09 删掉「AI 分 + 噪声」的假一致性 + 修复证据从未入库的系统性漏洞（2026-10-14 凌晨）
+
+### 1. P09 人机一致性：从自我相关改成真人盲评
+
+原实现 `app/main.py`：`conv.human_score = conv.score.overall + random.uniform(-12, 12)`，
+再用它算 Cohen's Kappa —— **让 AI 和它自己比**，Kappa 必然虚高；README 还预写「预期 Moderate-Substantial」。
+按用户选定的路线（真人评 20~30 条出真 Kappa）改造：
+
+- 预置人工分一律 `None`；只能由真人经**评分台**写入，落盘 `data/human_labels.json`（重启自动回填）；
+- 新增 `web/label.html` + `GET /api/v1/labeling{,/queue}` + `GET/POST/DELETE /api/v1/labeling/{id}`；
+- **盲评**：队列与单条视图在接口层就不返回 AI 分，提交后才揭示差值，防锚定；
+- 人工分沿用与 `_rule_based_score()` 同一套五维权重（25/25/15/20/15），否则两边分数不可比；
+- 真人评分不足 5 条时 `GET /api/v1/agreement` 返回 `kappa: null` + 原因，**不出数**；
+  出数时响应自带 `provenance`（评分者 / 时间范围 / 是否盲评 / 权重 / 被评会话是 P01 真实导入还是演示预置）
+  与 `limitations`（单人评分无 inter-rater 校验、四档阈值影响结果、小样本置信区间宽）。
+
+**证据**：`p09-ai-sales-assessment/pytest-20261014.log`（**30 → 41 passed**，新增
+`tests/test_labeling.py` 5 条：盲评无 AI 分、按权重算分且落盘、四类非法入参被 422、撤销清干净、
+**用混淆矩阵独立反算 Kappa 校验公式**；`test_agreement_statistics` 从「断言假样本量 22」改为
+「真人评 6 条后断言 + 断言 `mock_notice` 必须消失」）+ 运行中 8090 端口实测
+（`/api/v1/labeling` → `labeled_count:0, pending:22`；`/api/v1/agreement` → `kappa:null`；
+`/api/v1/conversations` 前 5 条 `human_score` 全 `null`）+ 评分台截图。
+`tests/conftest.py` 新增 `_isolate_human_labels`，把 `LABELS_PATH` 指向 `tmp_path`，
+**避免跑测试污染真人标注**。
+
+**门禁状态**：工具与口径已就位，**报告尚未出具**（要等真人评分，见 README「人工质检评分台」一节）。
+
+### 2. 系统性漏洞：`_evidence/` 下的日志从来没进过仓库
+
+`.gitignore:27` 有一条全局 `*.log`，而验收证据按规则 04 正是以 `*.log` 形式存放 ——
+`git ls-files _evidence | grep -c '\.log$'` 实测为 **0**，即：
+
+> 远端仓库里只有 INDEX.md 的结论数字（「162 tests passed」「36/36 一致」…），
+> **一份可复核的日志都没有**，53 个日志文件（约 2.4 MB）全部只在本地。
+
+已加例外规则 `!_evidence/**/*.log` / `!_evidence/*.log`（`_runtime/` 仍整体忽略），
+并为 `projects/p09-ai-sales-assessment/data/human_labels.json` 开了白名单
+（真人标注是 Kappa 的唯一数据来源，必须可被复核；该文件只含分数/评语/署名，不含客户对话内容）。
+
+### 3. 顺带纠正一处历史数字
+
+`_evidence/INDEX.md` 记 P09 为「34 全绿」，而 `p09-ai-sales-assessment/pytest-20261013.log` 实际是
+**30 passed** → 已在 `p09-ai-sales-assessment/INDEX.md` 里以日志为准登记。
+
+
+
+## D20 · 用户反馈：「启动之后好多黑色弹窗」→ 静默一键启动 + 桌面应用程序（2026-10-14 上午）
+
+详情见 `_evidence/shell/D20-silent-launch-desktop-app.md`（三条根因逐条实测 + A/B 取证 + 时间线）。
+
+**根因不是「没做静默」，是标志位在本机失效**：`_tools/supervisor.py` 用 `DETACHED_PROCESS` 起服务，
+但 Win11「默认终端应用 = Windows Terminal」会照样接管并给每个控制台子进程开一个可见窗口 ——
+探针复用 `spawn()` 真实路径实测 **10 个服务 → 11 个 `CASCADIA_HOSTING_WINDOW_CLASS` 窗口**。
+A/B 对照（同一条命令行只换标志位）：`DETACHED_PROCESS` 弹 1 个 / `CREATE_NO_WINDOW` 弹 0 个
+（`_evidence/shell/D20-flags-ab-test.log`）。改标志位后，`DETACHED_PROCESS` 原本保证的
+「父脚本退出服务仍活」没有丢。
+
+**顺带照出来一个真 bug**：`p01-commerce` 在无控制台路径下必崩 ——
+`external/ecommerce-service-backend/main.py:14` 的 `print("🚀 …")` 在 stdout 被重定向成日志后按
+GBK 编码 → `UnicodeEncodeError`，进程直接退出。老路径每个服务都带窗口，所以从没暴露；
+15 端口探活也一直把它记成「未启动」而不是「起不来」。修法：`spawn()` 给子进程加
+`PYTHONIOENCODING=utf-8`（只动 stdio，不改各模块读中文文件的默认编码）。
+第三条：桌面入口是 `pythonw`，`resolve_python()` 会跟着把 shell 网关跑成 `pythonw serve.py`
+（GUI 子系统不吃 `CREATE_NO_WINDOW`），已归一化回同目录 `python.exe`。
+
+**新入口**：`_tools/launcher.py`（静默编排 start/stop/status/open，命名互斥量防连点，
+只在服务没起来时弹一个框）+ `_tools/make_desktop_app.py`（brand.json logo → 多尺寸 ico →
+系统自带 `csc.exe` 编 `_tools/dist/云枢智能.exe`，41,984 字节零额外依赖 → 桌面三个快捷方式：
+一键启动 / 停止服务 / 服务状态）。
+
+**实测**：双击图标后 170s 窗口监视「合计新窗口 6，其中控制台类 **0**」；
+`08:48:07` 起 15 个服务 → `08:48:09` 门户就绪并自动开浏览器（+2s）→ `08:48:19` **15/15 在线**（+12s，暖启动）；
+「停止服务」`08:52:02 → 08:52:10` **全部端口已释放**（8s，复测 0/15）；再次双击后 `status` = 15/15。
+日志 `_evidence/shell/D20-launcher.log`、`D20-supervisor-status.log`、`D20-window-watch-silent-start.log`。
+
+**边界**：`start-all.bat` 仍开它自己那一个窗口（它就是给人看进度并 `pause` 的，但不再弹服务窗口）；
+P01 自带 `tools/dev_up.py` 的 `CREATE_NEW_CONSOLE` 是它文档写明的模块级设计，统一平台路径不经过它；
+12s 是依赖已装的暖启动，首次冷启动含 `uv sync` / `npm install` 未测；**没有公网入口这条不变**。
+
+## D21 · 用户反馈：客服页「加载历史消息失败 / 加载订单列表失败」→ 一键启动现在带起 MySQL 容器（2026-10-14 上午）
+
+**根因不在 P01 代码里**：P01 后端(18082) 与商城中台(18081) 都连 Docker 容器 `customer-service-mysql`
+（`projects/p01-ai-customer-service/external/docker/docker-compose.yml` 发布 `127.0.0.1:3307:3306`）。
+D20 的桌面「一键启动」只管 SERVICE_REGISTRY 里那 15 个业务进程，**不管 Docker** ——
+本轮 Docker Desktop 引擎没运行 → 3307 无监听 → 两个接口 500，日志是
+`OperationalError (2003, "Can't connect to MySQL server on '127.0.0.1'")`。
+`_evidence/shell/INDEX.md:90` 记过一次同名报错（那次是 18081 没起、MySQL 在听），这次正好相反。
+
+**修法（根因，不是绕过）**：`_tools/launcher.py` 新增 `ensure_mysql()`，在起业务进程之前：
+3307 已在听就直接过；没在听则先 `docker info` 探引擎，引擎没跑就 `Popen` 拉起 Docker Desktop 并轮询等它，
+再 `docker compose -f <那份 compose> up -d`，最后等端口出现。**宿主端口从 compose 解析**（`mysql_host_port()`），
+不另抄常量，避免与唯一真源漂移。失败不静默：并进 D20 那条「有依赖没就绪」提示框，
+文案点名「客服页会报加载历史消息/订单列表失败」。不想碰 Docker 用 `pythonw _tools\launcher.py start --no-mysql`。
+
+**实测**：引擎已跑时把容器 `docker stop` 掉，`ensure_mysql()` **1.8s** 把它带回 3307；
+引擎冷启动那条分支（`Popen` Docker Desktop + 轮询 `docker info`）本轮是手工走通的 —— **15.9s 就绪**，
+代码是同一段逻辑，但没有在引擎关闭状态下端到端复跑，按未测对待。
+复验走浏览器同一条 vite 代理路径：`/api/chat/history?sender_id=u1001` → **200、106 条真实历史消息**；
+`/commerce/users/u1001/orders` → **200**（iPhone 15 Pro ¥8999 待发货、小米恒温电热水壶 ¥149 运输中等）；
+页面 DOM 断言 `err_history=false, err_orders=false` → 截图 `p01-ai-customer-service/P01-mysql-restored.png`。
+逐条见 `_evidence/p01-ai-customer-service/INDEX.md` 新增节。
+
+**边界**：只并入了 P01 的 MySQL。同一台 Docker 上 `milvus-standalone / milvus-minio / milvus-etcd`
+本轮实测仍是 `Exited`（P04 的向量库），P03 的 MySQL(3306)/RAGFlow(9380) 也仍未启动 ——
+**P04 端口 8041 在听不等于检索可用**，这两条要不要一起并进启动器，属需确认的动作，未擅自动手。
+
+## D22 · 作品集首页文案重设计（2026-10-14）
+
+**问题**：首页文案是「自证清单」口吻 —— 开篇先立靶子再辩解（"不是十个各自为战的 demo"）、数字与业务后果脱钩、
+"关于作者"只有 30 字、六条 ADR 只写结论不写代价。
+
+**改了什么**（只改文案，未动视觉令牌与布局）：
+- hero：主张从「能点开就跑」改为「十个模块跑在同一套中台里」；lead 先讲给谁做、闭环怎么转，再讲统一形态，
+  把「每个指标可在 _evidence/ 复核 / 没测过的明写未测」下沉为第二句。
+- 四个小节标题与导语重写：`十大能力模块 · 四层架构`、`一条数据闭环，六个工程决策`、`实测数据，以及它从哪来`、
+  `真实 / 模拟边界`；六张 ADR 卡每条补上「为什么 + 代价」（如 ADR-0002 写清起因是 P03 前端把 8030 写成 8000 的真实故障）。
+- 十张模块卡统一为「实测数字 / Mock 边界（真实… 模拟… 未闭环…）」两行式，数字一律照抄证据文件未作改动。
+- 「关于作者与阅读路线」三条卡从「视角标签」改为「按 AI-FDE / 应用开发 / 工程化分别怎么聊、现场走哪条路径」。
+- 登录模态与模块拦截文案改为说明真实行为（五种角色；服务没起来给启动命令而不是空白页）。
+- statbar 新增「跨模块真实取数 3」：P02→P06、P07→P06（`app/services/data_platform.py:20` `api_url("p06", ...)`）、P09→P01。
+
+**顺手修掉的两处不实文案**：
+1. 边界节原写「P02 浅色态在 `/`→`/login` 跳转时会丢 `?cp-theme`（尚未修）」—— 实际已修：
+   `web/src/middleware.ts:24-29` 显式把 `cp-theme` 带进重定向，`web/src/app/layout.tsx` 从 Cookie 读主题供 SSR。
+2. 草稿曾把「非老板角色访问 P02 老板看板被 403」挂在**外壳登录**语境下 —— 与 ADR-0003 的 P02 例外冲突
+   （外壳令牌不下发给 P02，P02 用自身 Cookie RBAC），已改为不暗示角色跨模块传递的表述。
+
+**核对后主动删掉的表述**：「与各项目 README 的 mock 边界一节一一对应」—— P02 README 无该章节，P05 用
+「七、边界与不做的事」，P06/P08/P09 只写「已知限制」，故改为指向 UI 标注 / 接口字段 / `_evidence/`。
+> 由此暴露一条规范缺口：`.qoder/rules/02-技术规范.md` 要求每项目 README 含「已知限制与 mock 边界」，
+> **P02 目前缺这一节**，未擅自动手补，登记待办。
+
+**静态门户同步（`01-portfolio/index.html`）**：它是「不依赖这台笔记本、随时可打开」的那一版，hero 与文案与外壳同源，
+因此同一套重写一并落上去（含 `<title>` 与 meta description），并重跑 `_tools/build_portfolio.py` 生成 `dist/index.html`。
+顺带修掉该文件里两处与实测冲突的旧内容：
+
+| 位置 | 原文 | 实况 | 依据 |
+|---|---|---|---|
+| P09 卡 | `34 项测试` | 41 项（同一文件下方的 565 卡里也写着 P09 41，自相矛盾） | `_evidence/p09-ai-sales-assessment/pytest-*.log` |
+| P10 卡 / 边界卡 | `生命周期编排与部署形态真实可调用`、`真实：…OpenAI 兼容部署形态` | **不存在可调用的端点**，部署仅登记状态、`endpoint_url` 返回 null —— 原表述属把模拟当真实 | `projects/p10-model-finetune/` 接口与 AGENTS.md ⑥ |
+
+另删去静态页与外壳都出现过的「与 README 第六节一一对应」——P02 README 无该章节（规范缺口，见上）。
+
+**证据**：`_evidence/shell/2026-10-14_首页文案重设_hero.png`（1280×1500，未登录访客态首屏）、
+`_evidence/shell/2026-10-14_首页文案重设_整页.png`（1440×7200，含十模块卡、六条 ADR、Ragas 对照表、边界节与关于作者）、
+`_evidence/shell/2026-10-14_静态门户文案重设.png`（1280×4200，`01-portfolio/dist/index.html` 整页，十张模块截图正常渲染）。
+前两张是 Edge headless 直抓 `http://127.0.0.1:8800/`，第三张抓的是构建产物。
+
+**未做**：本轮没有新跑测试或评测，文案里的数字全部沿用 D1–D21 已登记的实测值；
+`01-portfolio/index.html` 的源文件（非 dist）在本地直接打开时十张模块截图是坏的 —— 仓库里只有 `dist/img/`，
+源目录 `01-portfolio/img/` 从未入库。属既有状态，未擅自改动，登记备查。
+
+## D23 · P02 商品池「不能删除」→「点了没反应」：补删除能力 + 去掉对 window.confirm 的依赖（2026-10-14）
+
+> 编号说明：先前误登记为 D21，与上面「一键启动带起 P01 MySQL 容器」（根 `agents.md` 亦按 D21 引用）撞号，
+> 现改记 D23。模块内证据文件同步改名 `_evidence/p02/D23-商品池删除.md`。
+
+**第一轮**：反馈「商品池商品不能删除」。不是权限或业务规则拦截，而是**两层都缺** —— `products.py` 只有
+GET/POST/PATCH（全 api 目录唯一的 `@router.delete` 在 `stores.py`），`product-row.tsx` 行内只有「进入」链接。
+补齐 `DELETE /api/v1/products/{product_id}`（编辑权限 + Workspace 归属，客服 403 / 未登录 401 / 跨 Workspace 404）
++ 三个入口（商品池列表行、工作台首页行、商品详情页头部）。级联清除 SKU 与库存档案/流水、平台映射、
+竞品与监控快照、创意、生成任务、素材、推广链接与点击、经营数据、复盘、广告建议与实验、诊断、解析任务；
+**`agent_runs` / `agent_approvals` 只置空 `product_id` 保留审计** —— 用 mapper 内省核过 Product 的级联子图
+（24 表可达），唯一的洞就是 `agent_approvals.run_id` 没配外键级联，连删 AgentRun 会抛约束错误。
+
+**第二轮**：上线后用户接着反馈**「点删除没反应」**。根因不在 P02：统一外壳 `shell/index.html:347` 把模块挂在
+`sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-downloads"` 的 iframe 里，**缺
+`allow-modals`** —— 沙箱帧内 `window.confirm()` 不弹窗、直接返回 `false`，而第一轮的守卫正是
+`if (!confirmed) event.preventDefault()`，于是恒被判定成「用户取消」，浏览器根本不提交。
+顺着这条还查出一个**早于本次就存在的缺陷**：店铺删除按钮（`store-delete-button.tsx`）是同一写法，
+所以它在外壳里一直点不动；全站源码用 `confirm()` 的就这两处。
+修法两条各自独立成立：① 商品删除改成**服务端渲染的两步确认页**（`/products/{id}/delete` 读出本次会连带
+清除的**真实数量**并写明 Agent 审计只解除关联 → 按「确认删除商品」才 POST `/products/{id}/delete/confirm` →
+回跳 `/products?product=deleted`），入口降级成普通 `<Link>`，**零 JS 依赖**；
+② 外壳 sandbox 补 `allow-modals`（并把原因写成注释），店铺删除及各模块弹窗恢复可用。
+
+**实测**：`_evidence/p02/pytest-20261014.log` **166 passed**（较 10-13 的 162 新增 4 条；级联用例连接层开
+`PRAGMA foreign_keys=ON`，漏删任一张子表即像在 PostgreSQL 上一样抛约束错误，并先断言 18 张子表「删除前各有
+数据」防止断言空过）；`_evidence/p02/product_delete_live.log` 实机 HTTP 序列（201 建临时商品+SKU+竞品 →
+403/401 → 204 → 详情 404 → 商品池无残留）；删除后只读 SQL 复核 product_id 对应的 SKU/库存档案/库存流水/竞品/
+推广链接与全库孤儿行均为 0，演示数据两轮跑完都回到原状 6 商品 / 3 店铺。
+两步确认链路在「内置浏览器面板未打开 → 页面不水合（`document.hidden=true`、DOM 无 `__react*` 键）」的环境里
+**反而能端到端验完**：入口 → 确认页（`SKU:1 竞品:1 推广链接:1`）→ 确认删除 → 回跳提示，以及上一轮没验成的
+**取消分支**（确认页点「返回商品」→ `/products/7`，h1 仍是原商品名、未被删）。外壳回归：`127.0.0.1:8800/`
+仍正常渲染，iframe `sandbox` 实测已含 `allow-modals`。
+
+**边界**：店铺删除只改了外壳，它自己的 `confirm()` 写法没动，「在 iframe 里点店铺删除能弹窗」**没实测**
+（自动化环境不水合 React，真点下去还会删掉演示店铺）；本条**没有截图**（无可视 surface
+`NATIVE_BROWSER_VIEWPORT_UNAVAILABLE`）；覆盖率未测量；PostgreSQL 侧未实机复跑，本机 P02 用 SQLite。
+是否把店铺删除也改成同款两步确认页，等一句话。

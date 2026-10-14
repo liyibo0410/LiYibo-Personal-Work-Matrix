@@ -1,0 +1,71 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base
+configfile: pyproject.toml
+plugins: anyio-4.15.1, langsmith-0.14.7
+collecting ... collected 23 items
+
+tests/test_node_rerank_cliff.py::TestCliffAllRelated::test_all_related_not_over_truncated PASSED [  4%]
+tests/test_node_rerank_cliff.py::TestSigmoidNormalization::test_raw_logits_and_sigmoid_range PASSED [  8%]
+tests/test_node_rerank_cliff.py::TestCliffTriggersTruncation::test_real_cliff_triggers_truncation PASSED [ 13%]
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_equal_scores_no_nan_no_crash PASSED [ 17%]
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_near_equal_scores_small_span PASSED [ 21%]
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_two_docs_equal_scores PASSED [ 26%]
+tests/test_node_rerank_cliff.py::TestCliffEqualScoresBoundary::test_all_none_scores PASSED [ 30%]
+tests/test_reranker.py::TestRerankPassthrough::test_passthrough_returns_correct_length PASSED [ 34%]
+tests/test_reranker.py::TestRerankPassthrough::test_passthrough_preserves_order PASSED [ 39%]
+tests/test_reranker.py::TestRerankPassthrough::test_passthrough_scores_are_positive PASSED [ 43%]
+tests/test_reranker.py::TestRerankPassthrough::test_empty_documents PASSED [ 47%]
+tests/test_reranker.py::TestRerankLocalNormalPath::test_local_rerank_returns_correct_length PASSED [ 52%]
+tests/test_reranker.py::TestRerankLocalNormalPath::test_local_rerank_semantic_ordering PASSED [ 56%]
+tests/test_reranker.py::TestRerankLocalNormalPath::test_rerank_documents_with_local_backend PASSED [ 60%]
+tests/test_reranker.py::TestLocalToCloudDegradation::test_nonexistent_model_path_falls_back PASSED [ 65%]
+tests/test_reranker.py::TestLocalToCloudDegradation::test_local_fails_cloud_succeeds PASSED [ 69%]
+tests/test_reranker.py::TestCloudToPassthroughDegradation::test_cloud_backend_fails_falls_to_passthrough PASSED [ 73%]
+tests/test_reranker.py::TestCloudToPassthroughDegradation::test_unknown_backend_falls_to_passthrough PASSED [ 78%]
+tests/test_reranker.py::TestSingletonCache::test_model_loaded_only_once PASSED [ 82%]
+tests/test_reranker.py::TestDependencyMissing::test_flagembedding_import_error_graceful PASSED [ 86%]
+tests/test_reranker.py::TestDependencyMissing::test_module_import_does_not_crash PASSED [ 91%]
+tests/test_reranker.py::TestLocalCloudConsistency::test_top1_consistency PASSED [ 95%]
+tests/test_reranker.py::TestCliffCutoffIntegration::test_cliff_does_not_over_truncate_related_docs PASSED [100%]
+
+============================== warnings summary ===============================
+tests\test_node_rerank_cliff.py:56
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:56: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_node_rerank_cliff.py:118
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:118: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_node_rerank_cliff.py:192
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:192: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_node_rerank_cliff.py:288
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:288: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_reranker.py:90
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:90: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_reranker.py:312
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:312: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_reranker.py:437
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:437: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests\test_reranker.py:486
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:486: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.needs_model
+
+tests/test_reranker.py::TestLocalToCloudDegradation::test_nonexistent_model_path_falls_back
+  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Lib\site-packages\dashscope\__init__.py:63: DeprecationWarning: The Assistants API (dashscope.assistants) is deprecated and will be removed in a future release. Please migrate to the Responses API. See https://help.aliyun.com/zh/model-studio/synchronous-call-api-reference for migration details.
+    from dashscope.assistants import Assistant, AssistantList, Assistants
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 23 passed, 9 warnings in 36.34s =======================

@@ -1,0 +1,23 @@
+P04 pytest 现状（2026-10-13 21:3x，本轮改动后复跑）
+================================================================
+命令：.venv/Scripts/python.exe -m pytest tests -q
+（tests/ 目录只有 test_reranker.py 与 test_node_rerank_cliff.py 两个文件，均要加载本地 BGE-reranker-large）
+
+结论：**本轮改动无关，套件在当前机器上跑不完**。
+- 第一次跑完：9 failed, 14 passed（失败项全部集中在需要加载重排模型的用例）
+- 之后两次：进程直接 Segmentation fault / "Windows fatal exception: access violation"
+- 崩溃栈顶：torch/storage.py:471 __getitem__ ← FlagEmbedding/inference/reranker/encoder_only/base.py:72 __init__
+  即 torch 以 mmap 方式读模型权重时原生崩溃，不是 Python 断言失败
+- 现场内存：可用 3.3 GB / 共 15.7 GB（占用 79%），15 个平台服务在跑；
+  停掉 p04 服务释放显存后复跑仍然崩 —— 所以不是与常驻服务抢资源
+- 已核对：本轮改的文件（web/api/*、utils/mongo_document_utils.py、processor/query_processor/nodes/node_answer_output.py、
+  web/page/*）与重排链路无关；git status 里 utils/reranker* 与 node_rerank* 未改动
+- 基线对照：_evidence/p04/full_testsuite_p1.log 记的是 23 passed（D5 当时机器上服务没起这么多）
+
+功能侧的替代验证（真实跑通，见同目录其他文件）：
+- verify-cascade-delete.log  —— 上传→切片数回读→删除→向量与记录双清→不再命中（PASS）
+- stream-query-evidence.log  —— SSE 流式问答 317 事件、1861 字回答、4 条引用带 score
+- console-qa-dom.json        —— 浏览器真实渲染出的回答 + 引用来源
+
+下面是崩溃现场原始输出：
+================================================================

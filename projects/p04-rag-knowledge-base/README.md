@@ -366,9 +366,12 @@ curl http://localhost:8041/api/import/documents
 
 ## 📊 检索效果评估（Ragas）
 
-使用 [Ragas](https://github.com/explodinggradients/ragas) 对检索链路与生成质量进行离线评估，脚本见 `eval/eval.py`，测试集 `eval/qa.csv`（3 条产品手册问答），结果 `eval/qa_result.csv`（5 项指标：Faithfulness / Answer Relevancy / Context Precision / Context Recall / Answer Correctness）。
+使用 [Ragas](https://github.com/explodinggradients/ragas) 对检索链路与生成质量进行离线评估，脚本见 `eval/eval.py`，测试集 `eval/qa.csv`，结果 `eval/qa_result.csv`（5 项指标：Faithfulness / Answer Relevancy / Context Precision / Context Recall / Answer Correctness）。
 
-| 指标 | 得分（均值） | 说明 |
+**下面这组数字是 3 条样本那一版跑出来的**（`eval/qa_result.csv` 里实际只有 3 行，采集于 2026-10-12 12:51；
+测试集后来扩到 36 条，但 `eval.py` 这条单后端链路**没有在 36 条上重跑**）：
+
+| 指标 | 得分（均值，n=3） | 说明 |
 |------|------|------|
 | Context Recall | 1.0000 | 上下文召回率：所有问题均召回到全部相关证据 |
 | Answer Relevancy | 0.9576 | 答案与问题的相关性 |
@@ -376,21 +379,51 @@ curl http://localhost:8041/api/import/documents
 | Faithfulness | 0.7111 | 事实忠实度：答案与上下文一致性 |
 | Answer Correctness | 0.6196 | 答案与标准答案的综合正确性 |
 
-> 指标由 Ragas 结合 LLM 打分得出，召回链路（HyDE + RRF + BGE-Reranker）表现稳定；Answer Correctness 相对偏低受表达差异影响，可通过扩充测试集与答案规范化继续优化。
+> 3 条样本不构成任何"水位"结论，只能证明这条评测链路跑得通。
+> 当前有效的对比结论看下一节（36 条）。
+>
+> 🔴 **门禁尚未满足的两项**（`.qoder/rules/04-验收门禁.md` P04 行要求"召回率/精确率/拒答率/忠实度"四指标
+> + 一次策略对比实验）：
+> ① **拒答率从未被计算** —— `eval/eval.py` 与 `eval/eval_compare.py` 里没有拒答相关逻辑，评测集也没有
+> 库外问题，全仓 grep「拒答/refusal」在这两个脚本内零命中；
+> ② **父子分块 vs 定长分块的策略对比实验没做过** —— 分块长度只有一种配置
+> （`processor/import_processor/config_base.py`），没有可切换的分块策略开关。
 
 ### Local vs Cloud 重排对比评测
 
-脚本 `eval/eval_compare.py` 对同一份 `eval/qa.csv` 测试集，分别用 local（BGE-reranker-large）和 cloud（DashScope TextReRank）两种重排后端跑完整 RAG 流程，收集答案与上下文后统一用 Ragas 评估，输出对比报告。
+脚本 `eval/eval_compare.py` 对同一份 `eval/qa.csv` 测试集（**现为 36 条**，原始 3 条保留在 `eval/qa_original_3.csv`），
+分别用 local（BGE-reranker-large）和 cloud（DashScope `qwen3.7-text-rerank`）两种重排后端跑完整 RAG 流程，
+收集答案与上下文后统一用 Ragas 评估，输出对比报告。
 
 ```bash
 cd projects/p04-rag-knowledge-base
 uv run python eval/eval_compare.py
 ```
 
+**实测结果**（`_evidence/p04/rag_compare_report.json`，2026-10-12 22:08，36 条 × 2 后端 = 72 次请求，
+两侧 `actual_backend` 均为真实后端、`degrade_notes` 为空）：
+
+| 指标 | Local (BGE-reranker-large) | Cloud (DashScope) | 差异 |
+|------|------|------|------|
+| Faithfulness | 0.9651 | **0.9777** | Cloud +1.3pp |
+| Answer Relevancy | 0.8152 | **0.8178** | 持平 |
+| Context Precision | 0.6810 | **0.9190** | Cloud +23.8pp |
+| Context Recall | 0.8681 | **0.9583** | Cloud +9.0pp |
+| Answer Correctness | 0.6900 | **0.7217** | Cloud +3.2pp |
+| 平均延迟 | 51.37s | **18.69s** | Cloud 快 2.75× |
+| 是否出网 | **否（私有化）** | 是 | Local 唯一保留优势 |
+
+> **结论**：Cloud 端点用 `sk-ws-` 免费工作空间 Key、重排真正生效后，**五项指标全部优于 Local，延迟只有本地的
+> 1/2.75**；Local 的卖点是**全链路不出网**，不是质量更好。
+> 早期那版"Local 略优"来自 3 条样本 + Cloud 因 `sk-sp-` 不支持 TextReRank 而降级成 passthrough 的基线，
+> 已归档在 `_evidence/p04/_archive_D5-01_baseline/`，不能当结论对外讲。
+
 输出文件（保存到 `_evidence/p04/`）：
 - `rag_compare_result_local.csv` — local 后端逐条结果
 - `rag_compare_result_cloud.csv` — cloud 后端逐条结果
 - `rag_compare_report.json` — 汇总对比报告（含各指标均分、平均延迟、降级说明）
+- `rag_compare_latency.csv` — 72 条请求的逐条延迟与实际后端记录
+
 
 ---
 
@@ -431,7 +464,9 @@ uv run python eval/eval_compare.py
 | 统计口径 | `/statistics` 默认 `owner=public`，与文档列表一致；库里另有 1 条历史 `owner=test` 记录不计入 | 想看全库需显式传 `owner` 或改查询 |
 | MCP 联网搜索 | 真实 MCP 客户端，但端点握手失败时**降级跳过**（只记 warning，不伪造搜索结果） | 断网/端点异常时回答只来自本地知识库 |
 | 非流式 `/query` | 整条链路实测约 35s，且会占用一个工作线程；控制台与 chat 页默认走 SSE 流式 | 脚本压测别用非流式 |
-| Ragas 评测集 | 仅 3 条产品手册问答（`eval/qa.csv`） | 指标是小样本，只用于策略对比，不代表线上水位 |
+| Ragas 评测集 | 对比实验用 **36 条**（`eval/qa.csv`，原始 3 条存于 `eval/qa_original_3.csv`）；但 `eval.py` 单后端那份 `qa_result.csv` **仍只有 3 行未重跑** | 36 条的结论见「Local vs Cloud 重排对比评测」；3 条的数字不构成水位，也不代表线上表现 |
+| 拒答率 | **未实现**：`eval/eval.py` 与 `eval/eval_compare.py` 都不计算拒答率，评测集里也没有库外问题 | 门禁要求的四项指标之一，目前只有召回/精确/忠实度三项真跑过 |
+| 分块策略 | 只有定长分块一种配置，**没有父子分块开关** | 门禁要求的「父子分块 vs 定长」策略对比实验没做过，不声称做过 |
 
 ---
 
