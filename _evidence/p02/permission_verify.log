@@ -1,9 +1,9 @@
 ==========================================================================
 【一】创建 / 确认三个角色账号
 ==========================================================================
-  [owner   ] created=False email=owner@cloudpivot.demo      role=owner
-  [operator] created=True  email=cs@cloudpivot.demo         role=operator
-  [viewer  ] created=True  email=viewer@cloudpivot.demo     role=viewer
+  [owner   ] created=False email=owner@portfolio.demo      role=owner
+  [operator] created=True  email=cs@portfolio.demo         role=operator
+  [viewer  ] created=True  email=viewer@portfolio.demo     role=viewer
 
 ==========================================================================
 【二】登录并获取真实 token

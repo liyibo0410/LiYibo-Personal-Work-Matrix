@@ -1,0 +1,137 @@
+=== RUN2 steps (47) ===
+[正常] 总览 | 页面加载 | HTTP 200；badge="14 张表 / 3.24万 行"；statCards=4；metricCards=7；bg=rgb(245, 247, 250)
+[正常] 总览 | 导航 Tab 枚举 | ["dashboard","tables","metrics","quality","lineage","ingest"]
+[部分] 总览 | 指标卡（核心指标概览） | ["成交总额 | 3.60万 | ▲ 33.87%","订单量 | 133 | ▲ 25.47%","转化率 | 0.44% | ▲ 46.67%","客单价 | 270.36 | ▲ 6.69%","退货率 | 20.30% | ▲ 53.67%","独立访客数 | 3.04万 | ▼ 15.17%","页面浏览量 | 9.69万 | ▼ 28.12%"]
+[正常] 总览 | 健康环/数仓分层 | 29
+健康分 / 应用层 ADS; 2 张表; 明细层 DWD; 2 张表; 汇总层 DWS; 2 张表; 原始层 ODS; 6 张表
+[正常] 数据表 | 进入 Tab | 14 张表: ads_key_metrics,ads_product_ranking,dwd_customer_profile,dwd_order_detail,tmp_uitest_agent5_json,dws_daily_product,dws_daily_shop,ods_customers,ods_dirty_probe,ods_orders,ods_products,ods_stores,ods_traffic,tmp_uitest_agent5_csv
+[正常] 数据表 | 分层筛选 select | 行数=7，分层=ODS
+[正常] 数据表 | 分层筛选 select | 行数=3，分层=DWD
+[正常] 数据表 | 分层筛选 select | 行数=2，分层=DWS
+[正常] 数据表 | 分层筛选 select | 行数=2，分层=ADS
+[正常] 数据表 | 分层筛选 select | 行数=14，分层=ADS/DWD/DWS/ODS
+[缺陷] 数据表 | 「查看」 ads_key_metrics | 两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ads_key_metrics; 200 tables/ads_key_metrics/preview?limit=50] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/ads_key_metrics; 404 tables/ads_key_metrics/preview?limit=50] 
+[缺陷] 数据表 | 「查看」 ads_product_ranking | 两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ads_product_ranking; 200 tables/ads_product_ranking/preview?limit=50] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ads_product_ranking/preview?limit=50; 200 tables/ads_product_ranking] 
+[缺陷] 数据表 | 「查看」 dwd_customer_profile | 两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/dwd_customer_profile/preview?limit=50; 200 tables/dwd_customer_profile] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/dwd_customer_profile/preview?limit=50; 200 tables/dwd_customer_profile] 
+[正常] 数据表 | 「查看」 dwd_order_detail | 打开成功（第2次）："订单明细宽表 (dwd_order_detail)" 列=16 预览行=50
+[正常] 数据表 | 「查看」 tmp_uitest_agent5_json | 打开成功（第1次）："tmp_uitest_agent5_json (tmp_uitest_agent5_json)" 列=4 预览行=3
+[缺陷] 数据表 | 「查看」 dws_daily_product | 两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 200 tables/dws_daily_product/preview?limit=50; 404 tables/dws_daily_product] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/dws_daily_product; 200 tables/dws_daily_product/preview?limit=50] 
+[缺陷] 数据表 | 「查看」 dws_daily_shop | 两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/dws_daily_shop/preview?limit=50; 200 tables/dws_daily_shop] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/dws_daily_shop/preview?limit=50; 200 tables/dws_daily_shop] 
+[缺陷] 数据表 | 「查看」 ods_customers | 两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/ods_customers/preview?limit=50; 200 tables/ods_customers] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ods_customers/preview?limit=50; 200 tables/ods_customers] 
+[缺陷] 数据表 | 「查看」 ods_dirty_probe | 两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/ods_dirty_probe; 200 tables/ods_dirty_probe/preview?limit=50] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ods_dirty_probe/preview?limit=50; 200 tables/ods_dirty_probe] 
+[缺陷] 数据表 | 「查看」 ods_orders | 两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 200 tables/ods_orders/preview?limit=50; 404 tables/ods_orders] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/ods_orders; 200 tables/ods_orders/preview?limit=50] 
+[正常] 数据表 | 「查看」 ods_products | 打开成功（第2次）："商品主数据 (ods_products)" 列=12 预览行=3
+[正常] 数据表 | 「查看」 ods_stores | 打开成功（第2次）："店铺主数据 (ods_stores)" 列=5 预览行=3
+[正常] 数据表 | 「查看」 ods_traffic | 打开成功（第1次）："流量日志表 (ods_traffic)" 列=8 预览行=50
+[缺陷] 数据表 | 「查看」 tmp_uitest_agent5_csv | 两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/tmp_uitest_agent5_csv; 200 tables/tmp_uitest_agent5_csv/preview?limit=50] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/tmp_uitest_agent5_csv/preview?limit=50; 200 tables/tmp_uitest_agent5_csv] 
+[缺陷] 数据表 | 「查看」按钮汇总 × 14 | 成功 5/14；失败 9 张: ads_key_metrics, ads_product_ranking, dwd_customer_profile, dws_daily_product, dws_daily_shop, ods_customers, ods_dirty_probe, ods_orders, tmp_uitest_agent5_csv
+[正常] 指标 | 进入 Tab | 7 项: 成交总额 (gmv) / 订单量 (order_count) / 转化率 (conversion_rate) / 客单价 (avg_order_value) / 退货率 (return_rate) / 独立访客数 (traffic_uv) / 页面浏览量 (traffic_pv)
+[正常] 指标 | 查询按钮（gmv） | HTTP 200；摘要=最新值=3.60万 | 平均值=3.60万 | 最大值=5.35万 | 最小值=2.05万；canvas=1；出图耗时≈206ms
+[正常] 指标 | 查询按钮（order_count） | HTTP 200；摘要=最新值=133 | 平均值=126.99 | 最大值=160 | 最小值=80；canvas=1；出图耗时≈36ms
+[正常] 指标 | 查询按钮（conversion_rate） | HTTP 200；摘要=最新值=0.44% | 平均值=0.00% | 最大值=1.00% | 最小值=0.00%；canvas=1；出图耗时≈35ms
+[正常] 指标 | 查询按钮（avg_order_value） | HTTP 200；摘要=最新值=270.36 | 平均值=283.16 | 最大值=347.37 | 最小值=232.61；canvas=1；出图耗时≈27ms
+[正常] 指标 | 查询按钮（return_rate） | HTTP 200；摘要=最新值=16.75% | 平均值=17.00% | 最大值=20.00% | 最小值=13.00%；canvas=1；出图耗时≈35ms
+[正常] 指标 | 查询按钮（traffic_uv） | HTTP 200；摘要=最新值=6.63万 | 平均值=17.56万 | 最大值=20.43万 | 最小值=6.63万；canvas=1；出图耗时≈27ms
+[正常] 指标 | 查询按钮（traffic_pv） | HTTP 200；摘要=最新值=278.97万 | 平均值=285.38万 | 最大值=292.82万 | 最小值=278.97万；canvas=1；出图耗时≈28ms
+[正常] 指标 | 7 项指标逐一查询 | 成功 7/7
+[正常] 质量 | 「运行质量检查」按钮 | HTTP 200；status="检查完成 - 148 项"；汇总=健康评分=29 | 通过=135 | 警告=1 | 失败=12；明细行=148；toast=质量检查完成: 135 通过, 1 警告, 12 失败
+[正常] 血缘 | 进入 Tab | 节点rect=11，连线path=11，SVG高=718，明细行=11；节点文本=ODS,DWD,DWS,ADS,customers,orders,products,stores,traffic,customer profile
+[正常] 血缘 | 图可交互性 | 首节点 cursor/onclick = auto
+[正常] 接入 | 进入 Tab | 等待上传...
+[正常] 接入 | CSV 拖拽区点击 | filechooser 事件触发
+[正常] 接入 | CSV 上传（tmp_uitest_agent5_csv） | 等待上传... [10:39:33] 开始上传: tmp_uitest_agent5.csv → tmp_uitest_agent5_csv (ODS) [10:39:33] ✓ 成功: 3 行, 4 列
+[正常] 接入 | JSON 上传（tmp_uitest_agent5_json） | 等待上传... [10:39:33] 开始上传: tmp_uitest_agent5.csv → tmp_uitest_agent5_csv (ODS) [10:39:33] ✓ 成功: 3 行, 4 列 [10:39:33] 开始上传: tmp_uitest_agent5.json → tmp_uitest_agent5_json (DWD) [10:39:33] ✓ 成功: 3 行, 4 列
+[正常] 接入 | 非法表名拒绝（tmp_uitest_bad name!） | log尾: 等待上传... [10:39:33] 开始上传: tmp_uitest_agent5.csv → tmp_uitest_agent5_csv (ODS) [10:39:33] ✓ 成功: 3 行, 4 列 [10:39:33] 开始上传: tmp_uitest_agent5.json → tmp_uitest_agent5_json (DWD) [10:39:33] ✓ 成功: 3 行, 4 列 [10:39:33] 开始上传: tmp_uitest_agent5.json → tmp_uitest_bad name! (DWD) [10:39:33] ✗ 失败: 非法表名：'tmp_uitest_bad name!'。只允许字母、数字与下划线，须以字母或下划线开头，最长 64 字符；toast: 质量检查完成: 135 通过, 1 警告, 12 失败
+上传成功: 3 行导入 tmp_uitest_agent5_csv
+上传成功: 3 行导入 tmp_uitest_agent5_json
+上传失败: 非法表名：'tmp_uitest_bad name!'。只允许字母、数字与下划线，须以字母或下划线开头，最长 64 字符
+[正常] 数据表 | 临时表可见性 | DOM: {"hasCsv":true,"hasJson":true,"hasBad":false,"totalRows":14} / API: {"hasCsv":true,"hasJson":true,"hasBad":false,"total":14}
+[正常] 查询(API) | 合法 SELECT | {"status":200,"code":0,"msg":"success","sample":"{\"rows\":[{\"cnt\":92,\"gmv\":3312522.61}],\"count\":1,\"truncated\":false}"}
+[正常] 查询(API) | 护栏-多语句夹带 DROP | {"status":400,"code":1,"msg":"不允许多条语句：请用分号分隔的单条查询","sample":null}
+[正常] 查询(API) | 护栏-读文件函数 | {"status":400,"code":1,"msg":"该语句包含不被允许的 DuckDB 能力：read_text","sample":null}
+[正常] 查询(API) | 确认未建表 | {"hasProbe":false,"total":14}
+
+=== console unique ===
+x15 error|Failed to load resource: the server responded with a status of 404 (Not Found)
+x1 error|API error: /tables/ads_key_metrics Error: Table 'ads_key_metrics' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async Promise.all (index
+x8 error|Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+x1 error|API error: /tables/ads_key_metrics SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+x1 error|API error: /tables/ads_key_metrics/preview?limit=50 Error: Table 'ads_key_metrics' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async P
+x1 error|API error: /tables/ads_product_ranking Error: Table 'ads_product_ranking' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async Promise.al
+x1 error|API error: /tables/ads_product_ranking/preview?limit=50 Error: Table 'ads_product_ranking' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at
+x1 error|API error: /tables/dwd_customer_profile/preview?limit=50 Error: Table 'dwd_customer_profile' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    
+x1 error|API error: /tables/dwd_customer_profile/preview?limit=50 SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+x1 error|API error: /tables/dwd_order_detail SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+x2 error|API error: /tables/dws_daily_product Error: Table 'dws_daily_product' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async Promise.all (i
+x1 error|API error: /tables/dws_daily_shop/preview?limit=50 SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+x1 error|API error: /tables/dws_daily_shop/preview?limit=50 Error: Table 'dws_daily_shop' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async Pro
+x1 error|API error: /tables/ods_customers/preview?limit=50 SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+x1 error|API error: /tables/ods_customers/preview?limit=50 Error: Table 'ods_customers' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async Promi
+x1 error|API error: /tables/ods_dirty_probe SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+x1 error|API error: /tables/ods_dirty_probe/preview?limit=50 Error: Table 'ods_dirty_probe' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async P
+x1 error|API error: /tables/ods_orders Error: Table 'ods_orders' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async Promise.all (index 0)
+    at
+x1 error|API error: /tables/ods_orders SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+x1 error|API error: /tables/ods_products/preview?limit=50 Error: Table 'ods_products' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async Promise
+x1 error|API error: /tables/ods_stores SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+x1 error|API error: /tables/tmp_uitest_agent5_csv Error: Table 'tmp_uitest_agent5_csv' not found
+    at api (http://127.0.0.1:8060/:392:32)
+    at async Promis
+x1 error|API error: /tables/tmp_uitest_agent5_csv/preview?limit=50 Error: Table 'tmp_uitest_agent5_csv' not found
+    at api (http://127.0.0.1:8060/:392:32)
+  
+x3 error|Failed to load resource: the server responded with a status of 400 (Bad Request)
+
+=== netFails (0) ===
+
+=== api non2xx ===
+count=25
+x1 400 ingest/json
+x2 400 query
+x1 404 tables/ads_key_metrics
+x1 404 tables/ads_key_metrics/preview
+x1 404 tables/ads_product_ranking
+x1 404 tables/ads_product_ranking/preview
+x1 404 tables/dwd_customer_profile/preview
+x2 404 tables/dws_daily_product
+x1 404 tables/dws_daily_shop/preview
+x1 404 tables/ods_customers/preview
+x1 404 tables/ods_dirty_probe/preview
+x1 404 tables/ods_orders
+x1 404 tables/ods_products/preview
+x1 404 tables/tmp_uitest_agent5_csv
+x1 404 tables/tmp_uitest_agent5_csv/preview
+x1 500 tables/ads_key_metrics
+x1 500 tables/dwd_customer_profile/preview
+x1 500 tables/dwd_order_detail
+x1 500 tables/dws_daily_shop/preview
+x1 500 tables/ods_customers/preview
+x1 500 tables/ods_dirty_probe
+x1 500 tables/ods_orders
+x1 500 tables/ods_stores
+
+=== quality/dashboard dumps ===
+200 dashboard :: {"code":0,"data":{"table_count":14,"total_rows":32422,"layers":{"ADS":2,"DWD":2,"DWS":2,"ODS":6},"health":{"score":29,"total_checks":148,"passed":135,"warned":1,"failed":12},"metrics":[{"code":"gmv","name":"成交总额","unit":"元","latest":35958.37,"avg":36005.68,"trend":0.3387},{"code":"order_count","name
+200 quality/check :: {"code":0,"data":{"checks":[{"table_name":"ads_key_metrics","check_type":"null_rate","check_name":"空值率检查 - stat_date","column_name":"stat_date","status":"PASS","severity":"INFO","metric_value":0,"threshold":0.2,"details":"总行数: 92, 空值: 0, 空值率: 0.00%"},{"table_name":"ads_key_metrics","check_type":"nul

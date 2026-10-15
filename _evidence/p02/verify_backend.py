@@ -12,8 +12,8 @@ import io
 import os
 import sys
 
-API = r"D:\software\PycharmProjects\面试项目\projects\p02-ecommerce-ops-assistant\api"
-EV = r"D:\software\PycharmProjects\面试项目\_evidence\p02"
+API = r"D:\software\PycharmProjects\作品矩阵\projects\p02-ecommerce-ops-assistant\api"
+EV = r"D:\software\PycharmProjects\作品矩阵\_evidence\p02"
 
 # --- 复刻 run_local_dev.py 的环境设置 ---
 os.environ["DATABASE_URL"] = "sqlite:///" + os.path.join(API, "local_dev.db")
@@ -44,8 +44,8 @@ def w(s):
     print(s)
 
 
-EMAIL = "owner@cloudpivot.demo"
-PASSWORD = "CloudPivot@2026"
+EMAIL = "owner@portfolio.demo"
+PASSWORD = "Li Yibo's Personal Portfolio@2026"
 
 try:
     from fastapi.testclient import TestClient
@@ -59,7 +59,7 @@ try:
 
     with SessionLocal() as db:
         user, created = ensure_bootstrap_user(
-            db, email=EMAIL, display_name="云枢 Owner", password=PASSWORD, role=UserRole.OWNER
+            db, email=EMAIL, display_name="示例 Owner", password=PASSWORD, role=UserRole.OWNER
         )
         # 必须在 session 内取值，否则 detached 后访问属性会抛 DetachedInstanceError
         boot = (created, user.email, user.role.value)

@@ -1,7 +1,7 @@
 ﻿============================= test session starts =============================
-platform win32 -- Python 3.13.14, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p02-ecommerce-ops-assistant\api\.venv\Scripts\python.exe
+platform win32 -- Python 3.13.14, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\作品矩阵\projects\p02-ecommerce-ops-assistant\api\.venv\Scripts\python.exe
 cachedir: .pytest_cache
-rootdir: D:\software\PycharmProjects\面试项目\shared\llm-gateway
+rootdir: D:\software\PycharmProjects\作品矩阵\shared\llm-gateway
 configfile: pyproject.toml
 plugins: anyio-4.15.1, langsmith-0.14.1
 collecting ... collected 11 items

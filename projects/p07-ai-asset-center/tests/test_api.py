@@ -254,7 +254,7 @@ def test_generate_validates_prompt(client):
 
 def test_performance_create_and_report(client):
     r = client.post("/api/v1/assets/AST-001/performance", json={
-        "store_name": "云枢旗舰店", "platform": "kuaishou", "impressions": 10000, "clicks": 600,
+        "store_name": "示例旗舰店", "platform": "kuaishou", "impressions": 10000, "clicks": 600,
         "conversions": 30, "spend": 1000, "revenue": 6000,
         "period_start": "2026-10-01", "period_end": "2026-10-10"})
     assert r.status_code == 201 and len(r.json()["performance"]) == 2

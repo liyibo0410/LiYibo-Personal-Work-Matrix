@@ -1,14 +1,14 @@
 [2026-10-14 08:43:49] start: 0 已在线，15 待启动
 [2026-10-14 08:43:49] [启动] shell         C:\Users\23329\AppData\Local\Programs\Python\Python312\pythonw.exe serve.py
-[2026-10-14 08:43:49] [启动] p01-commerce  D:\software\PycharmProjects\面试项目\projects\p01-ai-customer-service\external\ecommerce-service-backend\.venv\Scripts\python.exe main.py
+[2026-10-14 08:43:49] [启动] p01-commerce  D:\software\PycharmProjects\作品矩阵\projects\p01-ai-customer-service\external\ecommerce-service-backend\.venv\Scripts\python.exe main.py
 [2026-10-14 08:43:49] [启动] p01-api       uv run python main.py
 [2026-10-14 08:43:49] [启动] p01-web       npm run dev
-[2026-10-14 08:43:49] [启动] p02-api       D:\software\PycharmProjects\面试项目\projects\p02-ecommerce-ops-assistant\api\.venv\Scripts\python.exe scripts/run_local_dev.py
+[2026-10-14 08:43:49] [启动] p02-api       D:\software\PycharmProjects\作品矩阵\projects\p02-ecommerce-ops-assistant\api\.venv\Scripts\python.exe scripts/run_local_dev.py
 [2026-10-14 08:43:49] [启动] p02-web       npm run dev -- -p 3001
 [2026-10-14 08:43:49] [启动] p03-api       uv run python main.py
 [2026-10-14 08:43:49] [启动] p03-web       npm run dev
-[2026-10-14 08:43:49] [启动] p04           D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe -m uvicorn web.api.console_service:app --host 0.0.0.0 --port 8041
-[2026-10-14 08:43:49] [启动] p05           D:\software\PycharmProjects\面试项目\projects\p05-contract-review\.venv\Scripts\python.exe run.py
+[2026-10-14 08:43:49] [启动] p04           D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe -m uvicorn web.api.console_service:app --host 0.0.0.0 --port 8041
+[2026-10-14 08:43:49] [启动] p05           D:\software\PycharmProjects\作品矩阵\projects\p05-contract-review\.venv\Scripts\python.exe run.py
 [2026-10-14 08:43:49] [启动] p06           uv run python app/main.py
 [2026-10-14 08:43:49] [启动] p07           uv run python app/main.py
 [2026-10-14 08:43:49] [启动] p08           uv run python app/main.py
@@ -16,18 +16,18 @@
 [2026-10-14 08:43:49] [启动] p10           uv run python app/main.py
 [2026-10-14 08:43:51] 已打开门户 http://127.0.0.1:8800/
 [2026-10-14 08:45:50] 未就绪：p01-commerce
-[2026-10-14 08:45:50] NOTIFY 云枢智能：部分服务未就绪 :: 门户已可访问，但这些端口没起来： | p01-commerce |  | 日志目录：D:\software\PycharmProjects\面试项目\_runtime\logs\launcher.log |  | 打开日志目录？
+[2026-10-14 08:45:50] NOTIFY 李奕波个人作品矩阵：部分服务未就绪 :: 门户已可访问，但这些端口没起来： | p01-commerce |  | 日志目录：D:\software\PycharmProjects\作品矩阵\_runtime\logs\launcher.log |  | 打开日志目录？
 [2026-10-14 08:48:07] start: 0 已在线，15 待启动
 [2026-10-14 08:48:07] [启动] shell         C:\Users\23329\AppData\Local\Programs\Python\Python312\python.exe serve.py
-[2026-10-14 08:48:07] [启动] p01-commerce  D:\software\PycharmProjects\面试项目\projects\p01-ai-customer-service\external\ecommerce-service-backend\.venv\Scripts\python.exe main.py
+[2026-10-14 08:48:07] [启动] p01-commerce  D:\software\PycharmProjects\作品矩阵\projects\p01-ai-customer-service\external\ecommerce-service-backend\.venv\Scripts\python.exe main.py
 [2026-10-14 08:48:07] [启动] p01-api       uv run python main.py
 [2026-10-14 08:48:07] [启动] p01-web       npm run dev
-[2026-10-14 08:48:07] [启动] p02-api       D:\software\PycharmProjects\面试项目\projects\p02-ecommerce-ops-assistant\api\.venv\Scripts\python.exe scripts/run_local_dev.py
+[2026-10-14 08:48:07] [启动] p02-api       D:\software\PycharmProjects\作品矩阵\projects\p02-ecommerce-ops-assistant\api\.venv\Scripts\python.exe scripts/run_local_dev.py
 [2026-10-14 08:48:07] [启动] p02-web       npm run dev -- -p 3001
 [2026-10-14 08:48:07] [启动] p03-api       uv run python main.py
 [2026-10-14 08:48:07] [启动] p03-web       npm run dev
-[2026-10-14 08:48:07] [启动] p04           D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe -m uvicorn web.api.console_service:app --host 0.0.0.0 --port 8041
-[2026-10-14 08:48:07] [启动] p05           D:\software\PycharmProjects\面试项目\projects\p05-contract-review\.venv\Scripts\python.exe run.py
+[2026-10-14 08:48:07] [启动] p04           D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe -m uvicorn web.api.console_service:app --host 0.0.0.0 --port 8041
+[2026-10-14 08:48:07] [启动] p05           D:\software\PycharmProjects\作品矩阵\projects\p05-contract-review\.venv\Scripts\python.exe run.py
 [2026-10-14 08:48:07] [启动] p06           uv run python app/main.py
 [2026-10-14 08:48:07] [启动] p07           uv run python app/main.py
 [2026-10-14 08:48:07] [启动] p08           uv run python app/main.py
@@ -42,15 +42,15 @@
 [2026-10-14 08:52:10] 全部端口已释放
 [2026-10-14 08:52:55] start: 0 已在线，15 待启动
 [2026-10-14 08:52:55] [启动] shell         C:\Users\23329\AppData\Local\Programs\Python\Python312\python.exe serve.py
-[2026-10-14 08:52:55] [启动] p01-commerce  D:\software\PycharmProjects\面试项目\projects\p01-ai-customer-service\external\ecommerce-service-backend\.venv\Scripts\python.exe main.py
+[2026-10-14 08:52:55] [启动] p01-commerce  D:\software\PycharmProjects\作品矩阵\projects\p01-ai-customer-service\external\ecommerce-service-backend\.venv\Scripts\python.exe main.py
 [2026-10-14 08:52:55] [启动] p01-api       uv run python main.py
 [2026-10-14 08:52:55] [启动] p01-web       npm run dev
-[2026-10-14 08:52:55] [启动] p02-api       D:\software\PycharmProjects\面试项目\projects\p02-ecommerce-ops-assistant\api\.venv\Scripts\python.exe scripts/run_local_dev.py
+[2026-10-14 08:52:55] [启动] p02-api       D:\software\PycharmProjects\作品矩阵\projects\p02-ecommerce-ops-assistant\api\.venv\Scripts\python.exe scripts/run_local_dev.py
 [2026-10-14 08:52:56] [启动] p02-web       npm run dev -- -p 3001
 [2026-10-14 08:52:56] [启动] p03-api       uv run python main.py
 [2026-10-14 08:52:56] [启动] p03-web       npm run dev
-[2026-10-14 08:52:56] [启动] p04           D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe -m uvicorn web.api.console_service:app --host 0.0.0.0 --port 8041
-[2026-10-14 08:52:56] [启动] p05           D:\software\PycharmProjects\面试项目\projects\p05-contract-review\.venv\Scripts\python.exe run.py
+[2026-10-14 08:52:56] [启动] p04           D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe -m uvicorn web.api.console_service:app --host 0.0.0.0 --port 8041
+[2026-10-14 08:52:56] [启动] p05           D:\software\PycharmProjects\作品矩阵\projects\p05-contract-review\.venv\Scripts\python.exe run.py
 [2026-10-14 08:52:56] [启动] p06           uv run python app/main.py
 [2026-10-14 08:52:56] [启动] p07           uv run python app/main.py
 [2026-10-14 08:52:56] [启动] p08           uv run python app/main.py

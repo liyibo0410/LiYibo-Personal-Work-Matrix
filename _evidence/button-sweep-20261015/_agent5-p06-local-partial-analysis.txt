@@ -1,0 +1,52 @@
+=== LOCAL PARTIAL apiDumps (26) 按序 ===
+0 200 /api/v1/dashboard
+1 200 /api/v1/tables
+2 404 /api/v1/tables/ads_key_metrics
+3 200 /api/v1/tables/ads_key_metrics/preview?limit=50
+4 500 /api/v1/tables/ads_key_metrics/preview?limit=50
+5 200 /api/v1/tables/ads_key_metrics
+6 404 /api/v1/tables/ads_product_ranking/preview?limit=50
+7 200 /api/v1/tables/ads_product_ranking
+8 404 /api/v1/tables/ads_product_ranking
+9 200 /api/v1/tables/ads_product_ranking/preview?limit=50
+10 404 /api/v1/tables/dwd_customer_profile/preview?limit=50
+11 200 /api/v1/tables/dwd_customer_profile
+12 404 /api/v1/tables/dwd_customer_profile/preview?limit=50
+13 200 /api/v1/tables/dwd_customer_profile
+14 404 /api/v1/tables/dwd_order_detail/preview?limit=50
+15 200 /api/v1/tables/dwd_order_detail
+16 200 /api/v1/tables/dwd_order_detail
+17 200 /api/v1/tables/dwd_order_detail/preview?limit=50
+18 404 /api/v1/tables/tmp_uitest_agent5_json
+19 200 /api/v1/tables/tmp_uitest_agent5_json/preview?limit=50
+20 200 /api/v1/tables/tmp_uitest_agent5_json/preview?limit=50
+21 200 /api/v1/tables/tmp_uitest_agent5_json
+22 404 /api/v1/tables/dws_daily_product/preview?limit=50
+23 200 /api/v1/tables/dws_daily_product
+24 500 /api/v1/tables/dws_daily_product
+25 404 /api/v1/tables/dws_daily_product/preview?limit=50
+
+=== consoleMsgs ===
+0 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+1 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+2 [error] API error: /tables/ads_key_metrics Error: Table 'ads_key_metrics' not found     at api (http://127.0.0.1:8060/:392:32)     at async Promise.all (index 0)     at async showTableDetail (http://127.0.0.1:8060/:541:29)
+3 [error] Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+4 [error] API error: /tables/ads_key_metrics/preview?limit=50 SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+5 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+6 [error] API error: /tables/ads_product_ranking/preview?limit=50 Error: Table 'ads_product_ranking' not found     at api (http://127.0.0.1:8060/:392:32)     at async Promise.all (index 1)     at async showTableDetail (http://127.
+7 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+8 [error] API error: /tables/ads_product_ranking Error: Table 'ads_product_ranking' not found     at api (http://127.0.0.1:8060/:392:32)     at async Promise.all (index 0)     at async showTableDetail (http://127.0.0.1:8060/:541:2
+9 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+10 [error] API error: /tables/dwd_customer_profile/preview?limit=50 Error: Table 'dwd_customer_profile' not found     at api (http://127.0.0.1:8060/:392:32)     at async Promise.all (index 1)     at async showTableDetail (http://12
+11 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+12 [error] API error: /tables/dwd_customer_profile/preview?limit=50 Error: Table 'dwd_customer_profile' not found     at api (http://127.0.0.1:8060/:392:32)     at async Promise.all (index 1)     at async showTableDetail (http://12
+13 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+14 [error] API error: /tables/dwd_order_detail/preview?limit=50 Error: Table 'dwd_order_detail' not found     at api (http://127.0.0.1:8060/:392:32)     at async Promise.all (index 1)     at async showTableDetail (http://127.0.0.1:
+15 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+16 [error] API error: /tables/tmp_uitest_agent5_json Error: Table 'tmp_uitest_agent5_json' not found     at api (http://127.0.0.1:8060/:392:32)     at async Promise.all (index 0)     at async showTableDetail (http://127.0.0.1:8060/
+17 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+18 [error] API error: /tables/dws_daily_product/preview?limit=50 Error: Table 'dws_daily_product' not found     at api (http://127.0.0.1:8060/:392:32)     at async Promise.all (index 1)     at async showTableDetail (http://127.0.0.
+19 [error] Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+20 [error] API error: /tables/dws_daily_product SyntaxError: Unexpected token 'I', "Internal S"... is not valid JSON
+21 [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+22 [error] API error: /tables/dws_daily_product/preview?limit=50 Error: Table 'dws_daily_product' not found     at api (http://127.0.0.1:8060/:392:32)     at async Promise.all (index 1)

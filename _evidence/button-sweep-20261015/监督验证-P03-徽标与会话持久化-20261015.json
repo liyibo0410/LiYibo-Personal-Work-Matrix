@@ -1,0 +1,14 @@
+{
+  "restoredUser": true,
+  "restoredAi": true,
+  "threadKept": true,
+  "msgCountAfterLoad": 2,
+  "badge": {
+    "text": "● 数据源就绪",
+    "cls": "health-badge ok",
+    "title": "MySQL 已连接 · SQL护栏 active · 端到端 verified"
+  },
+  "viteOverlay": false,
+  "errors": [],
+  "ts": "2026-10-15T03:56:54.652Z"
+}

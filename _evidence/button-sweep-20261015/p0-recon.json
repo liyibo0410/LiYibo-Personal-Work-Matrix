@@ -1,0 +1,328 @@
+{
+  "base": "http://39.96.200.45:8070",
+  "ts": "2026-10-15T01:28:06.236Z",
+  "loaded": true,
+  "info": {
+    "title": "李奕波个人作品矩阵 · 统一平台",
+    "hash": "",
+    "nav": [
+      {
+        "text": "李奕波个人作品矩阵 Li Yibo's Personal Portfolio 全栈 AI 作品集",
+        "href": "#/"
+      },
+      {
+        "text": "十大模块",
+        "href": "#lp-modules"
+      },
+      {
+        "text": "架构与取舍",
+        "href": "#lp-arch"
+      },
+      {
+        "text": "实测数据",
+        "href": "#lp-evidence"
+      },
+      {
+        "text": "真实边界",
+        "href": "#lp-boundary"
+      },
+      {
+        "text": "关于我",
+        "href": "#lp-about"
+      },
+      {
+        "text": "材料",
+        "href": "#lp-resume"
+      }
+    ],
+    "sections": [
+      {
+        "id": "lp-modules",
+        "hasTitle": true
+      },
+      {
+        "id": "lp-arch",
+        "hasTitle": true
+      },
+      {
+        "id": "lp-evidence",
+        "hasTitle": true
+      },
+      {
+        "id": "lp-boundary",
+        "hasTitle": true
+      },
+      {
+        "id": "lp-about",
+        "hasTitle": true
+      },
+      {
+        "id": "lp-resume",
+        "hasTitle": true
+      }
+    ],
+    "buttons": [
+      {
+        "id": "btn-theme-public",
+        "text": "◐",
+        "title": "切换主题"
+      },
+      {
+        "id": "btn-login-open",
+        "text": "登录进入演示",
+        "title": ""
+      },
+      {
+        "id": "btn-resume-settings",
+        "text": "自定义材料",
+        "title": ""
+      }
+    ],
+    "links": [
+      {
+        "id": "",
+        "text": "李奕波个人作品矩阵 Li Yibo's Personal Portfolio 全栈 AI 作品集",
+        "href": "#/"
+      },
+      {
+        "id": "",
+        "text": "十大模块",
+        "href": "#lp-modules"
+      },
+      {
+        "id": "",
+        "text": "架构与取舍",
+        "href": "#lp-arch"
+      },
+      {
+        "id": "",
+        "text": "实测数据",
+        "href": "#lp-evidence"
+      },
+      {
+        "id": "",
+        "text": "真实边界",
+        "href": "#lp-boundary"
+      },
+      {
+        "id": "",
+        "text": "关于我",
+        "href": "#lp-about"
+      },
+      {
+        "id": "",
+        "text": "材料",
+        "href": "#lp-resume"
+      },
+      {
+        "id": "cta-demo",
+        "text": "登录，进入演示 · 旗舰 P02",
+        "href": "#/workspace/ecommerce-ops"
+      },
+      {
+        "id": "",
+        "text": "看十大模块与实测数据 ↓",
+        "href": "#lp-modules"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/customer-service"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/ecommerce-ops"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/contract"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/sales-assessment"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/research"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/knowledge"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/asset-center"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/live-clip"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/finetune"
+      },
+      {
+        "id": "",
+        "text": "进入演示",
+        "href": "#/workspace/data-platform"
+      },
+      {
+        "id": "",
+        "text": "github.com/liyibo0410",
+        "href": "https://github.com/liyibo0410"
+      },
+      {
+        "id": "rs-pdf-dl",
+        "text": "下载完整材料 PDF",
+        "href": "/https://github.com/liyibo0410/yunshu-ai-portfolio"
+      },
+      {
+        "id": "rs-pdf-view",
+        "text": "在线预览",
+        "href": "/https://github.com/liyibo0410/yunshu-ai-portfolio"
+      }
+    ],
+    "mods": [
+      {
+        "name": "P01 AI客服",
+        "meta": "运行中customer-service:5173",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/customer-service"
+      },
+      {
+        "name": "P02 运营助手",
+        "meta": "★ 旗舰运行中ecommerce-ops:3001",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/ecommerce-ops"
+      },
+      {
+        "name": "P05 合同审批",
+        "meta": "运行中contract:8770",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/contract"
+      },
+      {
+        "name": "P09 销售考核",
+        "meta": "运行中sales-assessment:8090",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/sales-assessment"
+      },
+      {
+        "name": "P03 问数",
+        "meta": "运行中research:5174",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/research"
+      },
+      {
+        "name": "P04 知识库",
+        "meta": "运行中knowledge:8041",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/knowledge"
+      },
+      {
+        "name": "P07 素材中心",
+        "meta": "运行中asset-center:8070",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/asset-center"
+      },
+      {
+        "name": "P08 直播切片",
+        "meta": "运行中live-clip:8080",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/live-clip"
+      },
+      {
+        "name": "P10 微调平台",
+        "meta": "运行中finetune:8101",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/finetune"
+      },
+      {
+        "name": "P06 数据中台",
+        "meta": "运行中data-platform:8060",
+        "svcTag": "运行中",
+        "hasMock": true,
+        "demoHref": "#/workspace/data-platform"
+      }
+    ],
+    "statbar": [
+      {
+        "v": "10",
+        "l": "能力模块 · 本机实跑"
+      },
+      {
+        "v": "4",
+        "l": "架构分层 L0–L3"
+      },
+      {
+        "v": "731",
+        "l": "pytest 实跑通过"
+      },
+      {
+        "v": "4",
+        "l": "跨模块真实取数"
+      },
+      {
+        "v": "6",
+        "l": "工程决策 ADR"
+      },
+      {
+        "v": "10/10",
+        "l": "服务探活 · 实时"
+      }
+    ],
+    "lsKeys": [
+      "cp_theme_v2"
+    ],
+    "ssKeys": []
+  },
+  "logs": [
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing."
+    },
+    {
+      "t": "goto-ok",
+      "attempt": 1,
+      "status": 200
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing."
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    }
+  ]
+}

@@ -69,7 +69,7 @@ BOLD_CANDIDATES = [
 ]
 
 # 汉字字模探测用字符：缺字时这些字符会全部渲染成同一个 .notdef 方框
-CJK_PROBE = "云枢智能电商运营模块架构数据层"
+CJK_PROBE = "李奕波个人作品矩阵电商运营模块架构数据层"
 
 # 设计令牌（唯一真源 shared/ui-kit/tokens.css）
 C_BG        = "#FFFFFF"   # 社交预览白底
@@ -201,7 +201,7 @@ def draw_social_preview(dest: Path) -> tuple[int, int, int]:
     # 品牌区
     rect(80, 72, 48, 48, 12, C_BRAND)
     text(104, 106, "CP", 20, "#FFFFFF", "bold", "ms")
-    text(144, 102, "云枢智能 CloudPivot", 22, C_INK1, "bold")
+    text(144, 102, "李奕波个人作品矩阵 Li Yibo's Personal Portfolio", 22, C_INK1, "bold")
     text(144, 127, "AI 电商运营中台", 14, C_INK3)
     text(1200, 102, "本机 15 进程实跑 · 界面截图见仓库 README", 15, C_INK3, anchor="rs")
 
@@ -237,7 +237,7 @@ def draw_social_preview(dest: Path) -> tuple[int, int, int]:
 
     # 页脚
     line(80, 540, 1200, 540)
-    text(80, 584, "李奕波 · 求职方向 AI-FDE / AI 应用开发", 17, C_INK2)
+    text(80, 584, "李奕波 · 独立开发 · 全栈工程", 17, C_INK2)
     text(1200, 584, "github.com/liyibo0410/yunshu-ai-portfolio", 17, C_INK3, anchor="rs")
 
     out = img.resize((SOCIAL_W, SOCIAL_H), Image.Resampling.LANCZOS)
@@ -251,7 +251,7 @@ REPO_URL = "github.com/liyibo0410/yunshu-ai-portfolio"
 
 BANNER_NODES = [
     "CP",
-    "云枢智能 CloudPivot",
+    "李奕波个人作品矩阵 Li Yibo's Personal Portfolio",
     "AI 电商运营中台 · 十个 AI 能力模块，一套统一系统",
     "10 模块", "4 层架构", "15 受管进程", "731 passed",
     "架构分层",
@@ -262,7 +262,7 @@ BANNER_NODES = [
 
 SOCIAL_NODES = [
     "CP",
-    "云枢智能 CloudPivot",
+    "李奕波个人作品矩阵 Li Yibo's Personal Portfolio",
     "AI 电商运营中台",
     "本机 15 进程实跑 · 界面截图见仓库 README",
     "L0 数据中台", "L1 模型微调", "L2 能力层", "L3 应用层",
@@ -272,7 +272,7 @@ SOCIAL_NODES = [
     "4", "层架构 · 6 条 ADR",
     "15", "受管进程",
     "731", "pytest passed",
-    "李奕波 · 求职方向 AI-FDE / AI 应用开发",
+    "李奕波 · 独立开发 · 全栈工程",
     REPO_URL,
 ]
 
@@ -282,7 +282,7 @@ SVG_SPECS = [
         "size": (BANNER_W, BANNER_H),
         "nodes": BANNER_NODES,
         "must": [
-            "云枢智能 CloudPivot",
+            "李奕波个人作品矩阵 Li Yibo's Personal Portfolio",
             "AI 电商运营中台",
             "十个 AI 能力模块，一套统一系统",
             "10 模块", "4 层架构", "15 受管进程", "731 passed",
@@ -295,7 +295,7 @@ SVG_SPECS = [
         "size": (BANNER_W, BANNER_H),
         "nodes": BANNER_NODES,
         "must": [
-            "云枢智能 CloudPivot",
+            "李奕波个人作品矩阵 Li Yibo's Personal Portfolio",
             "AI 电商运营中台",
             "十个 AI 能力模块，一套统一系统",
             "10 模块", "4 层架构", "15 受管进程", "731 passed",
@@ -309,12 +309,12 @@ SVG_SPECS = [
         "size": (SOCIAL_W, SOCIAL_H),
         "nodes": SOCIAL_NODES,
         "must": [
-            "云枢智能 CloudPivot",
+            "李奕波个人作品矩阵 Li Yibo's Personal Portfolio",
             "AI 电商运营中台",
             "十个 AI 能力模块，合并成一套统一系统",
             "微前端外壳统一挂载，非单体合并",
             "业务模块", "pytest passed",
-            "李奕波", "AI-FDE", REPO_URL,
+            "李奕波", "独立开发", REPO_URL,
         ],
     },
 ]
@@ -463,7 +463,7 @@ def main() -> int:
     ASSETS.mkdir(parents=True, exist_ok=True)
 
     print("=" * 78)
-    print("云枢智能 · GitHub 视觉资产生成与自检")
+    print("李奕波个人作品矩阵 · GitHub 视觉资产生成与自检")
     print("=" * 78)
 
     resolve_fonts()

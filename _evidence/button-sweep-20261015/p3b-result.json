@@ -1,0 +1,550 @@
+{
+  "ts": "2026-10-15T02:00:55.730Z",
+  "steps": [
+    {
+      "area": "defect-repro-127001",
+      "ctl": "127.0.0.1:8800 外壳挂载 p01",
+      "action": "click",
+      "after": {
+        "src": "http://39.96.200.45:8090/p01/?cp-theme=light",
+        "banner": ""
+      },
+      "pass": true,
+      "note": "预期挂本机 5173；实测指向公网隧道 URL（IS_LOCAL 正则含 $ 锚点，127.0.0.1 未命中）",
+      "ts": "2026-10-15T01:58:23.886Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "localhost:8800 外壳挂载 p01 的 src",
+      "action": "click",
+      "after": {
+        "src": "http://localhost:5173/?cp-theme=light"
+      },
+      "pass": true,
+      "note": "localhost 命中 IS_LOCAL，挂本机端口",
+      "ts": "2026-10-15T01:58:28.624Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "AI 客服(p01)",
+      "action": "click",
+      "src": "http://localhost:5173/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:5173/?cp-theme=light",
+        "title": "AI 电商客服 · 李奕波个人作品矩阵",
+        "textLen": 7062,
+        "snippet": "◈ 商务版式 数字人 听澜 数字人未连接 连接后由数字人朗读客服回复 连接数字人 数字人未连接 电商客服系统 李奕波个人作品矩阵 听澜 在线 导出 新对话 用户标识 刷新对象列表 对话 #1 你 用户 我要退款 听澜 金牌客服 好的，我们先处理退款申请。 请告",
+        "rootKids": 1,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:58:39.063Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "运营助手(p02)",
+      "action": "click",
+      "src": "http://localhost:3001/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:3001/login?cp-theme=light",
+        "title": "电商运营助手 · 李奕波个人作品矩阵",
+        "textLen": 176,
+        "snippet": "电商运营助手 登录工作台 李奕波个人作品矩阵 演示账号（密码均为 Test123456） 点一下就把账号和密码填进下面的表单 老板 boss@example.com 运营 ops@example.com 美工 design@portfolio.c",
+        "rootKids": 8,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:58:49.561Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "合同审批(p05)",
+      "action": "click",
+      "src": "http://localhost:8770/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:8770/login?next=/%3Fcp-theme%3Dlight&cp-theme=light",
+        "title": "登录 · 衡鉴 V2.1.9 · 企业合同智能审查系统",
+        "textLen": 485,
+        "snippet": "衡鉴 V2.1.9 企业合同智能审查系统 · 李奕波个人作品矩阵 登录审查平台 按需求 2.4.2 划分三类角色：法务审查人、业务经办人、系统管理员。 未登录的访客无法进入任何页面或接口。 账号 口令 登 录 演示账号：legal / applicant / ",
+        "rootKids": 10,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:59:00.080Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "销售考核(p09)",
+      "action": "click",
+      "src": "http://localhost:8090/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:8090/?cp-theme=light",
+        "title": "P09 AI 销售考核 · 李奕波个人作品矩阵",
+        "textLen": 350,
+        "snippet": "李奕波个人作品矩阵 AI 销售考核 P09 模块 ▤ 考核看板 ☆ 坐席排行榜 ✉ 会话列表 ⚙ 质检规则 ⚖ 人机一致性 考核看板 2025 年 3 月客服质量指标概览 ⚠ 演示说明：LLM 评分使用基于规则的启发式算法，而非真实 LLM 调用。所有数据均为",
+        "rootKids": 2,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:59:10.637Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "NL2SQL 问数(p03)",
+      "action": "click",
+      "src": "http://localhost:5174/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:5174/?cp-theme=light",
+        "title": "NL2SQL 问数 · 李奕波个人作品矩阵",
+        "textLen": 62,
+        "snippet": "欢迎使用问数助手 今天想了解哪方面的经营数据？ 李奕波个人作品矩阵 AI 生成的问数结果可能存在偏差，请以下方溯源报告为准。",
+        "rootKids": 1,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:59:21.068Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "RAG 知识库(p04)",
+      "action": "click",
+      "src": "http://localhost:8041/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:8041/console.html",
+        "title": "RAG 知识库 · 统一控制台",
+        "textLen": 264,
+        "snippet": "RAG 知识库 智能知识管理平台 · 李奕波个人作品矩阵 上传导入 文档管理 检索问答 数据看板 依赖正常：依赖全部在线，检索问答与文档导入均可端到端跑通。（检索问答可用） Milvus 向量库：在线 · 硬依赖 MongoDB 文档/历史库：在线 · 硬依赖",
+        "rootKids": 2,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:59:31.510Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "素材中心(p07)",
+      "action": "click",
+      "src": "http://localhost:8070/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:8070/?cp-theme=light",
+        "title": "AI 素材中心 · 李奕波个人作品矩阵",
+        "textLen": 412,
+        "snippet": "AI 素材中心 Li Yibo's Personal Portfolio 概览 素材库 以文搜图 AI 生成 效果关联 v2.0.6 素材概览 LLM 已接入 · qwen3.8-max 网关调用 0 次 · 0 tokens · mock 0 总 素材总数 ",
+        "rootKids": 3,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:59:42.019Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "直播切片(p08)",
+      "action": "click",
+      "src": "http://localhost:8080/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:8080/?cp-theme=light",
+        "title": "P08 直播切片 · 李奕波个人作品矩阵",
+        "textLen": 525,
+        "snippet": "P08 直播切片 李奕波个人作品矩阵 Li Yibo's Personal Portfolio ■ 数据概览 ▶ 直播列表 ✂ 切片库 ⚙ 批量任务 v1.0.0 · Mock Mode ASR / 评分 / 视频 均为模拟 数据概览 直播切片系统运行状态总览",
+        "rootKids": 3,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:59:52.476Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "模型微调平台(p10)",
+      "action": "click",
+      "src": "http://localhost:8101/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:8101/?cp-theme=light",
+        "title": "P10 模型微调平台 · 李奕波个人作品矩阵",
+        "textLen": 293,
+        "snippet": "P10 微调平台 李奕波个人作品矩阵 AI 平台 ■ 总览 ☰ 数据集 ⚙ 训练 ★ 评测 ◆ 模型仓库 平台总览 ⚠ 演示模式：训练、评测和部署均为模拟，未实际占用 GPU 资源。 5 数据集 3 训练任务 3 模型版本 45,726 样本总量 83.7% ",
+        "rootKids": 2,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:02.917Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "数据中台(p06)",
+      "action": "click",
+      "src": "http://localhost:8060/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:8060/?cp-theme=light",
+        "title": "P06 数据中台 · Li Yibo's Personal Portfolio",
+        "textLen": 398,
+        "snippet": "李奕波个人作品矩阵 P06 数据中台 数据总览 数据表管理 指标探查 数据质量 数据血缘 数据接入 v1.0.0 · DuckDB + FastAPI 数据总览 14 张表 / 3.24万 行 数据表 14 12 张 总行数 3.24万 健康评分 29 135",
+        "rootKids": 3,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:13.380Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "主题抽查前置挂载(p09)",
+      "action": "click",
+      "src": "http://localhost:8090/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:8090/?cp-theme=light",
+        "title": "P09 AI 销售考核 · 李奕波个人作品矩阵",
+        "textLen": 350,
+        "snippet": "李奕波个人作品矩阵 AI 销售考核 P09 模块 ▤ 考核看板 ☆ 坐席排行榜 ✉ 会话列表 ⚙ 质检规则 ⚖ 人机一致性 考核看板 2025 年 3 月客服质量指标概览 ⚠ 演示说明：LLM 评分使用基于规则的启发式算法，而非真实 LLM 调用。所有数据均为",
+        "rootKids": 2,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:23.860Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "主题抽查前置挂载(p03)",
+      "action": "click",
+      "src": "http://localhost:5174/?cp-theme=dark",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:5174/?cp-theme=dark",
+        "title": "NL2SQL 问数 · 李奕波个人作品矩阵",
+        "textLen": 62,
+        "snippet": "欢迎使用问数助手 今天想了解哪方面的经营数据？ 李奕波个人作品矩阵 AI 生成的问数结果可能存在偏差，请以下方溯源报告为准。",
+        "rootKids": 1,
+        "theme": "dark"
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:35.273Z"
+    },
+    {
+      "area": "localhost-mount",
+      "ctl": "主题抽查前置挂载(p10)",
+      "action": "click",
+      "src": "http://localhost:8101/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://localhost:8101/?cp-theme=light",
+        "title": "P10 模型微调平台 · 李奕波个人作品矩阵",
+        "textLen": 293,
+        "snippet": "P10 微调平台 李奕波个人作品矩阵 AI 平台 ■ 总览 ☰ 数据集 ⚙ 训练 ★ 评测 ◆ 模型仓库 平台总览 ⚠ 演示模式：训练、评测和部署均为模拟，未实际占用 GPU 资源。 5 数据集 3 训练任务 3 模型版本 45,726 样本总量 83.7% ",
+        "rootKids": 2,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:46.659Z"
+    },
+    {
+      "area": "theme-postmessage",
+      "ctl": "◐ 主题下发 p09/p03/p10 (localhost)",
+      "action": "toggle x3",
+      "after": [
+        {
+          "id": "p09",
+          "before": "light",
+          "fb": "light",
+          "after": "dark",
+          "fa": "dark",
+          "pass": true
+        },
+        {
+          "id": "p03",
+          "before": "dark",
+          "fb": "dark",
+          "after": "light",
+          "fa": "light",
+          "pass": true
+        },
+        {
+          "id": "p10",
+          "before": "light",
+          "fb": "light",
+          "after": "dark",
+          "fa": "dark",
+          "pass": true
+        }
+      ],
+      "pass": true,
+      "ts": "2026-10-15T02:00:47.607Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "打开(未登录作者通道)",
+      "action": "click",
+      "after": {
+        "saveText": "保存（仅本机预览）",
+        "gateVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:50.369Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "作者通道登录 (本机 owner 口令)",
+      "action": "submit",
+      "after": {
+        "okVisible": true,
+        "okText": "已连接作者通道（owner），「保存」将写入全站默认。",
+        "saveText": "保存为全站默认",
+        "err": ""
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:51.714Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "保存为全站默认 (owner) — 稍后恢复原状",
+      "action": "click",
+      "after": {
+        "apiName": "A1 材料全站测试-恢复中"
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:53.451Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "恢复默认 (owner→出厂值) — 稍后整体恢复原状",
+      "action": "click",
+      "after": {
+        "apiName": "李奕波"
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:55.676Z"
+    },
+    {
+      "area": "sidebar-health",
+      "ctl": "10 个探活点 vs /api/services/health (localhost)",
+      "action": "read",
+      "after": {
+        "dots": [
+          {
+            "id": "p01",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p02",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p05",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p09",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p03",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p04",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p07",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p08",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p10",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p06",
+            "cls": "online",
+            "title": "服务运行中"
+          }
+        ],
+        "health": {
+          "p01": true,
+          "p02": true,
+          "p03": true,
+          "p04": true,
+          "p05": true,
+          "p06": true,
+          "p07": true,
+          "p08": true,
+          "p09": true,
+          "p10": true
+        },
+        "badge": "10/10"
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:00:55.730Z"
+    }
+  ],
+  "logs": [
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://127.0.0.1:8800/"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://127.0.0.1:8800/"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8800/favicon.ico"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://localhost:8800/"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://localhost:8800/"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://localhost:8800/favicon.ico"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connecting...",
+      "url": "http://localhost:5173/@vite/client"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connected.",
+      "url": "http://localhost:5173/@vite/client"
+    },
+    {
+      "t": "console",
+      "type": "log",
+      "text": "[HMR] connected",
+      "url": "http://localhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connecting...",
+      "url": "http://localhost:5174/@vite/client"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connected.",
+      "url": "http://localhost:5174/@vite/client"
+    },
+    {
+      "t": "console",
+      "type": "log",
+      "text": "WebSocket Connected",
+      "url": "http://localhost:5174/src/App.vue"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation",
+      "url": "http://localhost:8070/shared/vendor/tailwind.3.4.17.js"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connecting...",
+      "url": "http://localhost:5174/@vite/client"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connected.",
+      "url": "http://localhost:5174/@vite/client"
+    },
+    {
+      "t": "console",
+      "type": "log",
+      "text": "WebSocket Connected",
+      "url": "http://localhost:5174/src/App.vue"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    }
+  ]
+}

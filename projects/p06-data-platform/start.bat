@@ -1,8 +1,8 @@
 @echo off
 chcp 65001 >nul 2>&1
-title P06 Data Platform - CloudPivot
+title P06 Data Platform - Li Yibo's Personal Portfolio
 echo ============================================
-echo   P06 数据中台 - CloudPivot
+echo   P06 数据中台 - Li Yibo's Personal Portfolio
 echo   Port: 8060
 echo ============================================
 echo.

@@ -1,0 +1,973 @@
+{
+  "error": "TimeoutError: page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#btn-resume-settings')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" class=\"cp-btn secondary\" id=\"btn-resume-settings\">自定义材料</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    59 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+  "steps": [
+    {
+      "area": "boot",
+      "ctl": "本地外壳 127.0.0.1:8800 打开",
+      "action": "goto",
+      "after": {
+        "title": "李奕波个人作品矩阵 · 统一平台"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:46:24.590Z"
+    },
+    {
+      "area": "boot",
+      "ctl": "登录 owner/owner123 (本地)",
+      "action": "submit",
+      "after": {
+        "topbar": "作品集首页"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:46:25.976Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "AI 客服(p01)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p01/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:46:51.948Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "运营助手(p02)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p02/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:47:17.871Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "合同审批(p05)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p05/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:47:43.899Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "销售考核(p09)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p09/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://39.96.200.45:8090/p09/?cp-theme=light",
+        "title": "502 Bad Gateway",
+        "ready": "complete",
+        "textLen": 28,
+        "snippet": "502 Bad Gateway nginx/1.24.0",
+        "rootKids": 3,
+        "theme": null
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:47:46.369Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "NL2SQL 问数(p03)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p03/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:48:12.231Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "RAG 知识库(p04)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p04/?cp-theme=light",
+      "banner": "RAG 知识库 的服务没有在监听 127.0.0.1:8041 页面空白/拒绝连接是后端没起来，不是页面坏了。启动后点右侧按钮重试： python _tools\\supervisor.py start p04 重试",
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:48:38.206Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "素材中心(p07)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p07/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:49:04.165Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "直播切片(p08)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p08/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:49:30.116Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "模型微调平台(p10)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p10/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:49:56.031Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "数据中台(p06)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p06/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:50:21.963Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "主题抽查前置挂载(p09)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p09/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://39.96.200.45:8090/p09/?cp-theme=light",
+        "title": "502 Bad Gateway",
+        "ready": "complete",
+        "textLen": 28,
+        "snippet": "502 Bad Gateway nginx/1.24.0",
+        "rootKids": 3,
+        "theme": null
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:50:24.442Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "主题抽查前置挂载(p03)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p03/?cp-theme=dark",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:50:51.239Z"
+    },
+    {
+      "area": "local-mount",
+      "ctl": "主题抽查前置挂载(p10)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p10/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:51:18.070Z"
+    },
+    {
+      "area": "theme-postmessage",
+      "ctl": "◐ 主题下发 p09/p03/p10 (本地)",
+      "action": "toggle x3",
+      "after": [
+        {
+          "id": "p09",
+          "before": "light",
+          "fb": null,
+          "after": "dark",
+          "fa": null,
+          "pass": false
+        },
+        {
+          "id": "p03",
+          "before": "dark",
+          "fb": "no-frame",
+          "after": "light",
+          "fa": "no-frame",
+          "pass": false
+        },
+        {
+          "id": "p10",
+          "before": "light",
+          "fb": "no-frame",
+          "after": "dark",
+          "fa": "no-frame",
+          "pass": false
+        }
+      ],
+      "pass": false,
+      "ts": "2026-10-15T01:51:19.031Z"
+    },
+    {
+      "area": "sidebar-health",
+      "ctl": "10 个探活点 vs /api/services/health (本地)",
+      "action": "read",
+      "after": {
+        "dots": [
+          {
+            "id": "p01",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p02",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p05",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p09",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p03",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p04",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p07",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p08",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p10",
+            "cls": "online",
+            "title": "服务运行中"
+          },
+          {
+            "id": "p06",
+            "cls": "online",
+            "title": "服务运行中"
+          }
+        ],
+        "health": {
+          "p01": true,
+          "p02": true,
+          "p03": true,
+          "p04": true,
+          "p05": true,
+          "p06": true,
+          "p07": true,
+          "p08": true,
+          "p09": true,
+          "p10": true
+        },
+        "badge": "10/10"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:51:19.652Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "作者通道登录 (本机 owner 口令)",
+      "action": "submit",
+      "after": {
+        "okVisible": true,
+        "okText": "已连接作者通道（owner），「保存」将写入全站默认。",
+        "saveText": "保存并全站生效",
+        "gateVisible": false,
+        "err": "",
+        "hasToken": true,
+        "pwFrom": "_runtime/owner_password.txt (未记录值)"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:51:21.702Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "保存并全站生效 (owner) — 稍后恢复原状",
+      "action": "click",
+      "after": {
+        "apiCompany": "A1 全站品牌测试-恢复中",
+        "sidebar": "品牌设置"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:51:23.389Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "恢复默认 (owner→出厂值) — 稍后整体恢复原状",
+      "action": "click",
+      "after": {
+        "apiCompany": "李奕波个人作品矩阵"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:51:25.551Z"
+    }
+  ],
+  "logs": [
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://127.0.0.1:8800/"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://127.0.0.1:8800/"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8800/favicon.ico"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p07/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p07/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p08/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p07/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p08/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p10/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p07/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p08/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p10/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p06/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p07/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p08/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p10/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p06/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p07/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p08/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p10/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p06/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=dark"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p07/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p08/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p10/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p06/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=dark"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p10/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p01/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p05/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p07/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p08/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p10/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p06/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p09/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p03/?cp-theme=dark"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p10/?cp-theme=light"
+    }
+  ]
+}

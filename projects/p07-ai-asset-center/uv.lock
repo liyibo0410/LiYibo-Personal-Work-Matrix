@@ -52,7 +52,7 @@ wheels = [
 ]
 
 [[package]]
-name = "cloudpivot-config"
+name = "portfolio-config"
 version = "1.0.0"
 source = { editable = "../../shared/config" }
 
@@ -173,7 +173,7 @@ name = "p07-ai-asset-center"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "cloudpivot-config" },
+    { name = "portfolio-config" },
     { name = "fastapi" },
     { name = "httpx" },
     { name = "llm-gateway" },
@@ -192,7 +192,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "cloudpivot-config", editable = "../../shared/config" },
+    { name = "portfolio-config", editable = "../../shared/config" },
     { name = "fastapi", specifier = ">=0.115" },
     { name = "httpx", specifier = ">=0.27.0" },
     { name = "llm-gateway", editable = "../../shared/llm-gateway" },

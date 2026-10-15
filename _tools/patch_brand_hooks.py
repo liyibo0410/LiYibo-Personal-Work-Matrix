@@ -8,34 +8,34 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(r"D:/software/PycharmProjects/面试项目/projects")
+ROOT = Path(r"D:/software/PycharmProjects/作品矩阵/projects")
 
 # (文件, [(旧片段, 新片段), ...])
 RULES = [
     ("p06-data-platform/web/index.html", [
-        ('<title>P06 数据中台 - CloudPivot</title>',
-         '<title data-cp-brand-title="P06 数据中台 · {name_en}">P06 数据中台 - CloudPivot</title>'),
-        ("<h1>CloudPivot</h1>",
-         '<h1 data-cp-brand="company">云枢智能</h1>'),
+        ('<title>P06 数据中台 - Li Yibo's Personal Portfolio</title>',
+         '<title data-cp-brand-title="P06 数据中台 · {name_en}">P06 数据中台 - Li Yibo's Personal Portfolio</title>'),
+        ("<h1>Li Yibo's Personal Portfolio</h1>",
+         '<h1 data-cp-brand="company">李奕波个人作品矩阵</h1>'),
     ]),
     ("p08-live-clip/web/index.html", [
-        ('<title>P08 直播切片系统 - 云枢智能</title>',
-         '<title data-cp-brand-title="P08 直播切片 · {company}">P08 直播切片系统 - 云枢智能</title>'),
-        ('<div class="subtitle">云枢智能 CloudPivot</div>',
-         '<div class="subtitle"><span data-cp-brand="company">云枢智能</span> '
-         '<span data-cp-brand="name_en">CloudPivot</span></div>'),
+        ('<title>P08 直播切片系统 - 李奕波个人作品矩阵</title>',
+         '<title data-cp-brand-title="P08 直播切片 · {company}">P08 直播切片系统 - 李奕波个人作品矩阵</title>'),
+        ('<div class="subtitle">李奕波个人作品矩阵 Li Yibo's Personal Portfolio</div>',
+         '<div class="subtitle"><span data-cp-brand="company">李奕波个人作品矩阵</span> '
+         '<span data-cp-brand="name_en">Li Yibo's Personal Portfolio</span></div>'),
     ]),
     ("p09-ai-sales-assessment/web/index.html", [
-        ('<title>P09 AI 销售考核 - 云枢智能</title>',
-         '<title data-cp-brand-title="P09 AI 销售考核 · {company}">P09 AI 销售考核 - 云枢智能</title>'),
-        ("<h1>云枢智能</h1>",
-         '<h1 data-cp-brand="company">云枢智能</h1>'),
+        ('<title>P09 AI 销售考核 - 李奕波个人作品矩阵</title>',
+         '<title data-cp-brand-title="P09 AI 销售考核 · {company}">P09 AI 销售考核 - 李奕波个人作品矩阵</title>'),
+        ("<h1>李奕波个人作品矩阵</h1>",
+         '<h1 data-cp-brand="company">李奕波个人作品矩阵</h1>'),
     ]),
     ("p10-model-finetune/web/index.html", [
-        ('<title>P10 模型微调平台 - 云枢智能</title>',
-         '<title data-cp-brand-title="P10 模型微调平台 · {company}">P10 模型微调平台 - 云枢智能</title>'),
-        ("<span>云枢智能 AI 平台</span>",
-         '<span><span data-cp-brand="company">云枢智能</span> AI 平台</span>'),
+        ('<title>P10 模型微调平台 - 李奕波个人作品矩阵</title>',
+         '<title data-cp-brand-title="P10 模型微调平台 · {company}">P10 模型微调平台 - 李奕波个人作品矩阵</title>'),
+        ("<span>李奕波个人作品矩阵 AI 平台</span>",
+         '<span><span data-cp-brand="company">李奕波个人作品矩阵</span> AI 平台</span>'),
     ]),
 ]
 

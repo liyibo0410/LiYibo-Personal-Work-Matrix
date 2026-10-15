@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-cp-brand-title="P10 模型微调平台 · {company}">P10 模型微调平台 - 云枢智能</title>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
-<!-- 统一设计系统：tokens.css 是配色唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
+<title data-cp-brand-title="P10 模型微调平台 · {company}">P10 模型微调平台 - 李奕波个人作品矩阵</title>
+<!-- 统一设计系统：tokens.css 是配色唯一真源；services.js + ui-kit.js 体积小、只做主题/品牌桥接，
+     用 defer 后置到解析后执行，避免阻塞首屏 HTML 解析。
+     echarts（~1MB）不再在首屏加载：改为用户点击「损失曲线 / 对比」时按需懒加载（见 ensureEcharts），
+     这样首屏解析与可见骨架渲染不再被这个大库卡住。后端已对 /shared 开启 gzip + 缓存。 -->
 <link rel="stylesheet" href="/shared/ui-kit/tokens.css">
 <script src="/shared/config/services.js"></script>
 <script src="/shared/ui-kit/ui-kit.js"></script>
@@ -139,9 +141,9 @@ tr:hover td { background: var(--accent-dim); }
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="logo">
-      <div class="cp-brandmark" data-cp-brand="logo">云枢</div>
+      <div class="cp-brandmark" data-cp-brand="logo">YD</div>
       <h1>P10 微调平台</h1>
-      <span><span data-cp-brand="company">云枢智能</span> AI 平台</span>
+      <span><span data-cp-brand="company">李奕波个人作品矩阵</span> AI 平台</span>
     </div>
     <nav>
       <div class="nav-item active" data-page="dashboard">

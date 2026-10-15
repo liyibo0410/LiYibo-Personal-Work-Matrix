@@ -1,11 +1,11 @@
 @echo off
 chcp 65001 >nul
-title P01 AI Customer Service - CloudPivot
+title P01 AI Customer Service - Li Yibo's Personal Portfolio
 cd /d "%~dp0"
 
 echo ============================================================
 echo   P01 AI Customer Service Backend
-echo   CloudPivot (YunShu Intelligent) Platform
+echo   Li Yibo's Personal Portfolio Platform
 echo ============================================================
 echo.
 

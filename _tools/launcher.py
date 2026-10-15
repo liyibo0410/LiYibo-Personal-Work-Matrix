@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""云枢智能 · 静默一键启动入口（给桌面应用程序 / pythonw 调用，不产生任何控制台窗口）。
+"""李奕波个人作品矩阵 · 静默一键启动入口（给桌面应用程序 / pythonw 调用，不产生任何控制台窗口）。
 
     pythonw _tools/launcher.py            # 起全部服务（含 P01 的 MySQL 容器），门户就绪后自动开浏览器
     pythonw _tools/launcher.py stop       # 停全部服务
@@ -35,7 +35,7 @@ ERROR_ALREADY_EXISTS = 183
 _GATE = None  # 持有命名互斥量的句柄，进程退出前不能丢
 
 
-def acquire_gate(name: str = "CloudPivot_launcher") -> bool:
+def acquire_gate(name: str = "Li Yibo's Personal Portfolio_launcher") -> bool:
     """同一时刻只允许一个 start/stop 在跑（桌面图标连点、脚本重入都算）。"""
     kernel32 = ctypes.windll.kernel32
     kernel32.CreateMutexW.restype = ctypes.c_void_p
@@ -206,7 +206,7 @@ def do_start(wait_seconds: float, with_mysql: bool = True) -> int:
             break
         time.sleep(0.5)
     if not (gateway and all(sup.port_open(p) for p in gateway["ports"])):
-        notify("云枢智能：外壳网关没起来",
+        notify("李奕波个人作品矩阵：外壳网关没起来",
                f"门户 {portal_url()} 未能访问。\n日志：{LOG_FILE}\n\n打开日志目录？")
         return 1
     open_portal()
@@ -228,7 +228,7 @@ def do_start(wait_seconds: float, with_mysql: bool = True) -> int:
         problems.append("P01 客服依赖的 MySQL 没就绪，客服页会报"
                         "「加载历史消息失败 / 加载订单列表失败」：\n" + mysql_note)
     if problems:
-        notify("云枢智能：有依赖没就绪",
+        notify("李奕波个人作品矩阵：有依赖没就绪",
                "\n\n".join(problems) + f"\n\n日志目录：{LOG_FILE}\n\n打开日志目录？")
         return 0
     emit(f"全部 {len(catalog)} 个服务在线")
@@ -286,5 +286,5 @@ if __name__ == "__main__":
         # pythonw 下没有控制台，异常必须落日志并弹窗，否则用户只看到「双击没反应」
         err = traceback.format_exc()
         log("FATAL\n" + err)
-        notify("云枢智能：启动器出错", err[-800:] + f"\n\n完整日志：{LOG_FILE}")
+        notify("李奕波个人作品矩阵：启动器出错", err[-800:] + f"\n\n完整日志：{LOG_FILE}")
         sys.exit(1)

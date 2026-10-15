@@ -17,8 +17,8 @@ export interface CpBrand {
 }
 
 export const DEFAULT_BRAND: CpBrand = {
-  company: "云枢智能",
-  name_en: "CloudPivot",
+  company: "李奕波个人作品矩阵",
+  name_en: "Li Yibo's Personal Portfolio",
   subtitle: "统一平台",
   tagline: "AI 电商运营中台",
   version: "v1.0",

@@ -269,7 +269,7 @@
   "health": {
     "app": "衡鉴 V2.1.9",
     "version": "2.1.9",
-    "root": "D:\\software\\PycharmProjects\\面试项目\\projects\\p05-contract-review",
+    "root": "D:\\software\\PycharmProjects\\作品矩阵\\projects\\p05-contract-review",
     "db": "review.db",
     "approval_mode": "mock",
     "approval_base": "http://127.0.0.1:8781/mock/feishu/api",

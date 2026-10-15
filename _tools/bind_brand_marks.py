@@ -14,13 +14,13 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BACKUP = ROOT / "_runtime" / "brandmark-backup"
 
-MARK = '<div class="cp-brandmark" data-cp-brand="logo">云枢</div>'
+MARK = '<div class="cp-brandmark" data-cp-brand="logo">YD</div>'
 
 PLAN: dict[str, list[tuple[str, str, int]]] = {
     # P06：logo 放在模块名上方
     "projects/p06-data-platform/web/index.html": [
-        ('    <div class="sidebar-header">\n      <h1 data-cp-brand="company">云枢智能</h1>',
-         '    <div class="sidebar-header">\n      ' + MARK + '\n      <h1 data-cp-brand="company">云枢智能</h1>', 1),
+        ('    <div class="sidebar-header">\n      <h1 data-cp-brand="company">李奕波个人作品矩阵</h1>',
+         '    <div class="sidebar-header">\n      ' + MARK + '\n      <h1 data-cp-brand="company">李奕波个人作品矩阵</h1>', 1),
     ],
     # P08：侧栏标题块
     "projects/p08-live-clip/web/index.html": [
@@ -29,8 +29,8 @@ PLAN: dict[str, list[tuple[str, str, int]]] = {
     ],
     # P09：h1 本身就是品牌名，logo 另起一行
     "projects/p09-ai-sales-assessment/web/index.html": [
-        ('    <div class="sidebar-logo">\n      <h1 data-cp-brand="company">云枢智能</h1>',
-         '    <div class="sidebar-logo">\n      ' + MARK + '\n      <h1 data-cp-brand="company">云枢智能</h1>', 1),
+        ('    <div class="sidebar-logo">\n      <h1 data-cp-brand="company">李奕波个人作品矩阵</h1>',
+         '    <div class="sidebar-logo">\n      ' + MARK + '\n      <h1 data-cp-brand="company">李奕波个人作品矩阵</h1>', 1),
     ],
     # P10
     "projects/p10-model-finetune/web/index.html": [
@@ -45,17 +45,17 @@ PLAN: dict[str, list[tuple[str, str, int]]] = {
     # P04 问答页：原本是个空的 .logo 容器
     "projects/p04-rag-knowledge-base/web/page/chat.html": [
         ('        <div class="logo"></div>',
-         '        <div class="logo cp-brandmark" data-cp-brand="logo">云枢</div>', 1),
+         '        <div class="logo cp-brandmark" data-cp-brand="logo">YD</div>', 1),
     ],
     # 作品集站：顶栏与页脚的品牌位改名可定制
     "01-portfolio/index.html": [
         ('      <span class="cp-logo">云</span>',
          '      <span class="cp-logo" data-cp-brand="logo">云</span>', 1),
-        ('        <span class="cp-brand-name">云枢智能 <span class="text-[var(--cp-brand)]">CloudPivot</span></span>',
-         '        <span class="cp-brand-name"><span data-cp-brand="company">云枢智能</span> '
-         '<span class="text-[var(--cp-brand)]" data-cp-brand="name_en">CloudPivot</span></span>', 1),
-        ('    <p>云枢智能 CloudPivot · 全栈 AI 作品集</p>',
-         '    <p><span data-cp-brand="company">云枢智能</span> <span data-cp-brand="name_en">CloudPivot</span> · 全栈 AI 作品集</p>', 1),
+        ('        <span class="cp-brand-name">李奕波个人作品矩阵 <span class="text-[var(--cp-brand)]">Li Yibo's Personal Portfolio</span></span>',
+         '        <span class="cp-brand-name"><span data-cp-brand="company">李奕波个人作品矩阵</span> '
+         '<span class="text-[var(--cp-brand)]" data-cp-brand="name_en">Li Yibo's Personal Portfolio</span></span>', 1),
+        ('    <p>李奕波个人作品矩阵 Li Yibo's Personal Portfolio · 全栈 AI 作品集</p>',
+         '    <p><span data-cp-brand="company">李奕波个人作品矩阵</span> <span data-cp-brand="name_en">Li Yibo's Personal Portfolio</span> · 全栈 AI 作品集</p>', 1),
         ('<body class="cp-app">',
          '<body class="cp-app" data-cp-brand-src="../shared/config/brand.json">', 1),
         ('<script src="https://cdn.tailwindcss.com"></script>',
@@ -63,8 +63,8 @@ PLAN: dict[str, list[tuple[str, str, int]]] = {
     ],
     # 手机速览画廊
     "mobile-gallery/v2/index.html": [
-        ('    <h1>云枢智能 · AI 电商运营中台</h1>',
-         '    <h1><span data-cp-brand="company">云枢智能</span> · <span data-cp-brand="subtitle">AI 电商运营中台</span></h1>', 1),
+        ('    <h1>李奕波个人作品矩阵 · AI 电商运营中台</h1>',
+         '    <h1><span data-cp-brand="company">李奕波个人作品矩阵</span> · <span data-cp-brand="subtitle">AI 电商运营中台</span></h1>', 1),
         ('<body>',
          '<body data-cp-brand-src="../../shared/config/brand.json">', 1),
         ('<script>',

@@ -17,8 +17,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-PROJECT = Path(r"D:/software/PycharmProjects/面试项目/projects/p04-rag-knowledge-base")
-BACKUP_DIR = Path(r"D:/software/PycharmProjects/面试项目/_runtime/orphan-backup")
+PROJECT = Path(r"D:/software/PycharmProjects/作品矩阵/projects/p04-rag-knowledge-base")
+BACKUP_DIR = Path(r"D:/software/PycharmProjects/作品矩阵/_runtime/orphan-backup")
 
 sys.path.insert(0, str(PROJECT))
 

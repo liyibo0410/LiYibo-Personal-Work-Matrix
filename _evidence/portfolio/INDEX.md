@@ -2,7 +2,7 @@
 
 | 证据文件 | 证明的功能 | 结果 |
 |---|---|---|
-| `live-before-20261014.png` | **修复前**公网站点的真实渲染：`https://cloudpivot-portfolio-b6qrn9o3mtx.qoder.zone/` 是旧深色版，且带 `+25.7% / +24.5% Answer Relevancy/Correctness 提升`（D5-B01 返工已推翻的结论）、GitHub 与「下载简历」都是死链 `#`、作者写成「2026 届」 | ✅ Edge 无头真实截图（问题取证） |
+| `live-before-20261014.png` | **修复前**公网站点的真实渲染：`https://portfolio-portfolio-b6qrn9o3mtx.qoder.zone/` 是旧深色版，且带 `+25.7% / +24.5% Answer Relevancy/Correctness 提升`（D5-B01 返工已推翻的结论）、GitHub 与「下载材料」都是死链 `#`、作者写成「2026 届」 | ✅ Edge 无头真实截图（问题取证） |
 | `static-site-top.png` | **重建后**站点的真实渲染：浅色 + 单一品牌蓝、十大模块卡带实测指标与 Mock 边界、统计条 556/10/4/6、真实截图已加载 | ✅ Edge 无头真实截图 + DOM 探针 |
 
 ## 重建做了什么（2026-10-14）

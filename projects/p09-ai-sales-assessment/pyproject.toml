@@ -9,11 +9,11 @@ dependencies = [
     "pydantic>=2.0",
     "python-multipart>=0.0.6",
     "httpx>=0.27.0",
-    "cloudpivot-config",
+    "portfolio-config",
 ]
 
 [tool.uv.sources]
-cloudpivot-config = { path = "../../shared/config", editable = true }
+portfolio-config = { path = "../../shared/config", editable = true }
 
 [build-system]
 requires = ["hatchling"]

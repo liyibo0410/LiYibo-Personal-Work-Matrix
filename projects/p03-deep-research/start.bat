@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul 2>&1
-title CloudPivot P03 - NL2SQL 问数
+title Li Yibo's Personal Portfolio P03 - NL2SQL 问数
 cd /d "%~dp0"
 
 echo ============================================================
-echo   CloudPivot P03 - NL2SQL 问数系统
+echo   Li Yibo's Personal Portfolio P03 - NL2SQL 问数系统
 echo ============================================================
 echo.
 

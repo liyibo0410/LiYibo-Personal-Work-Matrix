@@ -11,8 +11,8 @@ import json
 import io
 import subprocess
 
-ROOT = r"D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base"
-REPO = r"D:\software\PycharmProjects\面试项目"
+ROOT = r"D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base"
+REPO = r"D:\software\PycharmProjects\作品矩阵"
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 

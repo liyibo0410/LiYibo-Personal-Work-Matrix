@@ -1,0 +1,256 @@
+=== STEPS (13) ===
+[正常] 总览 | 页面加载 | 打开 http://39.96.200.45:8090/p06/
+    预期: 首屏正常渲染（HTTP 200）
+    实际: HTTP 200；badge="15 张表 / 3.24万 行"；statCards=4；metricCards=7；bg=rgb(245, 247, 250)
+    证据: agent5-01-p06-dashboard.png
+[正常] 总览 | 导航 Tab 枚举 | 读取所有 nav-item
+    预期: 总览/数据表/指标/质量/血缘/接入 6 个（无「查询」Tab）
+    实际: ["dashboard","tables","metrics","quality","lineage","ingest"]
+    证据: DOM 快照
+[部分] 总览 | 指标卡（核心指标概览） | 读取 7 项指标卡文本
+    预期: GMV/订单/转化率/客单价/退货率/UV/PV 齐全且有口径标注
+    实际: ["成交总额 | 3.60万 | ▲ 33.87%","订单量 | 133 | ▲ 25.47%","转化率 | 0.44% | ▲ 46.67%","客单价 | 270.36 | ▲ 6.69%","退货率 | 20.30% | ▲ 53.67%","独立访客数 | 3.04万 | ▼ 15.17%","页面浏览量 | 9.69万 | ▼ 28.12%"]
+    证据: 指标卡仅显示 名称/最新值/趋势，未显示口径说明（接口 metric.description 有口径但页面未展示）
+[正常] 总览 | 健康环/数仓分层 | 读取文本
+    预期: 健康分与分层显示
+    实际: 29
+健康分 / 应用层 ADS; 2 张表; 明细层 DWD; 2 张表; 汇总层 DWS; 2 张表; 原始层 ODS; 6 张表
+    证据: 同截图
+[正常] 数据表 | 进入 Tab | 点击侧栏「数据表管理」
+    预期: 加载表列表
+    实际: 15 张表: ads_key_metrics,ads_product_ranking,dwd_customer_profile,dwd_order_detail,tmp_uitest_agent5_json,dws_daily_product,dws_daily_shop,ods_customers,ods_dirty_probe,ods_orders,ods_products,ods_stores,ods_traffic,qoder_probe_ok,tmp_uitest_agent5_csv
+    证据: agent5-02-p06-tables-list.png
+[正常] 数据表 | 分层筛选 select | 选择 ODS
+    预期: 仅显示对应分层（或全部）
+    实际: 行数=8，分层=ODS
+    证据: agent5-03-p06-tables-filter-ods.png
+[正常] 数据表 | 分层筛选 select | 选择 DWD
+    预期: 仅显示对应分层（或全部）
+    实际: 行数=3，分层=DWD
+    证据: 
+[正常] 数据表 | 分层筛选 select | 选择 DWS
+    预期: 仅显示对应分层（或全部）
+    实际: 行数=2，分层=DWS
+    证据: 
+[正常] 数据表 | 分层筛选 select | 选择 ADS
+    预期: 仅显示对应分层（或全部）
+    实际: 行数=2，分层=ADS
+    证据: 
+[正常] 数据表 | 分层筛选 select | 选择 全部
+    预期: 仅显示对应分层（或全部）
+    实际: 行数=15，分层=ADS/DWD/DWS/ODS
+    证据: 
+[正常] 数据表 | 查看按钮（第1行 ads_key_metrics） | 点击「查看」
+    预期: 显示列信息+预览
+    实际: 标题="核心经营指标 (ads_key_metrics)" 列=9 预览行=50
+    证据: agent5-04-p06-table-detail-first.png
+[缺陷] 数据表 | 「查看」按钮 × 15 | 逐一点击并关闭
+    预期: 每张表都能打开详情并关闭
+    实际: 成功 7/15；失败: dwd_customer_profile: attempt1:page.waitForFunction: Timeout 20000ms exceeded. [api: 200 tables/dwd_customer_profile/preview?limit=50; 404 tables/dwd_customer_profile] attempt2:page.waitForFunction: Timeout 20000ms exceeded. [api: 502 tables/dwd_customer_profile/preview?limit=50; 502 tables/dwd_customer_profile]  || dwd_order_detail: attempt1:page.waitForFunction: Timeout 20000ms exceeded. [api: 502 tables/dwd_order_detail/preview?limit=50; 502 tables/dwd_order_detail] attempt2:page.waitForFunction: Timeout 20000ms exceeded. [api: 502 tables/dwd_order_detail/preview?limit=50; 502 tables/dwd_order_detail]  || dws_daily_shop: attempt1:page.waitForFunction: Timeout 20000ms exceeded. [api: 200 tables/dws_daily_shop/preview?limit=50; 404 tables/dws_daily_shop] attempt2:page.waitForFunction: Timeout 20000ms exceeded. [api: 404 tables/dws_daily_shop; 200 tables/dws_daily_shop/preview?limit=50]  || ods_products: attempt1:page.waitForFunction: Timeout 20000ms exceeded. [api: 404 tables/ods_products; 200 tables/ods_products/preview?limit=50] attempt2:page.waitForFunction: Timeout 20000ms exceeded. [api: 404 tables/ods_products; 200 tables/ods_products/preview?limit=50]  || ods_stores: attempt1:page.waitForFunction: Timeout 20000ms exceeded. [api: 502 tables/ods_stores; 502 tables/ods_stores/preview?limit=50] attempt2:page.waitForFunction: Timeout 20000ms exceeded. [api: 502 tables/ods_stores/preview?limit=50; 502 tables/ods_stores]  || ods_traffic: attempt1:page.waitForFunc
+    证据: 遍历测试（失败项含重试与相关接口状态）
+[缺陷] 全局 | 脚本异常 | -
+    预期: 全部步骤完成
+    实际: 异常中断: page.waitForFunction: Timeout 30000ms exceeded.
+    证据: 
+
+=== CONSOLE (59) ===
+x7 error|Failed to load resource: the server responded with a status of 404 (Not Found)
+x1 error|API error: /tables/ads_product_ranking Error: Table 'ads_product_ranking' not found
+    at api (http://39.96.200.45:8090/p06/:392:32)
+    at async Promise.all (index 0)
+    at async showTableDetail (http://39.96.200.45:8090/p06/:541:29)
+x1 error|API error: /tables/dwd_customer_profile Error: Table 'dwd_customer_profile' not found
+    at api (http://39.96.200.45:8090/p06/:392:32)
+    at async Promise.all (index 0)
+    at async showTableDetail (http://39.96.200.45:8090/p06/:541:29)
+x23 error|Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+x1 error|API error: /tables/dwd_customer_profile/preview?limit=50 SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x1 error|API error: /tables/dwd_customer_profile SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/dwd_order_detail/preview?limit=50 SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/dwd_order_detail SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/dws_daily_shop Error: Table 'dws_daily_shop' not found
+    at api (http://39.96.200.45:8090/p06/:392:32)
+    at async Promise.all (index 0)
+    at async showTableDetail (http://39.96.200.45:8090/p06/:541:29)
+x2 error|API error: /tables/ods_products Error: Table 'ods_products' not found
+    at api (http://39.96.200.45:8090/p06/:392:32)
+    at async Promise.all (index 0)
+    at async showTableDetail (http://39.96.200.45:8090/p06/:541:29)
+x2 error|API error: /tables/ods_stores SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/ods_stores/preview?limit=50 SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/ods_traffic SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/ods_traffic/preview?limit=50 SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/qoder_probe_ok SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/qoder_probe_ok/preview?limit=50 SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/tmp_uitest_agent5_csv SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x2 error|API error: /tables/tmp_uitest_agent5_csv/preview?limit=50 SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+x1 error|API error: /metrics SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+
+=== NETFAILS (0) ===
+
+=== API STATUS COUNTS ===
+x1 200 dashboard
+x1 200 tables
+x1 200 tables/ads_key_metrics
+x1 200 tables/ads_key_metrics/preview
+x1 200 tables/ads_product_ranking
+x2 200 tables/ads_product_ranking/preview
+x1 200 tables/dwd_customer_profile/preview
+x1 200 tables/dws_daily_product
+x1 200 tables/dws_daily_product/preview
+x2 200 tables/dws_daily_shop/preview
+x1 200 tables/ods_customers
+x1 200 tables/ods_customers/preview
+x1 200 tables/ods_dirty_probe
+x1 200 tables/ods_dirty_probe/preview
+x1 200 tables/ods_orders
+x1 200 tables/ods_orders/preview
+x2 200 tables/ods_products/preview
+x1 200 tables/tmp_uitest_agent5_json
+x1 200 tables/tmp_uitest_agent5_json/preview
+x1 404 tables/ads_product_ranking
+x1 404 tables/dwd_customer_profile
+x2 404 tables/dws_daily_shop
+x2 404 tables/ods_products
+x1 502 metrics
+x1 502 tables/dwd_customer_profile
+x1 502 tables/dwd_customer_profile/preview
+x2 502 tables/dwd_order_detail
+x2 502 tables/dwd_order_detail/preview
+x2 502 tables/ods_stores
+x2 502 tables/ods_stores/preview
+x2 502 tables/ods_traffic
+x2 502 tables/ods_traffic/preview
+x2 502 tables/qoder_probe_ok
+x2 502 tables/qoder_probe_ok/preview
+x2 502 tables/tmp_uitest_agent5_csv
+x2 502 tables/tmp_uitest_agent5_csv/preview
+
+=== NON-2xx DUMPS ===
+404 http://39.96.200.45:8090/api/v1/tables/ads_product_ranking
+  {"code":1,"data":null,"msg":"Table 'ads_product_ranking' not found"}
+404 http://39.96.200.45:8090/api/v1/tables/dwd_customer_profile
+  {"code":1,"data":null,"msg":"Table 'dwd_customer_profile' not found"}
+502 http://39.96.200.45:8090/api/v1/tables/dwd_customer_profile/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/dwd_customer_profile
+  null
+502 http://39.96.200.45:8090/api/v1/tables/dwd_order_detail/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/dwd_order_detail
+  null
+502 http://39.96.200.45:8090/api/v1/tables/dwd_order_detail/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/dwd_order_detail
+  null
+404 http://39.96.200.45:8090/api/v1/tables/dws_daily_shop
+  {"code":1,"data":null,"msg":"Table 'dws_daily_shop' not found"}
+404 http://39.96.200.45:8090/api/v1/tables/dws_daily_shop
+  {"code":1,"data":null,"msg":"Table 'dws_daily_shop' not found"}
+404 http://39.96.200.45:8090/api/v1/tables/ods_products
+  {"code":1,"data":null,"msg":"Table 'ods_products' not found"}
+404 http://39.96.200.45:8090/api/v1/tables/ods_products
+  {"code":1,"data":null,"msg":"Table 'ods_products' not found"}
+502 http://39.96.200.45:8090/api/v1/tables/ods_stores
+  null
+502 http://39.96.200.45:8090/api/v1/tables/ods_stores/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/ods_stores/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/ods_stores
+  null
+502 http://39.96.200.45:8090/api/v1/tables/ods_traffic
+  null
+502 http://39.96.200.45:8090/api/v1/tables/ods_traffic/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/ods_traffic/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/ods_traffic
+  null
+502 http://39.96.200.45:8090/api/v1/tables/qoder_probe_ok
+  null
+502 http://39.96.200.45:8090/api/v1/tables/qoder_probe_ok/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/qoder_probe_ok
+  null
+502 http://39.96.200.45:8090/api/v1/tables/qoder_probe_ok/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/tmp_uitest_agent5_csv
+  null
+502 http://39.96.200.45:8090/api/v1/tables/tmp_uitest_agent5_csv/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/tables/tmp_uitest_agent5_csv
+  null
+502 http://39.96.200.45:8090/api/v1/tables/tmp_uitest_agent5_csv/preview?limit=50
+  null
+502 http://39.96.200.45:8090/api/v1/metrics
+  null
+
+=== TABLE-RELATED DUMPS (order) ===
+200 tables/ads_key_metrics/preview?limit=50
+200 tables/ads_key_metrics
+404 tables/ads_product_ranking
+200 tables/ads_product_ranking/preview?limit=50
+200 tables/ads_product_ranking
+200 tables/ads_product_ranking/preview?limit=50
+200 tables/dwd_customer_profile/preview?limit=50
+404 tables/dwd_customer_profile
+502 tables/dwd_customer_profile/preview?limit=50
+502 tables/dwd_customer_profile
+502 tables/dwd_order_detail/preview?limit=50
+502 tables/dwd_order_detail
+502 tables/dwd_order_detail/preview?limit=50
+502 tables/dwd_order_detail
+200 tables/tmp_uitest_agent5_json/preview?limit=50
+200 tables/tmp_uitest_agent5_json
+200 tables/dws_daily_product/preview?limit=50
+200 tables/dws_daily_product
+200 tables/dws_daily_shop/preview?limit=50
+404 tables/dws_daily_shop
+404 tables/dws_daily_shop
+200 tables/dws_daily_shop/preview?limit=50
+200 tables/ods_customers
+200 tables/ods_customers/preview?limit=50
+200 tables/ods_dirty_probe/preview?limit=50
+200 tables/ods_dirty_probe
+200 tables/ods_orders
+200 tables/ods_orders/preview?limit=50
+404 tables/ods_products
+200 tables/ods_products/preview?limit=50
+404 tables/ods_products
+200 tables/ods_products/preview?limit=50
+502 tables/ods_stores
+502 tables/ods_stores/preview?limit=50
+502 tables/ods_stores/preview?limit=50
+502 tables/ods_stores
+502 tables/ods_traffic
+502 tables/ods_traffic/preview?limit=50
+502 tables/ods_traffic/preview?limit=50
+502 tables/ods_traffic
+502 tables/qoder_probe_ok
+502 tables/qoder_probe_ok/preview?limit=50
+502 tables/qoder_probe_ok
+502 tables/qoder_probe_ok/preview?limit=50
+502 tables/tmp_uitest_agent5_csv
+502 tables/tmp_uitest_agent5_csv/preview?limit=50
+502 tables/tmp_uitest_agent5_csv
+502 tables/tmp_uitest_agent5_csv/preview?limit=50
+
+=== METRICS/DASHBOARD/QUERY DUMPS ===
+200 dashboard
+  {"code":0,"data":{"table_count":15,"total_rows":32423,"layers":{"ADS":2,"DWD":2,"DWS":2,"ODS":6},"health":{"score":29,"total_checks":152,"passed":139,"warned":1,"failed":12},"metrics":[{"code":"gmv","name":"成交总额","unit":"元","latest":35958.37,"avg":36005.68,"trend":0.3387},{"code":"order_count","name":"订单量","unit":"单","latest":133,"avg":126.99,"trend":0.2547},{"code":"conversion_rate","name":"转化率",
+502 metrics
+  null

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""云枢智能全平台服务管理器。
+"""李奕波个人作品矩阵全平台服务管理器。
 
 start-all.bat 的老办法是开十几个独立控制台窗口：看不见日志、关窗口就断、
 端口起了没有也没人核对。这里改成分离进程 + 落盘日志 + PID 记录，并在使用前
@@ -340,14 +340,36 @@ def cmd_stop(catalog: list[dict], targets: list[str], takeover: bool) -> int:
     return 0
 
 
+def cmd_watch(catalog: list[dict], targets: list[str], interval: float, once: bool = False) -> int:
+    """看门狗：周期性探活，发现掉线的服务自动拉起（2026-10-15 新增）。
+
+    背景：当日实测 P04 / P02-web 各静默死过一次（无 traceback、无自动恢复），
+    演示中后端一挂整条链路就是 502。supervisor 此前是一次性 CLI、没有守护循环；
+    这里只重启「端口未监听」的服务，不动已在线的进程。
+    """
+    picked = [e for e in catalog if not targets or e["id"] in targets]
+    print(f"[watch] 每 {interval:.0f}s 探活 {len(picked)} 个服务（Ctrl+C 退出；--once 只跑一轮）")
+    while True:
+        for e in picked:
+            if all(port_open(x) for x in e["ports"]):
+                continue
+            print(f"[{time.strftime('%H:%M:%S')}] [掉线] {e['id']:<13} 端口 {e['ports']} 未监听 → 拉起")
+            spawn(e)
+        if once:
+            return 0
+        time.sleep(interval)
+
+
 def main() -> int:
-    ap = argparse.ArgumentParser(description="云枢智能全平台服务管理器")
-    ap.add_argument("action", choices=["start", "stop", "restart", "status"])
+    ap = argparse.ArgumentParser(description="李奕波个人作品矩阵全平台服务管理器")
+    ap.add_argument("action", choices=["start", "stop", "restart", "status", "watch"])
     ap.add_argument("ids", nargs="*", help="服务 id，留空表示全部")
     ap.add_argument("--takeover", action="store_true",
                     help="接管端口上非本管理器启动的既有进程（先杀再起）")
     ap.add_argument("--verbose", action="store_true", help="status 时打印未启动服务的日志尾部")
     ap.add_argument("--timeout", type=float, default=120)
+    ap.add_argument("--interval", type=float, default=15, help="watch 的探活间隔（秒）")
+    ap.add_argument("--once", action="store_true", help="watch 只跑一轮就退出（自检用）")
     args = ap.parse_args()
 
     services = registry()
@@ -368,6 +390,8 @@ def main() -> int:
         cmd_stop(catalog, args.ids, takeover=True)
         time.sleep(1.5)
         return cmd_start(catalog, args.ids, takeover=False)
+    if args.action == "watch":
+        return cmd_watch(catalog, args.ids, args.interval, once=args.once)
     return 0
 
 

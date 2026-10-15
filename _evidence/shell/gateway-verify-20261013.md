@@ -1,4 +1,4 @@
-# 云枢智能统一平台外壳（shell gateway）· 验证记录
+# 李奕波个人作品矩阵统一平台外壳（shell gateway）· 验证记录
 
 - **验证时间**：2026-10-13
 - **验证方式**：单次调用内后台起 `shell/serve.py`（端口 8800）→ curl 打全套接口 → 浏览器（browser-use）走登录→首页→挂载黄金路径 → take_snapshot / evaluate_script 取证
@@ -27,7 +27,7 @@
 
 ## 三、前端黄金路径（browser-use 结构取证）
 
-1. **登录页渲染**：品牌「云枢智能 / CloudPivot」、账号+密码表单、登录按钮、5 个演示账号 chip（owner/ops/legal/sales/admin）—— take_snapshot 确认。
+1. **登录页渲染**：品牌「李奕波个人作品矩阵 / Li Yibo's Personal Portfolio」、账号+密码表单、登录按钮、5 个演示账号 chip（owner/ops/legal/sales/admin）—— take_snapshot 确认。
 2. **真实登录**：填 owner/owner123 → 提交 → 网关签发令牌 → 进入应用视图（非 mock，走 /api/auth/login 真实校验）。
 3. **登录后首页（智能体矩阵）**：
    - 侧栏按层分组导航：应用层 L3（P01/P02/P05/P09）、能力层 L2（P03/P04/P07/P08）、模型层 L1（P10）、数据层 L0（P06），每项带 `#/workspace/{route}` 链接；

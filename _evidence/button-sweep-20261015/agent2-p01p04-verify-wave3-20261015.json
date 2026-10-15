@@ -1,0 +1,61 @@
+{
+ "startedLocal": "2026/10/15 10:52:16",
+ "steps": [
+  {
+   "area": "P04",
+   "ctl": "列表接口缓存复验(浏览器内双发)",
+   "action": "fetch ×2",
+   "expected": "第二轮仍真实回源（no-store）",
+   "actual": [
+    {
+     "url": "/documents",
+     "round": 1,
+     "status": 200,
+     "cc": "no-store",
+     "ms": 73,
+     "transferSize": 1140,
+     "duration": 71
+    },
+    {
+     "url": "/documents",
+     "round": 2,
+     "status": 200,
+     "cc": "no-store",
+     "ms": 141,
+     "transferSize": 1140,
+     "duration": 140
+    },
+    {
+     "url": "/search?keyword=test",
+     "round": 1,
+     "status": 200,
+     "cc": "no-store",
+     "ms": 135,
+     "transferSize": 772,
+     "duration": 134
+    },
+    {
+     "url": "/search?keyword=test",
+     "round": 2,
+     "status": 200,
+     "cc": "no-store",
+     "ms": 130,
+     "transferSize": 772,
+     "duration": 129
+    }
+   ],
+   "verdict": "正常(已修复)",
+   "shot": null,
+   "t": "10:51:55"
+  },
+  {
+   "area": "P01",
+   "ctl": "刷新对象列表(复验)",
+   "action": "点击",
+   "actual": "异常: Error: page.goto: net::ERR_CONNECTION_TIMED_OUT at http://39.96.200.45:8090/p01/\nCall log:\n\u001b[2m  - navigating to \"http://39.96.200.45:8090/p01/\", waiting until \"load\"\u001b[22m\n",
+   "verdict": "缺陷",
+   "shot": null,
+   "t": "10:52:16"
+  }
+ ]
+}

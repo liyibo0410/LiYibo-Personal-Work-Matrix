@@ -1,0 +1,780 @@
+{
+  "base": "http://127.0.0.1:8060/",
+  "ts": "2026-10-15T02:39:08.851Z",
+  "steps": [
+    {
+      "ts": "2026-10-15T02:35:17.609Z",
+      "page": "指标",
+      "widget": "查询按钮 ×7（本地补尾）",
+      "action": "逐一查询 7 指标并等出图",
+      "expected": "7/7 出数出图",
+      "actual": "成功 7/7；单项耗时: gmv:169ms/canvas=1 | order_count:43ms/canvas=1 | conversion_rate:45ms/canvas=1 | avg_order_value:47ms/canvas=1 | return_rate:38ms/canvas=1 | traffic_uv:36ms/canvas=1 | traffic_pv:38ms/canvas=1",
+      "verdict": "正常",
+      "evidence": "agent5-30-p06-tail-metrics-final.png"
+    },
+    {
+      "ts": "2026-10-15T02:35:18.731Z",
+      "page": "质量",
+      "widget": "运行质量检查（本地补尾）",
+      "action": "点击运行",
+      "expected": "检查完成+汇总+明细",
+      "actual": "HTTP 200；\"检查完成 - 148 项\"；健康评分=29 | 通过=135 | 警告=1 | 失败=12；明细=148",
+      "verdict": "正常",
+      "evidence": "agent5-31-p06-tail-quality.png"
+    },
+    {
+      "ts": "2026-10-15T02:35:19.517Z",
+      "page": "血缘",
+      "widget": "进入 Tab（本地补尾）",
+      "action": "渲染检查",
+      "expected": "图谱+明细",
+      "actual": "节点=11，连线=11，SVG高=718，明细=11",
+      "verdict": "正常",
+      "evidence": "agent5-32-p06-tail-lineage.png"
+    },
+    {
+      "ts": "2026-10-15T02:35:19.993Z",
+      "page": "接入",
+      "widget": "CSV 拖拽区点击（本地补尾）",
+      "action": "点击上传区",
+      "expected": "弹文件选择器",
+      "actual": "filechooser 触发",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:35:20.265Z",
+      "page": "接入",
+      "widget": "CSV 上传（本地补尾，重跑替换同名 tmp 表）",
+      "action": "同名重传",
+      "expected": "成功",
+      "actual": "等待上传... [10:35:20] 开始上传: tmp_uitest_agent5.csv → tmp_uitest_agent5_csv (ODS) [10:35:20] ✓ 成功: 3 行, 4 列",
+      "verdict": "正常",
+      "evidence": "agent5-33-p06-tail-ingest-csv.png"
+    },
+    {
+      "ts": "2026-10-15T02:35:20.404Z",
+      "page": "接入",
+      "widget": "JSON 上传（本地补尾）",
+      "action": "同名重传",
+      "expected": "成功",
+      "actual": "等待上传... [10:35:20] 开始上传: tmp_uitest_agent5.csv → tmp_uitest_agent5_csv (ODS) [10:35:20] ✓ 成功: 3 行, 4 列 [10:35:20] 开始上传: tmp_uitest_agent5.json → tmp_uitest_agent5_json (ODS) [10:35:20] ✓ 成功: 3 行, 4 列",
+      "verdict": "正常",
+      "evidence": "agent5-34-p06-tail-ingest-json.png"
+    },
+    {
+      "ts": "2026-10-15T02:35:20.435Z",
+      "page": "接入",
+      "widget": "非法表名（本地补尾复核）",
+      "action": "tmp_uitest_bad name!",
+      "expected": "拒绝",
+      "actual": "等待上传... [10:35:20] 开始上传: tmp_uitest_agent5.csv → tmp_uitest_agent5_csv (ODS) [10:35:20] ✓ 成功: 3 行, 4 列 [10:35:20] 开始上传: tmp_uitest_agent5.json → tmp_uitest_agent5_json (ODS) [10:35:20] ✓ 成功: 3 行, 4 列 ",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:35:20.455Z",
+      "page": "查询(API)",
+      "widget": "合法 SELECT（本地复验）",
+      "action": "COUNT/SUM 查询",
+      "expected": "返回结果",
+      "actual": "{\"status\":200,\"code\":0,\"msg\":\"success\"}",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:35:20.460Z",
+      "page": "查询(API)",
+      "widget": "护栏-多语句（本地复验）",
+      "action": "无害载荷",
+      "expected": "拦截",
+      "actual": "{\"status\":400,\"code\":1,\"msg\":\"不允许多条语句：请用分号分隔的单条查询\"}",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:35:20.464Z",
+      "page": "查询(API)",
+      "widget": "护栏-read_text（本地复验）",
+      "action": "无害载荷",
+      "expected": "拦截",
+      "actual": "{\"status\":400,\"code\":1,\"msg\":\"该语句包含不被允许的 DuckDB 能力：read_text\"}",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:35:20.475Z",
+      "page": "查询(API)",
+      "widget": "未建表复核（本地复验）",
+      "action": "探针表不应存在",
+      "expected": "不存在",
+      "actual": "false",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:35:44.046Z",
+      "page": "数据表",
+      "widget": "「查看」ads_key_metrics（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] A2[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:36:05.742Z",
+      "page": "数据表",
+      "widget": "「查看」ads_product_ranking（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] A2[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:36:36.810Z",
+      "page": "数据表",
+      "widget": "「查看」dwd_order_detail（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] A2[page.waitForFunction: Timeout 9000ms exceeded.; 500/200] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:36:58.501Z",
+      "page": "数据表",
+      "widget": "「查看」dws_daily_product（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] A2[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:37:20.170Z",
+      "page": "数据表",
+      "widget": "「查看」dws_daily_shop（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 500/200] A2[page.waitForFunction: Timeout 9000ms exceeded.; 500/200] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:37:41.869Z",
+      "page": "数据表",
+      "widget": "「查看」ods_customers（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] A2[page.waitForFunction: Timeout 9000ms exceeded.; 200/404] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:38:03.605Z",
+      "page": "数据表",
+      "widget": "「查看」ods_orders（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 200/404] A2[page.waitForFunction: Timeout 9000ms exceeded.; 500/200] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:38:25.300Z",
+      "page": "数据表",
+      "widget": "「查看」ods_products（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] A2[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:38:46.971Z",
+      "page": "数据表",
+      "widget": "「查看」ods_stores（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 500/200] A2[page.waitForFunction: Timeout 9000ms exceeded.; 500/404] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:08.744Z",
+      "page": "数据表",
+      "widget": "「查看」tmp_uitest_agent5_json（补尾）",
+      "action": "点击2次重试",
+      "expected": "详情打开",
+      "actual": "失败: A1[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] A2[page.waitForFunction: Timeout 9000ms exceeded.; 404/200] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:08.745Z",
+      "page": "数据表",
+      "widget": "「查看」循环汇总（本地补尾）×14",
+      "action": "逐行点击",
+      "expected": "全部打开",
+      "actual": "成功 4/14；失败 10 张",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:08.851Z",
+      "page": "数据表",
+      "widget": "tmp 可见性（本地补尾核对）",
+      "action": "DOM+API",
+      "expected": "两 tmp 在、非法名无",
+      "actual": "{\"domCsv\":true,\"domJson\":true,\"domBad\":false,\"apiCsv\":true,\"apiJson\":true,\"apiBad\":false,\"total\":14}",
+      "verdict": "正常",
+      "evidence": "agent5-35-p06-tail-tables-tmp.png"
+    }
+  ],
+  "consoleMsgs": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ads_key_metrics/preview?limit=50 Error: Table 'ads_key_metrics' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ads_key_metrics/preview?limit=50 Error: Table 'ads_key_metrics' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ads_product_ranking/preview?limit=50 Error: Table 'ads_product_ranking' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ads_product_ranking/preview?limit=50 Error: Table 'ads_product_ranking' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dwd_order_detail/preview?limit=50 Error: Table 'dwd_order_detail' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dwd_order_detail/preview?limit=50 SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dws_daily_product/preview?limit=50 Error: Table 'dws_daily_product' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dws_daily_product/preview?limit=50 Error: Table 'dws_daily_product' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dws_daily_shop/preview?limit=50 SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dws_daily_shop SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_customers Error: Table 'ods_customers' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_customers Error: Table 'ods_customers' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_orders Error: Table 'ods_orders' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_orders/preview?limit=50 SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_products/preview?limit=50 Error: Table 'ods_products' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_products/preview?limit=50 Error: Table 'ods_products' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_stores/preview?limit=50 SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_stores SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_stores/preview?limit=50 Error: Table 'ods_stores' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/tmp_uitest_agent5_json Error: Table 'tmp_uitest_agent5_json' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/tmp_uitest_agent5_json/preview?limit=50 Error: Table 'tmp_uitest_agent5_json' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)"
+    }
+  ],
+  "netFails": [],
+  "apiDumps": [
+    {
+      "url": "http://127.0.0.1:8060/api/v1/dashboard",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_count\":14,\"total_rows\":32422,\"layers\":{\"ADS\":2,\"DWD\":2,\"DWS\":2,\"ODS\":6},\"health\":{\"score\":29,\"total_checks\":148,\"passed\":135,\"warned\":1,\"failed\":12},\"metrics\":[{\"code\":\"gmv\",\"name\":\"成交总额\",\"unit\":\"元\",\"latest\":35958.37,\"avg\":36005.68,\"trend\":0.3387},{\"code\":\"order_count\",\"name\":\"订单量\",\"unit\":\"单\",\"latest\":133,\"avg\":126.99,\"trend\":0.2547},{\"code\":\"conversion_rate\",\"name\":\"转化率\",\"unit\":\"%\",\"latest\":0.0044,\"avg\":0,\"trend\":0.4667},{\"code\":\"avg_order_value\",\"name\":\"客单价\",\"unit\":\"元\",\"latest\":270.36,\"avg\":283.16,\"trend\":0.0669},{\"code\":\"return_rate\",\"name\":\"退货率\",\"unit\":\"%\",\"latest\":0.203,\"avg\":0.17,\"trend\":0.5367},{\"code\":\"traffic_uv\",\"name\":\"独立访客数\",\"unit\":\"人\",\"latest\":30410,\"avg\":26728.45,\"trend\":-0.1517},{\"code\":\"traffic_pv\",\"name\":\"页面浏览量\",\"unit\":\"次\",\"latest\":96864,\"avg\":93058.33,\"trend\":-0.2812}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":[{\"code\":\"gmv\",\"name\":\"成交总额\",\"description\":\"所有已完成订单的成交金额总和\",\"unit\":\"元\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"gmv\",\"aggregation\":\"SUM\"},{\"code\":\"order_count\",\"name\":\"订单量\",\"description\":\"所有订单数量（含已完成和已退货）\",\"unit\":\"单\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"order_count\",\"aggregation\":\"SUM\"},{\"code\":\"conversion_rate\",\"name\":\"转化率\",\"description\":\"支付用户数 / 独立访客数\",\"unit\":\"%\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"conversion_rate\",\"aggregation\":\"AVG\"},{\"code\":\"avg_order_value\",\"name\":\"客单价\",\"description\":\"成交总额 / 订单量\",\"unit\":\"元\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"avg_order_value\",\"aggregation\":\"AVG\"},{\"code\":\"return_rate\",\"name\":\"退货率\",\"description\":\"退货订单数 / 总订单数\",\"unit\":\"%\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"return_rate\",\"aggregation\":\"AVG\"},{\"code\":\"traffic_uv\",\"name\":\"独立访客数\",\"description\":\"每日独立访客数量\",\"unit\":\"人\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"uv\",\"aggregation\":\"SUM\"},{\"code\":\"traffic_pv\",\"name\":\"页面浏览量\",\"description\":\"每日页面浏览次数\",\"unit\":\"次\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"pv\",\"aggregation\":\"SUM\"}],\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/gmv/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"gmv\",\"name\":\"成交总额\",\"unit\":\"元\",\"description\":\"所有已完成订单的成交金额总和\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":28428.45},{\"period\":\"2024-07-02\",\"value\":38194.53},{\"period\":\"2024-07-03\",\"value\":41075.67},{\"period\":\"2024-07-04\",\"value\":20531.64},{\"period\":\"2024-07-05\",\"value\":41562.61},{\"period\":\"2024-07-06\",\"value\":41878.75},{\"period\":\"2024-07-07\",\"value\":45070.4},{\"period\":\"2024-07-08\",\"value\":39214.94},{\"period\":\"2024-07-09\",\"value\":20823.49},{\"period\":\"2024-07-10\",\"value\":36955.79},{\"period\":\"2024-07-11\",\"value\":26353.13},{\"period\":\"2024-07-12\",\"value\":44018.35},{\"period\":\"2024-07-13\",\"value\":35101.65},{\"period\":\"2024-07-14\",\"value\":43980.85},{\"period\":\"2024-07-15\",\"value\":43074.1},{\"period\":\"2024-07-16\",\"value\":36092.21},{\"period\":\"2024-07-17\",\"value\":40752.05},{\"period\":\"2024-07-18\",\"value\":31805.85},{\"period\":\"2024-07-19\",\"value\":35197.22},{\"period\":\"2024-07-20\",\"value\":41796.32},{\"period\":\"2024-07-21\",\"value\":45465.76},{\"period\":\"2024-07-22\",\"value\":32565.67},{\"period\":\"2024-07-23\",\"value\":38179.27},{\"period\":\"2024-07-24\",\"value\":25940.74},{\"period\":\"2024-07-25\",\"value\":40830.78},{\"period\":\"2024-07-26\",\"value\":22611.12},{\"period\":\"2024-07-27\",\"value\":34867.53},{\"period\":\"2024-07-28\",\"value\":40067.18},{\"period\":\"2024-07-29\",\"value\":44341.89},{\"period\":\"2024-07-30\",\"value\":29944.29},{\"period\":\"2024-07-31\",\"value\":35426.52},{\"period\":\"2024-08-01\",\"value\":40547.83},{\"period\":\"2024-08-02\",\"value\":36371.46},{\"period\":\"2024-08-03\",\"value\":30346.61},{\"period\":\"2024-08-04\",\"value\":35139.07},{\"period\":\"2024-08-05\",\"value\":37054.65},{\"period\":\"2024-08-06\",\"value\":40306.44},{\"period\":\"2024-08-07\",\"value\":32405.19},{\"period\":\"2024-08-08\",\"value\":43970.93},{\"period\":\"2024-08-09\",\"value\":35314.86},{\"period\":\"2024-08-10\",\"value\":42399.28},{\"period\":\"2024-08-11\",\"value\":43402.47},{\"period\":\"2024-08-12\",\"value\":31138.54},{\"period\":\"2024-08-13\",\"value\":45609.97},{\"period\":\"2024-08-14\",\"value\":40890.21},{\"period\":\"2024-08-15\",\"value\":31976.98},{\"period\":\"2024-08-16\",\"value\":21550.16},{\"period\":\"2024-08-17\",\"value\":43391.4},{\"period\":\"2024-08-18\",\"value\":28621.83},{\"period\":\"2024-08-19\",\"value\":40794.24},{\"period\":\"2024-08-20\",\"value\":35269.3},{\"period\":\"2024-08-21\",\"value\":33152.95},{\"period\":\"2024-08-22\",\"value\":27149.35},{\"period\":\"2024-08-23\",\"value\":33671.7},{\"period\":\"2024-08-24\",\"value\":27907.84},{\"period\":\"2024-08-25\",\"value\":36645.32},{\"period\":\"2024-08-26\",\"value\":23701.24},{\"period\":\"2024-08-27\",\"value\":24404.03},{\"period\":\"2024-08-28\",\"value\":22079.86},{\"period\":\"2024-08-29\",\"value\":34322.64},{\"period\":\"2024-08-30\",\"value\":30984.57},{\"period\":\"2024-08-31\",\"value\":48844.94},{\"period\":\"2024-09-01\",\"value\":41665.62},{\"period\":\"2024-09-02\",\"value\":33027.33},{\"period\":\"2024-09-03\",\"value\":28872.08},{\"period\":\"2024-09-04\",\"value\":30925.71},{\"period\":\"2024-09-05\",\"value\":40243.07},{\"period\":\"2024-09-06\",\"value\":47534.55},{\"period\":\"2024-09-07\",\"value\":53507.7},{\"period\":\"2024-09-08\",\"value\":45855.86},{\"period\":\"2024-09-09\",\"value\":22814.98},{\"period\":\"2024-09-10\",\"value\":42454.85},{\"period\":\"2024-09-11\",\"value\":44938.31},{\"period\":\"2024-09-12\",\"value\":28209.13},{\"period\":\"2024-09-13\",\"value\":25966.97},{\"period\":\"2024-09-14\",\"value\":27855.43},{\"period\":\"2024-09-15\",\"value\":40244.45},{\"period\":\"2024-09-16\",\"value\":35717.84},{\"period\":\"2024-09-17\",\"value\":22113.7},{\"period\":\"2024-09-18\",\"value\":33562.28},{\"period\":\"2024-09-19\",\"value\":33989.13},{\"period\":\"2024-09-20\",\"value\":45765.98},{\"period\":\"2024-09-21\",\"value\":47982.33},{\"period\":\"2024-09-22\",\"value\":52290.02},{\"period\":\"2024-09-23\",\"value\":36610.21},{\"period\":\"2024-09-24\",\"value\":41523.56},{\"period\":\"2024-09-25\",\"value\":24243.72},{\"period\":\"2024-09-26\",\"value\":31817.44},{\"period\":\"2024-09-27\",\"value\":43254.74},{\"period\":\"2024-09-28\",\"value\":45201.95},{\"period\":\"2024-09-29\",\"value\":26860.69},{\"period\":\"2024-09-30\",\"value\":35958.37}],\"summary\":{\"total\":3312522.61,\"avg\":36005.68,\"max\":53507.7,\"min\":20531.64,\"count\":92,\"latest\":35958.37,\"tren"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/gmv/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"gmv\",\"name\":\"成交总额\",\"unit\":\"元\",\"description\":\"所有已完成订单的成交金额总和\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":28428.45},{\"period\":\"2024-07-02\",\"value\":38194.53},{\"period\":\"2024-07-03\",\"value\":41075.67},{\"period\":\"2024-07-04\",\"value\":20531.64},{\"period\":\"2024-07-05\",\"value\":41562.61},{\"period\":\"2024-07-06\",\"value\":41878.75},{\"period\":\"2024-07-07\",\"value\":45070.4},{\"period\":\"2024-07-08\",\"value\":39214.94},{\"period\":\"2024-07-09\",\"value\":20823.49},{\"period\":\"2024-07-10\",\"value\":36955.79},{\"period\":\"2024-07-11\",\"value\":26353.13},{\"period\":\"2024-07-12\",\"value\":44018.35},{\"period\":\"2024-07-13\",\"value\":35101.65},{\"period\":\"2024-07-14\",\"value\":43980.85},{\"period\":\"2024-07-15\",\"value\":43074.1},{\"period\":\"2024-07-16\",\"value\":36092.21},{\"period\":\"2024-07-17\",\"value\":40752.05},{\"period\":\"2024-07-18\",\"value\":31805.85},{\"period\":\"2024-07-19\",\"value\":35197.22},{\"period\":\"2024-07-20\",\"value\":41796.32},{\"period\":\"2024-07-21\",\"value\":45465.76},{\"period\":\"2024-07-22\",\"value\":32565.67},{\"period\":\"2024-07-23\",\"value\":38179.27},{\"period\":\"2024-07-24\",\"value\":25940.74},{\"period\":\"2024-07-25\",\"value\":40830.78},{\"period\":\"2024-07-26\",\"value\":22611.12},{\"period\":\"2024-07-27\",\"value\":34867.53},{\"period\":\"2024-07-28\",\"value\":40067.18},{\"period\":\"2024-07-29\",\"value\":44341.89},{\"period\":\"2024-07-30\",\"value\":29944.29},{\"period\":\"2024-07-31\",\"value\":35426.52},{\"period\":\"2024-08-01\",\"value\":40547.83},{\"period\":\"2024-08-02\",\"value\":36371.46},{\"period\":\"2024-08-03\",\"value\":30346.61},{\"period\":\"2024-08-04\",\"value\":35139.07},{\"period\":\"2024-08-05\",\"value\":37054.65},{\"period\":\"2024-08-06\",\"value\":40306.44},{\"period\":\"2024-08-07\",\"value\":32405.19},{\"period\":\"2024-08-08\",\"value\":43970.93},{\"period\":\"2024-08-09\",\"value\":35314.86},{\"period\":\"2024-08-10\",\"value\":42399.28},{\"period\":\"2024-08-11\",\"value\":43402.47},{\"period\":\"2024-08-12\",\"value\":31138.54},{\"period\":\"2024-08-13\",\"value\":45609.97},{\"period\":\"2024-08-14\",\"value\":40890.21},{\"period\":\"2024-08-15\",\"value\":31976.98},{\"period\":\"2024-08-16\",\"value\":21550.16},{\"period\":\"2024-08-17\",\"value\":43391.4},{\"period\":\"2024-08-18\",\"value\":28621.83},{\"period\":\"2024-08-19\",\"value\":40794.24},{\"period\":\"2024-08-20\",\"value\":35269.3},{\"period\":\"2024-08-21\",\"value\":33152.95},{\"period\":\"2024-08-22\",\"value\":27149.35},{\"period\":\"2024-08-23\",\"value\":33671.7},{\"period\":\"2024-08-24\",\"value\":27907.84},{\"period\":\"2024-08-25\",\"value\":36645.32},{\"period\":\"2024-08-26\",\"value\":23701.24},{\"period\":\"2024-08-27\",\"value\":24404.03},{\"period\":\"2024-08-28\",\"value\":22079.86},{\"period\":\"2024-08-29\",\"value\":34322.64},{\"period\":\"2024-08-30\",\"value\":30984.57},{\"period\":\"2024-08-31\",\"value\":48844.94},{\"period\":\"2024-09-01\",\"value\":41665.62},{\"period\":\"2024-09-02\",\"value\":33027.33},{\"period\":\"2024-09-03\",\"value\":28872.08},{\"period\":\"2024-09-04\",\"value\":30925.71},{\"period\":\"2024-09-05\",\"value\":40243.07},{\"period\":\"2024-09-06\",\"value\":47534.55},{\"period\":\"2024-09-07\",\"value\":53507.7},{\"period\":\"2024-09-08\",\"value\":45855.86},{\"period\":\"2024-09-09\",\"value\":22814.98},{\"period\":\"2024-09-10\",\"value\":42454.85},{\"period\":\"2024-09-11\",\"value\":44938.31},{\"period\":\"2024-09-12\",\"value\":28209.13},{\"period\":\"2024-09-13\",\"value\":25966.97},{\"period\":\"2024-09-14\",\"value\":27855.43},{\"period\":\"2024-09-15\",\"value\":40244.45},{\"period\":\"2024-09-16\",\"value\":35717.84},{\"period\":\"2024-09-17\",\"value\":22113.7},{\"period\":\"2024-09-18\",\"value\":33562.28},{\"period\":\"2024-09-19\",\"value\":33989.13},{\"period\":\"2024-09-20\",\"value\":45765.98},{\"period\":\"2024-09-21\",\"value\":47982.33},{\"period\":\"2024-09-22\",\"value\":52290.02},{\"period\":\"2024-09-23\",\"value\":36610.21},{\"period\":\"2024-09-24\",\"value\":41523.56},{\"period\":\"2024-09-25\",\"value\":24243.72},{\"period\":\"2024-09-26\",\"value\":31817.44},{\"period\":\"2024-09-27\",\"value\":43254.74},{\"period\":\"2024-09-28\",\"value\":45201.95},{\"period\":\"2024-09-29\",\"value\":26860.69},{\"period\":\"2024-09-30\",\"value\":35958.37}],\"summary\":{\"total\":3312522.61,\"avg\":36005.68,\"max\":53507.7,\"min\":20531.64,\"count\":92,\"latest\":35958.37,\"tren"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/order_count/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"order_count\",\"name\":\"订单量\",\"unit\":\"单\",\"description\":\"所有订单数量（含已完成和已退货）\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":93},{\"period\":\"2024-07-02\",\"value\":125},{\"period\":\"2024-07-03\",\"value\":152},{\"period\":\"2024-07-04\",\"value\":87},{\"period\":\"2024-07-05\",\"value\":138},{\"period\":\"2024-07-06\",\"value\":160},{\"period\":\"2024-07-07\",\"value\":160},{\"period\":\"2024-07-08\",\"value\":129},{\"period\":\"2024-07-09\",\"value\":80},{\"period\":\"2024-07-10\",\"value\":135},{\"period\":\"2024-07-11\",\"value\":100},{\"period\":\"2024-07-12\",\"value\":138},{\"period\":\"2024-07-13\",\"value\":144},{\"period\":\"2024-07-14\",\"value\":160},{\"period\":\"2024-07-15\",\"value\":124},{\"period\":\"2024-07-16\",\"value\":134},{\"period\":\"2024-07-17\",\"value\":142},{\"period\":\"2024-07-18\",\"value\":106},{\"period\":\"2024-07-19\",\"value\":125},{\"period\":\"2024-07-20\",\"value\":160},{\"period\":\"2024-07-21\",\"value\":160},{\"period\":\"2024-07-22\",\"value\":140},{\"period\":\"2024-07-23\",\"value\":127},{\"period\":\"2024-07-24\",\"value\":83},{\"period\":\"2024-07-25\",\"value\":128},{\"period\":\"2024-07-26\",\"value\":86},{\"period\":\"2024-07-27\",\"value\":123},{\"period\":\"2024-07-28\",\"value\":143},{\"period\":\"2024-07-29\",\"value\":154},{\"period\":\"2024-07-30\",\"value\":104},{\"period\":\"2024-07-31\",\"value\":120},{\"period\":\"2024-08-01\",\"value\":144},{\"period\":\"2024-08-02\",\"value\":113},{\"period\":\"2024-08-03\",\"value\":105},{\"period\":\"2024-08-04\",\"value\":122},{\"period\":\"2024-08-05\",\"value\":133},{\"period\":\"2024-08-06\",\"value\":151},{\"period\":\"2024-08-07\",\"value\":135},{\"period\":\"2024-08-08\",\"value\":157},{\"period\":\"2024-08-09\",\"value\":140},{\"period\":\"2024-08-10\",\"value\":160},{\"period\":\"2024-08-11\",\"value\":160},{\"period\":\"2024-08-12\",\"value\":96},{\"period\":\"2024-08-13\",\"value\":155},{\"period\":\"2024-08-14\",\"value\":133},{\"period\":\"2024-08-15\",\"value\":107},{\"period\":\"2024-08-16\",\"value\":88},{\"period\":\"2024-08-17\",\"value\":143},{\"period\":\"2024-08-18\",\"value\":109},{\"period\":\"2024-08-19\",\"value\":133},{\"period\":\"2024-08-20\",\"value\":124},{\"period\":\"2024-08-21\",\"value\":126},{\"period\":\"2024-08-22\",\"value\":103},{\"period\":\"2024-08-23\",\"value\":135},{\"period\":\"2024-08-24\",\"value\":110},{\"period\":\"2024-08-25\",\"value\":141},{\"period\":\"2024-08-26\",\"value\":82},{\"period\":\"2024-08-27\",\"value\":91},{\"period\":\"2024-08-28\",\"value\":81},{\"period\":\"2024-08-29\",\"value\":111},{\"period\":\"2024-08-30\",\"value\":118},{\"period\":\"2024-08-31\",\"value\":160},{\"period\":\"2024-09-01\",\"value\":156},{\"period\":\"2024-09-02\",\"value\":97},{\"period\":\"2024-09-03\",\"value\":113},{\"period\":\"2024-09-04\",\"value\":123},{\"period\":\"2024-09-05\",\"value\":119},{\"period\":\"2024-09-06\",\"value\":157},{\"period\":\"2024-09-07\",\"value\":160},{\"period\":\"2024-09-08\",\"value\":160},{\"period\":\"2024-09-09\",\"value\":91},{\"period\":\"2024-09-10\",\"value\":138},{\"period\":\"2024-09-11\",\"value\":159},{\"period\":\"2024-09-12\",\"value\":100},{\"period\":\"2024-09-13\",\"value\":94},{\"period\":\"2024-09-14\",\"value\":104},{\"period\":\"2024-09-15\",\"value\":132},{\"period\":\"2024-09-16\",\"value\":134},{\"period\":\"2024-09-17\",\"value\":89},{\"period\":\"2024-09-18\",\"value\":114},{\"period\":\"2024-09-19\",\"value\":120},{\"period\":\"2024-09-20\",\"value\":151},{\"period\":\"2024-09-21\",\"value\":160},{\"period\":\"2024-09-22\",\"value\":160},{\"period\":\"2024-09-23\",\"value\":137},{\"period\":\"2024-09-24\",\"value\":133},{\"period\":\"2024-09-25\",\"value\":82},{\"period\":\"2024-09-26\",\"value\":117},{\"period\":\"2024-09-27\",\"value\":158},{\"period\":\"2024-09-28\",\"value\":160},{\"period\":\"2024-09-29\",\"value\":106},{\"period\":\"2024-09-30\",\"value\":133}],\"summary\":{\"total\":11683,\"avg\":126.99,\"max\":160,\"min\":80,\"count\":92,\"latest\":133,\"trend\":0.2547}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/conversion_rate/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"conversion_rate\",\"name\":\"转化率\",\"unit\":\"%\",\"description\":\"支付用户数 / 独立访客数\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":0.0037},{\"period\":\"2024-07-02\",\"value\":0.0059},{\"period\":\"2024-07-03\",\"value\":0.0068},{\"period\":\"2024-07-04\",\"value\":0.0036},{\"period\":\"2024-07-05\",\"value\":0.0061},{\"period\":\"2024-07-06\",\"value\":0.0049},{\"period\":\"2024-07-07\",\"value\":0.0039},{\"period\":\"2024-07-08\",\"value\":0.0051},{\"period\":\"2024-07-09\",\"value\":0.0026},{\"period\":\"2024-07-10\",\"value\":0.0075},{\"period\":\"2024-07-11\",\"value\":0.0039},{\"period\":\"2024-07-12\",\"value\":0.0055},{\"period\":\"2024-07-13\",\"value\":0.0057},{\"period\":\"2024-07-14\",\"value\":0.0045},{\"period\":\"2024-07-15\",\"value\":0.004},{\"period\":\"2024-07-16\",\"value\":0.0046},{\"period\":\"2024-07-17\",\"value\":0.0066},{\"period\":\"2024-07-18\",\"value\":0.0043},{\"period\":\"2024-07-19\",\"value\":0.0047},{\"period\":\"2024-07-20\",\"value\":0.0055},{\"period\":\"2024-07-21\",\"value\":0.0075},{\"period\":\"2024-07-22\",\"value\":0.0062},{\"period\":\"2024-07-23\",\"value\":0.0039},{\"period\":\"2024-07-24\",\"value\":0.0031},{\"period\":\"2024-07-25\",\"value\":0.0059},{\"period\":\"2024-07-26\",\"value\":0.0031},{\"period\":\"2024-07-27\",\"value\":0.0039},{\"period\":\"2024-07-28\",\"value\":0.0052},{\"period\":\"2024-07-29\",\"value\":0.0091},{\"period\":\"2024-07-30\",\"value\":0.0035},{\"period\":\"2024-07-31\",\"value\":0.0049},{\"period\":\"2024-08-01\",\"value\":0.0052},{\"period\":\"2024-08-02\",\"value\":0.0045},{\"period\":\"2024-08-03\",\"value\":0.0034},{\"period\":\"2024-08-04\",\"value\":0.0035},{\"period\":\"2024-08-05\",\"value\":0.0064},{\"period\":\"2024-08-06\",\"value\":0.0069},{\"period\":\"2024-08-07\",\"value\":0.0051},{\"period\":\"2024-08-08\",\"value\":0.0053},{\"period\":\"2024-08-09\",\"value\":0.0039},{\"period\":\"2024-08-10\",\"value\":0.0044},{\"period\":\"2024-08-11\",\"value\":0.0062},{\"period\":\"2024-08-12\",\"value\":0.0047},{\"period\":\"2024-08-13\",\"value\":0.0055},{\"period\":\"2024-08-14\",\"value\":0.0052},{\"period\":\"2024-08-15\",\"value\":0.0055},{\"period\":\"2024-08-16\",\"value\":0.0033},{\"period\":\"2024-08-17\",\"value\":0.0043},{\"period\":\"2024-08-18\",\"value\":0.0041},{\"period\":\"2024-08-19\",\"value\":0.0038},{\"period\":\"2024-08-20\",\"value\":0.005},{\"period\":\"2024-08-21\",\"value\":0.0043},{\"period\":\"2024-08-22\",\"value\":0.004},{\"period\":\"2024-08-23\",\"value\":0.0072},{\"period\":\"2024-08-24\",\"value\":0.0038},{\"period\":\"2024-08-25\",\"value\":0.0042},{\"period\":\"2024-08-26\",\"value\":0.0026},{\"period\":\"2024-08-27\",\"value\":0.0046},{\"period\":\"2024-08-28\",\"value\":0.003},{\"period\":\"2024-08-29\",\"value\":0.0039},{\"period\":\"2024-08-30\",\"value\":0.0047},{\"period\":\"2024-08-31\",\"value\":0.0051},{\"period\":\"2024-09-01\",\"value\":0.0047},{\"period\":\"2024-09-02\",\"value\":0.0039},{\"period\":\"2024-09-03\",\"value\":0.0042},{\"period\":\"2024-09-04\",\"value\":0.005},{\"period\":\"2024-09-05\",\"value\":0.0054},{\"period\":\"2024-09-06\",\"value\":0.0061},{\"period\":\"2024-09-07\",\"value\":0.0044},{\"period\":\"2024-09-08\",\"value\":0.0045},{\"period\":\"2024-09-09\",\"value\":0.0038},{\"period\":\"2024-09-10\",\"value\":0.006},{\"period\":\"2024-09-11\",\"value\":0.0062},{\"period\":\"2024-09-12\",\"value\":0.0042},{\"period\":\"2024-09-13\",\"value\":0.0045},{\"period\":\"2024-09-14\",\"value\":0.0038},{\"period\":\"2024-09-15\",\"value\":0.0047},{\"period\":\"2024-09-16\",\"value\":0.0047},{\"period\":\"2024-09-17\",\"value\":0.0038},{\"period\":\"2024-09-18\",\"value\":0.0042},{\"period\":\"2024-09-19\",\"value\":0.0051},{\"period\":\"2024-09-20\",\"value\":0.0062},{\"period\":\"2024-09-21\",\"value\":0.005},{\"period\":\"2024-09-22\",\"value\":0.0056},{\"period\":\"2024-09-23\",\"value\":0.0059},{\"period\":\"2024-09-24\",\"value\":0.0065},{\"period\":\"2024-09-25\",\"value\":0.0037},{\"period\":\"2024-09-26\",\"value\":0.0043},{\"period\":\"2024-09-27\",\"value\":0.0067},{\"period\":\"2024-09-28\",\"value\":0.0053},{\"period\":\"2024-09-29\",\"value\":0.003},{\"period\":\"2024-09-30\",\"value\":0.0044}],\"summary\":{\"total\":0.45,\"avg\":0,\"max\":0.01,\"min\":0,\"count\":92,\"latest\":0.0044,\"trend\":0.4667}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/avg_order_value/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"avg_order_value\",\"name\":\"客单价\",\"unit\":\"元\",\"description\":\"成交总额 / 订单量\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":305.68},{\"period\":\"2024-07-02\",\"value\":305.56},{\"period\":\"2024-07-03\",\"value\":270.23},{\"period\":\"2024-07-04\",\"value\":236},{\"period\":\"2024-07-05\",\"value\":301.18},{\"period\":\"2024-07-06\",\"value\":261.74},{\"period\":\"2024-07-07\",\"value\":281.69},{\"period\":\"2024-07-08\",\"value\":303.99},{\"period\":\"2024-07-09\",\"value\":260.29},{\"period\":\"2024-07-10\",\"value\":273.75},{\"period\":\"2024-07-11\",\"value\":263.53},{\"period\":\"2024-07-12\",\"value\":318.97},{\"period\":\"2024-07-13\",\"value\":243.76},{\"period\":\"2024-07-14\",\"value\":274.88},{\"period\":\"2024-07-15\",\"value\":347.37},{\"period\":\"2024-07-16\",\"value\":269.34},{\"period\":\"2024-07-17\",\"value\":286.99},{\"period\":\"2024-07-18\",\"value\":300.06},{\"period\":\"2024-07-19\",\"value\":281.58},{\"period\":\"2024-07-20\",\"value\":261.23},{\"period\":\"2024-07-21\",\"value\":284.16},{\"period\":\"2024-07-22\",\"value\":232.61},{\"period\":\"2024-07-23\",\"value\":300.62},{\"period\":\"2024-07-24\",\"value\":312.54},{\"period\":\"2024-07-25\",\"value\":318.99},{\"period\":\"2024-07-26\",\"value\":262.92},{\"period\":\"2024-07-27\",\"value\":283.48},{\"period\":\"2024-07-28\",\"value\":280.19},{\"period\":\"2024-07-29\",\"value\":287.93},{\"period\":\"2024-07-30\",\"value\":287.93},{\"period\":\"2024-07-31\",\"value\":295.22},{\"period\":\"2024-08-01\",\"value\":281.58},{\"period\":\"2024-08-02\",\"value\":321.87},{\"period\":\"2024-08-03\",\"value\":289.02},{\"period\":\"2024-08-04\",\"value\":288.03},{\"period\":\"2024-08-05\",\"value\":278.61},{\"period\":\"2024-08-06\",\"value\":266.93},{\"period\":\"2024-08-07\",\"value\":240.04},{\"period\":\"2024-08-08\",\"value\":280.07},{\"period\":\"2024-08-09\",\"value\":252.25},{\"period\":\"2024-08-10\",\"value\":265},{\"period\":\"2024-08-11\",\"value\":271.27},{\"period\":\"2024-08-12\",\"value\":324.36},{\"period\":\"2024-08-13\",\"value\":294.26},{\"period\":\"2024-08-14\",\"value\":307.45},{\"period\":\"2024-08-15\",\"value\":298.85},{\"period\":\"2024-08-16\",\"value\":244.89},{\"period\":\"2024-08-17\",\"value\":303.44},{\"period\":\"2024-08-18\",\"value\":262.59},{\"period\":\"2024-08-19\",\"value\":306.72},{\"period\":\"2024-08-20\",\"value\":284.43},{\"period\":\"2024-08-21\",\"value\":263.12},{\"period\":\"2024-08-22\",\"value\":263.59},{\"period\":\"2024-08-23\",\"value\":249.42},{\"period\":\"2024-08-24\",\"value\":253.71},{\"period\":\"2024-08-25\",\"value\":259.9},{\"period\":\"2024-08-26\",\"value\":289.04},{\"period\":\"2024-08-27\",\"value\":268.18},{\"period\":\"2024-08-28\",\"value\":272.59},{\"period\":\"2024-08-29\",\"value\":309.21},{\"period\":\"2024-08-30\",\"value\":262.58},{\"period\":\"2024-08-31\",\"value\":305.28},{\"period\":\"2024-09-01\",\"value\":267.09},{\"period\":\"2024-09-02\",\"value\":340.49},{\"period\":\"2024-09-03\",\"value\":255.51},{\"period\":\"2024-09-04\",\"value\":251.43},{\"period\":\"2024-09-05\",\"value\":338.18},{\"period\":\"2024-09-06\",\"value\":302.77},{\"period\":\"2024-09-07\",\"value\":334.42},{\"period\":\"2024-09-08\",\"value\":286.6},{\"period\":\"2024-09-09\",\"value\":250.71},{\"period\":\"2024-09-10\",\"value\":307.64},{\"period\":\"2024-09-11\",\"value\":282.63},{\"period\":\"2024-09-12\",\"value\":282.09},{\"period\":\"2024-09-13\",\"value\":276.24},{\"period\":\"2024-09-14\",\"value\":267.84},{\"period\":\"2024-09-15\",\"value\":304.88},{\"period\":\"2024-09-16\",\"value\":266.55},{\"period\":\"2024-09-17\",\"value\":248.47},{\"period\":\"2024-09-18\",\"value\":294.41},{\"period\":\"2024-09-19\",\"value\":283.24},{\"period\":\"2024-09-20\",\"value\":303.09},{\"period\":\"2024-09-21\",\"value\":299.89},{\"period\":\"2024-09-22\",\"value\":326.81},{\"period\":\"2024-09-23\",\"value\":267.23},{\"period\":\"2024-09-24\",\"value\":312.21},{\"period\":\"2024-09-25\",\"value\":295.66},{\"period\":\"2024-09-26\",\"value\":271.94},{\"period\":\"2024-09-27\",\"value\":273.76},{\"period\":\"2024-09-28\",\"value\":282.51},{\"period\":\"2024-09-29\",\"value\":253.4},{\"period\":\"2024-09-30\",\"value\":270.36}],\"summary\":{\"total\":26050.74,\"avg\":283.16,\"max\":347.37,\"min\":232.61,\"count\":92,\"latest\":270.36,\"trend\":0.0669}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/return_rate/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"return_rate\",\"name\":\"退货率\",\"unit\":\"%\",\"description\":\"退货订单数 / 总订单数\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":0.129},{\"period\":\"2024-07-02\",\"value\":0.136},{\"period\":\"2024-07-03\",\"value\":0.1842},{\"period\":\"2024-07-04\",\"value\":0.1494},{\"period\":\"2024-07-05\",\"value\":0.1304},{\"period\":\"2024-07-06\",\"value\":0.1125},{\"period\":\"2024-07-07\",\"value\":0.2063},{\"period\":\"2024-07-08\",\"value\":0.2171},{\"period\":\"2024-07-09\",\"value\":0.1375},{\"period\":\"2024-07-10\",\"value\":0.2148},{\"period\":\"2024-07-11\",\"value\":0.15},{\"period\":\"2024-07-12\",\"value\":0.2536},{\"period\":\"2024-07-13\",\"value\":0.1944},{\"period\":\"2024-07-14\",\"value\":0.15},{\"period\":\"2024-07-15\",\"value\":0.2419},{\"period\":\"2024-07-16\",\"value\":0.1343},{\"period\":\"2024-07-17\",\"value\":0.1338},{\"period\":\"2024-07-18\",\"value\":0.1132},{\"period\":\"2024-07-19\",\"value\":0.168},{\"period\":\"2024-07-20\",\"value\":0.1688},{\"period\":\"2024-07-21\",\"value\":0.1438},{\"period\":\"2024-07-22\",\"value\":0.15},{\"period\":\"2024-07-23\",\"value\":0.126},{\"period\":\"2024-07-24\",\"value\":0.1325},{\"period\":\"2024-07-25\",\"value\":0.1719},{\"period\":\"2024-07-26\",\"value\":0.1512},{\"period\":\"2024-07-27\",\"value\":0.1301},{\"period\":\"2024-07-28\",\"value\":0.2028},{\"period\":\"2024-07-29\",\"value\":0.1623},{\"period\":\"2024-07-30\",\"value\":0.1635},{\"period\":\"2024-07-31\",\"value\":0.1833},{\"period\":\"2024-08-01\",\"value\":0.1319},{\"period\":\"2024-08-02\",\"value\":0.177},{\"period\":\"2024-08-03\",\"value\":0.2},{\"period\":\"2024-08-04\",\"value\":0.1721},{\"period\":\"2024-08-05\",\"value\":0.2105},{\"period\":\"2024-08-06\",\"value\":0.1722},{\"period\":\"2024-08-07\",\"value\":0.1556},{\"period\":\"2024-08-08\",\"value\":0.1975},{\"period\":\"2024-08-09\",\"value\":0.1786},{\"period\":\"2024-08-10\",\"value\":0.2},{\"period\":\"2024-08-11\",\"value\":0.1563},{\"period\":\"2024-08-12\",\"value\":0.1771},{\"period\":\"2024-08-13\",\"value\":0.1935},{\"period\":\"2024-08-14\",\"value\":0.1429},{\"period\":\"2024-08-15\",\"value\":0.1776},{\"period\":\"2024-08-16\",\"value\":0.1705},{\"period\":\"2024-08-17\",\"value\":0.1678},{\"period\":\"2024-08-18\",\"value\":0.1835},{\"period\":\"2024-08-19\",\"value\":0.188},{\"period\":\"2024-08-20\",\"value\":0.1371},{\"period\":\"2024-08-21\",\"value\":0.1587},{\"period\":\"2024-08-22\",\"value\":0.2427},{\"period\":\"2024-08-23\",\"value\":0.1852},{\"period\":\"2024-08-24\",\"value\":0.1545},{\"period\":\"2024-08-25\",\"value\":0.1773},{\"period\":\"2024-08-26\",\"value\":0.2195},{\"period\":\"2024-08-27\",\"value\":0.1538},{\"period\":\"2024-08-28\",\"value\":0.1235},{\"period\":\"2024-08-29\",\"value\":0.1441},{\"period\":\"2024-08-30\",\"value\":0.1864},{\"period\":\"2024-08-31\",\"value\":0.1813},{\"period\":\"2024-09-01\",\"value\":0.1538},{\"period\":\"2024-09-02\",\"value\":0.1959},{\"period\":\"2024-09-03\",\"value\":0.2035},{\"period\":\"2024-09-04\",\"value\":0.2276},{\"period\":\"2024-09-05\",\"value\":0.1933},{\"period\":\"2024-09-06\",\"value\":0.1592},{\"period\":\"2024-09-07\",\"value\":0.1},{\"period\":\"2024-09-08\",\"value\":0.1438},{\"period\":\"2024-09-09\",\"value\":0.1429},{\"period\":\"2024-09-10\",\"value\":0.1739},{\"period\":\"2024-09-11\",\"value\":0.1447},{\"period\":\"2024-09-12\",\"value\":0.13},{\"period\":\"2024-09-13\",\"value\":0.1809},{\"period\":\"2024-09-14\",\"value\":0.1442},{\"period\":\"2024-09-15\",\"value\":0.1061},{\"period\":\"2024-09-16\",\"value\":0.1493},{\"period\":\"2024-09-17\",\"value\":0.0899},{\"period\":\"2024-09-18\",\"value\":0.1491},{\"period\":\"2024-09-19\",\"value\":0.1333},{\"period\":\"2024-09-20\",\"value\":0.106},{\"period\":\"2024-09-21\",\"value\":0.1625},{\"period\":\"2024-09-22\",\"value\":0.175},{\"period\":\"2024-09-23\",\"value\":0.1679},{\"period\":\"2024-09-24\",\"value\":0.1805},{\"period\":\"2024-09-25\",\"value\":0.2317},{\"period\":\"2024-09-26\",\"value\":0.1795},{\"period\":\"2024-09-27\",\"value\":0.1519},{\"period\":\"2024-09-28\",\"value\":0.1688},{\"period\":\"2024-09-29\",\"value\":0.1321},{\"period\":\"2024-09-30\",\"value\":0.203}],\"summary\":{\"total\":15.24,\"avg\":0.17,\"max\":0.25,\"min\":0.09,\"count\":92,\"latest\":0.203,\"trend\":0.5367}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/traffic_uv/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"traffic_uv\",\"name\":\"独立访客数\",\"unit\":\"人\",\"description\":\"每日独立访客数量\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":24730},{\"period\":\"2024-07-02\",\"value\":20857},{\"period\":\"2024-07-03\",\"value\":22193},{\"period\":\"2024-07-04\",\"value\":23585},{\"period\":\"2024-07-05\",\"value\":22459},{\"period\":\"2024-07-06\",\"value\":32189},{\"period\":\"2024-07-07\",\"value\":40758},{\"period\":\"2024-07-08\",\"value\":25140},{\"period\":\"2024-07-09\",\"value\":30842},{\"period\":\"2024-07-10\",\"value\":17918},{\"period\":\"2024-07-11\",\"value\":25706},{\"period\":\"2024-07-12\",\"value\":24806},{\"period\":\"2024-07-13\",\"value\":25368},{\"period\":\"2024-07-14\",\"value\":35222},{\"period\":\"2024-07-15\",\"value\":30864},{\"period\":\"2024-07-16\",\"value\":29000},{\"period\":\"2024-07-17\",\"value\":21432},{\"period\":\"2024-07-18\",\"value\":24389},{\"period\":\"2024-07-19\",\"value\":26285},{\"period\":\"2024-07-20\",\"value\":28844},{\"period\":\"2024-07-21\",\"value\":21269},{\"period\":\"2024-07-22\",\"value\":22314},{\"period\":\"2024-07-23\",\"value\":32018},{\"period\":\"2024-07-24\",\"value\":26575},{\"period\":\"2024-07-25\",\"value\":21801},{\"period\":\"2024-07-26\",\"value\":27409},{\"period\":\"2024-07-27\",\"value\":31100},{\"period\":\"2024-07-28\",\"value\":27716},{\"period\":\"2024-07-29\",\"value\":16935},{\"period\":\"2024-07-30\",\"value\":29757},{\"period\":\"2024-07-31\",\"value\":24207},{\"period\":\"2024-08-01\",\"value\":27156},{\"period\":\"2024-08-02\",\"value\":24700},{\"period\":\"2024-08-03\",\"value\":30703},{\"period\":\"2024-08-04\",\"value\":34271},{\"period\":\"2024-08-05\",\"value\":20696},{\"period\":\"2024-08-06\",\"value\":21914},{\"period\":\"2024-08-07\",\"value\":26304},{\"period\":\"2024-08-08\",\"value\":29282},{\"period\":\"2024-08-09\",\"value\":35684},{\"period\":\"2024-08-10\",\"value\":36117},{\"period\":\"2024-08-11\",\"value\":25929},{\"period\":\"2024-08-12\",\"value\":20176},{\"period\":\"2024-08-13\",\"value\":28102},{\"period\":\"2024-08-14\",\"value\":24789},{\"period\":\"2024-08-15\",\"value\":19363},{\"period\":\"2024-08-16\",\"value\":25877},{\"period\":\"2024-08-17\",\"value\":32721},{\"period\":\"2024-08-18\",\"value\":26288},{\"period\":\"2024-08-19\",\"value\":35184},{\"period\":\"2024-08-20\",\"value\":24556},{\"period\":\"2024-08-21\",\"value\":29080},{\"period\":\"2024-08-22\",\"value\":26061},{\"period\":\"2024-08-23\",\"value\":18693},{\"period\":\"2024-08-24\",\"value\":29169},{\"period\":\"2024-08-25\",\"value\":33318},{\"period\":\"2024-08-26\",\"value\":30243},{\"period\":\"2024-08-27\",\"value\":19812},{\"period\":\"2024-08-28\",\"value\":26626},{\"period\":\"2024-08-29\",\"value\":28660},{\"period\":\"2024-08-30\",\"value\":24940},{\"period\":\"2024-08-31\",\"value\":30800},{\"period\":\"2024-09-01\",\"value\":33379},{\"period\":\"2024-09-02\",\"value\":24603},{\"period\":\"2024-09-03\",\"value\":26418},{\"period\":\"2024-09-04\",\"value\":24769},{\"period\":\"2024-09-05\",\"value\":21793},{\"period\":\"2024-09-06\",\"value\":25673},{\"period\":\"2024-09-07\",\"value\":35936},{\"period\":\"2024-09-08\",\"value\":35214},{\"period\":\"2024-09-09\",\"value\":23932},{\"period\":\"2024-09-10\",\"value\":22908},{\"period\":\"2024-09-11\",\"value\":25146},{\"period\":\"2024-09-12\",\"value\":23900},{\"period\":\"2024-09-13\",\"value\":20968},{\"period\":\"2024-09-14\",\"value\":27321},{\"period\":\"2024-09-15\",\"value\":28307},{\"period\":\"2024-09-16\",\"value\":27950},{\"period\":\"2024-09-17\",\"value\":23702},{\"period\":\"2024-09-18\",\"value\":26828},{\"period\":\"2024-09-19\",\"value\":23746},{\"period\":\"2024-09-20\",\"value\":24152},{\"period\":\"2024-09-21\",\"value\":31955},{\"period\":\"2024-09-22\",\"value\":28061},{\"period\":\"2024-09-23\",\"value\":22928},{\"period\":\"2024-09-24\",\"value\":20204},{\"period\":\"2024-09-25\",\"value\":22213},{\"period\":\"2024-09-26\",\"value\":26716},{\"period\":\"2024-09-27\",\"value\":23281},{\"period\":\"2024-09-28\",\"value\":29854},{\"period\":\"2024-09-29\",\"value\":35848},{\"period\":\"2024-09-30\",\"value\":30410}],\"summary\":{\"total\":2459017,\"avg\":26728.45,\"max\":40758,\"min\":16935,\"count\":92,\"latest\":30410,\"trend\":-0.1517}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/traffic_pv/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"traffic_pv\",\"name\":\"页面浏览量\",\"unit\":\"次\",\"description\":\"每日页面浏览次数\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":94057},{\"period\":\"2024-07-02\",\"value\":66488},{\"period\":\"2024-07-03\",\"value\":79112},{\"period\":\"2024-07-04\",\"value\":92793},{\"period\":\"2024-07-05\",\"value\":80288},{\"period\":\"2024-07-06\",\"value\":114472},{\"period\":\"2024-07-07\",\"value\":139815},{\"period\":\"2024-07-08\",\"value\":77385},{\"period\":\"2024-07-09\",\"value\":113921},{\"period\":\"2024-07-10\",\"value\":60692},{\"period\":\"2024-07-11\",\"value\":88489},{\"period\":\"2024-07-12\",\"value\":90511},{\"period\":\"2024-07-13\",\"value\":101121},{\"period\":\"2024-07-14\",\"value\":119865},{\"period\":\"2024-07-15\",\"value\":115657},{\"period\":\"2024-07-16\",\"value\":93844},{\"period\":\"2024-07-17\",\"value\":77151},{\"period\":\"2024-07-18\",\"value\":85929},{\"period\":\"2024-07-19\",\"value\":85015},{\"period\":\"2024-07-20\",\"value\":109118},{\"period\":\"2024-07-21\",\"value\":81260},{\"period\":\"2024-07-22\",\"value\":70983},{\"period\":\"2024-07-23\",\"value\":113704},{\"period\":\"2024-07-24\",\"value\":88909},{\"period\":\"2024-07-25\",\"value\":73490},{\"period\":\"2024-07-26\",\"value\":90025},{\"period\":\"2024-07-27\",\"value\":94648},{\"period\":\"2024-07-28\",\"value\":98065},{\"period\":\"2024-07-29\",\"value\":54808},{\"period\":\"2024-07-30\",\"value\":106183},{\"period\":\"2024-07-31\",\"value\":85668},{\"period\":\"2024-08-01\",\"value\":82484},{\"period\":\"2024-08-02\",\"value\":87833},{\"period\":\"2024-08-03\",\"value\":108908},{\"period\":\"2024-08-04\",\"value\":114352},{\"period\":\"2024-08-05\",\"value\":71194},{\"period\":\"2024-08-06\",\"value\":74053},{\"period\":\"2024-08-07\",\"value\":89812},{\"period\":\"2024-08-08\",\"value\":99351},{\"period\":\"2024-08-09\",\"value\":126484},{\"period\":\"2024-08-10\",\"value\":112651},{\"period\":\"2024-08-11\",\"value\":90169},{\"period\":\"2024-08-12\",\"value\":70319},{\"period\":\"2024-08-13\",\"value\":109272},{\"period\":\"2024-08-14\",\"value\":83797},{\"period\":\"2024-08-15\",\"value\":63370},{\"period\":\"2024-08-16\",\"value\":93925},{\"period\":\"2024-08-17\",\"value\":112249},{\"period\":\"2024-08-18\",\"value\":89428},{\"period\":\"2024-08-19\",\"value\":122372},{\"period\":\"2024-08-20\",\"value\":84218},{\"period\":\"2024-08-21\",\"value\":100383},{\"period\":\"2024-08-22\",\"value\":99436},{\"period\":\"2024-08-23\",\"value\":70014},{\"period\":\"2024-08-24\",\"value\":101002},{\"period\":\"2024-08-25\",\"value\":106040},{\"period\":\"2024-08-26\",\"value\":108630},{\"period\":\"2024-08-27\",\"value\":68627},{\"period\":\"2024-08-28\",\"value\":100169},{\"period\":\"2024-08-29\",\"value\":103463},{\"period\":\"2024-08-30\",\"value\":81853},{\"period\":\"2024-08-31\",\"value\":102366},{\"period\":\"2024-09-01\",\"value\":119515},{\"period\":\"2024-09-02\",\"value\":83337},{\"period\":\"2024-09-03\",\"value\":91416},{\"period\":\"2024-09-04\",\"value\":86144},{\"period\":\"2024-09-05\",\"value\":78368},{\"period\":\"2024-09-06\",\"value\":91902},{\"period\":\"2024-09-07\",\"value\":110295},{\"period\":\"2024-09-08\",\"value\":123683},{\"period\":\"2024-09-09\",\"value\":84964},{\"period\":\"2024-09-10\",\"value\":91763},{\"period\":\"2024-09-11\",\"value\":82558},{\"period\":\"2024-09-12\",\"value\":91895},{\"period\":\"2024-09-13\",\"value\":79603},{\"period\":\"2024-09-14\",\"value\":105517},{\"period\":\"2024-09-15\",\"value\":97385},{\"period\":\"2024-09-16\",\"value\":100278},{\"period\":\"2024-09-17\",\"value\":78809},{\"period\":\"2024-09-18\",\"value\":90770},{\"period\":\"2024-09-19\",\"value\":69808},{\"period\":\"2024-09-20\",\"value\":91191},{\"period\":\"2024-09-21\",\"value\":110624},{\"period\":\"2024-09-22\",\"value\":99636},{\"period\":\"2024-09-23\",\"value\":76167},{\"period\":\"2024-09-24\",\"value\":68814},{\"period\":\"2024-09-25\",\"value\":76553},{\"period\":\"2024-09-26\",\"value\":92802},{\"period\":\"2024-09-27\",\"value\":83112},{\"period\":\"2024-09-28\",\"value\":101137},{\"period\":\"2024-09-29\",\"value\":134766},{\"period\":\"2024-09-30\",\"value\":96864}],\"summary\":{\"total\":8561366,\"avg\":93058.33,\"max\":139815,\"min\":54808,\"count\":92,\"latest\":96864,\"trend\":-0.2812}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/quality/check",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"checks\":[{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - stat_date\",\"column_name\":\"stat_date\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - gmv\",\"column_name\":\"gmv\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - order_count\",\"column_name\":\"order_count\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - paying_customers\",\"column_name\":\"paying_customers\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - avg_order_value\",\"column_name\":\"avg_order_value\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - return_rate\",\"column_name\":\"return_rate\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - uv\",\"column_name\":\"uv\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - pv\",\"column_name\":\"pv\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - conversion_rate\",\"column_name\":\"conversion_rate\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"duplication\",\"check_name\":\"重复行检查\",\"column_name\":\"\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.01,\"details\":\"总行数: 92, 重复行: 0, 重复率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"primary_key\",\"check_name\":\"主键唯一性检查 - stat_date\",\"column_name\":\"stat_date\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0,\"details\":\"主键列: stat_date, 总行数: 92, 唯一值: 92, 重复: 0\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"freshness\",\"check_name\":\"数据新鲜度检查 - stat_date\",\"column_name\":\"stat_date\",\"status\":\"FAIL\",\"severity\":\"CRITICAL\",\"metric_value\":745,\"threshold\":7,\"details\":\"最新日期: 2024-09-30, 距今: 745天\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - stat_date\",\"column_name\":\"stat_date\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - product_id\",\"column_name\":\"product_id\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - product_name\",\"column_name\":\"product_name\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - gmv\",\"column_name\":\"gmv\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - order_count\",\"column_name\":\"order_count\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - quantity_sold\",\"column_name\":\"quantity_sold\",\"status\":\"PAS"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/lineage",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"nodes\":[{\"id\":\"ads_key_metrics\",\"layer\":\"ADS\"},{\"id\":\"ads_product_ranking\",\"layer\":\"ADS\"},{\"id\":\"dwd_customer_profile\",\"layer\":\"DWD\"},{\"id\":\"dwd_order_detail\",\"layer\":\"DWD\"},{\"id\":\"dws_daily_product\",\"layer\":\"DWS\"},{\"id\":\"dws_daily_shop\",\"layer\":\"DWS\"},{\"id\":\"ods_customers\",\"layer\":\"ODS\"},{\"id\":\"ods_orders\",\"layer\":\"ODS\"},{\"id\":\"ods_products\",\"layer\":\"ODS\"},{\"id\":\"ods_stores\",\"layer\":\"ODS\"},{\"id\":\"ods_traffic\",\"layer\":\"ODS\"}],\"edges\":[{\"source\":\"ods_orders\",\"target\":\"dwd_order_detail\",\"transform_type\":\"JOIN\",\"description\":\"订单表关联店铺、商品、客户维度\"},{\"source\":\"ods_stores\",\"target\":\"dwd_order_detail\",\"transform_type\":\"JOIN\",\"description\":\"店铺维度关联到订单明细\"},{\"source\":\"ods_products\",\"target\":\"dwd_order_detail\",\"transform_type\":\"JOIN\",\"description\":\"商品维度关联到订单明细\"},{\"source\":\"ods_customers\",\"target\":\"dwd_order_detail\",\"transform_type\":\"JOIN\",\"description\":\"客户维度关联到订单明细\"},{\"source\":\"ods_customers\",\"target\":\"dwd_customer_profile\",\"transform_type\":\"AGGREGATE\",\"description\":\"客户基础信息 + 订单汇总统计\"},{\"source\":\"ods_orders\",\"target\":\"dwd_customer_profile\",\"transform_type\":\"AGGREGATE\",\"description\":\"客户消费行为聚合\"},{\"source\":\"dwd_order_detail\",\"target\":\"dws_daily_shop\",\"transform_type\":\"AGGREGATE\",\"description\":\"按店铺+日期聚合订单数据\"},{\"source\":\"dwd_order_detail\",\"target\":\"dws_daily_product\",\"transform_type\":\"AGGREGATE\",\"description\":\"按商品+日期聚合销售数据\"},{\"source\":\"dws_daily_shop\",\"target\":\"ads_key_metrics\",\"transform_type\":\"AGGREGATE\",\"description\":\"全店日度汇总至核心指标\"},{\"source\":\"ods_traffic\",\"target\":\"ads_key_metrics\",\"transform_type\":\"JOIN\",\"description\":\"流量数据关联到核心指标\"},{\"source\":\"dws_daily_product\",\"target\":\"ads_product_ranking\",\"transform_type\":\"DERIVE\",\"description\":\"商品维度排行计算\"}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/ingest/csv?table_name=tmp_uitest_agent5_csv&layer=ODS",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_csv\",\"row_count\":3,\"columns\":4,\"column_details\":[{\"name\":\"campaign\",\"type\":\"VARCHAR\"},{\"name\":\"impressions\",\"type\":\"INTEGER\"},{\"name\":\"clicks\",\"type\":\"INTEGER\"},{\"name\":\"cost\",\"type\":\"DOUBLE\"}]},\"msg\":\"Successfully ingested 3 rows\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/ingest/json?table_name=tmp_uitest_agent5_json&layer=ODS",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_json\",\"row_count\":3,\"columns\":4,\"column_details\":[{\"name\":\"sku\",\"type\":\"VARCHAR\"},{\"name\":\"name\",\"type\":\"VARCHAR\"},{\"name\":\"price\",\"type\":\"DOUBLE\"},{\"name\":\"qty\",\"type\":\"INTEGER\"}]},\"msg\":\"Successfully ingested 3 rows\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/ingest/json?table_name=tmp_uitest_bad%20name!&layer=ODS",
+      "status": 400,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"非法表名：'tmp_uitest_bad name!'。只允许字母、数字与下划线，须以字母或下划线开头，最长 64 字符\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/query",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"rows\":[{\"cnt\":92,\"gmv\":3312522.61}],\"count\":1,\"truncated\":false},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/query",
+      "status": 400,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"不允许多条语句：请用分号分隔的单条查询\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/query",
+      "status": 400,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"该语句包含不被允许的 DuckDB 能力：read_text\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":[{\"table_name\":\"ads_key_metrics\",\"display_name\":\"核心经营指标\",\"layer\":\"ADS\",\"description\":\"全局核心指标：GMV/订单量/转化率/客单价/退货率/流量\",\"row_count\":92,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.509302\"},{\"table_name\":\"ads_product_ranking\",\"display_name\":\"商品排行榜\",\"layer\":\"ADS\",\"description\":\"商品GMV排行榜，含日度排名\",\"row_count\":1104,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.517911\"},{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":2000,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.522364\"},{\"table_name\":\"dwd_order_detail\",\"display_name\":\"订单明细宽表\",\"layer\":\"DWD\",\"description\":\"订单明细宽表，关联店铺/商品/客户维度\",\"row_count\":11683,\"column_count\":16,\"created_at\":\"2026-10-12T14:55:46.525407\"},{\"table_name\":\"dws_daily_product\",\"display_name\":\"商品日度汇总\",\"layer\":\"DWS\",\"description\":\"按商品+日期聚合的销售指标\",\"row_count\":1104,\"column_count\":7,\"created_at\":\"2026-10-12T14:55:46.529267\"},{\"table_name\":\"dws_daily_shop\",\"display_name\":\"店铺日度汇总\",\"layer\":\"DWS\",\"description\":\"按店铺+日期聚合的经营指标\",\"row_count\":460,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.533470\"},{\"table_name\":\"ods_customers\",\"display_name\":\"客户主数据\",\"layer\":\"ODS\",\"description\":\"客户主数据，包含昵称、性别、省份、注册日期\",\"row_count\":2000,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.536492\"},{\"table_name\":\"ods_dirty_probe\",\"display_name\":\"脏数据探针\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":4,\"column_count\":4,\"created_at\":\"2026-10-14T08:34:38.504299\"},{\"table_name\":\"ods_orders\",\"display_name\":\"原始订单表\",\"layer\":\"ODS\",\"description\":\"各渠道原始订单数据，包含订单号、客户、商品、金额、状态等\",\"row_count\":11683,\"column_count\":11,\"created_at\":\"2026-10-12T14:55:46.539995\"},{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.545131\"},{\"table_name\":\"ods_stores\",\"display_name\":\"店铺主数据\",\"layer\":\"ODS\",\"description\":\"店铺主数据，包含店铺名称、平台、经营品类\",\"row_count\":5,\"column_count\":5,\"created_at\":\"2026-10-12T14:55:46.549035\"},{\"table_name\":\"ods_traffic\",\"display_name\":\"流量日志表\",\"layer\":\"ODS\",\"description\":\"各渠道每日流量数据，UV/PV/跳出率\",\"row_count\":2269,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.552756\"},{\"table_name\":\"tmp_uitest_agent5_csv\",\"display_name\":\"tmp_uitest_agent5_csv\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:16.903692\"},{\"table_name\":\"tmp_uitest_agent5_json\",\"display_name\":\"tmp_uitest_agent5_json\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:17.221172\"}],\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":[{\"table_name\":\"ads_key_metrics\",\"display_name\":\"核心经营指标\",\"layer\":\"ADS\",\"description\":\"全局核心指标：GMV/订单量/转化率/客单价/退货率/流量\",\"row_count\":92,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.509302\"},{\"table_name\":\"ads_product_ranking\",\"display_name\":\"商品排行榜\",\"layer\":\"ADS\",\"description\":\"商品GMV排行榜，含日度排名\",\"row_count\":1104,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.517911\"},{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":2000,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.522364\"},{\"table_name\":\"dwd_order_detail\",\"display_name\":\"订单明细宽表\",\"layer\":\"DWD\",\"description\":\"订单明细宽表，关联店铺/商品/客户维度\",\"row_count\":11683,\"column_count\":16,\"created_at\":\"2026-10-12T14:55:46.525407\"},{\"table_name\":\"dws_daily_product\",\"display_name\":\"商品日度汇总\",\"layer\":\"DWS\",\"description\":\"按商品+日期聚合的销售指标\",\"row_count\":1104,\"column_count\":7,\"created_at\":\"2026-10-12T14:55:46.529267\"},{\"table_name\":\"dws_daily_shop\",\"display_name\":\"店铺日度汇总\",\"layer\":\"DWS\",\"description\":\"按店铺+日期聚合的经营指标\",\"row_count\":460,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.533470\"},{\"table_name\":\"ods_customers\",\"display_name\":\"客户主数据\",\"layer\":\"ODS\",\"description\":\"客户主数据，包含昵称、性别、省份、注册日期\",\"row_count\":2000,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.536492\"},{\"table_name\":\"ods_dirty_probe\",\"display_name\":\"脏数据探针\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":4,\"column_count\":4,\"created_at\":\"2026-10-14T08:34:38.504299\"},{\"table_name\":\"ods_orders\",\"display_name\":\"原始订单表\",\"layer\":\"ODS\",\"description\":\"各渠道原始订单数据，包含订单号、客户、商品、金额、状态等\",\"row_count\":11683,\"column_count\":11,\"created_at\":\"2026-10-12T14:55:46.539995\"},{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.545131\"},{\"table_name\":\"ods_stores\",\"display_name\":\"店铺主数据\",\"layer\":\"ODS\",\"description\":\"店铺主数据，包含店铺名称、平台、经营品类\",\"row_count\":5,\"column_count\":5,\"created_at\":\"2026-10-12T14:55:46.549035\"},{\"table_name\":\"ods_traffic\",\"display_name\":\"流量日志表\",\"layer\":\"ODS\",\"description\":\"各渠道每日流量数据，UV/PV/跳出率\",\"row_count\":2269,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.552756\"},{\"table_name\":\"tmp_uitest_agent5_csv\",\"display_name\":\"tmp_uitest_agent5_csv\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:16.903692\"},{\"table_name\":\"tmp_uitest_agent5_json\",\"display_name\":\"tmp_uitest_agent5_json\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:17.221172\"}],\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ads_key_metrics' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ads_key_metrics\",\"display_name\":\"核心经营指标\",\"layer\":\"ADS\",\"description\":\"全局核心指标：GMV/订单量/转化率/客单价/退货率/流量\",\"row_count\":92,\"columns\":[{\"name\":\"stat_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"paying_customers\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"avg_order_value\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"return_rate\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"uv\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"pv\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"conversion_rate\",\"type\":\"DOUBLE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ads_key_metrics' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ads_key_metrics\",\"display_name\":\"核心经营指标\",\"layer\":\"ADS\",\"description\":\"全局核心指标：GMV/订单量/转化率/客单价/退货率/流量\",\"row_count\":92,\"columns\":[{\"name\":\"stat_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"paying_customers\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"avg_order_value\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"return_rate\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"uv\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"pv\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"conversion_rate\",\"type\":\"DOUBLE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ads_product_ranking' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ads_product_ranking\",\"display_name\":\"商品排行榜\",\"layer\":\"ADS\",\"description\":\"商品GMV排行榜，含日度排名\",\"row_count\":1104,\"columns\":[{\"name\":\"stat_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"quantity_sold\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"return_rate\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"rank_no\",\"type\":\"BIGINT\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ads_product_ranking' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ads_product_ranking\",\"display_name\":\"商品排行榜\",\"layer\":\"ADS\",\"description\":\"商品GMV排行榜，含日度排名\",\"row_count\":1104,\"columns\":[{\"name\":\"stat_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"quantity_sold\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"return_rate\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"rank_no\",\"type\":\"BIGINT\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_customer_profile\",\"rows\":[],\"count\":0},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":2000,\"columns\":[{\"name\":\"U00609\",\"type\":\"周**小姐\",\"nullable\":false},{\"name\":\"U00522\",\"type\":\"徐**同学\",\"nullable\":false},{\"name\":\"U01555\",\"type\":\"赵**先生\",\"nullable\":false},{\"name\":\"U00901\",\"type\":\"李**小姐\",\"nullable\":false},{\"name\":\"U00080\",\"type\":\"朱**先生\",\"nullable\":false},{\"name\":\"U01009\",\"type\":\"罗**小姐\",\"nullable\":false},{\"name\":\"U01255\",\"type\":\"吴**小姐\",\"nullable\":false},{\"name\":\"U00082\",\"type\":\"林**小姐\",\"nullable\":false},{\"name\":\"U01534\",\"type\":\"何**同学\",\"nullable\":false},{\"name\":\"U01835\",\"type\":\"杨**同学\",\"nullable\":false},{\"name\":\"U01227\",\"type\":\"孙**同学\",\"nullable\":false},{\"name\":\"U01185\",\"type\":\"黄**同学\",\"nullable\":false},{\"name\":\"U00718\",\"type\":\"马**同学\",\"nullable\":false},{\"name\":\"U00045\",\"type\":\"何**小姐\",\"nullable\":false},{\"name\":\"U00434\",\"type\":\"胡**同学\",\"nullable\":false},{\"name\":\"U01877\",\"type\":\"李**同学\",\"nullable\":false},{\"name\":\"U01213\",\"type\":\"周**先生\",\"nullable\":false},{\"name\":\"U00937\",\"type\":\"林**\",\"nullable\":false},{\"name\":\"U01389\",\"type\":\"刘**小姐\",\"nullable\":false},{\"name\":\"U00405\",\"type\":\"李**先生\",\"nullable\":false},{\"name\":\"U00171\",\"type\":\"杨**先生\",\"nullable\":false},{\"name\":\"U01443\",\"type\":\"朱**同学\",\"nullable\":false},{\"name\":\"U01575\",\"type\":\"陈**同学\",\"nullable\":false},{\"name\":\"U01845\",\"type\":\"郭**小姐\",\"nullable\":false},{\"name\":\"U00421\",\"type\":\"徐**\",\"nullable\":false},{\"name\":\"U01541\",\"type\":\"高**\",\"nullable\":false},{\"name\":\"U01848\",\"type\":null,\"nullable\":false},{\"name\":\"U00038\",\"type\":null,\"nullable\":false},{\"name\":\"U00231\",\"type\":\"孙**同学\",\"nullable\":false},{\"name\":\"U01584\",\"type\":\"周**先生\",\"nullable\":false},{\"name\":\"U01067\",\"type\":null,\"nullable\":false},{\"name\":\"U01929\",\"type\":\"刘**\",\"nullable\":false},{\"name\":\"U00508\",\"type\":null,\"nullable\":false},{\"name\":\"U01141\",\"type\":\"陈**先生\",\"nullable\":false},{\"name\":\"U00694\",\"type\":\"高**小姐\",\"nullable\":false},{\"name\":\"U01968\",\"type\":\"林**先生\",\"nullable\":false},{\"name\":\"U01258\",\"type\":\"吴**\",\"nullable\":false},{\"name\":\"U00490\",\"type\":\"周**先生\",\"nullable\":false},{\"name\":\"U00102\",\"type\":\"张**先生\",\"nullable\":false},{\"name\":\"U00761\",\"type\":\"徐**同学\",\"nullable\":false},{\"name\":\"U00806\",\"type\":\"王**同学\",\"nullable\":false},{\"name\":\"U01202\",\"type\":\"赵**小姐\",\"nullable\":false},{\"name\":\"U01623\",\"type\":\"杨**先生\",\"nullable\":false},{\"name\":\"U01601\",\"type\":\"黄**同学\",\"nullable\":false},{\"name\":\"U01739\",\"type\":\"周**小姐\",\"nullable\":false},{\"name\":\"U00926\",\"type\":null,\"nullable\":false},{\"name\":\"U01817\",\"type\":\"罗**\",\"nullable\":false},{\"name\":\"U01649\",\"type\":null,\"nullable\":false},{\"name\":\"U00293\",\"type\":\"罗**先生\",\"nullable\":false},{\"name\":\"U00422\",\"type\":null,\"nullable\":false}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_customer_profile\",\"rows\":[{\"customer_id\":2000}],\"count\":1},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":0,\"columns\":[{\"name\":\"U00609\",\"type\":\"周**小姐\",\"nullable\":false},{\"name\":\"U00522\",\"type\":\"徐**同学\",\"nullable\":false},{\"name\":\"U01555\",\"type\":\"赵**先生\",\"nullable\":false},{\"name\":\"U00901\",\"type\":\"李**小姐\",\"nullable\":false},{\"name\":\"U00080\",\"type\":\"朱**先生\",\"nullable\":false},{\"name\":\"U01009\",\"type\":\"罗**小姐\",\"nullable\":false},{\"name\":\"U01255\",\"type\":\"吴**小姐\",\"nullable\":false},{\"name\":\"U00082\",\"type\":\"林**小姐\",\"nullable\":false},{\"name\":\"U01534\",\"type\":\"何**同学\",\"nullable\":false},{\"name\":\"U01835\",\"type\":\"杨**同学\",\"nullable\":false},{\"name\":\"U01227\",\"type\":\"孙**同学\",\"nullable\":false},{\"name\":\"U01185\",\"type\":\"黄**同学\",\"nullable\":false},{\"name\":\"U00718\",\"type\":\"马**同学\",\"nullable\":false},{\"name\":\"U00045\",\"type\":\"何**小姐\",\"nullable\":false},{\"name\":\"U00434\",\"type\":\"胡**同学\",\"nullable\":false},{\"name\":\"U01877\",\"type\":\"李**同学\",\"nullable\":false},{\"name\":\"U01213\",\"type\":\"周**先生\",\"nullable\":false},{\"name\":\"U00937\",\"type\":\"林**\",\"nullable\":false},{\"name\":\"U01389\",\"type\":\"刘**小姐\",\"nullable\":false},{\"name\":\"U00405\",\"type\":\"李**先生\",\"nullable\":false},{\"name\":\"U00171\",\"type\":\"杨**先生\",\"nullable\":false},{\"name\":\"U01443\",\"type\":\"朱**同学\",\"nullable\":false},{\"name\":\"U01575\",\"type\":\"陈**同学\",\"nullable\":false},{\"name\":\"U01845\",\"type\":\"郭**小姐\",\"nullable\":false},{\"name\":\"U00421\",\"type\":\"徐**\",\"nullable\":false},{\"name\":\"U01541\",\"type\":\"高**\",\"nullable\":false},{\"name\":\"U01848\",\"type\":null,\"nullable\":false},{\"name\":\"U00038\",\"type\":null,\"nullable\":false},{\"name\":\"U00231\",\"type\":\"孙**同学\",\"nullable\":false},{\"name\":\"U01584\",\"type\":\"周**先生\",\"nullable\":false},{\"name\":\"U01067\",\"type\":null,\"nullable\":false},{\"name\":\"U01929\",\"type\":\"刘**\",\"nullable\":false},{\"name\":\"U00508\",\"type\":null,\"nullable\":false},{\"name\":\"U01141\",\"type\":\"陈**先生\",\"nullable\":false},{\"name\":\"U00694\",\"type\":\"高**小姐\",\"nullable\":false},{\"name\":\"U01968\",\"type\":\"林**先生\",\"nullable\":false},{\"name\":\"U01258\",\"type\":\"吴**\",\"nullable\":false},{\"name\":\"U00490\",\"type\":\"周**先生\",\"nullable\":false},{\"name\":\"U00102\",\"type\":\"张**先生\",\"nullable\":false},{\"name\":\"U00761\",\"type\":\"徐**同学\",\"nullable\":false},{\"name\":\"U00806\",\"type\":\"王**同学\",\"nullable\":false},{\"name\":\"U01202\",\"type\":\"赵**小姐\",\"nullable\":false},{\"name\":\"U01623\",\"type\":\"杨**先生\",\"nullable\":false},{\"name\":\"U01601\",\"type\":\"黄**同学\",\"nullable\":false},{\"name\":\"U01739\",\"type\":\"周**小姐\",\"nullable\":false},{\"name\":\"U00926\",\"type\":null,\"nullable\":false},{\"name\":\"U01817\",\"type\":\"罗**\",\"nullable\":false},{\"name\":\"U01649\",\"type\":null,\"nullable\":false},{\"name\":\"U00293\",\"type\":\"罗**先生\",\"nullable\":false},{\"name\":\"U00422\",\"type\":null,\"nullable\":false}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_order_detail/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'dwd_order_detail' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_order_detail",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_order_detail\",\"display_name\":\"订单明细宽表\",\"layer\":\"DWD\",\"description\":\"订单明细宽表，关联店铺/商品/客户维度\",\"row_count\":11683,\"columns\":[{\"name\":\"order_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"customer_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"category_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"quantity\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"unit_price\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"total_amount\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"cost\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"profit\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"payment_method\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"status\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"order_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"province\",\"type\":\"VARCHAR\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_order_detail/preview?limit=50",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_order_detail",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_order_detail\",\"display_name\":\"订单明细宽表\",\"layer\":\"DWD\",\"description\":\"订单明细宽表，关联店铺/商品/客户维度\",\"row_count\":11683,\"columns\":[{\"name\":\"customer_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"category_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"quantity\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"unit_price\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"total_amount\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"cost\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"profit\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"payment_method\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"status\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"order_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"province\",\"type\":\"VARCHAR\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'dws_daily_product' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dws_daily_product\",\"display_name\":\"商品日度汇总\",\"layer\":\"DWS\",\"description\":\"按商品+日期聚合的销售指标\",\"row_count\":1104,\"columns\":[{\"name\":\"stat_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"quantity_sold\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"return_count\",\"type\":\"HUGEINT\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'dws_daily_product' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dws_daily_product\",\"display_name\":\"商品日度汇总\",\"layer\":\"DWS\",\"description\":\"按商品+日期聚合的销售指标\",\"row_count\":1104,\"columns\":[{\"name\":\"stat_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"quantity_sold\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"return_count\",\"type\":\"HUGEINT\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop/preview?limit=50",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dws_daily_shop\",\"display_name\":\"店铺日度汇总\",\"layer\":\"DWS\",\"description\":\"按店铺+日期聚合的经营指标\",\"row_count\":460,\"columns\":[{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"paying_customers\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"avg_order_value\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"return_count\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"return_rate\",\"type\":\"DOUBLE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dws_daily_shop\",\"rows\":[{\"stat_date\":\"2024-09-05\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"order_count\":27,\"gmv\":10145.85,\"paying_customers\":27,\"avg_order_value\":375.77,\"return_count\":5,\"return_rate\":0.1852},{\"stat_date\":\"2024-09-05\",\"store_id\":\"S003\",\"store_name\":\"示例抖音旗舰店\",\"order_count\":29,\"gmv\":8675.05,\"paying_customers\":28,\"avg_order_value\":299.14,\"return_count\":4,\"return_rate\":0.1379},{\"stat_date\":\"2024-09-05\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"order_count\":22,\"gmv\":8347.54,\"paying_customers\":22,\"avg_order_value\":379.43,\"return_count\":6,\"return_rate\":0.2727},{\"stat_date\":\"2024-09-06\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"order_count\":35,\"gmv\":9243.73,\"paying_customers\":35,\"avg_order_value\":264.11,\"return_count\":1,\"return_rate\":0.0286},{\"stat_date\":\"2024-09-06\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"order_count\":20,\"gmv\":4497.91,\"paying_customers\":20,\"avg_order_value\":224.9,\"return_count\":3,\"return_rate\":0.15},{\"stat_date\":\"2024-09-06\",\"store_id\":\"S001\",\"store_name\":\"示例旗舰店\",\"order_count\":39,\"gmv\":16319.63,\"paying_customers\":39,\"avg_order_value\":418.45,\"return_count\":8,\"return_rate\":0.2051},{\"stat_date\":\"2024-09-10\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"order_count\":27,\"gmv\":7623.77,\"paying_customers\":27,\"avg_order_value\":282.36,\"return_count\":2,\"return_rate\":0.0741},{\"stat_date\":\"2024-09-11\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"order_count\":25,\"gmv\":5923.09,\"paying_customers\":25,\"avg_order_value\":236.92,\"return_count\":5,\"return_rate\":0.2},{\"stat_date\":\"2024-09-11\",\"store_id\":\"S003\",\"store_name\":\"示例抖音旗舰店\",\"order_count\":34,\"gmv\":9102.92,\"paying_customers\":34,\"avg_order_value\":267.73,\"return_count\":6,\"return_rate\":0.1765},{\"stat_date\":\"2024-09-12\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"order_count\":18,\"gmv\":5078.38,\"paying_customers\":18,\"avg_order_value\":282.13,\"return_count\":4,\"return_rate\":0.2222},{\"stat_date\":\"2024-09-12\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"order_count\":17,\"gmv\":4897.4,\"paying_customers\":17,\"avg_order_value\":288.08,\"return_count\":1,\"return_rate\":0.0588},{\"stat_date\":\"2024-09-14\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"order_count\":21,\"gmv\":5445.63,\"paying_customers\":21,\"avg_order_value\":259.32,\"return_count\":3,\"return_rate\":0.1429},{\"stat_date\":\"2024-09-16\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"order_count\":25,\"gmv\":8659.61,\"paying_customers\":25,\"avg_order_value\":346.38,\"return_count\":1,\"return_rate\":0.04},{\"stat_date\":\"2024-09-16\",\"store_id\":\"S001\",\"store_name\":\"示例旗舰店\",\"order_count\":24,\"gmv\":6438.77,\"paying_customers\":24,\"avg_order_value\":268.28,\"return_count\":5,\"return_rate\":0.2083},{\"stat_date\":\"2024-09-17\",\"store_id\":\"S001\",\"store_name\":\"示例旗舰店\",\"order_count\":24,\"gmv\":6403.6,\"paying_customers\":24,\"avg_order_value\":266.82,\"return_count\":2,\"return_rate\":0.0833},{\"stat_date\":\"2024-09-18\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"order_count\":21,\"gmv\":7337.56,\"paying_customers\":21,\"avg_order_value\":349.41,\"return_count\":2,\"return_rate\":0.0952},{\"stat_date\":\"2024-09-18\",\"store_id\":\"S003\",\"store_name\":\"示例抖音旗舰店\",\"order_count\":23,\"gmv\":6243.65,\"paying_customers\":23,\"avg_order_value\":271.46,\"return_count\":3,\"return_rate\":0.1304},{\"stat_date\":\"2024-09-18\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"order_count\":18,\"gmv\":5337.25,\"paying_customers\":18,\"avg_order_value\":296.51,\"return_count\":6,\"return_rate\":0.3333},{\"stat_date\":\"2024-09-19\",\"store_id\":\"S003\",\"store_name\":\"示例抖音旗舰店\",\"order_count\":25,\"gmv\":5720.47,\"paying_customers\":25,\"avg_order_value\":228.82,\"return_count\":4,\"return_rate\":0.16},{\"stat_date\":\"2024-09-19\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"order_count\":28,\"gmv\":9406,\"paying_customers\":28,\"avg_order_value\":335.93,\"return_count\":2,\"return_rate\":0.0714},{\"stat_date\":\"2024-09-21\",\"store_id\":\"S003\",\"store_name\":\"示例抖音旗舰店\",\"order_count\":31,\"gmv\":9659.57,\"paying_customers\":31,\"avg_order_value\":311.6,\"return_count\":4,\"return_rate\":0.129},{\"stat_date\":\"2024-09-22\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"order_count\":31,\"gmv\":"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_customers' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_customers\",\"rows\":[{\"customer_id\":\"U00001\",\"nickname\":\"吴**\",\"gender\":\"女\",\"province\":\"安徽\",\"register_date\":\"2023-06-08\",\"last_login\":\"2024-08-23\"},{\"customer_id\":\"U00002\",\"nickname\":\"胡**先生\",\"gender\":\"男\",\"province\":\"江苏\",\"register_date\":\"2023-04-23\",\"last_login\":\"2024-09-19\"},{\"customer_id\":\"U00003\",\"nickname\":\"王**\",\"gender\":\"女\",\"province\":\"河南\",\"register_date\":\"2023-07-14\",\"last_login\":\"2024-08-26\"},{\"customer_id\":\"U00004\",\"nickname\":null,\"gender\":\"男\",\"province\":\"湖北\",\"register_date\":\"2024-06-23\",\"last_login\":\"2024-08-18\"},{\"customer_id\":\"U00005\",\"nickname\":\"孙**小姐\",\"gender\":\"女\",\"province\":\"湖北\",\"register_date\":\"2023-12-20\",\"last_login\":\"2024-09-02\"},{\"customer_id\":\"U00006\",\"nickname\":\"何**\",\"gender\":\"女\",\"province\":\"天津\",\"register_date\":\"2023-12-13\",\"last_login\":\"2024-07-02\"},{\"customer_id\":\"U00007\",\"nickname\":null,\"gender\":\"女\",\"province\":\"天津\",\"register_date\":\"2024-04-20\",\"last_login\":\"2024-07-28\"},{\"customer_id\":\"U00008\",\"nickname\":\"周**\",\"gender\":\"女\",\"province\":\"重庆\",\"register_date\":\"2023-02-25\",\"last_login\":\"2024-08-18\"},{\"customer_id\":\"U00009\",\"nickname\":\"郭**先生\",\"gender\":\"女\",\"province\":\"浙江\",\"register_date\":\"2024-03-23\",\"last_login\":\"2024-07-17\"},{\"customer_id\":\"U00010\",\"nickname\":null,\"gender\":\"女\",\"province\":\"上海\",\"register_date\":\"2023-06-08\",\"last_login\":\"2024-07-09\"},{\"customer_id\":\"U00011\",\"nickname\":\"高**小姐\",\"gender\":\"女\",\"province\":\"广东\",\"register_date\":\"2023-06-27\",\"last_login\":\"2024-08-24\"},{\"customer_id\":\"U00012\",\"nickname\":\"罗**同学\",\"gender\":\"男\",\"province\":\"湖南\",\"register_date\":\"2023-06-06\",\"last_login\":\"2024-08-19\"},{\"customer_id\":\"U00013\",\"nickname\":\"王**同学\",\"gender\":\"女\",\"province\":\"湖北\",\"register_date\":\"2024-04-10\",\"last_login\":\"2024-08-15\"},{\"customer_id\":\"U00014\",\"nickname\":\"何**\",\"gender\":\"女\",\"province\":\"陕西\",\"register_date\":\"2023-08-11\",\"last_login\":\"2024-07-05\"},{\"customer_id\":\"U00015\",\"nickname\":\"朱**同学\",\"gender\":\"男\",\"province\":\"天津\",\"register_date\":\"2023-12-02\",\"last_login\":\"2024-07-25\"},{\"customer_id\":\"U00016\",\"nickname\":\"郭**先生\",\"gender\":\"男\",\"province\":\"山东\",\"register_date\":\"2023-07-10\",\"last_login\":\"2024-07-01\"},{\"customer_id\":\"U00017\",\"nickname\":\"张**\",\"gender\":\"女\",\"province\":\"陕西\",\"register_date\":\"2023-03-10\",\"last_login\":\"2024-08-11\"},{\"customer_id\":\"U00018\",\"nickname\":\"李**\",\"gender\":\"男\",\"province\":\"安徽\",\"register_date\":\"2023-10-05\",\"last_login\":\"2024-09-07\"},{\"customer_id\":\"U00019\",\"nickname\":\"孙**同学\",\"gender\":\"男\",\"province\":\"福建\",\"register_date\":\"2023-03-23\",\"last_login\":\"2024-08-13\"},{\"customer_id\":\"U00020\",\"nickname\":\"何**同学\",\"gender\":\"女\",\"province\":\"福建\",\"register_date\":\"2024-02-18\",\"last_login\":\"2024-07-25\"},{\"customer_id\":\"U00021\",\"nickname\":\"刘**先生\",\"gender\":\"女\",\"province\":\"四川\",\"register_date\":\"2024-03-26\",\"last_login\":\"2024-08-09\"},{\"customer_id\":\"U00022\",\"nickname\":\"黄**先生\",\"gender\":\"女\",\"province\":\"上海\",\"register_date\":\"2023-06-09\",\"last_login\":\"2024-08-20\"},{\"customer_id\":\"U00023\",\"nickname\":null,\"gender\":\"女\",\"province\":\"陕西\",\"register_date\":\"2023-09-11\",\"last_login\":\"2024-09-10\"},{\"customer_id\":\"U00024\",\"nickname\":\"罗**先生\",\"gender\":\"女\",\"province\":\"河南\",\"register_date\":\"2023-07-12\",\"last_login\":\"2024-07-28\"},{\"customer_id\":\"U00025\",\"nickname\":null,\"gender\":\"女\",\"province\":\"广东\",\"register_date\":\"2023-08-21\",\"last_login\":\"2024-09-27\"},{\"customer_id\":\"U00026\",\"nickname\":\"李**同学\",\"gender\":\"男\",\"province\":\"湖北\",\"register_date\":\"2023-05-23\",\"last_login\":\"2024-07-05\"},{\"customer_id\":\"U00027\",\"nickname\":\"张**先生\",\"gender\":\"男\",\"province\":\"江苏\",\"register_date\":\"2023-04-22\",\"last_login\":\"2024-09-08\"},{\"customer_id\":\"U00028\",\"nickname\":\"周**先生\",\"gender\":\"男\",\"province\":\"天津\",\"register_date\":\"2024-01-19\",\"last_login\":\"2024-08-29\"},{\"customer_id\":\"U00029\",\"nickname\":\"吴**\",\"gender\":\"女\",\"province\":\"湖南\",\"register_date\":\"2023-05-07\",\"last_login\":\"2024-07-06\"},{\"customer_id\":\"U00030\",\"nickname\":\"杨**\",\"gender\":\"女\",\"province\":\"浙江\",\"register_date\":\"2024-06-03\",\"last_login\":\"2024-08-28\"},{\"customer_id\":\"U00031\",\"nickname\":\"胡**同学\",\"gender\":\"女\",\"province\":\"四川\",\"register_date\":\"2024-03-06\",\"last_login\":\"2024-08-27\"},{\"customer"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_customers\",\"rows\":[{\"customer_id\":\"U00001\",\"nickname\":\"吴**\",\"gender\":\"女\",\"province\":\"安徽\",\"register_date\":\"2023-06-08\",\"last_login\":\"2024-08-23\"},{\"customer_id\":\"U00002\",\"nickname\":\"胡**先生\",\"gender\":\"男\",\"province\":\"江苏\",\"register_date\":\"2023-04-23\",\"last_login\":\"2024-09-19\"},{\"customer_id\":\"U00003\",\"nickname\":\"王**\",\"gender\":\"女\",\"province\":\"河南\",\"register_date\":\"2023-07-14\",\"last_login\":\"2024-08-26\"},{\"customer_id\":\"U00004\",\"nickname\":null,\"gender\":\"男\",\"province\":\"湖北\",\"register_date\":\"2024-06-23\",\"last_login\":\"2024-08-18\"},{\"customer_id\":\"U00005\",\"nickname\":\"孙**小姐\",\"gender\":\"女\",\"province\":\"湖北\",\"register_date\":\"2023-12-20\",\"last_login\":\"2024-09-02\"},{\"customer_id\":\"U00006\",\"nickname\":\"何**\",\"gender\":\"女\",\"province\":\"天津\",\"register_date\":\"2023-12-13\",\"last_login\":\"2024-07-02\"},{\"customer_id\":\"U00007\",\"nickname\":null,\"gender\":\"女\",\"province\":\"天津\",\"register_date\":\"2024-04-20\",\"last_login\":\"2024-07-28\"},{\"customer_id\":\"U00008\",\"nickname\":\"周**\",\"gender\":\"女\",\"province\":\"重庆\",\"register_date\":\"2023-02-25\",\"last_login\":\"2024-08-18\"},{\"customer_id\":\"U00009\",\"nickname\":\"郭**先生\",\"gender\":\"女\",\"province\":\"浙江\",\"register_date\":\"2024-03-23\",\"last_login\":\"2024-07-17\"},{\"customer_id\":\"U00010\",\"nickname\":null,\"gender\":\"女\",\"province\":\"上海\",\"register_date\":\"2023-06-08\",\"last_login\":\"2024-07-09\"},{\"customer_id\":\"U00011\",\"nickname\":\"高**小姐\",\"gender\":\"女\",\"province\":\"广东\",\"register_date\":\"2023-06-27\",\"last_login\":\"2024-08-24\"},{\"customer_id\":\"U00012\",\"nickname\":\"罗**同学\",\"gender\":\"男\",\"province\":\"湖南\",\"register_date\":\"2023-06-06\",\"last_login\":\"2024-08-19\"},{\"customer_id\":\"U00013\",\"nickname\":\"王**同学\",\"gender\":\"女\",\"province\":\"湖北\",\"register_date\":\"2024-04-10\",\"last_login\":\"2024-08-15\"},{\"customer_id\":\"U00014\",\"nickname\":\"何**\",\"gender\":\"女\",\"province\":\"陕西\",\"register_date\":\"2023-08-11\",\"last_login\":\"2024-07-05\"},{\"customer_id\":\"U00015\",\"nickname\":\"朱**同学\",\"gender\":\"男\",\"province\":\"天津\",\"register_date\":\"2023-12-02\",\"last_login\":\"2024-07-25\"},{\"customer_id\":\"U00016\",\"nickname\":\"郭**先生\",\"gender\":\"男\",\"province\":\"山东\",\"register_date\":\"2023-07-10\",\"last_login\":\"2024-07-01\"},{\"customer_id\":\"U00017\",\"nickname\":\"张**\",\"gender\":\"女\",\"province\":\"陕西\",\"register_date\":\"2023-03-10\",\"last_login\":\"2024-08-11\"},{\"customer_id\":\"U00018\",\"nickname\":\"李**\",\"gender\":\"男\",\"province\":\"安徽\",\"register_date\":\"2023-10-05\",\"last_login\":\"2024-09-07\"},{\"customer_id\":\"U00019\",\"nickname\":\"孙**同学\",\"gender\":\"男\",\"province\":\"福建\",\"register_date\":\"2023-03-23\",\"last_login\":\"2024-08-13\"},{\"customer_id\":\"U00020\",\"nickname\":\"何**同学\",\"gender\":\"女\",\"province\":\"福建\",\"register_date\":\"2024-02-18\",\"last_login\":\"2024-07-25\"},{\"customer_id\":\"U00021\",\"nickname\":\"刘**先生\",\"gender\":\"女\",\"province\":\"四川\",\"register_date\":\"2024-03-26\",\"last_login\":\"2024-08-09\"},{\"customer_id\":\"U00022\",\"nickname\":\"黄**先生\",\"gender\":\"女\",\"province\":\"上海\",\"register_date\":\"2023-06-09\",\"last_login\":\"2024-08-20\"},{\"customer_id\":\"U00023\",\"nickname\":null,\"gender\":\"女\",\"province\":\"陕西\",\"register_date\":\"2023-09-11\",\"last_login\":\"2024-09-10\"},{\"customer_id\":\"U00024\",\"nickname\":\"罗**先生\",\"gender\":\"女\",\"province\":\"河南\",\"register_date\":\"2023-07-12\",\"last_login\":\"2024-07-28\"},{\"customer_id\":\"U00025\",\"nickname\":null,\"gender\":\"女\",\"province\":\"广东\",\"register_date\":\"2023-08-21\",\"last_login\":\"2024-09-27\"},{\"customer_id\":\"U00026\",\"nickname\":\"李**同学\",\"gender\":\"男\",\"province\":\"湖北\",\"register_date\":\"2023-05-23\",\"last_login\":\"2024-07-05\"},{\"customer_id\":\"U00027\",\"nickname\":\"张**先生\",\"gender\":\"男\",\"province\":\"江苏\",\"register_date\":\"2023-04-22\",\"last_login\":\"2024-09-08\"},{\"customer_id\":\"U00028\",\"nickname\":\"周**先生\",\"gender\":\"男\",\"province\":\"天津\",\"register_date\":\"2024-01-19\",\"last_login\":\"2024-08-29\"},{\"customer_id\":\"U00029\",\"nickname\":\"吴**\",\"gender\":\"女\",\"province\":\"湖南\",\"register_date\":\"2023-05-07\",\"last_login\":\"2024-07-06\"},{\"customer_id\":\"U00030\",\"nickname\":\"杨**\",\"gender\":\"女\",\"province\":\"浙江\",\"register_date\":\"2024-06-03\",\"last_login\":\"2024-08-28\"},{\"customer_id\":\"U00031\",\"nickname\":\"胡**同学\",\"gender\":\"女\",\"province\":\"四川\",\"register_date\":\"2024-03-06\",\"last_login\":\"2024-08-27\"},{\"customer"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_customers' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_dirty_probe",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_dirty_probe\",\"display_name\":\"脏数据探针\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":4,\"columns\":[{\"name\":\"order_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"customer_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"total_amount\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"stat_date\",\"type\":\"TIMESTAMP\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_dirty_probe/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_dirty_probe\",\"rows\":[{\"order_id\":\"O-9001\",\"customer_id\":\"C001\",\"total_amount\":-500,\"stat_date\":\"2024-09-28T00:00:00\"},{\"order_id\":\"O-9002\",\"customer_id\":\"C002\",\"total_amount\":120.5,\"stat_date\":\"2024-09-29T00:00:00\"},{\"order_id\":\"O-9002\",\"customer_id\":\"C002\",\"total_amount\":120.5,\"stat_date\":\"2024-09-29T00:00:00\"},{\"order_id\":\"O-9003\",\"customer_id\":null,\"total_amount\":88,\"stat_date\":\"2024-09-30T00:00:00\"}],\"count\":4},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_orders\",\"rows\":[{\"order_id\":\"OD0008193\",\"customer_id\":\"U01495\",\"store_id\":\"S005\",\"product_id\":\"P004\",\"quantity\":3,\"unit_price\":79,\"total_amount\":199.7,\"payment_method\":\"微信支付\",\"status\":\"已取消\",\"order_date\":\"2024-09-04T08:31:00\",\"pay_date\":null},{\"order_id\":\"OD0008194\",\"customer_id\":\"U00316\",\"store_id\":\"S002\",\"product_id\":\"P003\",\"quantity\":3,\"unit_price\":109.69,\"total_amount\":377.31,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T02:41:00\",\"pay_date\":\"2024-09-04T03:00:00\"},{\"order_id\":\"OD0008195\",\"customer_id\":\"U01074\",\"store_id\":\"S003\",\"product_id\":\"P002\",\"quantity\":2,\"unit_price\":89,\"total_amount\":161.72,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T08:45:00\",\"pay_date\":\"2024-09-04T08:53:00\"},{\"order_id\":\"OD0008196\",\"customer_id\":\"U00227\",\"store_id\":\"S001\",\"product_id\":\"P007\",\"quantity\":1,\"unit_price\":59,\"total_amount\":54.7,\"payment_method\":\"微信支付\",\"status\":\"已取消\",\"order_date\":\"2024-09-04T16:56:00\",\"pay_date\":null},{\"order_id\":\"OD0008197\",\"customer_id\":\"U00609\",\"store_id\":\"S005\",\"product_id\":\"P002\",\"quantity\":1,\"unit_price\":89,\"total_amount\":89,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T22:40:00\",\"pay_date\":\"2024-09-04T22:51:00\"},{\"order_id\":\"OD0008198\",\"customer_id\":\"U00522\",\"store_id\":\"S004\",\"product_id\":\"P010\",\"quantity\":2,\"unit_price\":159,\"total_amount\":318,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T23:03:00\",\"pay_date\":\"2024-09-04T23:31:00\"},{\"order_id\":\"OD0008199\",\"customer_id\":\"U00118\",\"store_id\":\"S005\",\"product_id\":\"P002\",\"quantity\":2,\"unit_price\":89,\"total_amount\":178,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T03:42:00\",\"pay_date\":\"2024-09-04T03:50:00\"},{\"order_id\":\"OD0008200\",\"customer_id\":\"U01555\",\"store_id\":\"S001\",\"product_id\":\"P003\",\"quantity\":2,\"unit_price\":105.87,\"total_amount\":298,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T08:27:00\",\"pay_date\":\"2024-09-04T08:55:00\"},{\"order_id\":\"OD0008201\",\"customer_id\":\"U01271\",\"store_id\":\"S005\",\"product_id\":\"P004\",\"quantity\":1,\"unit_price\":79,\"total_amount\":79,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T21:33:00\",\"pay_date\":\"2024-09-04T21:39:00\"},{\"order_id\":\"OD0008202\",\"customer_id\":\"U01659\",\"store_id\":\"S002\",\"product_id\":\"P011\",\"quantity\":2,\"unit_price\":119,\"total_amount\":238,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T19:23:00\",\"pay_date\":\"2024-09-04T19:38:00\"},{\"order_id\":\"OD0008203\",\"customer_id\":\"U01874\",\"store_id\":\"S005\",\"product_id\":\"P009\",\"quantity\":1,\"unit_price\":299,\"total_amount\":299,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T04:00:00\",\"pay_date\":\"2024-09-04T04:26:00\"},{\"order_id\":\"OD0008204\",\"customer_id\":\"U00289\",\"store_id\":\"S004\",\"product_id\":\"P005\",\"quantity\":2,\"unit_price\":129,\"total_amount\":258,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T17:07:00\",\"pay_date\":\"2024-09-04T17:14:00\"},{\"order_id\":\"OD0008205\",\"customer_id\":\"U00186\",\"store_id\":\"S002\",\"product_id\":\"P002\",\"quantity\":2,\"unit_price\":89,\"total_amount\":163.11,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T16:10:00\",\"pay_date\":\"2024-09-04T16:23:00\"},{\"order_id\":\"OD0008206\",\"customer_id\":\"U00580\",\"store_id\":\"S004\",\"product_id\":\"P012\",\"quantity\":1,\"unit_price\":49,\"total_amount\":49,\"payment_method\":\"京东白条\",\"status\":\"已取消\",\"order_date\":\"2024-09-04T02:43:00\",\"pay_date\":null},{\"order_id\":\"OD0008207\",\"customer_id\":\"U00999\",\"store_id\":\"S004\",\"product_id\":\"P005\",\"quantity\":1,\"unit_price\":129,\"total_amount\":129,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T18:20:00\",\"pay_date\":\"2024-09-04T18:48:00\"},{\"order_id\":\"OD0008208\",\"customer_id\":\"U00901\",\"store_id\":\"S001\",\"product_id\":\"P011\",\"quantity\":1,\"unit_price\":119,\"total_amount\":119,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T00:00:00\",\"pay_date\":\"2024-09-04T00:23:00\"},{\"order_id\":\"OD0008209\",\"customer_id\":\"U01908\",\"store_id\":\"S002\",\"product_id\":\"P006\",\"quantity\":2,\"unit_price\":168,\"total_amoun"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_orders' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders/preview?limit=50",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_orders\",\"display_name\":\"原始订单表\",\"layer\":\"ODS\",\"description\":\"各渠道原始订单数据，包含订单号、客户、商品、金额、状态等\",\"row_count\":11683,\"columns\":[{\"name\":\"customer_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"quantity\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"unit_price\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"total_amount\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"payment_method\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"status\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"order_date\",\"type\":\"TIMESTAMP\",\"nullable\":true},{\"name\":\"pay_date\",\"type\":\"TIMESTAMP\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_products/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_products' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_products",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"columns\":[{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":false},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"category_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"price\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"cost\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"created_at\",\"type\":\"DATE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_products/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_products' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_products",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"columns\":[{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":false},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"category_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"price\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"cost\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"created_at\",\"type\":\"DATE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_stores/preview?limit=50",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_stores",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_stores\",\"display_name\":\"店铺主数据\",\"layer\":\"ODS\",\"description\":\"店铺主数据，包含店铺名称、平台、经营品类\",\"row_count\":5,\"columns\":[{\"name\":\"store_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"platform\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"category\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"created_at\",\"type\":\"DATE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_stores",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_stores/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_stores' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_traffic",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_traffic\",\"display_name\":\"流量日志表\",\"layer\":\"ODS\",\"description\":\"各渠道每日流量数据，UV/PV/跳出率\",\"row_count\":0,\"columns\":[{\"name\":\"id\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"visit_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"channel\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"uv\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"pv\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"avg_duration\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"bounce_rate\",\"type\":\"DOUBLE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_traffic/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_traffic\",\"rows\":[{\"id\":1,\"store_id\":\"S001\",\"visit_date\":\"2024-07-02\",\"channel\":\"自然搜索\",\"uv\":361,\"pv\":1596,\"avg_duration\":51.2,\"bounce_rate\":0.254},{\"id\":2,\"store_id\":\"S001\",\"visit_date\":\"2024-07-03\",\"channel\":\"自然搜索\",\"uv\":992,\"pv\":3662,\"avg_duration\":208.9,\"bounce_rate\":0.678},{\"id\":3,\"store_id\":\"S001\",\"visit_date\":\"2024-07-05\",\"channel\":\"自然搜索\",\"uv\":1013,\"pv\":4460,\"avg_duration\":206.8,\"bounce_rate\":0.603},{\"id\":4,\"store_id\":\"S001\",\"visit_date\":\"2024-07-06\",\"channel\":\"自然搜索\",\"uv\":486,\"pv\":1621,\"avg_duration\":227.4,\"bounce_rate\":0.371},{\"id\":5,\"store_id\":\"S001\",\"visit_date\":\"2024-07-07\",\"channel\":\"自然搜索\",\"uv\":1475,\"pv\":3101,\"avg_duration\":105.2,\"bounce_rate\":0.507},{\"id\":6,\"store_id\":\"S001\",\"visit_date\":\"2024-07-08\",\"channel\":\"自然搜索\",\"uv\":826,\"pv\":2837,\"avg_duration\":223,\"bounce_rate\":0.552},{\"id\":7,\"store_id\":\"S001\",\"visit_date\":\"2024-07-09\",\"channel\":\"自然搜索\",\"uv\":780,\"pv\":2334,\"avg_duration\":102.1,\"bounce_rate\":0.406},{\"id\":8,\"store_id\":\"S001\",\"visit_date\":\"2024-07-11\",\"channel\":\"自然搜索\",\"uv\":970,\"pv\":4020,\"avg_duration\":198.6,\"bounce_rate\":0.578},{\"id\":9,\"store_id\":\"S001\",\"visit_date\":\"2024-07-12\",\"channel\":\"自然搜索\",\"uv\":709,\"pv\":1860,\"avg_duration\":214.4,\"bounce_rate\":0.412},{\"id\":10,\"store_id\":\"S001\",\"visit_date\":\"2024-07-13\",\"channel\":\"自然搜索\",\"uv\":1453,\"pv\":6042,\"avg_duration\":194,\"bounce_rate\":0.516},{\"id\":11,\"store_id\":\"S001\",\"visit_date\":\"2024-07-14\",\"channel\":\"自然搜索\",\"uv\":684,\"pv\":3037,\"avg_duration\":263.8,\"bounce_rate\":0.468},{\"id\":12,\"store_id\":\"S001\",\"visit_date\":\"2024-07-15\",\"channel\":\"自然搜索\",\"uv\":1309,\"pv\":2951,\"avg_duration\":221.5,\"bounce_rate\":0.277},{\"id\":13,\"store_id\":\"S001\",\"visit_date\":\"2024-07-16\",\"channel\":\"自然搜索\",\"uv\":412,\"pv\":931,\"avg_duration\":191.2,\"bounce_rate\":0.302},{\"id\":14,\"store_id\":\"S001\",\"visit_date\":\"2024-07-18\",\"channel\":\"自然搜索\",\"uv\":1293,\"pv\":3127,\"avg_duration\":131.8,\"bounce_rate\":0.642},{\"id\":15,\"store_id\":\"S001\",\"visit_date\":\"2024-07-19\",\"channel\":\"自然搜索\",\"uv\":525,\"pv\":1663,\"avg_duration\":278.2,\"bounce_rate\":0.629},{\"id\":16,\"store_id\":\"S001\",\"visit_date\":\"2024-07-20\",\"channel\":\"自然搜索\",\"uv\":472,\"pv\":2351,\"avg_duration\":195,\"bounce_rate\":0.205},{\"id\":17,\"store_id\":\"S001\",\"visit_date\":\"2024-07-22\",\"channel\":\"自然搜索\",\"uv\":690,\"pv\":2185,\"avg_duration\":282.2,\"bounce_rate\":0.423},{\"id\":18,\"store_id\":\"S001\",\"visit_date\":\"2024-07-23\",\"channel\":\"自然搜索\",\"uv\":938,\"pv\":4139,\"avg_duration\":278.7,\"bounce_rate\":0.378},{\"id\":19,\"store_id\":\"S001\",\"visit_date\":\"2024-07-25\",\"channel\":\"自然搜索\",\"uv\":1401,\"pv\":5429,\"avg_duration\":248.3,\"bounce_rate\":0.442},{\"id\":20,\"store_id\":\"S001\",\"visit_date\":\"2024-07-26\",\"channel\":\"自然搜索\",\"uv\":867,\"pv\":2168,\"avg_duration\":141.2,\"bounce_rate\":0.537},{\"id\":21,\"store_id\":\"S001\",\"visit_date\":\"2024-07-27\",\"channel\":\"自然搜索\",\"uv\":1048,\"pv\":4055,\"avg_duration\":103.3,\"bounce_rate\":0.325},{\"id\":22,\"store_id\":\"S001\",\"visit_date\":\"2024-07-28\",\"channel\":\"自然搜索\",\"uv\":1508,\"pv\":4593,\"avg_duration\":107.1,\"bounce_rate\":0.325},{\"id\":23,\"store_id\":\"S001\",\"visit_date\":\"2024-07-29\",\"channel\":\"自然搜索\",\"uv\":1346,\"pv\":3097,\"avg_duration\":190.6,\"bounce_rate\":0.472},{\"id\":24,\"store_id\":\"S001\",\"visit_date\":\"2024-07-30\",\"channel\":\"自然搜索\",\"uv\":959,\"pv\":3256,\"avg_duration\":237.7,\"bounce_rate\":0.5},{\"id\":25,\"store_id\":\"S001\",\"visit_date\":\"2024-07-31\",\"channel\":\"自然搜索\",\"uv\":1219,\"pv\":4299,\"avg_duration\":37.3,\"bounce_rate\":0.235},{\"id\":26,\"store_id\":\"S001\",\"visit_date\":\"2024-08-02\",\"channel\":\"自然搜索\",\"uv\":1486,\"pv\":4979,\"avg_duration\":40.3,\"bounce_rate\":0.337},{\"id\":27,\"store_id\":\"S001\",\"visit_date\":\"2024-08-03\",\"channel\":\"自然搜索\",\"uv\":1758,\"pv\":4228,\"avg_duration\":48,\"bounce_rate\":0.61},{\"id\":28,\"store_id\":\"S001\",\"visit_date\":\"2024-08-04\",\"channel\":\"自然搜索\",\"uv\":594,\"pv\":1293,\"avg_duration\":182.2,\"bounce_rate\":0.403},{\"id\":29,\"store_id\":\"S001\",\"visit_date\":\"2024-08-05\",\"channel\":\"自然搜索\",\"uv\":1255,\"pv\":6259,\"avg_duration\":106.5,\"bounce_rate\":0.282},{\"id\":30,\"store_id\":\"S001\",\"visit_date\":\"2024-08-09\",\"channel\":\"自然搜索\",\"uv\":1256,\"pv\":5061,\"avg_duration\":159.3,\"bounce_rate\":0.641},{\"id\":31,\"store_id\":\"S001\",\""
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_csv/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_csv\",\"rows\":[],\"count\":0},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_csv",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_csv\",\"display_name\":\"tmp_uitest_agent5_csv\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"columns\":[{\"name\":\"campaign\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"impressions\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"clicks\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"cost\",\"type\":\"DOUBLE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_json",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'tmp_uitest_agent5_json' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_json/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_json\",\"rows\":[{\"sku\":\"UI-TEST-1\",\"name\":\"测试商品A\",\"price\":19.9,\"qty\":3},{\"sku\":\"UI-TEST-2\",\"name\":\"测试商品B\",\"price\":29.9,\"qty\":1},{\"sku\":\"UI-TEST-3\",\"name\":\"测试商品C\",\"price\":9.9,\"qty\":10}],\"count\":3},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_json/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'tmp_uitest_agent5_json' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_json",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_json\",\"display_name\":\"tmp_uitest_agent5_json\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"columns\":[{\"name\":\"sku\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"price\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"qty\",\"type\":\"INTEGER\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":[{\"table_name\":\"ads_key_metrics\",\"display_name\":\"核心经营指标\",\"layer\":\"ADS\",\"description\":\"全局核心指标：GMV/订单量/转化率/客单价/退货率/流量\",\"row_count\":92,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.509302\"},{\"table_name\":\"ads_product_ranking\",\"display_name\":\"商品排行榜\",\"layer\":\"ADS\",\"description\":\"商品GMV排行榜，含日度排名\",\"row_count\":1104,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.517911\"},{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":2000,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.522364\"},{\"table_name\":\"dwd_order_detail\",\"display_name\":\"订单明细宽表\",\"layer\":\"DWD\",\"description\":\"订单明细宽表，关联店铺/商品/客户维度\",\"row_count\":11683,\"column_count\":16,\"created_at\":\"2026-10-12T14:55:46.525407\"},{\"table_name\":\"dws_daily_product\",\"display_name\":\"商品日度汇总\",\"layer\":\"DWS\",\"description\":\"按商品+日期聚合的销售指标\",\"row_count\":1104,\"column_count\":7,\"created_at\":\"2026-10-12T14:55:46.529267\"},{\"table_name\":\"dws_daily_shop\",\"display_name\":\"店铺日度汇总\",\"layer\":\"DWS\",\"description\":\"按店铺+日期聚合的经营指标\",\"row_count\":460,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.533470\"},{\"table_name\":\"ods_customers\",\"display_name\":\"客户主数据\",\"layer\":\"ODS\",\"description\":\"客户主数据，包含昵称、性别、省份、注册日期\",\"row_count\":2000,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.536492\"},{\"table_name\":\"ods_dirty_probe\",\"display_name\":\"脏数据探针\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":4,\"column_count\":4,\"created_at\":\"2026-10-14T08:34:38.504299\"},{\"table_name\":\"ods_orders\",\"display_name\":\"原始订单表\",\"layer\":\"ODS\",\"description\":\"各渠道原始订单数据，包含订单号、客户、商品、金额、状态等\",\"row_count\":11683,\"column_count\":11,\"created_at\":\"2026-10-12T14:55:46.539995\"},{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.545131\"},{\"table_name\":\"ods_stores\",\"display_name\":\"店铺主数据\",\"layer\":\"ODS\",\"description\":\"店铺主数据，包含店铺名称、平台、经营品类\",\"row_count\":5,\"column_count\":5,\"created_at\":\"2026-10-12T14:55:46.549035\"},{\"table_name\":\"ods_traffic\",\"display_name\":\"流量日志表\",\"layer\":\"ODS\",\"description\":\"各渠道每日流量数据，UV/PV/跳出率\",\"row_count\":2269,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.552756\"},{\"table_name\":\"tmp_uitest_agent5_csv\",\"display_name\":\"tmp_uitest_agent5_csv\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:16.903692\"},{\"table_name\":\"tmp_uitest_agent5_json\",\"display_name\":\"tmp_uitest_agent5_json\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:17.221172\"}],\"msg\":\"success\"}"
+    }
+  ]
+}

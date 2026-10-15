@@ -1,0 +1,225 @@
+{
+ "started": "2026-10-15T02:40:19.667Z",
+ "finished": "2026-10-15T02:49:57.812Z",
+ "startedLocal": "2026/10/15 10:40:19",
+ "finishedLocal": "2026/10/15 10:49:57",
+ "steps": [
+  {
+   "area": "P01(公网)",
+   "ctl": "页面加载",
+   "action": "GET /p01/",
+   "actual": {
+    "title": "AI 电商客服 · 李奕波个人作品矩阵",
+    "url": "http://39.96.200.45:8090/p01/"
+   },
+   "verdict": "正常",
+   "shot": null,
+   "t": "10:40:28"
+  },
+  {
+   "area": "P01(公网)",
+   "ctl": "对话·kb-refund-how",
+   "action": "发送『怎么退款』(第1次)",
+   "expected": "命中知识库/退款流程，无「未检索到」",
+   "actual": {
+    "err": "请求失败（HTTP 502）。",
+    "s": "59.0",
+    "net": [
+     "10:41:27 502 POST http://39.96.200.45:8090/api/chat"
+    ]
+   },
+   "verdict": "公网失败(重试1次)",
+   "shot": "agent2-113-p01w-kb-refund-how-try1-fail.png",
+   "t": "10:41:28"
+  },
+  {
+   "area": "P01(公网)",
+   "ctl": "对话·kb-refund-how",
+   "action": "发送『怎么退款』(第2次)",
+   "expected": "命中知识库/退款流程，无「未检索到」",
+   "actual": {
+    "err": "请求失败（HTTP 502）。",
+    "s": "60.5",
+    "net": [
+     "10:42:48 502 POST http://39.96.200.45:8090/api/chat"
+    ]
+   },
+   "verdict": "公网失败→转本地",
+   "shot": "agent2-114-p01w-kb-refund-how-try2-fail.png",
+   "t": "10:42:49"
+  },
+  {
+   "area": "P01(公网)",
+   "ctl": "对话·kb-refund-policy",
+   "action": "发送『退款政策是什么』",
+   "expected": "命中知识库（退款/退货政策）",
+   "actual": {
+    "ok": true,
+    "s": "25.7",
+    "ans": "我们的退款和退货政策主要是这样的：\n\n1. **退款流程**：在【我的订单】里找到对应订单，点击『申请退款』并选择原因提交，商家会在 48 小时内审核。\n2. **退货政策**：商品签收后 7 天内，只要不影响二次销售就可以申请无理由退货（定制、生鲜、已拆封的贴身衣物等除外）。如果是已签收的商品，需要先申请退货并寄回。\n3. **到账时间**：审核通过后，款项一般 1~3 个工作日原路退回，银行渠道最长 7 个工作日。\n\n顺便提醒您，您这笔 iPhone 15 Pro 的订单目前还没发货，直接在订单里申请退款就行，不需要寄回商品哦。需要我帮您直接操作吗？",
+    "net": [
+     "10:43:15 200 POST http://39.96.200.45:8090/api/chat"
+    ]
+   },
+   "verdict": "正常",
+   "shot": "agent2-115-p01w-kb-refund-policy.png",
+   "t": "10:43:16"
+  },
+  {
+   "area": "P01(公网)",
+   "ctl": "对话·kb-refusal",
+   "action": "发送『你们公司CEO的私人手机号是多少？』",
+   "expected": "库外：明确拒答不编造",
+   "actual": {
+    "ok": true,
+    "s": "16.7",
+    "ans": "不好意思哦，CEO的私人手机号属于个人隐私，我这边无法提供呢。请问还有其他关于订单或商品的问题我可以帮您的吗？",
+    "net": [
+     "10:43:33 200 POST http://39.96.200.45:8090/api/chat"
+    ]
+   },
+   "verdict": "正常",
+   "shot": "agent2-116-p01w-kb-refusal.png",
+   "t": "10:43:34"
+  },
+  {
+   "area": "P01(公网)",
+   "ctl": "按钮·快捷chip「查订单状态」",
+   "action": "点击",
+   "expected": "发送并回答（真实订单状态）",
+   "actual": {
+    "s": "19.7",
+    "ans": "订单A20260410001当前状态是：商家正在备货，预计 24 小时内发出。。订单金额 ¥8999.00。",
+    "net": [
+     "10:43:54 200 POST http://39.96.200.45:8090/api/chat"
+    ]
+   },
+   "verdict": "正常",
+   "shot": "agent2-117-p01w-chip-order.png",
+   "t": "10:43:55"
+  },
+  {
+   "area": "P01(公网)",
+   "ctl": "按钮·语音播报",
+   "action": "点击后观察 ≤26s",
+   "expected": "成功播放或可见失败提示",
+   "actual": {
+    "cls": "tts-button|disabled=false",
+    "ttsResp": [
+     "10:44:07 503 http://39.96.200.45:8090/api/chat/tts"
+    ]
+   },
+   "verdict": "正常",
+   "shot": "agent2-118-p01w-tts.png",
+   "t": "10:44:08"
+  },
+  {
+   "area": "P01(本地)",
+   "ctl": "兜底说明",
+   "action": "-",
+   "actual": "下列问题公网 2 次失败，转本地 127.0.0.1:5173 复测: 怎么退款",
+   "verdict": "信息",
+   "shot": null,
+   "t": "10:44:08"
+  },
+  {
+   "area": "P01(本地)",
+   "ctl": "对话·kb-refund-how",
+   "action": "发送『怎么退款』",
+   "expected": "命中知识库/退款流程，无「未检索到」",
+   "actual": {
+    "ok": true,
+    "s": "13.6",
+    "ans": "请简单说一下退款原因。"
+   },
+   "verdict": "正常(本地)",
+   "shot": "agent2-119-p01wL-kb-refund-how.png",
+   "t": "10:44:28"
+  },
+  {
+   "area": "P04(公网)",
+   "ctl": "入口",
+   "action": "GET /p04/",
+   "actual": {
+    "url": "http://39.96.200.45:8090/console.html",
+    "title": "RAG 知识库 · 统一控制台"
+   },
+   "verdict": "正常",
+   "shot": null,
+   "t": "10:44:34"
+  },
+  {
+   "area": "P04(公网)",
+   "ctl": "按钮·重新检查",
+   "action": "点击",
+   "expected": "重新探活",
+   "actual": {
+    "before": "依赖正常：依赖全部在线，检索问答与文档导入均可端到端跑通。（检索问答可用）",
+    "after": "依赖正常：依赖全部在线，检索问答与文档导入均可端到端跑通。（检索问答可用）"
+   },
+   "verdict": "正常",
+   "shot": "agent2-120-p04w-health.png",
+   "t": "10:44:38"
+  },
+  {
+   "area": "P04(公网)",
+   "ctl": "检索问答·库内命中(复验)",
+   "action": "提问交换容量",
+   "expected": "答案 + 引用来源",
+   "actual": {
+    "s": "54",
+    "hasSrc": true,
+    "tail": "我 H3C LA2608 交换机的交换容量是多少？ AI 阶段进度（已完成7，进行中0） H3C LA2608 交换机的交换容量是 16 Gbps。 引用来源 3 条 [1] test_doc · H3C LA2608千兆以太网交换机 相关性 0.9961 # H3C LA2608 交换机用户手册 ## 产品概述 H3C LA2608 是一款千兆以太网交换机，提供 8 个 10/100/1000Mbps 自适应端口，支持自动翻转（Auto MDI/MDIX）功能。 ## 技术规格 - **端口数量**：8 个千兆以太网端口 - **交换容量**：16 Gbps - **包转发率**：11.9 Mpps - **MAC 地址表**：8K - [2] test_doc · H3C LA2608千兆以太网交换机 相关性 0.0112 ## 维护保养 - 定期用干布擦拭交换机表面灰尘 - 避免在潮湿、高温环境中使用 - 不要自行拆卸或维修交换机 - 雷雨天气建议断开电源和网线 ## 安全注意事项 1. 请勿在易燃易爆环境中使用本设备 2. 请勿将液体洒在交换机上 3. 请勿堵塞通风孔 4. 请使用原装电源线 5. 长时间不使用时建议断开电源 ## 保修信息 - **保修期限**：自购买之日起 3 年 - **保修范 [3] test_doc · H3C LA2608千兆以太网交换机 相关性"
+   },
+   "verdict": "正常",
+   "shot": "agent2-121-p04w-qa-hit.png",
+   "t": "10:45:34"
+  },
+  {
+   "area": "P04(公网)",
+   "ctl": "检索问答·库外拒答(复验)",
+   "action": "提问 iPhone 电池容量",
+   "expected": "明确拒答",
+   "actual": {
+    "s": "262",
+    "refused": true,
+    "text": " 我 请告诉我 iPhone 17 Pro Max 的电池容量是多少 AI 阶段进度（已完成7，进行中0） 抱歉，未找到相关产品，请提供准确型号以便我为您查询。"
+   },
+   "verdict": "正常",
+   "shot": "agent2-122-p04w-qa-refusal.png",
+   "t": "10:49:57"
+  }
+ ],
+ "p01_chat_network": [
+  "10:40:22 200 GET http://39.96.200.45:8090/api/chat/history?sender_id=u1001",
+  "10:41:27 502 POST http://39.96.200.45:8090/api/chat",
+  "10:41:47 200 GET http://39.96.200.45:8090/api/chat/history?sender_id=u1001",
+  "10:42:48 502 POST http://39.96.200.45:8090/api/chat",
+  "10:43:15 200 POST http://39.96.200.45:8090/api/chat",
+  "10:43:33 200 POST http://39.96.200.45:8090/api/chat",
+  "10:43:54 200 POST http://39.96.200.45:8090/api/chat",
+  "10:44:08 200 GET http://127.0.0.1:5173/api/chat/history?sender_id=u1001",
+  "10:44:27 200 POST http://127.0.0.1:5173/api/chat"
+ ],
+ "p01_request_failed": [],
+ "p01_tts_responses": [
+  "10:44:07 503 http://39.96.200.45:8090/api/chat/tts"
+ ],
+ "p01_console": [
+  "10:40:22 Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "10:40:23 Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "10:41:27 Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+  "10:41:27 WebSocket connection to 'ws://39.96.200.45:8090/' failed: Error during WebSocket handshake: Unexpected response code: 502",
+  "10:41:28 WebSocket connection to 'ws://39.96.200.45:8090/' failed: Error during WebSocket handshake: Unexpected response code: 502",
+  "10:41:47 Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "10:42:08 WebSocket connection to 'ws://39.96.200.45:8090/?token=VC7MRXCe8ZQ6' failed: Error in connection establishment: net::ERR_CONNECTION_TIMED_OUT",
+  "10:42:08 WebSocket connection to 'ws://localhost:5173/?token=VC7MRXCe8ZQ6' failed: Error in connection establishment: net::ERR_BLOCKED_BY_LOCAL_NETWORK_ACCESS_CHECKS",
+  "10:42:08 [vite] failed to connect to websocket.\nyour current setup:\n  (browser) 39.96.200.45:8090/ <--[HTTP]--> localhost:5173/ (server)\n  (browser) 39.96.200.45:8090/ <--[WebSocket (failing)]--> localhost:517",
+  "10:42:48 Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+  "10:44:07 Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+  "10:44:07 TTS error: Error: TTS 请求失败\n    at Proxy.playTts (http://39.96.200.45:8090/src/App.vue:614:29)",
+  "10:44:08 Failed to load resource: the server responded with a status of 404 (Not Found)"
+ ],
+ "p04_net4xx5xx": [],
+ "p04_console": []
+}

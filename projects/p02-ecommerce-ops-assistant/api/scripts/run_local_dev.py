@@ -17,8 +17,8 @@ import os
 import sys
 
 API_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# API_DIR = .../面试项目/projects/p02-ecommerce-ops-assistant/api
-# 向上 3 级到工作区根（面试项目/）
+# API_DIR = .../作品矩阵/projects/p02-ecommerce-ops-assistant/api
+# 向上 3 级到工作区根（作品矩阵/）
 WORKSPACE_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(API_DIR)))
 SHARED_LLM_GATEWAY = os.path.join(WORKSPACE_ROOT, "shared", "llm-gateway", "src")
 if os.path.isdir(SHARED_LLM_GATEWAY):

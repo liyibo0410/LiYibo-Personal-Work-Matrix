@@ -1,7 +1,7 @@
 ============================= test session starts =============================
-platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p09-ai-sales-assessment\.venv\Scripts\python.exe
+platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\作品矩阵\projects\p09-ai-sales-assessment\.venv\Scripts\python.exe
 cachedir: .pytest_cache
-rootdir: D:\software\PycharmProjects\面试项目\projects\p09-ai-sales-assessment
+rootdir: D:\software\PycharmProjects\作品矩阵\projects\p09-ai-sales-assessment
 configfile: pyproject.toml
 plugins: anyio-4.15.1
 collecting ... collected 41 items
@@ -50,7 +50,7 @@ tests/test_scoring.py::test_detailed_long_response_boosts_expertise PASSED [100%
 
 ============================== warnings summary ===============================
 .venv\Lib\site-packages\fastapi\testclient.py:1
-  D:\software\PycharmProjects\面试项目\projects\p09-ai-sales-assessment\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  D:\software\PycharmProjects\作品矩阵\projects\p09-ai-sales-assessment\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html

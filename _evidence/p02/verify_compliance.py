@@ -12,8 +12,8 @@ import io
 import os
 import sys
 
-API = r"D:\software\PycharmProjects\面试项目\projects\p02-ecommerce-ops-assistant\api"
-EV = r"D:\software\PycharmProjects\面试项目\_evidence\p02"
+API = r"D:\software\PycharmProjects\作品矩阵\projects\p02-ecommerce-ops-assistant\api"
+EV = r"D:\software\PycharmProjects\作品矩阵\_evidence\p02"
 sys.path.insert(0, API)
 
 out = []

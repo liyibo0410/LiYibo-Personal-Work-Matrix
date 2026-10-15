@@ -16,7 +16,7 @@ import uuid
 from pathlib import Path
 from unittest.mock import MagicMock
 
-ROOT = r"D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base"
+ROOT = r"D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base"
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 

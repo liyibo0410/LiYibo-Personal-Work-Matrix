@@ -13,8 +13,8 @@ import json
 import os
 import sys
 
-API = r"D:\software\PycharmProjects\面试项目\projects\p02-ecommerce-ops-assistant\api"
-EV = r"D:\software\PycharmProjects\面试项目\_evidence\p02"
+API = r"D:\software\PycharmProjects\作品矩阵\projects\p02-ecommerce-ops-assistant\api"
+EV = r"D:\software\PycharmProjects\作品矩阵\_evidence\p02"
 
 os.environ["DATABASE_URL"] = "sqlite:///" + os.path.join(API, "local_dev.db")
 os.environ["TASK_QUEUE_BACKEND"] = "inline"
@@ -38,9 +38,9 @@ from app.models import UserRole  # noqa: E402
 from app.services.bootstrap import ensure_bootstrap_user  # noqa: E402
 
 ACCOUNTS = [
-    ("owner", UserRole.OWNER, "owner@cloudpivot.demo", "CloudPivot@2026"),
-    ("operator", UserRole.OPERATOR, "cs@cloudpivot.demo", "CloudPivot@2026"),
-    ("viewer", UserRole.VIEWER, "viewer@cloudpivot.demo", "CloudPivot@2026"),
+    ("owner", UserRole.OWNER, "owner@portfolio.demo", "Li Yibo's Personal Portfolio@2026"),
+    ("operator", UserRole.OPERATOR, "cs@portfolio.demo", "Li Yibo's Personal Portfolio@2026"),
+    ("viewer", UserRole.VIEWER, "viewer@portfolio.demo", "Li Yibo's Personal Portfolio@2026"),
 ]
 
 w("=" * 74)
@@ -49,7 +49,7 @@ w("=" * 74)
 for name, role, email, pwd in ACCOUNTS:
     with SessionLocal() as db:
         user, created = ensure_bootstrap_user(
-            db, email=email, display_name=f"云枢 {name}", password=pwd, role=role
+            db, email=email, display_name=f"示例 {name}", password=pwd, role=role
         )
         info = (created, user.email, user.role.value)
     w(f"  [{name:8s}] created={info[0]!s:5s} email={info[1]:26s} role={info[2]}")

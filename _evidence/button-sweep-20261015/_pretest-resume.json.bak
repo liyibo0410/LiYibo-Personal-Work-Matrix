@@ -1,0 +1,38 @@
+{
+  "_comment": "材料区（外壳首页 #lp-resume）单一真源。外壳 GET /api/resume 读本文件，写入走 POST /api/resume（仅 owner 私密通道，sub==__owner__）。结构：name=姓名，role=职位方向，pdf=完整材料 PDF 路径，contacts.{phone,email,github,edu,certs}=联系方式，skills[{t,d}]=核心技术能力，projects[{title,desc,tags[]}]=项目经验，education=教育背景。",
+  "name": "李奕波",
+  "role": "AI 应用开发 / FDE",
+  "pdf": "/https://github.com/liyibo0410/yunshu-ai-portfolio",
+  "contacts": {
+    "phone": "已脱敏",
+    "email": "2332908627@qq.com",
+    "github": "github.com/liyibo0410",
+    "edu": "大专 · 河南建筑职业技术学院",
+    "certs": "影刀 RPA 高级工程师 · 英语四级"
+  },
+  "skills": [
+    { "t": "RAG 全链路", "d": "文档解析 / 切分 / 向量化 / 混合检索 / 重排 / 生成 / 评测；BGE-M3、Milvus / Qdrant、RRF 融合、BGE 重排、HyDE、查询改写、引用溯源。" },
+    { "t": "Agent 编排", "d": "LangChain / LangGraph，ReAct、计划执行、多子智能体协同；函数调用、MCP 工具接入、Pydantic 结构化输出校验。" },
+    { "t": "工程化", "d": "Python / FastAPI 异步服务 + SSE 流式；MySQL、Redis、Docker、Linux、Git 完整工程化与云部署上线。" },
+    { "t": "微调与部署", "d": "轻量化微调、训练集构建、开源模型私有化部署、vLLM 推理加速。" },
+    { "t": "多模态 & 评测", "d": "视觉大模型 + OCR 识别扫描件 / 表格；Ragas 指标评测 + 兜底策略；Dify / Coze 工作流。" }
+  ],
+  "projects": [
+    {
+      "title": "企业运营中台 · 四层 AI 中台底座（项目负责人）",
+      "desc": "自研大模型网关（多端点故障转移 / 成本统计 / 降级）、服务注册中心消除跨模块硬编码、微前端 iframe + postMessage 统一令牌与主题、DuckDB 分层数仓 + ETL 血缘 + 数据质量校验。",
+      "tags": ["10 后端 + 4 前端", "506 测试", "跨模块 HTTP 真实调用 + 异常自动降级"]
+    },
+    {
+      "title": "团队运营助手 · 多租户 AI 运营 SaaS",
+      "desc": "四角色 RBAC + 路由守卫 + 按钮级权限；广告法合规引擎（108 规则、近形字 / 零宽字符 / 全角空格三级匹配、法条溯源）；LangGraph 编排多智能体（商品诊断 / 竞品分析 / 创意策划 / 经营复盘，断点恢复 + 人工审批）。",
+      "tags": ["178 Pytest", "RBAC 403 已验", "合规高危拦截 100%", "F1=98.2%"]
+    },
+    {
+      "title": "垂直场景 AI 应用套件",
+      "desc": "私有知识库（双链路检索、RRF + 交叉编码精排、修复重排量纲缺陷、Ragas 忠实度 0.978）、零依赖合同审查（99ms 启动、边界条款转人工）、AI 客服（两阶段意图、防幻觉、73 Pytest）、NL2SQL（只读护栏拦截 DDL/DML、137 Pytest）。",
+      "tags": ["23+15 重排单测", "48 Pytest + 66/66 自检"]
+    }
+  ],
+  "education": "河南建筑职业技术学院（大专）· 专业排名第一 · 国家奖学金 · 国家励志奖学金 · 省级优秀毕业生。"
+}

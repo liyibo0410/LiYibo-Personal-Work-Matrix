@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-cp-brand-title="P06 数据中台 · {name_en}">P06 数据中台 - CloudPivot</title>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<title data-cp-brand-title="P06 数据中台 · {name_en}">P06 数据中台 - Li Yibo's Personal Portfolio</title>
+<!-- echarts 改为「按需懒加载」：首屏（数据总览）根本用不到它，仅当用户打开「指标探查」时
+     才注入脚本，避免 1MB 全量包阻塞首屏解析与渲染（实测为最大单一阻塞项）。见 ensureEcharts()。 -->
 <!-- 统一设计系统：tokens.css 是配色/间距/字体唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
 <link rel="stylesheet" href="/shared/ui-kit/tokens.css">
 <script src="/shared/config/services.js"></script>
@@ -139,8 +140,8 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-header">
-      <div class="cp-brandmark" data-cp-brand="logo">云枢</div>
-      <h1 data-cp-brand="company">云枢智能</h1>
+      <div class="cp-brandmark" data-cp-brand="logo">YD</div>
+      <h1 data-cp-brand="company">李奕波个人作品矩阵</h1>
       <div class="subtitle">P06 数据中台</div>
     </div>
     <nav class="sidebar-nav">

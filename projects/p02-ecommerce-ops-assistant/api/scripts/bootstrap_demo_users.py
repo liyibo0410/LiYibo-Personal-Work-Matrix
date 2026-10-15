@@ -17,10 +17,10 @@ from app.models import UserRole
 from app.services.bootstrap import ensure_bootstrap_user
 
 DEMO_USERS = [
-    {"email": "boss@cloudpivot.com", "display_name": "张总(老板)", "password": "Test123456", "role": UserRole.OWNER},
-    {"email": "ops@cloudpivot.com", "display_name": "李运营", "password": "Test123456", "role": UserRole.OPERATOR},
-    {"email": "design@cloudpivot.com", "display_name": "王美工", "password": "Test123456", "role": UserRole.DESIGNER},
-    {"email": "cs@cloudpivot.com", "display_name": "赵客服", "password": "Test123456", "role": UserRole.CS},
+    {"email": "boss@example.com", "display_name": "张总(老板)", "password": "Test123456", "role": UserRole.OWNER},
+    {"email": "ops@example.com", "display_name": "李运营", "password": "Test123456", "role": UserRole.OPERATOR},
+    {"email": "design@example.com", "display_name": "王美工", "password": "Test123456", "role": UserRole.DESIGNER},
+    {"email": "cs@example.com", "display_name": "赵客服", "password": "Test123456", "role": UserRole.CS},
 ]
 
 def main():

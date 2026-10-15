@@ -1,0 +1,281 @@
+{
+ "started": "2026-10-15T02:27:15.933Z",
+ "finished": "2026-10-15T02:31:23.796Z",
+ "startedLocal": "2026/10/15 10:27:15",
+ "finishedLocal": "2026/10/15 10:31:23",
+ "steps": [
+  {
+   "area": "P01",
+   "ctl": "页面加载",
+   "action": "GET http://39.96.200.45:8090/p01/",
+   "actual": {
+    "title": "AI 电商客服 · 李奕波个人作品矩阵",
+    "turns": 72,
+    "chips": [],
+    "sidebarCards": 5
+   },
+   "verdict": "正常",
+   "shot": "agent2-97-p01v-initial.png",
+   "t": "10:27:23"
+  },
+  {
+   "area": "P01",
+   "ctl": "按钮·新对话(清空)",
+   "action": "点击",
+   "expected": "回到欢迎页",
+   "actual": {
+    "turns": 0,
+    "chips": 4
+   },
+   "verdict": "正常",
+   "shot": "agent2-98-p01v-cleared-welcome.png",
+   "t": "10:27:26"
+  },
+  {
+   "area": "P01",
+   "ctl": "对话·怎么退款",
+   "action": "发送",
+   "expected": "命中种子 FAQ，无「未检索到」",
+   "actual": {
+    "st": "ok(42.5s)",
+    "ans": "",
+    "hitted": true
+   },
+   "verdict": "缺陷",
+   "shot": "agent2-99-p01v-kb-refund-how.png",
+   "t": "10:28:08"
+  },
+  {
+   "area": "P01",
+   "ctl": "对话·退款政策是什么",
+   "action": "发送",
+   "expected": "命中种子 FAQ",
+   "actual": {
+    "st": "ok(60.0s)",
+    "ans": "",
+    "hitted": true
+   },
+   "verdict": "缺陷",
+   "shot": "agent2-100-p01v-kb-refund-policy.png",
+   "t": "10:29:10"
+  },
+  {
+   "area": "P01",
+   "ctl": "对话·库外问题(CEO手机号)",
+   "action": "发送",
+   "expected": "明确拒答不编造",
+   "actual": {
+    "st": "ok(33.1s)",
+    "ans": ""
+   },
+   "verdict": "缺陷",
+   "shot": "agent2-101-p01v-kb-refusal.png",
+   "t": "10:29:46"
+  },
+  {
+   "area": "P01",
+   "ctl": "按钮·快捷chip「查订单状态」",
+   "action": "点击",
+   "expected": "发送问句并回答",
+   "actual": {
+    "st": "ok(0.0s)",
+    "user": "查订单状态",
+    "ans": ""
+   },
+   "verdict": "缺陷",
+   "shot": "agent2-102-p01v-chip-order.png",
+   "t": "10:29:48"
+  },
+  {
+   "area": "P01",
+   "ctl": "按钮·刷新对象列表",
+   "action": "点击",
+   "expected": "重新拉取侧栏",
+   "actual": {
+    "before": 5,
+    "afterCount": 5,
+    "after": [
+     "iPhone 15 Pro 256G 远峰蓝 ￥8999.00 订单号：A20260410001 待发货 发送订单",
+     "小米恒温电热水壶 3 ￥149.00 订单号：A20260408002 运输中 发送订单",
+     "Apple Watch Series 9 GPS 45mm ￥2999.00 订单号：A20260407004 待揽收 ",
+     "暖火暖宝宝贴 20片装 ￥14.90 订单号：A20260405003 已完成 发送订单",
+     "美的空气炸锅 5L ￥399.00 订单号：A20260402005 已取消 发送订单"
+    ]
+   },
+   "verdict": "正常",
+   "shot": "agent2-103-p01v-sidebar-refresh.png",
+   "t": "10:29:51"
+  },
+  {
+   "area": "P01",
+   "ctl": "按钮·语音播报(复验)",
+   "action": "点击后等 6s",
+   "expected": "正常播放或给出可见提示",
+   "actual": {
+    "btnClass": "tts-button tts-loading|disabled=true",
+    "ttsResponses": []
+   },
+   "verdict": "缺陷(复现:503无提示)",
+   "shot": "agent2-104-p01v-tts-state.png",
+   "t": "10:29:58"
+  },
+  {
+   "area": "P04",
+   "ctl": "入口 GET /p04/",
+   "action": "访问",
+   "expected": "307 → 可用页面",
+   "actual": {
+    "land": {
+     "url": "http://39.96.200.45:8090/console.html",
+     "title": "RAG 知识库 · 统一控制台",
+     "health": "依赖正常：依赖全部在线，检索问答与文档导入均可端到端跑通。（检索问答可用） Milvus 向量库：在线 · 硬依赖 MongoDB 文档/历史库：在线 · 硬依赖 MinIO 对象存储：在线 BGE-M3 嵌入模型：在线 · 硬依赖 LLM 生成凭据：在线 · 硬依赖 重新检查"
+    },
+    "redirects": [
+     "307 GET http://39.96.200.45:8090/p04/ -> loc=/console.html"
+    ],
+    "cookies": [
+     "cp_mod=p04"
+    ]
+   },
+   "verdict": "正常",
+   "shot": "agent2-105-p04v-landing.png",
+   "t": "10:30:04"
+  },
+  {
+   "area": "P04",
+   "ctl": "Tab·文档管理(列表)",
+   "action": "切换",
+   "expected": "列出种子文档，无「UI测试-可删」残留",
+   "actual": {
+    "rows": [
+     "hak180产品安全手册.pdf 627.8 KB 与另一份同名，删除会一并清理其向量 - 2026/10/13 06:25:03 处理中 预览切片删除",
+     "华为擎云B530 用户指南-(PUCZ,Windows11_03,zh-cn).pdf 670.3 KB 华为擎云B530台式机 2026/10/12 06:19:38 已完成 预览切片删除",
+     "hak180产品安全手册.pdf 627.8 KB 与另一份同名，删除会一并清理其向量 Brother HAK 180 烫金机 2026/10/12 06:19:38 已完成 预览切片删除",
+     "H3C LA2608室内无线网关 用户手册-6W100-整本手册.pdf 171.0 KB H3C LA2608室内无线网关 2026/10/12 06:19:38 已完成 预览切片删除",
+     "test_doc.md 2.8 KB H3C LA2608千兆以太网交换机 2026/10/12 06:15:11 已完成 预览切片删除"
+    ],
+    "note": "共 5 个文档，36 个切片，今日上传 0 个"
+   },
+   "verdict": "正常",
+   "shot": "agent2-106-p04v-docs-list.png",
+   "t": "10:30:09"
+  },
+  {
+   "area": "P04",
+   "ctl": "检索问答·库内命中",
+   "action": "提问 H3C LA2608 交换容量",
+   "expected": "答案 + 引用来源",
+   "actual": {
+    "hasSrc": true,
+    "tail": "干布擦拭交换机表面灰尘 - 避免在潮湿、高温环境中使用 - 不要自行拆卸或维修交换机 - 雷雨天气建议断开电源和网线 ## 安全注意事项 1. 请勿在易燃易爆环境中使用本设备 2. 请勿将液体洒在交换机上 3. 请勿堵塞通风孔 4. 请使用原装电源线 5. 长时间不使用时建议断开电源 ## 保修信息 - **保修期限**：自购买之日起 3 年 - **保修范 [3] test_doc · H3C LA2608千兆以太网交换机 相关性 0.0025 ## 指示灯说明 | 指示灯 | 状态 | 说明 | |--------|------|------| | PWR | 常亮 | 电源正常 | | PWR | 熄灭 | 未接通电源 | | LINK | 常亮 | 端口已连接设备 | | LINK | 闪烁 | 端口正在传输数据 | | ACT | 闪烁 | 数据活动指示 | ## 故障排查 ### 问题：交换机无法开机 **可能原因：",
+    "s": "18"
+   },
+   "verdict": "正常",
+   "shot": "agent2-107-p04v-qa-seed.png",
+   "t": "10:30:28"
+  },
+  {
+   "area": "P04",
+   "ctl": "检索问答·库外拒答",
+   "action": "提问 iPhone 电池容量",
+   "expected": "明确拒答/未记载",
+   "actual": {
+    "refused": true,
+    "tail": " 保修信息 - **保修期限**：自购买之日起 3 年 - **保修范 [3] test_doc · H3C LA2608千兆以太网交换机 相关性 0.0025 ## 指示灯说明 | 指示灯 | 状态 | 说明 | |--------|------|------| | PWR | 常亮 | 电源正常 | | PWR | 熄灭 | 未接通电源 | | LINK | 常亮 | 端口已连接设备 | | LINK | 闪烁 | 端口正在传输数据 | | ACT | 闪烁 | 数据活动指示 | ## 故障排查 ### 问题：交换机无法开机 **可能原因： 我 请告诉我 iPhone 17 Pro Max 的电池容量是多少 AI 阶段进度（已完成7，进行中1） 确认问题产品已完成 切片搜索已完成 网络搜索已完成 切片搜索(假设性文档)已完成 倒排融合已完成 重排序已完成 生成答案已完成 正在进行确认问题产品... 正在检索知识库并生成回答…",
+    "s": "4"
+   },
+   "verdict": "正常",
+   "shot": "agent2-108-p04v-qa-refusal.png",
+   "t": "10:30:32"
+  },
+  {
+   "area": "P04",
+   "ctl": "chat.html 首屏",
+   "action": "打开",
+   "expected": "加载 + API 连接提示",
+   "actual": {
+    "apiPill": "API: 已连接",
+    "msgs": 1,
+    "url": "http://39.96.200.45:8090/p04/chat.html"
+   },
+   "verdict": "正常",
+   "shot": "agent2-109-p04v-chat-initial.png",
+   "t": "10:30:37"
+  },
+  {
+   "area": "P04",
+   "ctl": "chat.html·库内命中",
+   "action": "提问千兆端口数",
+   "expected": "回答 + 参考来源",
+   "actual": {
+    "s": "36",
+    "text": "H3C LA2608 交换机有 8 个千兆端口。\n\n阶段进度（已完成7，进行中0，状态：已完成）\n参考来源 (3)\n这个回答有帮助吗？\n👍\n👎",
+    "sources": "参考来源 (3)"
+   },
+   "verdict": "正常",
+   "shot": "agent2-110-p04v-chat-answer.png",
+   "t": "10:31:13"
+  },
+  {
+   "area": "P04",
+   "ctl": "chat.html·库外拒答",
+   "action": "提问 iPhone 电池容量",
+   "expected": "拒答 + 标签",
+   "actual": {
+    "s": "9",
+    "text": "抱歉，未找到相关产品，请提供准确型号以便我为您查询。\n\n阶段进度（已完成7，进行中0，状态：已完成）\n库内无此产品\n当前知识库没有该产品的文档，可在「上传导入」里先把手册入库。\n这个回答有帮助吗？\n👍\n👎",
+    "refusal": "库内无此产品\n当前知识库没有该产品的文档，可在「上传导入」里先把手册入库。"
+   },
+   "verdict": "正常",
+   "shot": "agent2-111-p04v-chat-refusal.png",
+   "t": "10:31:22"
+  },
+  {
+   "area": "P04",
+   "ctl": "chat.html·流式输出开关",
+   "action": "切两次",
+   "expected": "checked 状态切换且可还原",
+   "actual": {
+    "before": true,
+    "mid": false,
+    "after": true
+   },
+   "verdict": "正常",
+   "shot": null,
+   "t": "10:31:23"
+  }
+ ],
+ "p01_console": [
+  "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "[error] Failed to load resource: net::ERR_EMPTY_RESPONSE",
+  "[error] Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+  "[error] WebSocket connection to 'ws://39.96.200.45:8090/' failed: Error during WebSocket handshake: Unexpected response code: 502",
+  "[error] WebSocket connection to 'ws://39.96.200.45:8090/' failed: Error during WebSocket handshake: Unexpected response code: 502",
+  "[error] WebSocket connection to 'ws://39.96.200.45:8090/' failed: Error in connection establishment: net::ERR_CONNECTION_TIMED_OUT",
+  "[error] WebSocket connection to 'ws://39.96.200.45:8090/' failed: Error during WebSocket handshake: Unexpected response code: 502",
+  "[error] Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+  "[error] WebSocket connection to 'ws://39.96.200.45:8090/' failed: Error during WebSocket handshake: Unexpected response code: 502",
+  "[error] Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+  "[error] WebSocket connection to 'ws://39.96.200.45:8090/' failed: Error during WebSocket handshake: Unexpected response code: 502",
+  "[error] Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+  "[error] Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+  "[error] Failed to load resource: net::ERR_EMPTY_RESPONSE"
+ ],
+ "p01_net_problems": [
+  "FAIL http://39.96.200.45:8800/api/brand :: net::ERR_EMPTY_RESPONSE",
+  "502 POST http://39.96.200.45:8090/api/chat",
+  "FAIL http://39.96.200.45:8090/api/chat :: net::ERR_ABORTED",
+  "502 POST http://39.96.200.45:8090/api/chat",
+  "502 POST http://39.96.200.45:8090/api/chat",
+  "502 GET http://39.96.200.45:8090/commerce/users/u1001/orders",
+  "502 GET http://39.96.200.45:8090/commerce/users/u1001/products",
+  "FAIL http://39.96.200.45:8800/api/brand :: net::ERR_EMPTY_RESPONSE"
+ ],
+ "p01_tts_responses": [],
+ "p04_console": [],
+ "p04_net_problems": [
+  "FAIL http://39.96.200.45:8090/stream/kb-console-mv8x85q9-4vl37s :: net::ERR_ABORTED",
+  "FAIL http://39.96.200.45:8090/stream/sess-m9uvflnxcymv8x8uyf :: net::ERR_ABORTED",
+  "FAIL http://39.96.200.45:8090/stream/sess-m9uvflnxcymv8x8uyf :: net::ERR_ABORTED"
+ ]
+}

@@ -1,0 +1,102 @@
+{
+  "ts": "2026-10-15T02:45:32.962Z",
+  "dash": {
+    "badge": "15 张表 / 3.24万 行",
+    "stats": 4
+  },
+  "rows": [
+    {
+      "t": "ads_key_metrics",
+      "v": "ok",
+      "attempt": 1,
+      "title": "核心经营指标 (ads_key_metrics)"
+    },
+    {
+      "t": "ads_product_ranking",
+      "v": "ok",
+      "attempt": 1,
+      "title": "商品排行榜 (ads_product_ranking)"
+    },
+    {
+      "t": "dwd_customer_profile",
+      "v": "ok",
+      "attempt": 1,
+      "title": "客户画像表 (dwd_customer_profile)"
+    },
+    {
+      "t": "dwd_order_detail",
+      "v": "ok",
+      "attempt": 1,
+      "title": "订单明细宽表 (dwd_order_detail)"
+    },
+    {
+      "t": "tmp_uitest_agent5_json",
+      "v": "ok",
+      "attempt": 1,
+      "title": "tmp_uitest_agent5_json (tmp_uitest_agent5_json)"
+    },
+    {
+      "t": "dws_daily_product",
+      "v": "ok",
+      "attempt": 1,
+      "title": "商品日度汇总 (dws_daily_product)"
+    },
+    {
+      "t": "dws_daily_shop",
+      "v": "ok",
+      "attempt": 1,
+      "title": "店铺日度汇总 (dws_daily_shop)"
+    },
+    {
+      "t": "ods_customers",
+      "v": "ok",
+      "attempt": 1,
+      "title": "客户主数据 (ods_customers)"
+    },
+    {
+      "t": "ods_dirty_probe",
+      "v": "ok",
+      "attempt": 1,
+      "title": "脏数据探针 (ods_dirty_probe)"
+    },
+    {
+      "t": "ods_orders",
+      "v": "ok",
+      "attempt": 1,
+      "title": "原始订单表 (ods_orders)"
+    },
+    {
+      "t": "ods_products",
+      "v": "ok",
+      "attempt": 1,
+      "title": "商品主数据 (ods_products)"
+    },
+    {
+      "t": "ods_stores",
+      "v": "ok",
+      "attempt": 1,
+      "title": "店铺主数据 (ods_stores)"
+    },
+    {
+      "t": "ods_traffic",
+      "v": "ok",
+      "attempt": 1,
+      "title": "流量日志表 (ods_traffic)"
+    },
+    {
+      "t": "tmp_uitest_agent5_csv",
+      "v": "ok",
+      "attempt": 1,
+      "title": "tmp_uitest_agent5_csv (tmp_uitest_agent5_csv)"
+    },
+    {
+      "t": "tmp_uitest_lock_smoke",
+      "v": "ok",
+      "attempt": 1,
+      "title": "tmp_uitest_lock_smoke (tmp_uitest_lock_smoke)"
+    }
+  ],
+  "ok": 15,
+  "fail": [],
+  "summary": "成功 15/15；失败 0"
+}

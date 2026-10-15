@@ -1,4 +1,4 @@
-# 截图墙建档 · 云枢智能 CloudPivot 作品集
+# 截图墙建档 · 李奕波个人作品矩阵 Li Yibo's Personal Portfolio 作品集
 
 > 建档人：证据与截图策展（D 号）｜建档时间：2026-10-15｜方法：**每张图都用 `read` 工具实际打开看过**（Pillow 12.3.0 实测宽高与字节数），不按文件名臆测画面。
 > 本文只覆盖三个既有目录：`_evidence/screenshots/`、`_evidence/portfolio/`、`_evidence/portfolio-matrix/`。
@@ -25,8 +25,8 @@
 | `_evidence/screenshots/p08.png` | 1400×900 | 81.5 KB | 1.556 | P08「直播切片 · 数据概览」：KPI 直播场次 3 / 生成切片 15 / 平均评分 68.4 / 任务队列 0；热门关键词表（下单·回购·小龙虾·限量·精华…）；最近切片列表。左下「v1.0.0 · Mock Mode」+「ASR / 评分 / 视频 均为模拟」 | 深色 | 是 | 无 | 模块墙 | P08 直播切片：ASR 转写 · 高光打分 · 自动切片（Mock 边界在画面内） |
 | `_evidence/screenshots/p09.png` | 1400×900 | 60.5 KB | 1.556 | P09「Assessment Dashboard」（英文 UI，P09 Module 徽标）：顶部橙色 Mock 提示；KPI 23 / 5 / 80.7 / 15；Score Distribution 柱图为空，Dimension Averages 雷达图有 5 维 | 深色 | 主体英文 | 无 | 模块墙 | P09 AI 销售考核：会话质检 · 多维评分 · 排行榜 |
 | `_evidence/screenshots/p10.png` | 1400×900 | 41.9 KB | 1.556 | P10「Dashboard」（英文 UI）：Mock Mode 橙色横幅（训练/评测/部署均为模拟）；KPI 3 / 2 / 3 / 45,700 / 83.7% / 1；Recent Training Runs 表两行（`cs-qa-lora-run1`、`product-desc-qlora-run2`，completed） | 深色 | 主体英文 | 无 | 模块墙 | P10 模型微调平台：数据集 · 训练 · 评测 · 模型仓库（Mock 模式） |
-| `_evidence/screenshots/portfolio.png` | 1400×900 | 122.0 KB | 1.556 | **旧版**作品集首页（深色）：「云枢智能 CloudPivot」大标题 + 10 / 4 / 200+ / 50万 指标 + 「十大模块」标题起步。与 `live-before-20261014.png` 同代 | 深色 | 是 | 无 | 仅证据（旧版对照） | 改造前：旧版作品集首页 |
-| `_evidence/screenshots/shell.png` | 1400×900 | 69.1 KB | 1.556 | **统一外壳工作台**：中「欢迎使用 云枢智能」，左分层导航（L3 应用：P01/P02/P05/P09；L2 能力：P03/P04/P07/P08；模型&数据：P10/P06；门户：工作台首页），右十张模块入口卡（每卡有状态点）。右上角身份显示 **`张总（老板）` · Owner（演示角色名，非真实姓名）** | 深色 | 是 | 无 | **首屏候选** / 模块墙 | 统一外壳：一个入口挂载十个模块，左侧按四层架构导航 |
+| `_evidence/screenshots/portfolio.png` | 1400×900 | 122.0 KB | 1.556 | **旧版**作品集首页（深色）：「李奕波个人作品矩阵 Li Yibo's Personal Portfolio」大标题 + 10 / 4 / 200+ / 50万 指标 + 「十大模块」标题起步。与 `live-before-20261014.png` 同代 | 深色 | 是 | 无 | 仅证据（旧版对照） | 改造前：旧版作品集首页 |
+| `_evidence/screenshots/shell.png` | 1400×900 | 69.1 KB | 1.556 | **统一外壳工作台**：中「欢迎使用 李奕波个人作品矩阵」，左分层导航（L3 应用：P01/P02/P05/P09；L2 能力：P03/P04/P07/P08；模型&数据：P10/P06；门户：工作台首页），右十张模块入口卡（每卡有状态点）。右上角身份显示 **`张总（老板）` · Owner（演示角色名，非真实姓名）** | 深色 | 是 | 无 | **首屏候选** / 模块墙 | 统一外壳：一个入口挂载十个模块，左侧按四层架构导航 |
 | `_evidence/screenshots/screenshots-mobile.zip` | — | 899.5 KB | — | 压缩包（非图片，未解包核对内容——**未验证**） | — | — | **未验证** | 仅证据（归档） | 移动端截图归档 |
 
 ### B. `_evidence/portfolio/`（4 张）
@@ -42,7 +42,7 @@
 
 | 路径 | 宽×高 | 大小 | 长宽比 | 画面主体（目视） | 明/暗 | 中文 | 隐私（手机号/邮箱/姓名） | 用途 | 建议图注 |
 |---|---|---|---|---|---|---|---|---|---|
-| `_evidence/portfolio-matrix/self-check-desktop.png` | 1440×1100 | 114.1 KB | 1.309 | 简历式「作品矩阵」首屏：大字 hero **「李奕波 / LI YIBO」** + 「把十个 AI 能力模块，跑成同一套中台。」+ 指标 10 / 731 / 4 / 6 + 按钮「查看作品矩阵 / 在线演示（本机:8800）/ 简历 PDF」 | 深色 | 是 | **含真实姓名「李奕波 / LI YIBO」** | 仅证据（含姓名） | 作品矩阵首页（深色） |
+| `_evidence/portfolio-matrix/self-check-desktop.png` | 1440×1100 | 114.1 KB | 1.309 | 矩阵式「作品矩阵」首屏：大字 hero **「李奕波 / LI YIBO」** + 「把十个 AI 能力模块，跑成同一套中台。」+ 指标 10 / 731 / 4 / 6 + 按钮「查看作品矩阵 / 在线演示（本机:8800）/ 材料 PDF」 | 深色 | 是 | **含真实姓名「李奕波 / LI YIBO」** | 仅证据（含姓名） | 作品矩阵首页（深色） |
 | `_evidence/portfolio-matrix/self-check-light.png` | 1440×1100 | 116.7 KB | 1.309 | 与上同视图，浅色主题 | **浅色** | 是 | **含真实姓名「李奕波 / LI YIBO」** | 仅证据（含姓名） | 作品矩阵首页（浅色） |
 | `_evidence/portfolio-matrix/self-check-dark.png` | 1440×1100 | 112.8 KB | 1.309 | 与 `self-check-desktop` 基本同一深色视图（主题切换的深色态留档） | 深色 | 是 | **含真实姓名「李奕波 / LI YIBO」** | 仅证据 | 作品矩阵首页（深色主题） |
 | `_evidence/portfolio-matrix/self-check-mobile.png` | 390×880 | 48.5 KB | 0.443 | 移动端 390px 首屏（浅色）：姓名 + 主张 + 两个按钮 + 指标卡起始。响应式证据 | **浅色** | 是 | **含真实姓名「李奕波 / LI YIBO」** | 仅证据（响应式） | 移动端首屏（390px） |
@@ -106,7 +106,7 @@
 
 ```html
 <p align="center">
-  <img src="_evidence/portfolio/static-site-top.png" width="49%" alt="云枢智能 · 作品集首屏（浅色态）" />
+  <img src="_evidence/portfolio/static-site-top.png" width="49%" alt="李奕波个人作品矩阵 · 作品集首屏（浅色态）" />
   <img src="_evidence/screenshots/shell.png" width="49%" alt="统一外壳工作台：一个入口挂载十个模块（深色态）" />
 </p>
 <p align="center">
@@ -120,7 +120,7 @@
 
 ```html
 <p align="center">
-  <img src="docs/assets/github/modules-wall.png" width="100%" alt="云枢智能 CloudPivot · 十大 AI 能力模块总览（P01–P10）" />
+  <img src="docs/assets/github/modules-wall.png" width="100%" alt="李奕波个人作品矩阵 Li Yibo's Personal Portfolio · 十大 AI 能力模块总览（P01–P10）" />
 </p>
 <p align="center">
   <sub>十大 AI 能力模块总览（P01–P10）· 每格注明来源文件名，可对照 <code>_evidence/screenshots/pXX.png</code> 复核</sub>
@@ -171,8 +171,8 @@
 | `docs/assets/github/screens/p10.png` | 1200×1272 | 73 KB | P10 模型微调平台总览（顶部常驻「训练、评测和部署均为模拟，未实际占用 GPU 资源」） |
 
 - 合成图：`docs/assets/github/modules-wall.png`（1876×980，402 KB），由 `python -X utf8 _tools\make_readme_gallery.py` 从上面十张 `pXX.png` 生成（5 列 × 2 行、浅色底 `#F5F7FA`、白卡 + `#DDE2EA` 边框、`msyh.ttc` 中文图注）。脚本按编号与 `README` 第五/七章口径一一对应，**缺图即报错退出，不会留空位**。
-- **品牌位差异（有意）**：截图中侧栏显示的是「李奕波个人作品矩阵」而不是「云枢智能」，因为本机 `shared/config/brand.json`（品牌位真源、不入库）已被机主自定义。这恰好是第一章「品牌可自定义」的真实效果，README 第三节已就这一点写明。
-- **隐私复核（本次复拍图）**：无手机号、无个人邮箱、无他人姓名。`p05.png` 页面内印有演示账号与口令 `legal / applicant / admin` + `Legal@2026 / Apply@2026 / Admin@2026`、`p02.png` 印有演示邮箱 `*@cloudpivot.com` 与「密码均为 Test123456」—— 这些**与 README 第四章的演示账号表完全一致，属仓库已公开的本地种子凭据**，不是额外泄露；生产部署必须自设 `CP_AUTH_SECRET`。
+- **品牌位差异（有意）**：截图中侧栏显示的是「李奕波个人作品矩阵」而不是「李奕波个人作品矩阵」，因为本机 `shared/config/brand.json`（品牌位真源、不入库）已被机主自定义。这恰好是第一章「品牌可自定义」的真实效果，README 第三节已就这一点写明。
+- **隐私复核（本次复拍图）**：无手机号、无个人邮箱、无他人姓名。`p05.png` 页面内印有演示账号与口令 `legal / applicant / admin` + `Legal@2026 / Apply@2026 / Admin@2026`、`p02.png` 印有演示邮箱 `*@example.com` 与「密码均为 Test123456」—— 这些**与 README 第四章的演示账号表完全一致，属仓库已公开的本地种子凭据**，不是额外泄露；生产部署必须自设 `CP_AUTH_SECRET`。
 - 复拍命令留档：用桌面浏览器工具逐页 `tabs.open` → 等异步数据渲染完成 → `screenshot(maxWidth=1200)`，服务状态来自 `python _tools\supervisor.py status`（实测 **15/15 在线**）。
 
 ---

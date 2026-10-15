@@ -196,7 +196,7 @@ BGE-M3 带 `sparse_linear.pt` + `colbert_linear.pt` → **ColBERT 是现成加�
 
 > 关键发现（架构叙事）：P05 与 P02 刻意做成**两条技术路线** ——
 > P02 云原生全栈（Docker + FastAPI + Next.js），P05 **零第三方依赖**（`python run.py` 即跑）。
-> 面试可讲"因地制宜"：内网客户不希望为了跑一个工具先装 Docker。
+> 演示可讲"因地制宜"：内网客户不希望为了跑一个工具先装 Docker。
 >
 > 关键发现（升级空间）：v2.0 明确划定 **"大模型不参与风险判定，只润色措辞"**。
 > D4 主任务 = 在该边界上引入 **LLM 二阶段语义复核**
@@ -386,7 +386,7 @@ qwen3.6-flash, qwen3.7-max, qwen3.7-plus, qwen3.8-flash, qwen3.8-max,
 wan2.7-image, wan2.7-image-pro`
 对 `qwen3-rerank`/`text-rerank-v1`/`gte-rerank` 逐个实测，全 404（**模型不存在，端点是在的**）。
 
-**⚠️ 更紧迫：Key 2026/10/22 00:00 到期，面试 10/20 开始** —— 面试第 3 天整个 P04 的
+**⚠️ 更紧迫：Key 2026/10/22 00:00 到期，演示 10/20 开始** —— 演示第 3 天整个 P04 的
 LLM 能力（答案生成 + Ragas 评测）会失效。必须在 10/20 前续期/换 Key/录屏留证。
 
 **P1 建议路线**：不为 cloud 通路额外付费。改为主打「**全链路私有化、不出网**」叙事
@@ -426,7 +426,7 @@ HTTP 200 → relevance_score: [0.9155, 0.6221, 0.0010]   语义排序完全正�
 两种量纲的对比从推测变为实测，**D5-01 必须修，修完必须重跑对比评测**。
 
 **⚠️ 合规**：Coding Plan 官方定位 "Coding tools only"，跑业务应用属**条款灰区**。
-建议本地调通拿数据 → 面试现场用按量付费 `sk-` Key。**Key 绝不能进 GitHub**。
+建议本地调通拿数据 → 演示现场用按量付费 `sk-` Key。**Key 绝不能进 GitHub**。
 
 > 方法论：**"某能力不可用"要先分清三層** —— ① Key 无效 ② 套餐无此模型 ③ **配置写错**。
 > 本次表层看起来是①+②（Token Plan 无 rerank），换 Key 后发现真根因是③（模型名写错）。
@@ -456,7 +456,7 @@ HTTP 200 → relevance_score: [0.9155, 0.6221, 0.0010]   语义排序完全正�
 
 ### 【P1 → P2】执行包 `00-总纲/20-D5-B01执行包-P1.md`
 - **Skill 裁定**：`docker-compose-recovery` Skill **暂缓**，改为写进项目
-  `docs/中间件运维手册.md` —— 受众从"工具自己"变成"面试官"，同样的知识能变成面试证据
+  `docs/中间件运维手册.md` —— 受众从"工具自己"变成"读者"，同样的知识能变成演示证据
 - **返工单增补第 ⑥ 项**：`.env` 配置修正（Qoder 原理解表漏了此项，且 ③ 依赖它）
 - 给出 ①②④⑤⑥ 全部精准定位（文件:行号），P2 无需自行摸索
 
@@ -531,7 +531,7 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
 - 新增 `require_owner_permission` 依赖 + `/api/v1/dashboard/overview` 老板看板端点
 - CS 角色访问老板看板返回 **HTTP 403**（已验证）
 - 前端导航按角色过滤 + 角色徽章展示
-- 4 个演示账号：boss/ops/design/cs@cloudpivot.com
+- 4 个演示账号：boss/ops/design/cs@example.com
 
 ### P01 · AI 客服（从源项目复制）
 
@@ -618,13 +618,13 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
 
 **P02 → P06 数据中台（指标）**
 - 新增 `api/app/services/data_platform_client.py`；`/api/v1/dashboard/overview` 返回 `metrics/metrics_source/metrics_degraded`
-- 地址 `cloudpivot_config.api_url("p06","/metrics/summary")` 从 services.json 解析，**未硬编码端口**；支持 `CP_P06_METRICS_URL` 覆盖
+- 地址 `portfolio_config.api_url("p06","/metrics/summary")` 从 services.json 解析，**未硬编码端口**；支持 `CP_P06_METRICS_URL` 覆盖
 - 正常：7 项指标（gmv/order_count/conversion_rate/avg_order_value/return_rate/traffic_uv/traffic_pv），source=p06-live
 - 降级：`ok=False/degraded=True/source=unavailable`，**不含 metrics 字段（不伪造）**；前端 dashboard 双处标注（绿色实时 / 黄色降级）
 
 **P09 → P01 客服（会话）**
 - 新增 `app/p01_client.py` + 端点 `GET /api/v1/p01/status`、`POST /api/v1/import/from-p01`
-- 地址 `cloudpivot_config.api_url("p01","/chat/history")`；health 用 `service_url`（P01 探针在根 `/health`，不在 `/api` 前缀下）
+- 地址 `portfolio_config.api_url("p01","/chat/history")`；health 用 `service_url`（P01 探针在根 `/health`，不在 `/api` 前缀下）
 - 角色映射 P01 user/bot → P09 customer/agent，按 session_id 聚合，规则引擎评分
 - 正常：真实拉取 2 段会话并评分（source=p01-live）；降级：`imported=0` 不伪造
 - 新增 4 项跨模块集成测试（monkeypatch，不依赖 P01 在线）；P09 pytest 30→**34 全绿**
@@ -707,7 +707,7 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
 
 | # | 反馈 | 结论 |
 |---|---|---|
-| 1 | CP logo / 云枢智能 要可自定义 | ✅ `shared/config/brand.json` 单一真源 + `/api/brand` 读写 + `data-cp-brand` 全站绑定；实测换成「奕波科技 / EboTech / 上传图片 logo」后外壳与模块同步变化（`D11-brand-custom-*.png`），随后已恢复默认 |
+| 1 | CP logo / 李奕波个人作品矩阵 要可自定义 | ✅ `shared/config/brand.json` 单一真源 + `/api/brand` 读写 + `data-cp-brand` 全站绑定；实测换成「奕波科技 / EboTech / 上传图片 logo」后外壳与模块同步变化（`D11-brand-custom-*.png`），随后已恢复默认 |
 | 2 | P01 数字人三卡要横排 | ✅ 根因是 `App.vue` 的 `@media (max-width:1280px)` 在 iframe 内（视口 = CSS 宽 − 240px 侧栏）被误命中；改 clamp 自适应列宽 + 断点降到 900px + 嵌入态单独放宽 |
 | 3 | P01 订单列表查不到 | ✅ 根因是商城中台 **18081 从未被 start-all.bat 启动**；已纳入托管，真实订单/商品出数据 |
 | 4 | P02 忘密码 + 页面不显示 | ✅ 口令 `Test123456`（`bootstrap_demo_users.py:19-24`，实测登录 200，**未重置任何数据**）；前端 3001 已起；三份系统凭据已写进 README 与 `start-all.bat` 输出 |
@@ -833,8 +833,8 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
 
 ### 根因（真凶，非凭据）
 
-`projects/p03-deep-research/agent/llm.py` 用 `Path(__file__).resolve().parents[2]` 定位仓库根并注释「即面试项目根」——
-实际指向 `面试项目/projects`，那里没有 `.env`。于是 `_read_root_env()` 恒返回空字典，
+`projects/p03-deep-research/agent/llm.py` 用 `Path(__file__).resolve().parents[2]` 定位仓库根并注释「即作品矩阵根」——
+实际指向 `作品矩阵/projects`，那里没有 `.env`。于是 `_read_root_env()` 恒返回空字典，
 根 `.env` 里配对好的两套凭据**一次都没被读到**，`resolve_model_config()` 直接落到
 「未找到可用的模型凭据」分支。已改为向上扫描、以 `LLM_API_KEY_FALLBACK` 作根 `.env` 锚点定位。
 
@@ -997,7 +997,7 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
 
 ### 顺带修掉的平台级缺陷（被这次重启暴露）
 
-- **P07 起不来**：`ModuleNotFoundError: No module named 'cloudpivot_config'` —— 真因是 `__editable__.cloudpivot_config-1.0.0.pth` 被写成 UTF-8 字节，而 Windows `site.py` 按 ANSI(GBK) 读 `.pth`，含中文的仓库路径解不出来，该目录从未进 `sys.path`（同 venv 里 GBK 写的 `llm_gateway.pth` 一切正常）。已把 p07/p09 两个 `.pth` 重写为 GBK，实测 `port('p07')=8070`、`api_url('p01',…)` 解析成功。**连带发现 P09 此前是静默走 env 兜底**，SERVICE_REGISTRY 其实一直没生效。
+- **P07 起不来**：`ModuleNotFoundError: No module named 'portfolio_config'` —— 真因是 `__editable__.portfolio_config-1.0.0.pth` 被写成 UTF-8 字节，而 Windows `site.py` 按 ANSI(GBK) 读 `.pth`，含中文的仓库路径解不出来，该目录从未进 `sys.path`（同 venv 里 GBK 写的 `llm_gateway.pth` 一切正常）。已把 p07/p09 两个 `.pth` 重写为 GBK，实测 `port('p07')=8070`、`api_url('p01',…)` 解析成功。**连带发现 P09 此前是静默走 env 兜底**，SERVICE_REGISTRY 其实一直没生效。
 - **P07 第二个坑**：`uv run python app/main.py` 下 `from app import config` 报 `No module named 'app'`（`sys.path[0]` 是 `app/`），按 p06 既有做法在入口补项目根。
 - **服务面**：接手时 3/15（D14 那轮被 `^C`），现已 `supervisor start` 全量拉起 → **15/15 在线**，外壳 `GET /api/services/health` 对 p03/p04/p07/p09 均报 online。
 
@@ -1006,8 +1006,8 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
 - **P04 pytest 套件当前跑不完**：`tests/` 只有重排相关两个文件，复跑先 9 failed/14 passed、随后直接段错误，栈顶是 `torch/storage.py` mmap 读权重 + `FlagEmbedding` 重排器构造 —— 原生崩溃；机器可用内存 3.3/15.7 GB，且**停掉 p04 服务复跑仍崩**，与本轮改动文件无交集。详见 `_evidence/p04/pytest-reranker-crash-20261013.log`（基线 `full_testsuite_p1.log` 的 23 passed 是机器上没起这么多服务时跑出来的）。
 - 控制台「全部导入任务」表是内存态，重启即空 —— 已在 README「已知限制与 mock 边界」写明（该节本轮补齐，之前缺）。
 - 库里那条历史 `owner=test` 文档没动（属数据删除，需用户点头）。
-- P04 README「快速开始」里的 `git clone https://github.com/liyibo0410/-BOSS-RAG-.git` 未改：本机 curl 不出网，无法核实仓库是否还在，**若已改名需用户确认后一并更新**（简历两处也引用了该仓库名）。
-- 更名顺带同步了 `03-resume/` 两版简历里的「P04 BOSS 智库」字样（纯产品名，未动任何主张/数字）—— 如希望简历保留旧称，说一声即可回退。
+- P04 README「快速开始」里的 `git clone https://github.com/liyibo0410/-BOSS-RAG-.git` 未改：本机 curl 不出网，无法核实仓库是否还在，**若已改名需用户确认后一并更新**（材料两处也引用了该仓库名）。
+- 更名顺带同步了 `03-resume/` 两版材料里的「P04 BOSS 智库」字样（纯产品名，未动任何主张/数字）—— 如希望材料保留旧称，说一声即可回退。
 - 改动均在工作区，**未 commit、未 push**。
 
 
@@ -1074,7 +1074,7 @@ local: [4.5820, -7.7969, 2.4766]  ← logits
 ## D18 · 收尾前诚信复核：P02 测试补证 / P04 指标口径 / D7 反向错误 / P10 去编造指标（2026-10-14 凌晨）
 
 用户要求「看看还有什么需要优化的地方，明天收尾」。先做全仓复核（15 端口探活全在线），
-把问题按「面试官一戳就破的诚信硬伤 / 门禁真缺口 / 收尾卫生」分档，本条记录已动手的第一档。
+把问题按「读者一戳就破的诚信硬伤 / 门禁真缺口 / 收尾卫生」分档，本条记录已动手的第一档。
 
 **判据统一**：凡是「没有测量来源的数字」，要么改成真实测量，要么显式变成 `null` + 原因，
 不允许继续以数字形式出现在接口或文档里（红线 2、红线 3）。
@@ -1208,7 +1208,7 @@ GBK 编码 → `UnicodeEncodeError`，进程直接退出。老路径每个服务
 
 **新入口**：`_tools/launcher.py`（静默编排 start/stop/status/open，命名互斥量防连点，
 只在服务没起来时弹一个框）+ `_tools/make_desktop_app.py`（brand.json logo → 多尺寸 ico →
-系统自带 `csc.exe` 编 `_tools/dist/云枢智能.exe`，41,984 字节零额外依赖 → 桌面三个快捷方式：
+系统自带 `csc.exe` 编 `_tools/dist/李奕波个人作品矩阵.exe`，41,984 字节零额外依赖 → 桌面三个快捷方式：
 一键启动 / 停止服务 / 服务状态）。
 
 **实测**：双击图标后 170s 窗口监视「合计新窗口 6，其中控制台类 **0**」；
@@ -1331,3 +1331,553 @@ GET/POST/PATCH（全 api 目录唯一的 `@router.delete` 在 `stores.py`），`
 （自动化环境不水合 React，真点下去还会删掉演示店铺）；本条**没有截图**（无可视 surface
 `NATIVE_BROWSER_VIEWPORT_UNAVAILABLE`）；覆盖率未测量；PostgreSQL 侧未实机复跑，本机 P02 用 SQLite。
 是否把店铺删除也改成同款两步确认页，等一句话。
+
+---
+
+## D24 · 全平台回归复测与缺陷修复（2026-10-14 下午）
+
+> 详细逐条（现象 → 根因 file:line → 修法 → 复验输出）见 **`D24-全平台回归与缺陷修复.md`**。
+> 本轮不改功能面，只做「把声称完成的东西真打一遍，打出来的按根因修」。
+
+**方法**：7 个诊断代理逐模块 curl + pytest + 读码；外壳走真实浏览器驱动（登录 / 十条挂载 / 主题 / 探活 / 控制台与网络面板）。
+
+**修掉的 10 组缺陷**（全部已复验）：
+
+| # | 缺陷 | 判定 |
+|---|---|---|
+| 1 | 网关 HTTP/1.0 + 探活把本机临时端口打满 → `ERR_NO_BUFFER_SPACE` 丢 tokens.css → **整站设计令牌随机消失** | P0 |
+| 2 | 六个静态模块硬依赖公网 CDN（echarts 实测 7.28s、tailwind 8.79s），与「本机实跑」矛盾；顺带发现 **P04 语法高亮从未生效**（引的是 CommonJS 构建，`window.hljs` 恒 undefined） | P0 |
+| 3 | HS256 密钥写死在公开源码里 → 任何人可自签 `owner/admin` 令牌（实测能写品牌配置）；品牌写只验签不看角色 | P0 安全 |
+| 4 | P06 `POST /api/v1/query` 免鉴权 + `startswith` 黑名单 → 实测 `SELECT 1; DROP TABLE` 真删表、`read_text('.env')` 真读文件 | P0 安全 |
+| 5 | P02 `GET /users` 恒 500（库里 `role='viewer'` 而枚举没有，`KeyError`）；出具 403 权限证据的脚本自身已不可运行 | P0 |
+| 6 | P02 合规**只检测不拦截**：`verdict` 无任何调用方读，人工 POST 违规文案实测 201 落库；PATCH 不过检 | P0 |
+| 7 | P05 absence 类命中无坐标（键在值 None）→ `None-200` TypeError → 案件**永久卡 reviewing 且不留审计**（实测 id=5/id=6 卡死） | P0 |
+| 8 | P03 只读护栏五发全穿（跨表 UNION 拖库 / information_schema / SLEEP / BENCHMARK / SHOW GRANTS，且行数无上限） | P0 |
+| 9 | P09 未署名的冒烟残留 75 分被 UI 当「人工评分」渲染；`PUT /rules` 改 penalty 对评分**零影响**（死配置） | P1 |
+| 10 | P10 预置训练裸吐写死的 `duration_seconds:19620 / final_loss` 且响应无 `simulated` 标记，与自家 README 直接矛盾；llm-gateway 遇非 JSON 响应**既不转移也不降级** | P1 |
+
+**真实数字**：`_evidence/regression-20261014-pytest.log` —— 全平台 **705 passed / 0 failed**
+（p01 62 · p02 171 · p03 137 · p04 59 · p05 48 + selftest 66/66 · p06 48 · p07 68 · p08 30 · p09 51 · p10 31）。
+修前：p02 166 · p03 61 · p04 23 · p05 46 · p06 44 · p09 39+2 failed · p10 28。
+
+**关键复验证据**（都在 D24 文档里带原文）：
+浏览器内 8×8 = **64/64** 资源成功、`--cp-brand=#3370FF`；本机服务端口 TIME_WAIT 稳态
+**387（含 35 个对端就是 8800）→ 约 56**（未归零：归零要靠 RST 关闭探测端，而那个方案跑半小时后
+P10 的 uvicorn accept 循环崩过一次 `WinError 64`，无法排除相关，已撤掉换用探活结果缓存 30 秒）；
+剩余约 600 个的对端是 443/80/853/7890 = 出网与本机代理，与本仓库服务无关。
+用那把已公开的旧密钥伪造令牌 → **401 签名校验失败**；P06 三条攻击载荷全 400 而正常 `WITH`/
+`replace`/字面量分号不误伤；P02 违规文案 **422 + hits**、PATCH 绕过被堵、库里 0 条脏数据；
+P05 重跑后 id=5/id=6 → **completed**（审计链 29 条）；P09 `/agreement` 仍是
+`kappa:null`「真人评分不足 0/5」并把残留列为 `suspect_unattributed`；P10 `train-001`
+→ `duration_seconds:null, simulated:true, provenance:"seed_demo（…）"`。
+
+**一条更正（可以划掉的 P0 待办）**：先前记录称 `00-总纲/26-D6…md:98` 与 09 号文含**完整** `sk-sp-` Key。
+实测那是被截断的 17 字符前缀与 `sk-sp-...` 占位；对**全部 git 跟踪文件**跑长 Key 正则 **0 命中**。
+「脱敏文档」这项不需要再做。真正的历史泄露仍在（P02 脚本的旧 commit），**吊销只能账号本人做**。
+就地脱敏：`p03/_site_8120/` 四个 HTML 里 8 处真实 Key 已替换为占位符（该目录本就 gitignore，未删文件）。
+
+**未修好、也不粉饰**：P08 仍是纯内存 mock（ffmpeg 一次没调、不出片、打点来自 `hash(text)` 伪随机，
+零截图）；P01 的「知识检索」是恒返回未命中的 stub 且「负面情绪自动建单转人工」整链不存在
+（`services.json` 里这三条 desc 已按实测改口，`shared/config/services.js` 同步重生成）；
+P03 图表与溯源零实现、无数据源时不拒答；P04 核心链路仍等 Milvus/MinIO；
+四统一里**认证与 LLM 网关只落地一半**（6 个后端零鉴权且绑 0.0.0.0，仅 P02/P07 走网关）；
+ADR-0001 写的 `/workspace/{route}` 实测 404，真实入口是 hash 路由。
+
+**测试副作用（未擅自清理，等确认）**：P02 商品 id=5 被探测代理真删并按快照重建
+（`created_at` 变为 10-14，18 张子表级联清空不可恢复）；P06 探针表 `ods_dirty_probe`；
+P05 新建案件 3–8 + 1 份审计导出；P09 那条未署名残留按红线**没删**，改由代码判为不可信。
+
+---
+
+## D25 · 十模块体检与项目会议纪要 + 首批修复（2026-10-14 晚）
+
+**形式**：18 位智能体（10 模块主理人各配免费模型 + 8 位横切审计员）分头体检 → 汇总定调。
+**产物**：`_evidence/D25-十模块体检与会议纪要.md`（逐模块结论、四统一/安全/数字/隧道/闭环五张横切审计表、P0–P3 路线图）。
+
+**本轮已落地的修复**（都有证据、都跑过）：
+1. **P01 知识检索真实化**（原 `knowledge/providers.py:180,192` 恒返回「未检索到」的 stub）：
+   新增 `knowledge/retrieval.py`（中文 n-gram + 拒答阈值 + 确定性排序）、`knowledge/seed/faq.json`、`knowledge/seed/kb.json`，
+   改写 `FAQProvider`/`RAGProvider`；新增 11 条用例，P01 **62 → 73 passed**。
+   证据：`_evidence/p01-ai-customer-service/pytest-20261014-knowledge-retrieval.log`、
+   `live-chat-refund-20261014.json`（真问「退款怎么申请」→ 真实命中并作答，改前会答「未检索到」）。
+   边界诚实：种子知识为**合成演示数据**，检索为**文本层 n-gram、非向量**（模块 README 与 seed `_note` 双处标注）。
+2. **全站数字对账**：README badge/表格、`shell/index.html`（卡片 565→**716**、statbar、材料标签）按
+   `_evidence/regression-20261014-pytest.log` 实测（p01 73·p02 171·p03 137·p04 59·p05 48·p06 48·p07 68·p08 30·p09 51·p10 31）重算。
+3. **P01 措辞纠偏**：`shell/index.html` 与 `shared/config/services.json`（+ 重生成 `services.js`）删去两处**不实宣称**——
+   「转人工建单」/「负面情绪自动建单转人工」（全仓 grep 无 sentiment/ticket/handoff 代码），并撤下无证据支撑的「78 接口」。
+4. **P1-1 P02 → P07 素材推送接线**（闭环半环）：新增 `asset_center_client.py` + 路由
+   `POST /products/{pid}/generated-assets/{aid}/push-to-asset-center`；另修 P07 侧**收了 `origin_id` 却不落库**（加列迁移），
+   P02 **178 passed**（+7）、P07 **68 passed**。证据：`cross-module-p07-20261014.md/.json`、两份 pytest 日志。
+   顺带实测到降级路径（P07 掉线时 `ok=false/degraded=true` 且附原因，不谎称成功）。
+5. **P1-3 P09 → P10 低分样本回流**（闭环再补一环）：P09 新增 `GET /api/v1/export/low-score`，
+   P10 新增 `p09_client.py`（仅标准库 urllib、端口从 SERVICE_REGISTRY 解析）+ `POST /api/v1/datasets/from-p09`；
+   实测 P09 导出 22 条 → P10 建集 `ds-101`（`provenance=p09-export`、`sample_count` 真实计数）。
+   P09 **55 passed**（+4）、P10 **35 passed**（+4）。证据：`cross-module-p09-20261014.md/.json`、两份 pytest 日志。
+6. **P2-3 给 `shared/llm-gateway` 补测试**（此前零自动化测试，是审计里风险最高的空洞之一）：
+   新增 `shared/llm-gateway/tests/test_gateway.py` **11 例**（未配置降级 / 主失败转备用 / 全失败降级 /
+   **非 JSON 也转移** / 凭证规则 / URL 归一 / payload / 成本统计），打桩不发真实请求。
+   网关「无重试」本轮刻意未动（涉幂等与重复计费，按红线 8 记为已知未做）。证据：`_evidence/shared/INDEX.md`。
+7. **P2-4 隧道/网关健壮性（本地部分）**：`_tools/tunnel_remote.py` 修两处 —— `status` 的服务器回环探测**假阴性**
+   （curl→bash `/dev/tcp`、ssh 失败暴露 rc+stderr、逐行正则）实测 **0/11 FAIL → 11/11 OPEN OK**；
+   `stop` **真正删除** `public_urls.json`（此前只 print「已清」，留下死链）。
+   纯本地代码，**服务器 nginx 未改**（涉在线演示，按红线先问）。证据：`_evidence/shell/D26-隧道状态假阴性与停隧道清理修复.md`。
+
+**过程中发现、待处置**：① `shell/index.html` 曾写「565」与各模块旧值，已改；② `_tools/tunnel_remote.py status`
+的服务器回环探测报 0/11 属**假阴性**（见 D25 #D，网页端 8070/8090 实测可达）；③ 网关 8800 于 22:53 后掉线，
+`_runtime/logs/shell.log` 显示该进程由 **workbuddy** 的 python 3.13.12 启动，**未擅自重启以免干扰其它工具**。
+
+---
+
+## D26 · P04 拒答率：三层拒答落地 + 改前基线实测（2026-10-14 深夜，Qoder）
+
+**为什么动手**：P04 门禁要求「召回率/精确率/拒答率/忠实度」四指标，前三项有 36 条 Ragas 对比背书，
+**拒答率既没有实现也没有口径** —— 而 `shared/config/services.json` 的 p04 desc 早已写着「拒答…评测」。
+根因不是缺指标脚本，是**能力本身不存在**：`ANSWER_PROMPT` 只有「不要编造」这种软话，
+`RERANK_MIN_TOPK=3` 还会强行塞 3 条切片进上下文，等于逼模型从噪声里编答案。
+
+**先测再定阈值**（这是本条最重要的方法论）：拿当时在线的 8041 跑了 7 条对照（`_evidence/p04/refusal-calibration.md`
++ 原始 `refusal-calibration.jsonl`），发现 **rerank 分数不能当拒判门** ——
+可答的「环境温湿度」top-1 只有 **0.2445**，而手册里查无此事实的「保修期几年」top-1 = **0.1078**，
+两者在分数轴上交错；按常见 0.3~0.5 阈值切会直接误拒真能答的问题。
+于是只留一条极低的硬底线 `0.05`（`REFUSAL_EVIDENCE_FLOOR`，env `KB_REFUSAL_MIN_EVIDENCE_SCORE` 可覆盖）挡纯噪声，
+事实层面的拒答交给生成层。
+
+**落地的改动**：
+1. `processor/query_processor/prompt/answer_prompt.py` — 硬规则：参考内容没有该事实就必须以 `【知识库未记载】` 开头，
+   禁止凭常识补全，禁止引导用户去查「完整使用说明书」这类提示词里不存在的外部资料（改造前真实输出里有这句）。
+2. `processor/query_processor/nodes/node_answer_output.py` + 新 `utils/refusal_utils.py` — 证据门控：
+   空召回或 top-1<0.05 时直接拒答**不调大模型**，并清空 `reranked_docs` 以免把不相干切片当引用端出去；
+   重排降级（全 `score=None`）**不按分数拦截**，避免把可用结果掐死。
+3. 新 `eval/qa_refusal.csv`（12 条库外样本，每条都用 grep 逐词确认手册里真没有：保修期/电话/邮箱/重量/尺寸/
+   功率/分贝/固件/WiFi/价格 全文 0 命中）+ 新 `eval/eval_refusal.py`（三口径：**拒答率 / 误拒率 / 反问澄清率**，
+   反问既非作答也非拒答故单列；支持 `--via-http` 复用在线服务，内存紧张时不再起一份模型）。
+4. 新 `tests/test_refusal.py` 21 条（模型无关）。实测 **57 passed in 13.27s** = 原有 36 条模型无关用例 + 新增 21 条；
+   依赖 torch 的 23 条（`test_reranker.py` / `test_node_rerank_cliff.py`）**主动 ignore** —— 采集时段本机空闲内存
+   最低只剩 1.0 GB，再跑必复现 10-13 的 mmap 段错误，所以没有把它合并成一个没跑过的「80 passed」。
+
+**改前基线（旧代码在跑的 8041，n=20 实测，`refusal-eval-before-fix.log` + `refusal-result-before-fix.csv`）**：
+拒答率 **8/12 = 0.667**（手册无记载类 7/8 已由模型自发诚实回答，库外实体类只有 **1/4**）；
+误拒率 **1/8 = 0.125**；反问澄清率 4/12。
+
+**顺带暴露的两个真问题**（都未粉饰）：
+- **实体层的宽松候选桶**：「华为 Mate 60」→ 反问「华为擎云B530台式机」，「丰田卡罗拉首保里程」→ 也反问。
+  库里查无此产品本该拒答，却被中置信度桶转成误导性的澄清，是拒答率的主要压制项。收紧它会改变可答样本的
+  检索入口，属取舍决策，本轮只量化不动。
+- **一次被拒答口径抓出来的真实漏召**：「起搏器用户感到异常怎么办」是 qa.csv 里的可答样本，手册第 9/15 行确有该条款、
+  `chunks.json` 里也搜得到，但这一轮 top-1=0.8094 命中的是另一段通用安全建议，含答案的切片没进上下文，
+  模型于是诚实答「文中并未提及」。→ 判定器记它为误拒是对的；且给出可复用诊断法：
+  **高分 + 说未提及 = 检索漏召**，低分 + 说未提及 = 手册确实没写。此前它被 36 条评测的平均 `Context Recall 0.9583` 掩盖。
+
+**改后复跑（2026-10-14 23:13 经使用者授权重启 8041，`supervisor.py restart p04`，新 PID 46260；同一评测集、同一命令，n=20）**：
+**四项 headline 全部持平** —— 拒答率 0.667、无记载类 0.875、库外实体类 0.25、误拒率 0.125，平均耗时 13.7→13.8s。
+逐条对照只有 2 条变化（「整机重量」「外形尺寸」）：改前靠模型自己 hedge 说「并未包含」才被判成拒答、
+且附送 3 条不相干切片的引用；改后走**确定性证据门控** —— 0 次大模型调用、0 条假引用。
+**为什么没涨**：拒答率的瓶颈不在生成层，而是 4 条库外实体被实体确认层的宽松候选桶转成反问（华为 Mate 60→反问华为擎云B530、
+丰田卡罗拉→反问），加 1 条检索漏召造成的误拒。把 4 条反问纠正为拒答的上限是 12/12，但那是设计推论**未实测**，
+且收紧该桶会改变可答样本的检索入口，属 owner 取舍，本轮不动。**「持平」如实记录，不包装成提升。**
+附带测得：重启后**首条 `/query` 41.2 秒**（模型冷加载；同条热态 11.0 秒），而 `_runtime/perf/p04-perf.md` 与
+`chat.html` 的冷启动提示写的是「约 5–15 秒」——区间偏乐观，本轮只记数，不改别人在用的前端文案。
+
+**仍未完成**：父子分块 vs 定长的策略对比实验没做过；依赖 torch 的 23 条用例未复跑（复跑时段空闲内存仅 2.3 GB，
+硬跑必复现 mmap 段错误），所以 P04 全量总数保持「未实测」，不写 80 这种没跑过的数字。
+README 已同步：评测章节、已知限制表（拒答三层 + 实体层反问 + 阈值依据 + 改后持平）、测试与质量（57 passed 的真实口径与被跳过的 23 条）。
+
+**追加（23:25~23:29，按使用者「后端不大改、主攻前端细节」的口径）**：把三层拒答在问答页做成**可见状态**。
+`web/page/chat.html` 新增 `detectRefusal()` / `appendRefusalNote()`，非流式 `finalizeBotAnswer`、流式 `final` 事件（页面默认走这条）、
+历史回放 `addBotMsgWithTime` 三条路径全部接线 —— 首版只挂了非流式，等于没做，已补。冷启动提示文案按实测改正
+（原「约 5–15 秒」→「实测最长约 40 秒」）。样式全走 ui-kit 令牌、无渐变无毛玻璃。
+**浏览器实测**（`http://127.0.0.1:8041/chat.html`，流式开启）：「整机重量」→ 挂「未找到依据」状态条且该气泡
+`.sources-bar` 数为 0；「环境温湿度」→ 正常作答 + 「📄 参考来源 (5)」且不挂标签；页面上 `refusal-note`=1 / `sources-bar`=1，两态互斥。
+**对比度实测**：正文 `#1A1F2B` on `#FDF1DC` = **14.74:1**、标签 on `#FFFFFF` = **16.47:1**（门禁 4.5:1）；
+琥珀色 3.78:1 只作左边框装饰，不当文字色。证据 `_evidence/p04/refusal-ui-20261014.md` +
+截图 `_evidence/p04/screenshots/p04-refusal-state-chat.png`（**窄视口 318 CSS px 的组件级取证**，
+browser-use 的浏览器被 DevTools 停靠挤掉横向空间且不支持 F12/Ctrl+0，故不当宽屏视觉稿用，也没伪造宽屏效果）。
+
+**再追加（2026-10-15 00:24~00:26，P04 答案图片区块）**：`chat.html` 的图片区块原本是「`<img>` + 把 90 多字符百分号编码
+URL 当正文打出来的 `<a>`」，且 `img` 报错就 `display:none`。改为 ui-kit 令牌下的缩略图卡片网格（整卡可点、URL 收进 `title`、
+失败转「图 N · 原图不可达（点击可重试）」）。实测该答案产出 5 张卡片、`loaded=0`、`broken=5`，气泡文本内不再有裸 URL；
+取证 `screenshots/p04-answer-images-broken-state.png`。
+**由此挖出一条被 UI 掩盖的缺陷**：答案配图**从来没显示过** —— 本机直连图片 URL 即 **HTTP 403**，
+MinIO 桶 `knowledge-base` 无匿名读策略（`get_bucket_policy` 返回 `NoSuchBucketPolicy`），另有切片指向不存在的桶
+`knowledge-base-v2`；旧前端把失败藏成裸链接所以一直没人发现。README 原写的「换端口/远程访问时显示不出来」把问题说小了，已按实测更正。
+修法三条（开桶匿名只读 / 加同源鉴权代理端点并做桶白名单 / 重新导入改写 URL）登记在 `_evidence/p04/answer-images-20261015.md`，
+按「后端不再大改」口径本轮**只登记不动手**。
+另一个复核陷阱：性能智能体给页面加了 `Cache-Control: public, max-age=300`，**改完静态页 5 分钟内看不到变化属正常**，
+复核必须带 `?cb=` cache-buster（本轮第一次实测就被它骗过，差点把旧版当新版验收）。
+
+**再追加②（00:33~00:37，P04 问答页两处收尾缺陷）**：
+(a) 流式问答完成后「阶段进度」冻结在 `状态：处理中`、末尾挂着 `⏳ 确认问题产品` —— 根因是后端收尾发的是
+`final`/`final_answer` 事件、不再补 `status=completed` 的 progress，而 SSE 路径只在 progress 里刷新摘要
+（非流式路径显式调了 completed 所以不露馅，**只有默认流式模式会出问题**）。改为记住 `lastDoneList`，
+收尾统一刷成已完成、`error` 刷成失败。(b) 生成层拒答的气泡里排着 7 张来自召回切片的配图，
+与「文档里没有这条信息」自相矛盾 —— `renderAnswerWithImages()` 加守卫：`detectRefusal(text)` 为真不渲染配图。
+**有意保留**生成层拒答的「参考来源 (5)」：该类拒答正文本身在引用它们（实测「仅提及不遵循安全说明可能导致保修失效，
+但未说明具体保修年限」），可核查优先；证据层拒答后端返回 0 文档，本就没有来源条。
+实测两向：拒答用例配图 7→**0**、标签正确、摘要 `状态：已完成`；可答用例配图 **5 张未被误伤**、无标签。
+取证 `screenshots/p04-chat-progress-and-refusal-guard.png` + `_evidence/p04/chat-ux-fixes-20261015.md`。
+
+**再追加③（00:40~00:52，P04 窄屏/手机适配 + 一处规范违规）**：318 CSS px 视口实测两页都崩。
+问答页：`.brand{min-width:240px}` 把头部挤成**逐字竖排**，机器人消息骨架还写了内联 `style="min-width:180px"`
+（内联盖掉样式表里正确的 `.msg>div:not(.avatar){min-width:0}`）→ 删内联 + 加 `@media(max-width:640px)`
+（头部换行、`.app` 满屏 `100dvh`、头像 30px、来源预览与图片网格收宽）。改后 `docOverflowX=0`、`.pill` 恢复横排。
+**顺带修掉一处违规**：`.topbar` 的 `linear-gradient(...)` 违反 `.qoder/rules/02-技术规范.md`「禁止渐变装饰底」，
+改扁平令牌 `var(--primary-bg)`，实测 `backgroundImage:none`；全模块扫描 chat 仅这 1 处、console 渐变与 backdrop 均 0。
+管理后台：`.sidebar{position:fixed;width:240px}` + `.main{margin-left:240px;padding:32px}` 导致横向溢出 **173px**
+（正文只剩 14px 可用宽）→ 加 `@media(max-width:860px)` 把侧栏转成顶部横滑导航。
+**过程中两个连锁坑都靠实测抓出来**：(1) 侧栏由 fixed 变 static 后 `.layout{display:flex}` 让正文从 x=318 起步，
+溢出反涨到 383 → 补 `.layout{display:block}`；(2) `.nav-menu{overflow-x:auto}` 与 auto 宽父级形成循环撑宽（侧栏被顶到 482px）
+→ 补 `max-width:100vw`。终态 `docOverflowX` **173→0**、三块容器均 312px 满宽。
+取证 `screenshots/p04-chat-mobile-318-after.png`、`p04-console-mobile-318-after.png` + `_evidence/p04/mobile-318-20261015.md`
+（该文件末节写明边界：只验 318 一个点、宽屏态未取证、后台表格内部溢出未逐一查）。
+
+---
+
+## D27 · 全平台窄屏巡检与修复：P06/P09/P10（2026-10-15 凌晨，Qoder）
+
+**为什么做**：使用者用手机预览成果，而 D26 那几轮截图里我一直看到别的模块在窄视口下排版崩掉，就顺手做了全平台量测。
+**口径**：browser-use 取 `documentElement.scrollWidth - clientWidth`，视口 318 CSS px（工具窗口被 DevTools 挤出的宽度，
+正好落在手机区间，不用伪造）；全程只读测量 + 改 CSS，未重启任何服务。
+**巡检表与细节见 `_evidence/narrow-screen-sweep-20261015.md`。**
+
+**结果**：P07 / P08 干净（溢出 0，P07 那个 `position:fixed` 只是 `#toast`）；
+**P06 186px → 0**、**P10 91px → 0**、**P09 89px → 73px（未清零，见下）**。
+
+**统一配方**（写在各模块自己的 `@media` 断点里，不动桌面态）：`.app{display:block}` →
+侧栏转**顶部横滑条**（`display:flex;overflow-x:auto;max-width:100vw`）→ `.main{margin-left:0;min-width:0;max-width:100vw}` →
+表格可横滚。三个模块同一个根因：`.sidebar{position:fixed;width:220~240px}` + `.main{margin-left:同宽}`，
+外加 **`.main{flex:1}` 的 `min-width:auto` 不肯收缩到内容 min-content 以下**（这才是 P09/P10 已经隐藏侧栏却仍溢出的原因）。
+
+**两个刻意决定**：
+① P09/P10 原断点写的是 `.sidebar{display:none}` —— 手机上**导航整个消失**只能看第一屏。我没沿用，改成横滑顶栏，
+实测 `navVisible=5` 项全部可达。
+② 避开了 D26 在 P04 现场抓到的两个连锁坑：侧栏由 fixed 变 static 后 `.app{display:flex}` 会把正文推到视口外
+（必须同时 `display:block`）、横滑容器与 auto 宽父级会循环撑宽（必须 `max-width:100vw`）。
+
+**登记未动（三条，都不是偷懒）**：
+- **P09 残余 73px** = ECharts 画布按宽屏尺寸初始化后不重绘（`.card-title` 327px > 正文 312px），正解是视口变化时调 `chart.resize()`，
+  属 JS 改动；而 P09 正是今晚另一个 AI 派发后中途被中断的模块（其代理 22:07 起、22:45 返回 `interrupted by user`），不去踩他的手。
+- **装饰渐变违规**（`.qoder/rules/02-技术规范.md`「禁止渐变装饰底」）：`p05/ui/rules.html:205,210`（当前 Tab 渐变底）、
+  `p09/web/index.html:94-96`（金银铜牌渐变）。收尾期不做跨模块视觉改动，只登记。
+- **一次自我纠错值得记**：`p05/ui/index.html:563,589` 等处的 `color:'linear-gradient(...)'` 看着像被浏览器丢弃的死声明，
+  查了 `charts.js:114` 才知道那是图表组件的**入参字段名**、最终赋给 `background:` —— 有效，不是缺陷。
+  同理 `p05` 的 `--cyan` 已回指 `var(--cp-brand)`（`app.css:33,78,1011,1038`），「青/蓝混用」在 P05 不成立。**先验证再动手。**
+
+**边界**：只量 318 一个点、只测各模块首页那一屏；二级 Tab 切换后新渲染的表格/图表未逐一复测；宽屏态未取证
+（网关 8800 今晚已被其他 AI 重新拉起，`curl / → 200`，后续可补宽屏视觉稿）。
+取证：`_evidence/p06-data-platform/mobile-318-p06-after.png`、`_evidence/p10-model-finetune/mobile-318-p10-after.png`。
+
+**D27 追加（01:10~01:20）**：拍桌面态取证时撞见 P06 一个语义错误 —— `trendHtml()` 只按数值正负配色，
+**「退货率 ▲53.67%」显示成绿色**（负向指标涨是坏事）。改为「箭头反映涨跌、颜色反映好坏」，
+`LOWER_IS_BETTER = new Set(['退货率'])`（7 个指标里只有它是负向）。
+⚠️ 后端 `METRIC_REGISTRY` 没有方向字段，这份清单暂落前端，**新增负向指标必须同步**；长期解（加 `direction` 字段 + 接口下发）属后端改动，登记未做。
+取证 `p06-data-platform/desktop-1440-before-trend-fix.png` / `desktop-1440-after-trend-fix.png` + `metrics-polarity-20261015.md`。
+同一批 1440×900 截图**补上了 D26/D27 一直欠的桌面态回归**：P04 chat/console、P10、shell 首屏均未被媒体查询改坏
+（`p04/screenshots/desktop-1440-*.png`、`p10-model-finetune/desktop-1440-home.png`、`shell/desktop-1440-shell-home.png`）。
+采集用 Edge 无头 `--window-size=1440,900 --virtual-time-budget=12000`，`--user-data-dir` 单独指到 `_runtime/qoder-shots/profile`，
+不复用其他工具的 `_runtime/edge-profile` 以免抢锁。
+
+**一个对不上、我没动的数字**：`shell/index.html` statbar 现写「731 pytest 实跑通过」。
+按可核线索只能推到 705（D24 回归日志）+ 11（D25 记录 P01 62→73）+ 21（本轮 P04 新增模型无关用例）= **737**，差 6，
+且无法判断是别的模块回退还是另一套口径。`shell/index.html` 是其他 AI 今晚的热区，**只登记不擅改**，
+需要一次全平台重跑才能定这个数（P04 依赖 torch 的 23 条仍未复跑，当时空闲内存 2.3 GB）。
+
+---
+
+## D28 · P06 数据接入 SQL 标识符注入：复现 → 修复 → 横向排查（2026-10-15 上午，Qoder）
+
+**分工调整**：本轮起 Qoder 转「找漏洞 + 修复」，前端交 OpenCode、功能完善交 WorkBuddy。
+开工前先量了内存（**空闲仅 1.2 GB**）—— 全平台 pytest（含 P04 依赖 torch 的 23 条）此刻跑不得，
+会把机器拖死，所以那笔 731/737 的账继续挂着，改做**不吃内存的静态审计 + 定点复现**。
+
+**漏洞**：`POST /api/v1/ingest/csv|json` 的 `table_name` 零校验，直接拼进
+`DROP TABLE IF EXISTS "{table_name}"` / `CREATE TABLE "{table_name}" (...)`（`app/ingestion.py:115,116,200,201`），
+而 DuckDB 的 `execute()` 一次可跑多条分号语句。
+**最阴的一点**：实测 `table_name=evil"; DROP TABLE victim_tbl; --` 之后**接口返回 400**，
+看起来"被拦住了"，实际 `DROP` 已在第一条 execute 里执行完、受害者表消失，抛错的是后面的 `CREATE`，
+被端点的 `except → err()` 盖成 400。**在这条路径上「返回了错误码」完全不能作为"未被利用"的证据。**
+
+**修复**：新增 `safe_table_name()`（`^[A-Za-z_][A-Za-z0-9_]{0,63}$`），在**任何 execute 之前**校验，
+两个 ingest 函数各加一行。红→绿过程完整：修复前 `4 failed / 1 passed`（victim_tbl 确实被删），
+修复后 `5 passed`，P06 全量 **53 passed**（48 原有 + 5 新增）无回归。
+测试 `tests/test_ingest_guard.py` 全程走 conftest 的临时 DuckDB + 临时元数据库，**未对运行中的 8060 发起任何攻击性请求**。
+
+**自我纠正一处**：我原断言「CSV 表头也是注入点、应返回 400」—— 实际 `_normalize_column_name()` 会把非
+`[A-Za-z0-9_]` 全剥掉（`a" `→`a`、`injected TEXT`→`injected_text`），表头路径本来就安全。
+用例改成断言「列名被洗成 `{a, injected_text, b}` 且不存在名为 `injected` 的列」，而不是硬要它报错。
+
+**横向排查（同类写法逐一定性，不凭印象报缺陷）**：
+`duckdb_engine.py:96,103` 的 `preview`/`table_row_count` 也拼表名，但**不可利用** —— 唯一入口
+`GET /api/v1/tables/{name}` 先过参数化的 `table_exists()`（`WHERE table_name = ?`），恶意名到不了拼接处；
+`p07/repository.py:54` 的 `WHERE {clause}` 只拼固定字面量、值全走 `?`；`p07/db.py:87` 的列名来自模块常量；
+`p02` alembic 那处是迁移脚本内部清单。四处全部写明判定依据，见 `_evidence/p06-data-platform/ingest-sql-injection-20261015.md`。
+
+**仍然没解决的（别当已修）**：`/api/v1/ingest/*` **依旧零鉴权** —— 同 WiFi 的人仍然能往数据中台灌表、删表，
+本轮只是让他不能借表名夹带任意语句。鉴权属 AGENTS.md ⑪「四统一只落地一半」的跨模块改造，不在本轮。
+另外 **8060 跑的还是修复前代码**（uvicorn 无 `--reload`），线上生效需重启该服务，等使用者点头。
+
+**D28 追加（09:05~09:25，经授权两次重启 8060 后上线）**：
+① 又修了**掩盖这次事故的元凶本身** —— 端点把一切异常包成 `Ingestion error: …` + 400（`main.py:434,458`），
+所以注入成功后接口"看起来被拦住了"。改为 `ValueError → 400 原样文案`、其他异常 `logger.exception + 500`，
+并加用例断言非法表名的 `msg` 以「非法表名」开头且不含 `Ingestion error`。P06 全量 **54 passed**（48 原有 + 6 新增）。
+② 线上验证只用**无害载荷**：`table_name=`（空）与 `bad-name`（连字符）—— 被引号包住后不可能命中真实表，
+既不建表也不删表，只靠文案区分新旧代码（`非法表名：` 只存在于修复后代码）。实测线上已返回该文案、无前缀。
+**全程未对运行中的服务发过真实注入载荷。** 重启走 `Start-Process` 脱离会话进程树（否则代理进程活不过命令），4 秒恢复。
+③ **我留下的脏数据（如实披露）**：验证"正常接入未被误杀"时往真库灌了 `qoder_probe_ok`（1 行），
+而 **P06 没有任何删表端点**（路由只有 tables/preview/stats/lineage + 两个 ingest）、也没有清理脚本，
+表数从 **12 变成 13**，P06 页面徽章会跟着显示 13。清理只能停服务直改 `data/analytics.duckdb` + 元数据库，
+而 `data/` 在红线「禁止删除/修改清单」内，**我没动手，登记等放行**（约 20 秒停机）。
+教训：验证正常路径应在 conftest 的临时库里做，不该在跑着的演示库上试。
+④ 同类掩蔽在 `main.py:325,353`（query / 指标端点）**本轮未动**，改它们会牵动 `test_api.py` 既有断言，留作下一轮。
+
+**D28 追加②（09:40~09:48，经放行后清理我造的脏数据）**：停 p06 → 确认 PID 不在任务表（DuckDB 单写者，
+进程没退就动文件会写坏库）→ **先备份三件套**（`analytics.duckdb` + `.wal` 3.3MB + `metadata.db`，
+新写入都在 wal 里，只备主文件等于没备）→ 定向 `DROP TABLE "qoder_probe_ok"`（15→14，打印差异集合就是这一张）
++ 按 `table_registry.id` 精确删元数据（registry 1 行 / column_metadata 2 行）→ 启动后 `/api/v1/tables` 14 张、探针表不存在、修复仍生效。
+**过程里差点留下更坏的结果**：第一次脚本在 `commit()` 前崩了（`column_metadata` 的外键是 `table_id` 不是 `table_name`），
+SQLite 直接回滚 → 变成"DuckDB 表已删、registry 还留着"，若当时重启就会留下一条指向不存在之表的死记录。
+第二次按 id 精确删 + 显式 commit + 事后查孤儿列元数据=0 才算干净。
+**顺带发现（不是我的，我没删）**：registry 里还有 `tmp_uitest_agent5_csv` / `tmp_uitest_agent5_json` 两张
+UI 测试残留 —— 根因是**接入端点能建表、模块却没有任何删表能力**，一次自动化测试就永久污染一张表。
+建议负责功能完善的一方加 `DELETE /api/v1/tables/{name}`，但必须带鉴权 + 复用 `safe_table_name` 白名单 +
+默认只允许删非样例层表，否则新端点本身就是"一键清空 ADS 层"的漏洞。
+
+
+---
+
+## D29 · 个人作品矩阵前端交付：`portfolio-matrix/`（2026-10-15，OpenCode）
+
+> 分工：本轮起 **OpenCode 做前端**、Qoder 找漏洞修复、WorkBuddy 完善功能。本条只记前端的产出与自检。
+
+**交付物**：`portfolio-matrix/` —— **自包含静态站点**（`index.html` + `styles.css` + `app.js` + `README.md`），
+主题「李奕波个人作品矩阵」。与既有 `01-portfolio/`、`shell/index.html` **并存不覆盖**（那两个归其他角色维护）。
+
+**产出方式**：智能体团队（免费模型为主）+ 独立复核。
+| 角色 | 模型 | 产物 |
+|---|---|---|
+| 产品经理（逆向工作法） | `longcat-2.5-preview-free` | `portfolio-matrix/_process/01-PRFAQ-PRD.md`：PRFAQ（约 1000 字）→ 需求洞察 → PRD（MoSCoW / 站点地图 / 三条任务流）→ 内容清单 |
+| 设计师 | `nemotron-3.5-lightning-free` | `portfolio-matrix/_process/02-design-spec.md`：灵感采样（**Paula Scher** + **Josef Müller-Brockmann**）→ 交互视觉方案 → Design Tokens → 线框 |
+| 前端（本机） | — | 三件套代码；对设计师给的令牌**做了必要校准**（见下） |
+| 独立 QA（只读） | `space-bunny-free` | 16 条缺陷清单，**已全部回改** |
+
+**对设计稿的两处必要修正（不照抄）**：
+1. 设计师给的 `box-shadow: 0 2 4 16px …` 是**非法 CSS**（缺单位），已改写为合法的双阴影。
+2. 主色 `#C65E3B` 对白底仅 **4.15:1**、对暖纸底 **3.77:1**，**不能做小字**。拆成三档：
+   `--brand`(装饰) / `--brand-ink #A8431F`(6.02:1，文字与实心按钮) / `--brand-strong #8E381B`(7.69:1，hover)。
+
+**约束落实**：无 emoji（实测 0）· 图标全部自绘内联 SVG · 三断点响应式 · 主控件 ≥44×44（文字链接 32px，满足 AA 24px）·
+动效 220/300ms + `prefers-reduced-motion` 回退 · 语义化 HTML5 与 `skip-link` · 需要图片处用真实 `picsum.photos` 链接 + 底色兜底 ·
+**无 JS 也能读全文**（`html.has-js` 渐进增强）。
+
+**自检证据**：`_evidence/portfolio-matrix/` —— 四张无头 Edge 截图（浅色/深色/移动端/整页）+ 静态校验
+（标签闭合、重复 id、锚点落点、图片 alt、括号平衡、emoji 计数）。逐条见该目录 `INDEX.md`；设计取舍见交付物 `README.md`。
+
+**QA 抓到的三个真阻塞项（已修）**：① `.totop{display:grid}` 压过 UA 的 `[hidden]`，回顶按钮首屏常驻；
+② 无 JS 时移动端导航被藏死、按钮也失效；③ 公网入口缺证据指向。
+
+**边界（诚实标注）**：字体（Google Fonts）与装饰图（Picsum）为**外链**，断网回退系统字体与底色，不宣称「完全离线」；
+不改 `shell/`、不改 `01-portfolio/`、不动 `.qoder/`、`.workbuddy/`；改动均在工作区，**未 commit**。
+
+**顺带澄清 D27 的 731/737 之差**：D27 可核线索按「705 + P01 11 + P04 21」推得 737。
+本轮的 731 = 705 + P01 11(62→73) + **P02 7**(171→178) + **P09 4**(51→55) + **P10 4**(31→35)，
+且 **P04 取 59（D24 回归口径）**、未计入 D26 新增的 21 条（其中 23 条依赖 torch 的用例本轮未复跑）。
+故 731 与 737 的差 = P04 口径差（21）减去 P02/P09/P10 增量（15）再减去 D27 未计入的差异 —— 两套口径都在页面上写明，
+**待一次全平台重跑再统一定数**，本轮不擅改 `shell/index.html`（那是 WorkBuddy/Qoder 的热区）。
+
+---
+
+## D30 · P04 文档检索 `/search`：正则注入面 + 对外契约撒谎（2026-10-15 上午，Qoder）
+
+**分工**：本轮起 Qoder 只做「找漏洞 + 修复」。做法是**只读端点巡检** —— 列出六个 FastAPI 模块的 GET 路由逐个打，
+不碰任何写端点。
+**先纠正自己一个误判**：路由清单里那一大堆 `/users/me`、`/items/`、`/hello`、`/simple-sync` 看着像"教程死代码挂在生产服务上"，
+实测**全部 404** —— 它们来自 `test/` 学习脚本与独立 app，并未被 `console_service` 挂载。先探活再下结论，没报假缺陷。
+
+**缺陷①（真实可利用）**：`utils/mongo_document_utils.py::search_documents` 把用户输入的 `keyword` **原样塞进 Mongo `$regex`**。
+运行中的 8041 实测：`keyword=(` / `[` / `a{1000000}` → **HTTP 500**，且 `detail` 里带 Mongo 报错原文（内部信息外泄）——
+**管理后台搜索框里敲一个左括号就崩**；`keyword=.*` → 200 且 **total=7，把整份文档列表拖出来**，绕过"关键词匹配"本意。
+
+**缺陷②（契约撒谎）**：端点 `summary="全文检索"`，实际只 `$or` 匹配 `filename` 与 `item_name`。
+实测 `hak180`→2、`烫金`→1（都在文件名里），而 `电源线`、`保修`→**0**（这俩只在正文里、手册确有这些章节）。
+即 OpenAPI 文档与任何自动生成的客户端都在承诺一个不存在的能力；前端注释其实早已写明真实行为，只有 API 契约没改口。
+
+**修复**：① `keyword` 走 `re.escape` 当字面量（两个 `$or` 分支都转义）—— 非法正则与通配符绕过同时消失；
+② `summary/description` 改成「文档关键词检索：匹配文件名与主体名称，不检索正文，正文问答走 `/query`」；
+③ 异常不再把 `str(e)` 拼进 `detail`，原文只进日志。
+
+**验证**：新增 `tests/test_search_literal.py` 4 条（假集合捕获查询条件，断言 `(`→`\(`、`.*`→`\.\*`、两分支都转义、
+`owner` 仍精确匹配、空关键词不炸），P04 模型无关全量 **61 passed in 16.68s**（原 57 + 新 4）。
+经授权 `restart p04`（12 秒就绪）后**线上复验**：`(` 由 500 → **200 total=1**（确实有文件名含括号，字面量命中）；
+`.*` 由 total=7 → **total=0**；`[`/`a{1000000}` 由 500 → 200；`hak180` 仍为 2（未误伤）。
+
+**仍未解决**：这依然不是全文检索（本轮只把契约改诚实，实现正文检索属功能完善）；
+`/search` 与 P04 其余端点**依旧零鉴权**且 `owner` 可任意指定 —— 转义只关掉了正则面，没关掉越权读他人文档的面。
+POST/PUT/DELETE 端点本轮未做行为探测（避免对演示服务写数据）。
+细节见 `_evidence/p04/search-regex-injection-20261015.md`。
+
+---
+
+## D31 · P04 `/statistics` 的 total_qa 口径不一致 + 裸 except 静默归零（2026-10-15 上午，Qoder）
+
+同一轮只读巡检里撞出来的。拿三种 owner 打 `/statistics`：
+
+```
+owner=public      docs=5  chunks=36  qa=237
+owner=nobody-xyz  docs=0  chunks=0   qa=237   ← 零文档租户，问答数照报 237
+owner=test        docs=1  chunks=0   qa=237
+```
+
+**根因**：`get_statistics` 里前三项都按 `flt={"owner":owner}` 过滤，唯独
+`total_qa = chat_messages.count_documents({})` 是**空过滤器数全库**；函数 docstring 自己写过
+"传 owner 就只统计该租户"，说明当初对齐时把问答项漏下了。而 README 与端点描述都声称「统计口径与列表一致」。
+
+**为什么不直接加 owner 过滤**：实测 `chat_message` 的 237 条记录**全部没有 owner 字段**
+（`{'owner': {'$exists': True}}` 计数为 0），硬加过滤器只会让每个租户都显示 0 ——
+那是把"口径不一致"换成"数字全错"。真要按租户统计得改写入侧 + 回填历史，属功能完善那条线。
+
+**本轮只做两件诚实的小事**：① 响应显式标 `total_qa_scope="platform"`，端点描述与 README 两处口径同步改口；
+② 修掉同一个 try 里的裸 `except: pass` —— Mongo 抖动时问答数被静默置 0，看板显示成"真的没人问过"，
+改为 `logger.warning` + `total_qa_available=False` + `scope="unavailable"`，把"统计不可用"与"零问答"分开。
+
+**验证**：新增 `tests/test_statistics_scope.py` 3 条（假集合，不连 Mongo），P04 模型无关全量 **64 passed in 17.33s**。
+**未做**：需第三次重启 8041 才在线上生效，本轮没擅自重启，等点头。
+
+**顺带排除三个嫌疑（都查过，不是缺陷）**：① 各模块那堆 `/users/me`、`/items/`、`/hello` 教程路由实测全 404，
+来自 `test/` 学习脚本未挂载；② 全平台 `$regex` 直传用户输入只有 P04 那一处（D30 已修）；
+③ `p07/repository.py:134` 的 `UPDATE ... SET {join(sets)}` 安全 —— 有列名白名单 `allowed`、值全走 `?`。
+**登记为潜伏待办**：P04 还有 8 处 `HTTPException(500, detail=f"...{str(e)}")`
+（`import_service.py:235,301,323,352,365,407,420`、`query_service.py:169`）会把异常原文吐给前端，
+但用不存在的 task_id、怪 owner 探过**当前触发不了**，属潜伏信息外泄而非现成缺陷 ——
+没有为投机收益去改 8 处，留给加固轮次。细节见 `_evidence/p04/statistics-scope-20261015.md`。
+
+---
+
+## D32 · P10 概览卡把「无评测支撑的准确率」平均了进去（2026-10-15 上午，Qoder）
+
+同一套「跨端点数字对账」抓出来的第三个缺陷。对账时发现：
+
+```
+stats.avg_accuracy = 0.8367          ← 首页「平均准确率」
+评测列表 accuracy  = [0.847, 0.792, 0.612]，最大 0.847
+```
+**概览报的平均值比评测列表里任何一条都高。** 逐模型核对：`model-001 v1.0`=0.847（对上 eval-001）、
+`model-003`=0.792（对上 eval-002），而 **`model-002 CS-QA-LoRA v1.1` 自称 0.871 —— 没有任何评测记录**
+（train-001 唯一的评测是 v1.0 的 0.847）。对 P10 尤其致命：它的核心叙事就是「微调前后评测对比」，
+而 AGENTS.md ⑥ 已承认微调门禁四项全空 —— 这个 0.871 正是「已清空无测量来源数字」的漏网之鱼。
+
+**刻意没做的事**：没有给 v1.1 补一条假评测把数圆上（红线 2 编造数据），那只会让"第二轮迭代"看起来更完整。
+
+**实际改动**（`app/main.py`）：① 评测与模型版本之间**没有外键**、只靠 `名称小写-版本` 字符串关联，
+把规则写成可单测的 `_eval_key_for()` / `_evaluation_for_model()`；② `/api/v1/models` 与单模型详情
+每条加 `has_evaluation` / `evaluation_id` —— **自称的 accuracy 原值不动，只标"可不可信"**；
+③ 概览 `avg_accuracy` 只计入有评测的模型，新增 `avg_accuracy_scope` / `models_evaluated` / `models_without_evaluation`。
+
+**验证**：新增 5 条测试（含回归哨兵「概览平均准确率不得高于评测列表最大值」），P10 全量 **40 passed**（35+5）无回归。
+经授权 `restart p10`（9 秒就绪）线上复验：`avg_accuracy` **0.8367 → 0.8195**、`models_without_evaluation=1`、
+v1.1 标为 `has_evaluation=False` 而 0.871 原值保留。
+**顺带排除假阳性**：`/api/v1/compare` 前后对比端点只读评测记录（`main.py:896-938`），没沾这些自估值，是干净的。
+全仓 grep 过 `0.871`/`avg_accuracy`：README、前端、`shell/index.html` 均未引用，数字只活在 API 层。
+**遗留**：根因是缺 `model_id` 外键（改名即静默断链），补外键属功能完善；v1.1 要么补真实评测要么在页面上写明"占位无评测"，
+是产品决定不是缺陷修复。细节见 `_evidence/p10-model-finetune/avg-accuracy-no-evaluation-20261015.md`。
+
+---
+
+## D33 · P06 概览「数仓层级」与「表总数」永远对不齐（2026-10-15 上午，Qoder）
+
+对账法抓出的第四个。`table_count=15` 而 `layers={ADS:2,DWD:2,DWS:2,ODS:6}` 求和只有 **12**。
+根因：`dashboard()` 的分层是**按表名前缀**归类，`table_count` 数的是全部表，
+不带四种前缀的表只进总数不进分层，又没有「未分层」兜底桶。
+前端 `web/index.html:451` 把两个数并排印在一张卡上（主数字 `table_count`、副标题 `sum(layers)`），
+所以页面上直接写着**「15」配「12 张」**这种自相矛盾的组合。
+
+**修**：加未分层计数，且**只在真有未分层表时**才输出 `UNCLASSIFIED` 桶。
+—— 一开始做成恒定五个键，查了前端才发现那是回归：`index.html:454` 的「数仓层级」卡片显示
+`Object.keys(layers).length`，多一个键会让页面写成「数仓层级 **5**」而数仓只有四层。
+
+**验证**：新增 4 条测试（求和恒等总数 / 干净库不输出兜底桶 / `probe_no_prefix` 落入未分层而非静默消失 / 带前缀仍归正确层），
+P06 全量 **58 passed**（54+4）无回归；`restart p06` 后线上 `15 = 6+2+2+2+3` ✓ 自洽。
+
+**顺带钉死一件事**：那 3 张未分层表**全是 `tmp_uitest_*`**，且比 D28 记录时又多一张 `tmp_uitest_lock_smoke` ——
+今天至少**三个不同的自动化测试代理**往数据中台灌表没清。根因仍是 D28 那条：
+**P06 有建表的 ingest 端点却没有任何删表端点**，每次测试永久留一张表。
+兜底桶至少让污染在页面上**看得见**了（以前只是没人能解释的差值）。删表端点属功能完善，建议连鉴权与白名单一起做。
+
+**查过但刻意没改**：健康分 30 的算法（`quality.py:323-345`）是 `base=140/153*100=91.5`，
+`penalty=1*2+12*5=62`，`91.5-62=30` —— 公式是注释里写明的设计，不是 bug；
+但惩罚是**不随检查总数归一的绝对值**，同样 7.8% 失败率在 30 条检查下会得 74 分，
+所以这个分数根本不能跨时间/跨数据量比较，而页面只印一个大号「30 健康分」。
+改它等于改对外指标含义，属指标定义决策，本轮只登记。细节见 `_evidence/p06-data-platform/dashboard-layers-20261015.md`。
+
+---
+
+## D34 · P07/P08 聚合值对账：一处可复现性加固 + 一次自我纠错（2026-10-15 中午，Qoder）
+
+**P07 全项自洽**（阴性结果，也值得记）：`total_assets=17` 与分页 total、`by_type`/`by_source`/`by_tag_source`
+三种分组各自求和均为 17，`coverage_rate=8/17=0.4706`、`roi=463300/45200=10.25` 全部对得上。
+
+**P08 计数全对**（streams 3 / clips 15 / tasks 2 与列表端点一致，`avg_score 68.2 = round(68.25,1)`）。
+
+**① 我怀疑错的一个**：`total_duration_minutes=18.2` 而 15 条切片 duration 求和只有 **13.61 分钟**，
+我据此以为又抓到"概览与明细对不上"。查实现 `main.py:681` 数的是 `_all_streams` 的整场直播时长，
+再看前端 `index.html:613` 把它标在「直播场次」卡下、文案「总时长 18.2 分钟」—— 语义与实现一致，**不是缺陷**。
+若当初直接报"发现 4.6 分钟的差"就是一次假阳性。
+
+**② 真问题：热词榜并列名次不可复现**。`top_keywords` 原先只按计数排（`key=lambda x: x[1], reverse=True`），
+计数相同的关键词谁先谁后取决于 dict 插入顺序，而 stats 走 `_all_clips`（处理序）、`/clips` 按分数序 —— 实测同计数不同序：
+`stats: 下单4, 回购2, 小龙虾2, 限量2` vs `按 /clips 重算: 下单4, 小龙虾2, 回购2, 限量2`。
+P08 门禁要求「打点结果**可解释**」，会随取数路径重排的榜单不符合。改为 `(-count, keyword)`。
+
+**诚实降级**：新增的不变量断言**在修复前也会通过**（旧插入序恰好等于字典序），
+所以它是防插入序漂移的守卫，不是"红转绿"证明；本次价值是确定性本身，不是修掉了一个当下可见的错误输出。
+P08 全量 **30 passed** 无回归；`restart p08`（9 秒）线上满足不变量 ✓。
+细节见 `_evidence/p08-live-clip/stats-reconcile-20261015.md`。
+
+---
+
+## D35 · P02 演示库漂移：登录页四个一键账号全部 401（旗舰模块首屏）（2026-10-15 中午，Qoder）
+
+**现象**：`web/src/app/login/page.tsx:13-20` 给四个可一键填充的演示账号（`boss/ops/design/cs@example.com` / `Test123456`），
+实测**四个全 401** —— 读者在旗舰模块首屏点哪个都进不去。
+
+**定性（结论不是"代码写错"）**：只读查 `api/local_dev.db`，12 个用户全是**旧品牌域名**（字面量按红线不复述） / `@local.dev`，
+**没有任何 `@example.com`**；而 `bootstrap_demo_users.py:20-23`、`acceptance_check.py`、`routes/workspace.py`
+三处代码都用 `@example.com`，**旧品牌域名在代码与文档里零出现**。
+→ 代码与 UI 自洽，**漂移的是这台机器的演示库**（某次品牌改名时手工塞了另一批用户，文档化种子从未在此库跑过）。
+连带后果：**`acceptance_check.py` 在当前库上根本跑不过**。
+所以**没有改代码** —— 改 `page.tsx` 迁就漂移库，会让照 README 跑 bootstrap 的 fresh 环境反而对不上。
+
+**处置**：先备份 `api/local_dev.db`(1.49MB) → `_runtime/qoder-backup-20261015/p02-local_dev.before-bootstrap.db`，
+再跑幂等的 `bootstrap_demo_users.py`（`ensure_bootstrap_user` 存在即跳过）→ 四账号 Created。无需重启
+（`run_local_dev.py:28` 指向 `API_DIR/local_dev.db`，SQLite 新提交即时可见）。
+
+**复验（全实测）**：四账号登录 **200** 且角色正确；**RBAC 门禁** `cs` → `/dashboard/overview` **403**、`/users` **403**，`boss` → 200；
+P02→P06 真实取数 `metrics_source="p06-live"`、`degraded=False`，gmv `35958.37/36005.68/0.3387` 与 P06 `/metrics/summary` 逐条相同；
+`total_stores=2`=`/stores`、`total_products=3`=`/products`。
+
+**我自己犯的错（重要）**：bootstrap 后第一轮验证仍报四账号 401，我差点据此断言"服务连的不是这个库"。
+实际是**我的探针写错了** —— P02 的 `/api/v1/*` 用 **Bearer token**，我却用 Cookie 会话访问，
+且 `sess()` 返回三元组被解包成两个变量，异常路径整个失真。改用 Bearer 重测 → 全 200；
+又查了 `:8000` 是 PID 48776、启动于 10-14 23:01（bootstrap 后未重启），排除"靠重启才生效"的误判。
+教训：**验证失败先怀疑自己的探针，再怀疑被测物。**
+
+**遗留**：库里那 8 个旧品牌域名 / `@local.dev` 用户是漂移残留，**我没删**（非我数据 + 删用户属破坏性操作），
+现在 12 用户并存、`/users` 会列出两批账号；更根本的是**演示账号没有单一来源**（UI 一份、bootstrap 一份、库一份），
+正解是后端下发演示账号，属功能完善。细节见 `_evidence/p02/demo-accounts-drift-20261015.md`。
+
+
+
+---
+
+## 2026-10-15 · 全平台按钮全量实测与监督修复（button-sweep-20261015）
+
+上午 6+3 路子智能体对十个模块 + 统一外壳做了「逐按钮点击」实测（约 450+ 控件/交互点，含重试与现场竞态实验），
+随后监督窗口修复 9 项代码缺陷并逐项复验（P05 四页 TDZ、P06 DuckDB 并发假 404、P10 小数据集训练 500、
+外壳 127.0.0.1 挂载、P04 缓存/翻页/错误文案、品牌兜底请求等），另清理 P04/P10 双进程残留。
+
+- 总索引与优化建议清单：`_evidence/button-sweep-20261015/INDEX.md`
+- 各模块报告：`agent1-shell.md` / `agent2-p01-p04.md` / `agent3-p02-p03.md` / `agent4-p05-p08.md` / `agent5-p06-p07.md` / `agent6-p09-p10.md`
+- 监督复验：`监督验证-P05-外壳-20261015.json`、`监督验证-P10-训练-*.json`、`监督验证-P04-缓存头-20261015.txt`、`agent5-p06-race-experiment*.json`
+- 环境事实同日如实记录：公网隧道 09:40–10:02 整段 502；P04/P02-web 各静默死过一次且无自愈（supervisor 无看门狗）。
+
+**同日第二波（「全部修复」）**：在按钮实测基础上又修复 14 项 —— P02 保存链路（两处 route 漏带鉴权头 → 100% 保存失败）与合规命中透传、P02 诊断横幅/健康度真实化/占位素材图、P09 三按钮（从 P01 导入 / 发起评分 / 导出低分）、P10 训练列表端点与 12 处前端接线、P06 同名覆盖护栏（零鉴权端点不可再换表）/ 指标口径 / 图表占位、P05 审批实例登记（本地上传合同回写修复）+ 自检文案、P08/P03 如实标注、全站 13 页 favicon、`supervisor.py watch` 看门狗。
+复验：P05 selftest 66/66 · P06 6 passed · P10 40 passed · P09/P10/P06 前端无头检查零报错 · P06 覆盖重传 400 · P05 实例登记 200。
+明细、仍未做项与全部证据见 `_evidence/button-sweep-20261015/INDEX.md` §6（复验日志：`监督验证-*`）。

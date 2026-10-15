@@ -1,7 +1,7 @@
 [project]
 name = "p03-deep-research"
 version = "0.3.0"
-description = "CloudPivot 云枢智能 - NL2SQL 问数系统 (P03)"
+description = "Li Yibo's Personal Portfolio 李奕波个人作品矩阵 - NL2SQL 问数系统 (P03)"
 requires-python = ">=3.12"
 dependencies = [
     "aiofiles>=25.1.0",

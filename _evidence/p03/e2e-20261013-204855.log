@@ -2,7 +2,7 @@ query: 查询数据库中药品销售数据，给出销量前三的药品名称�
 thread_id: 4a8023333b22
 events: 17  elapsed: 195.5s
 
-[session_created] 工作目录已创建: D:/software/PycharmProjects/面试项目/projects/p03-deep-research/output/session_4a8023333b22 
+[session_created] 工作目录已创建: D:/software/PycharmProjects/作品矩阵/projects/p03-deep-research/output/session_4a8023333b22 
 [assistant_call] 正在调用助手: 数据库查询助手 数据库查询助手
 [tool_start] 开始执行工具: 搜索表名工具 搜索表名工具
 [tool_start] 开始执行工具: 搜索表名工具 搜索表名工具

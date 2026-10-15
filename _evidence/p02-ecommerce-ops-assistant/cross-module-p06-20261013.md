@@ -3,7 +3,7 @@
 时间: 2026-10-13 08:34:18
 
 ## 架构规范落实
-- 目标地址由 cloudpivot_config.api_url('p06','/metrics/summary') 从 shared/config/services.json 解析，**未硬编码端口**
+- 目标地址由 portfolio_config.api_url('p06','/metrics/summary') 从 shared/config/services.json 解析，**未硬编码端口**
 - 支持 CP_P06_METRICS_URL 显式覆盖（降级演练用）
 
 ## 1. 正常路径（SERVICE_REGISTRY → 8060 活实例）

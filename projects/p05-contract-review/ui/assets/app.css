@@ -1541,7 +1541,7 @@ body { font-size: 15px; line-height: 1.7; }
 
 /* v2.1.9 · 二阶段复核徽标
    风险卡片上的复核结论标识：确认（绿）/ 误报（灰+删除线）/ 待人工（黄）
-   与风险等级徽标并排展示，让面试官一眼看到「规则命中 + 模型怎么说」的对照关系。 */
+   与风险等级徽标并排展示，让读者一眼看到「规则命中 + 模型怎么说」的对照关系。 */
 .vbadge {
   display: inline-flex; align-items: center;
   padding: 1px 7px; border-radius: 3px;

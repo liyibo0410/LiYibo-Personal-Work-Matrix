@@ -1,4 +1,4 @@
-# P07 · AI 素材中心（云枢智能 CloudPivot）
+# P07 · AI 素材中心（李奕波个人作品矩阵 Li Yibo's Personal Portfolio）
 
 ## 一句话定位
 品牌电商的 AI 素材生产-管理-检索中心：素材上传即自动打标，自然语言即可搜到素材，生成物直接入库，并与投放效果数据关联到同一张报表上。
@@ -37,7 +37,7 @@ graph TB
 | Prompt | `prompts/*.md` 版本化 | 与代码分离，响应里回显 `prompt_version`，改 prompt 可追溯 |
 | 检索 | 中文 n-gram + 同义组归一 + 字段加权 + IDF + 阈值拒答 | 纯本地零依赖；改造前的 `split()+子串包含` 在中文长句上 Recall@5 只有 0.05 |
 | 图像 | Pillow | 上传读真实宽高；生成投放规格卡（明确标注非 AI 出图） |
-| 跨模块 | `cloudpivot_config.api_url("p06", ...)` | 端口只从 SERVICE_REGISTRY 解析，禁止硬编码 |
+| 跨模块 | `portfolio_config.api_url("p06", ...)` | 端口只从 SERVICE_REGISTRY 解析，禁止硬编码 |
 | 前端 | 单页 HTML + Tailwind CDN + ECharts + `shared/ui-kit` | 无构建步骤；配色唯一真源是 `tokens.css`，主题切换后图表重画 |
 
 ## 快速开始
@@ -116,7 +116,7 @@ python _tools\supervisor.py status
 - **未做**：并发压测、真实素材量级下的检索性能、生成文案的投放效果增益回流、Docker 化（当前单机 uv 直跑）。
 - 前端样式使用 Tailwind CDN（与全平台静态模块一致），控制台会有一条 production 提示。
 
-## 面试问答 10 条
+## 设计与取舍问答 10 条
 1. **为什么不用 CLIP？** 演示机只有单卡 4060 且当前可用端点不提供 embeddings（实测 404）。我用「中文 n-gram + 同义组归一 + 字段加权」把 Recall@5 从 0.05 提到 1.0，同时把「这不是多模态向量检索」写在响应体和页面上 —— 能力边界比好看的说法重要。
 2. **检索怎么做到可解释？** 每个命中返回 `matched_terms`（哪个词命中 tags/name/description），前端直接展示；相关度是 IDF 加权后按查询侧总权重归一，配 0.18 的阈值做拒答。
 3. **中文分词为什么用二元组而不是 jieba？** 零依赖、对未登录词（"以旧换新"）鲁棒，且二元组天然覆盖子串匹配；代价是切出"有没/用的"这类噪声词，靠 IDF 把它们的权重压下去。
@@ -125,5 +125,5 @@ python _tools\supervisor.py status
 6. **上传的文件安全吗？** 客户端 Content-Type 一律不信，按文件头嗅探；不在白名单（png/jpeg/webp/gif/mp4/mov/webm）直接 422；落盘文件名用服务端生成的 asset_id，且校验路径不越出 `uploads/`；上限 32MB。
 7. **为什么 `tags` 要在读侧规范化成数组？** 历史上标签以原始字符串入库，前端 `JSON.parse("护肤,夏季")` 抛错导致整块素材库空白。现在 repository 统一 `normalize_tags`，接口对外只有数组，前端 `tagsOf()` 再兜一层。
 8. **旧库怎么迁移？** 启动时 `PRAGMA table_info` 检查缺列就 `ALTER TABLE ADD COLUMN`（`mime_type/tag_source/content`），并把早期被写死成同一时刻的 demo `created_at` 摊开 —— 不要求删库重建，用户数据不动。
-9. **跨模块调用怎么保证不硬编码端口？** 全部经 `cloudpivot_config.api_url("p06", "/metrics/summary")` 解析 SERVICE_REGISTRY；P06 不在时报表返回 `available=false` + 原因，前端显示"不编造大盘数字"。
+9. **跨模块调用怎么保证不硬编码端口？** 全部经 `portfolio_config.api_url("p06", "/metrics/summary")` 解析 SERVICE_REGISTRY；P06 不在时报表返回 `available=false` + 原因，前端显示"不编造大盘数字"。
 10. **下一步做什么？** ① 验证 `wan2.7-image` 的异步任务接口，把图片生成分成「真实出图」与「规格卡」两条明确路径；② 接 embeddings 端点后把检索升级为向量 + 关键词混合召回并做 A/B；③ 在 P02 侧接上 `ingest` 推送，把「生成→归库→投放→回流」闭环跑通。

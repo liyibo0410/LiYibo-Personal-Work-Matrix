@@ -14,10 +14,10 @@ const DEMO_PASSWORD = "Test123456";
 
 /** 四角色演示账号；点击即填充，省掉手输。口令与 bootstrap_demo_users.py 一致。 */
 const DEMO_ACCOUNTS = [
-  { key: "boss", email: "boss@cloudpivot.com", role: "老板" },
-  { key: "ops", email: "ops@cloudpivot.com", role: "运营" },
-  { key: "design", email: "design@cloudpivot.com", role: "美工" },
-  { key: "cs", email: "cs@cloudpivot.com", role: "客服" },
+  { key: "boss", email: "boss@example.com", role: "老板" },
+  { key: "ops", email: "ops@example.com", role: "运营" },
+  { key: "design", email: "design@example.com", role: "美工" },
+  { key: "cs", email: "cs@example.com", role: "客服" },
 ] as const;
 
 /** 渲染登录页面；服务端读取错误参数，表单提交到 /login/submit。 */
@@ -100,7 +100,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               type="email"
               required
               defaultValue={picked?.email}
-              placeholder="boss@cloudpivot.com"
+              placeholder="boss@example.com"
               autoComplete="username"
             />
           </Field>

@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "host": "127.0.0.1",
-  "comment": "云枢智能统一平台 · 服务注册表（SERVICE_REGISTRY）——端口的唯一真源。禁止在任何模块代码里硬编码其他模块端口，一律从这里解析。改端口只改这一个文件，然后运行 build_js.py 重新生成前端镜像 services.js。",
+  "comment": "李奕波个人作品矩阵统一平台 · 服务注册表（SERVICE_REGISTRY）——端口的唯一真源。禁止在任何模块代码里硬编码其他模块端口，一律从这里解析。改端口只改这一个文件，然后运行 build_js.py 重新生成前端镜像 services.js。",
   "gateway": {
     "name": "统一外壳网关",
     "web_port": 8800,
@@ -19,7 +19,7 @@
       "commerce_port": 18081,
       "api_prefix": "/api",
       "status": "ready",
-      "desc": "意图识别 + 知识检索 + 负面情绪自动建单转人工"
+      "desc": "意图识别 + 真实 LLM 生成回复 + FAQ/RAG 文本层检索（种子知识、命中不足拒答）；负面情绪自动建单转人工仍未实现 —— 见模块 README 已知限制"
     },
     "p02": {
       "name": "电商运营助手",
@@ -43,7 +43,7 @@
       "web_port": 5174,
       "api_prefix": "/api",
       "status": "ready",
-      "desc": "自然语言 → SQL → 图表 → 溯源报告，含只读护栏与拒答"
+      "desc": "自然语言 → SQL → 只读护栏（带行数钳制）；图表与溯源报告尚未实现，且 MySQL(3306) 未起时链路不通"
     },
     "p04": {
       "name": "RAG 知识库",
@@ -103,7 +103,7 @@
       "web_port": 8080,
       "api_prefix": "/api/v1",
       "status": "ready",
-      "desc": "样例视频端到端出片 + 可解释打点 + 批量队列"
+      "desc": "打点与批量队列可演示 —— 全程内存模拟，未接 ffmpeg、不产出切片文件"
     },
     "p09": {
       "name": "AI 销售考核",

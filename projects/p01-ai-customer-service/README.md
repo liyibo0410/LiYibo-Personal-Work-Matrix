@@ -1,6 +1,6 @@
 # P01 AI电商客服系统
 
-> 云枢智能（CloudPivot）平台 · L3 应用层模块
+> 李奕波个人作品矩阵（Li Yibo's Personal Portfolio）平台 · L3 应用层模块
 > 智能电商客服平台 -- 数字人 TTS x 领域知识问答 x 订单查询 x 闲聊分流 x 多轮对话
 
 ## 一句话定位

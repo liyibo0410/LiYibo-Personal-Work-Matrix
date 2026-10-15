@@ -1,0 +1,49 @@
+{
+  "error": "TimeoutError: page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#btn-menu')\u001b[22m\n\u001b[2m    - locator resolved to <button title=\"菜单\" id=\"btn-menu\" class=\"cp-icon-btn\">☰</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n",
+  "steps": [
+    {
+      "area": "nav-anchor",
+      "ctl": "品牌名锚点(#/)",
+      "action": "click",
+      "after": {
+        "hash": "#/",
+        "topbar": "作品集首页",
+        "homeVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:06:24.573Z"
+    },
+    {
+      "area": "login-modal",
+      "ctl": "点击遮罩空白处关闭",
+      "action": "click",
+      "after": {
+        "closed": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:06:25.715Z"
+    },
+    {
+      "area": "resume",
+      "ctl": "在线预览 (rs-pdf-view)",
+      "action": "click",
+      "after": {
+        "kind": "popup",
+        "url": "http://39.96.200.45:8070/https://github.com/liyibo0410/yunshu-ai-portfolio"
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:06:26.524Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "点击遮罩空白处关闭",
+      "action": "click",
+      "after": {
+        "wasOpen": true,
+        "closedNow": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:06:47.586Z"
+    }
+  ]
+}

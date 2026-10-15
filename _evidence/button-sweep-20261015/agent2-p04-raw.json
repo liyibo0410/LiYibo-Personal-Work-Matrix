@@ -1,0 +1,573 @@
+{
+ "root": "http://39.96.200.45:8090",
+ "results": [
+  {
+   "page": "P04·入口",
+   "control": "GET /p04/",
+   "action": "直接访问公网入口",
+   "expected": "307 → 落到可用于演示的页面",
+   "actual": "redirect chain=[{'url': 'http://39.96.200.45:8090/p04/', 'status': 307, 'loc': '/console.html'}, {'url': 'http://39.96.200.45:8090/console.html', 'status': 200, 'loc': ''}]; final=http://39.96.200.45:8090/console.html; title='RAG 知识库 · 统一控制台'; body[0:200]='RAG 知识库\\n\\n智能知识管理平台 · 李奕波个人作品矩阵\\n\\n上传导入\\n文档管理\\n检索问答\\n数据看板\\n依赖正常：依赖全部在线，检索问答与文档导入均可端到端跑通。（检索问答可用）\\nMilvus 向量库：在线 · 硬依赖\\nMongoDB 文档/历史库：在线 · 硬依赖\\nMinIO 对象存储：在线\\nBGE-M3 嵌入模型：在线 · 硬依赖\\nLLM 生成凭据：在线 · 硬依赖\\n重新检查\\n文件导入\\n\\n上传 '",
+   "verdict": "正常",
+   "shot": "agent2-01-p04-landing.png",
+   "t": "09:39:55"
+  },
+  {
+   "page": "P04·console",
+   "control": "首屏",
+   "action": "打开 /p04/console.html",
+   "expected": "健康条 + 4 个 Tab 正常",
+   "actual": "tabs=['tab-upload:文件导入\\n\\n上传 PDF 或 Markdown 文件，自动解析并入库\\n\\n点击或拖拽文件到此处\\n\\n支持 PDF / Markdown，多文件批量导入', 'tab-docs:文档管理\\n                查看已入库文档和导入任务状态\\n            \\n            \\n            \\n                \\n                    \\n                        \\n                        搜索\\n                        刷新\\n                    \\n                    加载中...\\n                \\n                \\n                已入库文档\\n                \\n                    \\n                        \\n                            文件名\\n                            主体名称\\n                            创建时间\\n                            状态\\n                            操作\\n                        \\n                    \\n                    \\n                \\n\\n                \\n                \\n                    切片预览\\n                    \\n                    \\n                    \\n                        上一批\\n                        下一批\\n                        \\n                        收起\\n                    \\n                \\n\\n                全部导入任务\\n                \\n                    \\n                        \\n                            文件名\\n                            Task ID\\n                            创建时间\\n                            状态\\n                            已完成节点', 'tab-qa:检索问答\\n                基于 RAG 技术，从知识库中检索并生成答案\\n            \\n            \\n            \\n                \\n                    \\n                        \\n                            \\n                      ",
+   "verdict": "正常",
+   "shot": "agent2-02-p04-console-initial.png",
+   "t": "09:40:01"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·重新检查(健康)",
+   "action": "点击",
+   "expected": "重新探活并刷新健康条",
+   "actual": "health='依赖正常：依赖全部在线，检索问答与文档导入均可端到端跑通。（检索问答可用）\\nMilvus 向量库：在线 · 硬依赖\\nMongoDB 文档/历史库：在线 · 硬依赖\\nMinIO 对象存储：在线\\nBGE-M3 嵌入模型：在线 · 硬依赖\\nLLM 生成凭据：在线 · 硬依赖\\n重新检查'",
+   "verdict": "正常",
+   "shot": "agent2-03-p04-health-refresh.png",
+   "t": "09:40:07"
+  },
+  {
+   "page": "P04·console",
+   "control": "Tab·上传导入",
+   "action": "点击左侧导航项",
+   "expected": "切换到该面板",
+   "actual": "active panel=tab-upload",
+   "verdict": "正常",
+   "shot": "agent2-04-p04-tab-upload.png",
+   "t": "09:40:09"
+  },
+  {
+   "page": "P04·console",
+   "control": "Tab·文档管理",
+   "action": "点击左侧导航项",
+   "expected": "切换到该面板",
+   "actual": "active panel=tab-docs",
+   "verdict": "正常",
+   "shot": "agent2-05-p04-tab-docs.png",
+   "t": "09:40:12"
+  },
+  {
+   "page": "P04·console",
+   "control": "Tab·检索问答",
+   "action": "点击左侧导航项",
+   "expected": "切换到该面板",
+   "actual": "active panel=tab-qa",
+   "verdict": "正常",
+   "shot": "agent2-06-p04-tab-qa.png",
+   "t": "09:40:14"
+  },
+  {
+   "page": "P04·console",
+   "control": "Tab·数据看板",
+   "action": "点击左侧导航项",
+   "expected": "切换到该面板",
+   "actual": "active panel=tab-dashboard",
+   "verdict": "正常",
+   "shot": "agent2-07-p04-tab-dashboard.png",
+   "t": "09:40:17"
+  },
+  {
+   "page": "P04·console",
+   "control": "上传·选择文件(UI测试-可删-A.md)",
+   "action": "通过文件选择器上传",
+   "expected": "上传 → 解析 → 切片入库，进度/日志可见",
+   "actual": "完成=True; 列表文本='UI测试-可删-A.md\\n0.39 KB\\n日志（已完成4，进行中1，点击展开）\\n处理中...\\n×'",
+   "verdict": "正常",
+   "shot": "agent2-08-p04-upload-A-done.png",
+   "t": "09:40:24"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·× 从列表移除",
+   "action": "点击某个上传项的 ×",
+   "expected": "仅从待上传列表移除，不影响已入库文档",
+   "actual": "列表项 2 -> 1",
+   "verdict": "正常",
+   "shot": "agent2-09-p04-file-remove.png",
+   "t": "09:40:28"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·清空列表",
+   "action": "点击",
+   "expected": "清空待上传列表",
+   "actual": "列表文本=''",
+   "verdict": "正常",
+   "shot": "agent2-10-p04-clear-filelist.png",
+   "t": "09:40:29"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·刷新(文档)",
+   "action": "点击",
+   "expected": "重新拉取文档列表",
+   "actual": "行数=5; 内容='hak180产品安全手册.pdf | 627.8 KB | 与另一份同名，删除会一并清理其向量 | \\t-\\t2026/10/13 06:25:03\\t处理中\\t预览切片删除 | 华为擎云B530 用户指南-(PUCZ,Windows11_03,zh-cn).pdf | 670.3 KB | \\t华为擎云B530台式机\\t2026/10/12 06:19:38\\t已完成\\t预览切片删除 | hak180产品安全手册.pdf | 627.8 KB | 与另一份同名，删除会一并清理其向量 | \\tBrother HAK 180 烫金机\\t2026/10/12 06:19:38\\t已完成\\t预览切片删除 | H3C LA2608室内无线网关 用户手册-6W100-整'",
+   "verdict": "正常",
+   "shot": "agent2-11-p04-docs-refresh.png",
+   "t": "09:40:37"
+  },
+  {
+   "page": "P04·console",
+   "control": "搜索框 + 按钮·搜索",
+   "action": "输入『UI测试』搜索",
+   "expected": "过滤出刚上传的测试文档",
+   "actual": "行数=2; 内容='UI测试-可删-B.md | 165 B | \\t-\\t2026/10/15 01:40:24\\t处理中\\t预览切片删除 | UI测试-可删-A.md | 402 B | \\t-\\t2026/10/15 01:40:21\\t处理中\\t预览切片删除'",
+   "verdict": "正常",
+   "shot": "agent2-12-p04-docs-search.png",
+   "t": "09:40:41"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·预览切片",
+   "action": "点击第一行文档",
+   "expected": "右侧打开切片预览并显示分块",
+   "actual": "panel display=block; title='切片预览 · UI测试-可删-B.md（Mongo 记录的切片数：0）'; pos=''; 内容=''",
+   "verdict": "正常",
+   "shot": "agent2-13-p04-preview-open.png",
+   "t": "09:40:45"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·下一批",
+   "action": "点击",
+   "expected": "切到下一批切片",
+   "actual": "pos '' -> '共 1 块，当前第 6~5 块'",
+   "verdict": "正常",
+   "shot": "agent2-14-p04-preview-next.png",
+   "t": "09:40:47"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·上一批",
+   "action": "点击",
+   "expected": "切回上一批切片",
+   "actual": "pos '共 1 块，当前第 6~5 块' -> '共 1 块，当前第 1~1 块'",
+   "verdict": "正常",
+   "shot": "agent2-15-p04-preview-prev.png",
+   "t": "09:40:50"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·收起",
+   "action": "点击",
+   "expected": "关闭预览面板",
+   "actual": "panel display=none",
+   "verdict": "正常",
+   "shot": "agent2-16-p04-preview-close.png",
+   "t": "09:40:51"
+  },
+  {
+   "page": "P04·console",
+   "control": "检索问答·qa-testdoc-hit",
+   "action": "提问『示例测试网关 CP-GW-01 的默认管理地址和端口...』",
+   "expected": "命中刚上传的测试文档并给出 10.99.99.1 / 8899",
+   "actual": "引用来源出现=False; 回答尾部='我 示例测试网关 CP-GW-01 的默认管理地址和端口是什么？ AI 阶段进度（已完成0，进行中1） 正在进行确认问题产品... SSE 连接已断开，未收到回答。'",
+   "verdict": "部分",
+   "shot": "agent2-17-p04-qa-testdoc-hit.png",
+   "t": "09:43:56"
+  },
+  {
+   "page": "P04·console",
+   "control": "检索问答·qa-seed-hit",
+   "action": "提问『H3C LA2608 交换机的交换容量是多少？...』",
+   "expected": "命中 H3C 手册并给出 16 Gbps",
+   "actual": "引用来源出现=False; 回答尾部='我 示例测试网关 CP-GW-01 的默认管理地址和端口是什么？ AI 阶段进度（已完成0，进行中1） 正在进行确认问题产品... SSE 连接已断开，未收到回答。 我 H3C LA2608 交换机的交换容量是多少？ AI 阶段进度（等待中） 请求失败：<html>\\r <head><title>502 Bad Gateway</title></head>\\r <body>\\r <center><h1>502 Bad Gateway</h1></center>\\r <hr><center>nginx/1.24.0</center>\\r </body>\\r </html>\\r <!-- a padding to disable MSIE and Chrome friendly error page -->\\r <!-- a padding to disable MSIE and Chrome friendly error page -->\\r <!-- a pa'",
+   "verdict": "部分",
+   "shot": "agent2-18-p04-qa-seed-hit.png",
+   "t": "09:44:00"
+  },
+  {
+   "page": "P04·console",
+   "control": "检索问答·qa-refusal",
+   "action": "提问『请告诉我 iPhone 17 Pro Max 的电池...』",
+   "expected": "明确拒答/说明文档未记载",
+   "actual": "引用来源出现=False; 回答尾部='l>\\r <!-- a padding to disable MSIE and Chrome friendly error page -->\\r <!-- a padding to disable MSIE and Chrome friendly error page -->\\r <!-- a pa 我 请告诉我 iPhone 17 Pro Max 的电池容量是多少 AI 阶段进度（等待中） 请求失败：<html>\\r <head><title>502 Bad Gateway</title></head>\\r <body>\\r <center><h1>502 Bad Gateway</h1></center>\\r <hr><center>nginx/1.24.0</center>\\r </body>\\r </html>\\r <!-- a padding to disable MSIE and Chrome friendly error page -->\\r <!-- a padding to disable MSIE and Chrome friendly error page -->\\r <!-- a pa'",
+   "verdict": "部分",
+   "shot": "agent2-19-p04-qa-refusal.png",
+   "t": "09:44:04"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·清空对话(检索问答)",
+   "action": "点击",
+   "expected": "清空问答线程（含服务端历史 DELETE）",
+   "actual": "线程文本[0:120]='你好，我是 RAG 知识库助手\\n\\n输入问题，我从知识库检索后作答，并附上引用来源；检索不到会明确拒答'",
+   "verdict": "正常",
+   "shot": "agent2-20-p04-qa-clear.png",
+   "t": "09:44:07"
+  },
+  {
+   "page": "P04·console",
+   "control": "Tab·数据看板",
+   "action": "点击并等待渲染",
+   "expected": "统计卡 + 两个图表 + Top 文档表",
+   "actual": "stats={'totalDocs': '5', 'totalChunks': '36', 'todayUploads': '0', 'totalQA': '223'}; canvas=['uploadTrendChart:538x260', 'docStatusChart:538x260']; top='1\\t华为擎云B530 用户指南-(PUCZ,Windows11_03,zh-cn).pdf\\t华为擎云B530台式机\\t14\\t2026/10/12 | 2\\thak180产品安全手册.pdf\\t-\\t7\\t2026/10/13 | 3\\thak180产品安全手册.pdf\\tBrother HAK 180 烫金机\\t7\\t2026/10/12 | 4\\tH3C LA2608室内无线网关 用户手册-6W100-整本手册.pdf\\tH3C'",
+   "verdict": "正常",
+   "shot": "agent2-21-p04-dashboard.png",
+   "t": "09:44:16"
+  },
+  {
+   "page": "P04·console",
+   "control": "按钮·删除(清理自建测试文档)",
+   "action": "逐个删除『UI测试-可删-*』",
+   "expected": "删除成功并连带清理向量",
+   "actual": "删除=['UI测试-可删-B.md\\n165 B\\n\\t-\\t2026/10/15 01:40:2', 'UI测试-可删-B.md\\n165 B\\n\\t-\\t2026/10/15 01:40:2', 'UI测试-可删-B.md\\n165 B\\n\\t-\\t2026/10/15 01:40:2', 'UI测试-可删-B.md\\n165 B\\n\\t-\\t2026/10/15 01:40:2']; 剩余列表='UI测试-可删-B.md | 165 B | \\t-\\t2026/10/15 01:40:24\\t处理中\\t预览切片删除 | UI测试-可删-A.md | 402 B | \\t-\\t2026/10/15 01:40:21\\t处理中\\t预览切片删除'",
+   "verdict": "正常",
+   "shot": "agent2-22-p04-cleanup-delete.png",
+   "t": "09:45:02"
+  },
+  {
+   "page": "P04·chat",
+   "control": "首屏",
+   "action": "打开 /p04/chat.html",
+   "expected": "聊天页加载 + 健康状态可见",
+   "actual": "title='502 Bad Gateway'; apiPill='(no pill)'; 消息数=0",
+   "verdict": "正常",
+   "shot": "agent2-23-p04-chat-initial.png",
+   "t": "09:45:07"
+  },
+  {
+   "page": "P04·chat",
+   "control": "按钮·发送",
+   "action": "提问",
+   "expected": "回答 + 引用",
+   "actual": "异常: Page.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#input\")\n",
+   "verdict": "缺陷",
+   "shot": "agent2-24-p04-chat-send-err.png",
+   "t": "09:45:37"
+  },
+  {
+   "page": "P04·chat",
+   "control": "按钮·反馈",
+   "action": "点击",
+   "expected": "提交反馈",
+   "actual": "未测：页面无反馈按钮",
+   "verdict": "未测",
+   "shot": null,
+   "t": "09:45:37"
+  },
+  {
+   "page": "P04·chat",
+   "control": "开关·流式输出",
+   "action": "点击",
+   "expected": "切换模式",
+   "actual": "异常: Page.eval_on_selector: Failed to find element matching selector \"#streamToggle\"",
+   "verdict": "缺陷",
+   "shot": null,
+   "t": "09:45:37"
+  },
+  {
+   "page": "P04·chat",
+   "control": "拒答场景",
+   "action": "提问库外问题",
+   "expected": "明确拒答",
+   "actual": "异常: Page.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#input\")\n",
+   "verdict": "缺陷",
+   "shot": "agent2-25-p04-chat-refusal-err.png",
+   "t": "09:46:07"
+  },
+  {
+   "page": "P04·chat",
+   "control": "按钮·清空对话",
+   "action": "点击",
+   "expected": "清空历史",
+   "actual": "异常: Page.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#btnClear\")\n",
+   "verdict": "缺陷",
+   "shot": "agent2-26-p04-chat-clear-err.png",
+   "t": "09:46:37"
+  },
+  {
+   "page": "P04·import",
+   "control": "首屏",
+   "action": "打开 /p04/import.html",
+   "expected": "上传页可用",
+   "actual": "title='502 Bad Gateway'; body[0:120]='502 Bad Gateway nginx/1.24.0'",
+   "verdict": "正常",
+   "shot": "agent2-27-p04-import-initial.png",
+   "t": "09:46:40"
+  },
+  {
+   "page": "P04·import",
+   "control": "上传",
+   "action": "选择文件上传",
+   "expected": "完成",
+   "actual": "异常: Page.set_input_files: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#fileInput\")\n",
+   "verdict": "缺陷",
+   "shot": "agent2-28-p04-import-err.png",
+   "t": "09:47:10"
+  },
+  {
+   "page": "P04·console",
+   "control": "删除(收尾清理)",
+   "action": "删除自建文档",
+   "expected": "清干净",
+   "actual": "异常: Page.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\".nav-item[data-tab=\\\"tab-docs\\\"]\")\n",
+   "verdict": "缺陷",
+   "shot": null,
+   "t": "09:47:44"
+  }
+ ],
+ "dialogs": [
+  {
+   "type": "confirm",
+   "message": "「UI测试-可删-B.md」仍在处理中。\n\n移除这一行只是去掉进度显示：服务器端的导入不会中断，导入完成后文档仍会出现在「文档管理」里。\n要删除已入库的文档，请到「文档管理」中点「删除」（会连带清理它的向量切片）。\n\n确定从当前列表移除这一条？",
+   "t": "09:40:26"
+  },
+  {
+   "type": "confirm",
+   "message": "列表里有 1 条记录，其中 1 条仍在处理中。\n清空只去掉本页的进度显示，不会中断服务器端导入，也不会删除已入库文档。\n\n确定清空？",
+   "t": "09:40:28"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 0 条切片，删除后「检索问答」不再命中该文档。\n\n服务器上的原始文件保留，未删除。",
+   "t": "09:44:23"
+  },
+  {
+   "type": "alert",
+   "message": "删除失败：HTTP 502",
+   "t": "09:44:23"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 0 条切片，删除后「检索问答」不再命中该文档。\n\n服务器上的原始文件保留，未删除。",
+   "t": "09:44:33"
+  },
+  {
+   "type": "alert",
+   "message": "删除失败：HTTP 502",
+   "t": "09:44:33"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 0 条切片，删除后「检索问答」不再命中该文档。\n\n服务器上的原始文件保留，未删除。",
+   "t": "09:44:42"
+  },
+  {
+   "type": "alert",
+   "message": "删除失败：HTTP 502",
+   "t": "09:44:43"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 0 条切片，删除后「检索问答」不再命中该文档。\n\n服务器上的原始文件保留，未删除。",
+   "t": "09:44:52"
+  },
+  {
+   "type": "alert",
+   "message": "删除失败：HTTP 502",
+   "t": "09:44:52"
+  }
+ ],
+ "console": [
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  },
+  {
+   "lvl": "error",
+   "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+  }
+ ],
+ "console_warn": [],
+ "netprobs": [
+  {
+   "url": "http://39.96.200.45:8090/stream/kb-console-mv8vfn6f-lqc356",
+   "fail": "net::ERR_INCOMPLETE_CHUNKED_ENCODING"
+  },
+  {
+   "url": "http://39.96.200.45:8090/stream/kb-console-mv8vfn6f-lqc356",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/query",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/query",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/history/kb-console-mv8vfn6f-lqc356",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/documents/cd8bca71-732f-4ef1-bc3e-26837b4adf98",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/documents/cd8bca71-732f-4ef1-bc3e-26837b4adf98",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/documents/cd8bca71-732f-4ef1-bc3e-26837b4adf98",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/documents/cd8bca71-732f-4ef1-bc3e-26837b4adf98",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/p04/chat.html",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/p04/import.html",
+   "status": 502
+  },
+  {
+   "url": "http://39.96.200.45:8090/p04/console.html",
+   "status": 502
+  }
+ ],
+ "chain": [
+  {
+   "url": "http://39.96.200.45:8090/p04/",
+   "status": 307,
+   "loc": "/console.html"
+  },
+  {
+   "url": "http://39.96.200.45:8090/console.html",
+   "status": 200,
+   "loc": ""
+  },
+  {
+   "url": "http://39.96.200.45:8090/p04/console.html",
+   "status": 200,
+   "loc": ""
+  },
+  {
+   "url": "http://39.96.200.45:8090/p04/chat.html",
+   "status": 502,
+   "loc": ""
+  },
+  {
+   "url": "http://39.96.200.45:8090/p04/import.html",
+   "status": 502,
+   "loc": ""
+  },
+  {
+   "url": "http://39.96.200.45:8090/p04/console.html",
+   "status": 502,
+   "loc": ""
+  }
+ ],
+ "dir_links": [
+  "agent2-01-p01-initial.png",
+  "agent2-01-p04-landing.png",
+  "agent2-02-p01-sidebar-orders.png",
+  "agent2-02-p04-console-initial.png",
+  "agent2-03-p01-skin-toggle.png",
+  "agent2-03-p04-health-refresh.png",
+  "agent2-04-p01-refresh-sidebar.png",
+  "agent2-04-p04-tab-upload.png",
+  "agent2-05-p01-tab-products.png",
+  "agent2-05-p04-tab-docs.png",
+  "agent2-06-p01-send-product.png",
+  "agent2-06-p04-tab-qa.png",
+  "agent2-07-p01-send-order.png",
+  "agent2-07-p04-tab-dashboard.png",
+  "agent2-08-p01-chat-hello.png",
+  "agent2-08-p04-upload-A-done.png",
+  "agent2-09-kb-refund-how.png",
+  "agent2-09-p04-file-remove.png",
+  "agent2-10-kb-refund-policy.png",
+  "agent2-10-p04-clear-filelist.png",
+  "agent2-11-kb-refusal.png",
+  "agent2-11-p04-docs-refresh.png",
+  "agent2-12-chat-human-handoff.png",
+  "agent2-12-p04-docs-search.png",
+  "agent2-13-p01-cleared-welcome.png",
+  "agent2-13-p04-preview-open.png",
+  "agent2-14-chip-0-err.png",
+  "agent2-14-p04-preview-next.png",
+  "agent2-15-p01-tts.png",
+  "agent2-15-p04-preview-prev.png",
+  "agent2-16-p01-copy.png",
+  "agent2-16-p04-preview-close.png",
+  "agent2-17-p01-export.png",
+  "agent2-17-p04-qa-testdoc-hit.png",
+  "agent2-18-p01-digital-human.png",
+  "agent2-18-p04-qa-seed-hit.png",
+  "agent2-19-p01-sender-switch.png",
+  "agent2-19-p04-qa-refusal.png",
+  "agent2-20-p04-qa-clear.png",
+  "agent2-21-p04-dashboard.png",
+  "agent2-22-p04-cleanup-delete.png",
+  "agent2-23-p04-chat-initial.png",
+  "agent2-24-p04-chat-send-err.png",
+  "agent2-25-p04-chat-refusal-err.png",
+  "agent2-26-p04-chat-clear-err.png",
+  "agent2-27-p04-import-initial.png",
+  "agent2-28-p04-import-err.png",
+  "agent2-31-p01r-initial.png",
+  "agent2-32-p01r-cleared.png",
+  "agent2-33-p01r-sanity.png",
+  "agent2-34-p01r-kb-refund-how.png",
+  "agent2-35-p01r-kb-refund-policy.png",
+  "agent2-36-p01r-kb-ship.png",
+  "agent2-37-p01r-kb-refusal.png",
+  "agent2-38-p01r-human-handoff.png",
+  "agent2-39-p01r-chip-0.png",
+  "agent2-40-p01r-chip-1.png",
+  "agent2-41-p01r-chip-2.png",
+  "agent2-42-p01r-chip-3.png",
+  "agent2-43-p01r-enter-send.png",
+  "agent2-44-p01r-tts-state.png",
+  "agent2-45-p01-sender-u2002.png",
+  "agent2-p01-export-客服对话_1792027965931.txt",
+  "agent2-p01-p04.md",
+  "agent2-p01-raw.json",
+  "agent2-p01-recheck.json",
+  "agent2-p04-outage-20261015.md"
+ ]
+}

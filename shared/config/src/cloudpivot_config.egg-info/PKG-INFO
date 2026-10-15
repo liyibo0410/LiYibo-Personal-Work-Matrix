@@ -1,7 +1,0 @@
-Metadata-Version: 2.4
-Name: cloudpivot-config
-Version: 1.0.0
-Summary: 云枢智能统一平台 · 服务注册表（SERVICE_REGISTRY），端口的唯一真源，禁止硬编码端口
-Requires-Python: >=3.11
-Provides-Extra: dev
-Requires-Dist: pytest; extra == "dev"

@@ -1,7 +1,7 @@
 [project]
 name = "p06-data-platform"
 version = "1.0.0"
-description = "CloudPivot Data Platform - E-commerce data hub with ingestion, analytics, quality, and lineage"
+description = "Li Yibo's Personal Portfolio Data Platform - E-commerce data hub with ingestion, analytics, quality, and lineage"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.110.0",

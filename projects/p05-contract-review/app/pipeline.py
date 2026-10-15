@@ -340,6 +340,23 @@ def submit_review(cfg, st: store.Store, case_id: int, wait: bool = True):
 
 # ------------------------------------------------------------------ 解析 + 审查
 def run_review(cfg, st: store.Store, case_id: int):
+    """审查入口：任何异常都必须把案件落到终态并留痕。
+
+    原先异常只被队列层吞成一条 result，案件状态永远停在 reviewing —— 含 absence
+    模式命中的合同（无坐标）在 llm.py 里抛 TypeError，于是「卡在审查中且无审计」，
+    门禁的「审批流走通并留痕」当场不可演示。blocked 是既有终态，可用「阻塞任务重试」重跑。
+    """
+    try:
+        return _run_review(cfg, st, case_id)
+    except Exception as exc:                            # noqa: BLE001
+        why = "%s: %s" % (type(exc).__name__, exc)
+        st.update_case(case_id, review_status=store.S_BLOCKED, blocked_reason="审查异常中断：%s" % why)
+        st.audit(case_id, "review", "pipeline.run_review", "failed",
+                 "审查异常中断：%s（可用「阻塞任务重试」重跑）" % why)
+        return {"ok": False, "error": "审查异常中断：%s" % why}
+
+
+def _run_review(cfg, st: store.Store, case_id: int):
     case = st.get_case(case_id)
     if not case:
         return {"ok": False, "error": "案件不存在"}

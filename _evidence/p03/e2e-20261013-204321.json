@@ -6,9 +6,9 @@
     {
       "type": "monitor_event",
       "event": "session_created",
-      "message": "工作目录已创建: D:/software/PycharmProjects/面试项目/projects/p03-deep-research/output/session_11f32ca5ef26",
+      "message": "工作目录已创建: D:/software/PycharmProjects/作品矩阵/projects/p03-deep-research/output/session_11f32ca5ef26",
       "data": {
-        "path": "D:/software/PycharmProjects/面试项目/projects/p03-deep-research/output/session_11f32ca5ef26"
+        "path": "D:/software/PycharmProjects/作品矩阵/projects/p03-deep-research/output/session_11f32ca5ef26"
       },
       "timestamp": "2026-10-13T20:41:13.863399"
     },

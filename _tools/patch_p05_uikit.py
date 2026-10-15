@@ -6,7 +6,7 @@ import re
 import sys
 from pathlib import Path
 
-UI = Path(r"D:/software/PycharmProjects/面试项目/projects/p05-contract-review/ui")
+UI = Path(r"D:/software/PycharmProjects/作品矩阵/projects/p05-contract-review/ui")
 PAGES = ["index.html", "workbench.html", "rules.html", "twin.html",
          "login.html", "mock.html", "denied.html"]
 

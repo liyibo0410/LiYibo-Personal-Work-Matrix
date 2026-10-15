@@ -28,7 +28,7 @@
 
 ### 顺带修掉的平台级问题（非 P04 但被这次重启暴露）
 
-- **P07 起不来**：`ModuleNotFoundError: No module named 'cloudpivot_config'` → 真因是 `__editable__.cloudpivot_config-1.0.0.pth` 被写成 UTF-8 字节，而 Windows `site.py` 按 ANSI(GBK) 读 `.pth`，含中文的仓库路径解不出来 → 该目录从未进 `sys.path`（同 venv 里 GBK 写的 `llm_gateway.pth` 就正常）。已把 p07/p09 两个 `.pth` 重写为 GBK 字节，实测 `cloudpivot_config.port('p07')=8070`、`api_url('p01','/chat/history')` 解析成功 —— **P09 此前是静默走 env 兜底**，现在才真正吃到 SERVICE_REGISTRY。
+- **P07 起不来**：`ModuleNotFoundError: No module named 'portfolio_config'` → 真因是 `__editable__.portfolio_config-1.0.0.pth` 被写成 UTF-8 字节，而 Windows `site.py` 按 ANSI(GBK) 读 `.pth`，含中文的仓库路径解不出来 → 该目录从未进 `sys.path`（同 venv 里 GBK 写的 `llm_gateway.pth` 就正常）。已把 p07/p09 两个 `.pth` 重写为 GBK 字节，实测 `portfolio_config.port('p07')=8070`、`api_url('p01','/chat/history')` 解析成功 —— **P09 此前是静默走 env 兜底**，现在才真正吃到 SERVICE_REGISTRY。
 - **P07 第二个坑**：`uv run python app/main.py` 下 `from app import config` 报 `No module named 'app'`（`sys.path[0]` 是 `app/`）。按 p06 既有做法在 `app/main.py` 顶部显式补项目根。
 - 会话期间发现 P01/P03/P05–P10 共 11 个服务掉线（非本轮改动导致），已 `supervisor start` 全量拉起，现 **15/15 在线**，外壳 `GET /api/services/health` 对 p03/p04/p07/p09 均报 online。
 

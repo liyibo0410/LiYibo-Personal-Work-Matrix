@@ -1,6 +1,6 @@
-D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\check_env.py:59: PyMilvusDeprecationWarning: `connections.connect` is an ORM-style PyMilvus API and will be removed in PyMilvus 3.1. Use `MilvusClient` instead.
+D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\check_env.py:59: PyMilvusDeprecationWarning: `connections.connect` is an ORM-style PyMilvus API and will be removed in PyMilvus 3.1. Use `MilvusClient` instead.
   connections.connect(uri=os.getenv("MILVUS_URL", ""))
-D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\check_env.py:61: PyMilvusDeprecationWarning: `connections.disconnect` is an ORM-style PyMilvus API and will be removed in PyMilvus 3.1. Use `MilvusClient` instead.
+D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\check_env.py:61: PyMilvusDeprecationWarning: `connections.disconnect` is an ORM-style PyMilvus API and will be removed in PyMilvus 3.1. Use `MilvusClient` instead.
   connections.disconnect("default")
 
 ============================================================

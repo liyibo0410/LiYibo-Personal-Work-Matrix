@@ -370,7 +370,7 @@ onMounted(() => {
           <!-- 品牌位：公司标与名称由 shared/config/brand.json 下发（外壳 ⚙ 品牌设置里改） -->
           <div class="welcome-brand">
             <span class="cp-brandmark welcome-brand-mark" data-cp-brand="logo">CP</span>
-            <span data-cp-brand="company">云枢智能</span>
+            <span data-cp-brand="company">李奕波个人作品矩阵</span>
           </div>
         </div>
       </div>

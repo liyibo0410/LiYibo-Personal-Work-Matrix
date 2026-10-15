@@ -56,11 +56,11 @@ UnicodeEncodeError: 'gbk' codec can't encode character '\U0001f680' in position 
 
 | 文件 | 作用 |
 |---|---|
-| `_tools/launcher.py` | 静默编排：`start` / `stop` / `status` / `open`。全程无窗口、无 `pause`，输出只落 `_runtime/logs/launcher.log`；门户端口就绪即开浏览器，其余服务后台继续就绪；命名互斥量 `CloudPivot_launcher` 防连点重复起服务；**只在服务没起来时**弹一个 MessageBox（选「是」直接打开日志目录） |
-| `_tools/make_desktop_app.py` | 一次性生成桌面应用：`brand.json` 的 logo（data URL PNG）→ 多尺寸 `cloudpivot.ico`（16/24/32/48/64/128/256）→ 用系统自带 `csc.exe` 编 `_tools/dist/云枢智能.exe`（`/target:winexe`，41,984 字节，不引入任何运行时依赖）→ 在桌面写三个快捷方式 |
-| 桌面 · `云枢智能 一键启动.lnk` | 双击 = 静默起 15 个服务 + 自动打开门户 |
-| 桌面 · `云枢智能 停止服务.lnk` | 双击 = 静默停全部（含 `--takeover` 收占用端口的旧进程） |
-| 桌面 · `云枢智能 服务状态.lnk` | 双击 = 弹窗显示 15 端口逐个 TCP 实测结果 |
+| `_tools/launcher.py` | 静默编排：`start` / `stop` / `status` / `open`。全程无窗口、无 `pause`，输出只落 `_runtime/logs/launcher.log`；门户端口就绪即开浏览器，其余服务后台继续就绪；命名互斥量 `Li Yibo's Personal Portfolio_launcher` 防连点重复起服务；**只在服务没起来时**弹一个 MessageBox（选「是」直接打开日志目录） |
+| `_tools/make_desktop_app.py` | 一次性生成桌面应用：`brand.json` 的 logo（data URL PNG）→ 多尺寸 `portfolio.ico`（16/24/32/48/64/128/256）→ 用系统自带 `csc.exe` 编 `_tools/dist/李奕波个人作品矩阵.exe`（`/target:winexe`，41,984 字节，不引入任何运行时依赖）→ 在桌面写三个快捷方式 |
+| 桌面 · `李奕波个人作品矩阵 一键启动.lnk` | 双击 = 静默起 15 个服务 + 自动打开门户 |
+| 桌面 · `李奕波个人作品矩阵 停止服务.lnk` | 双击 = 静默停全部（含 `--takeover` 收占用端口的旧进程） |
+| 桌面 · `李奕波个人作品矩阵 服务状态.lnk` | 双击 = 弹窗显示 15 端口逐个 TCP 实测结果 |
 
 exe 里烘焙了仓库绝对路径与 `pythonw.exe` 路径，并有「从 exe 自身位置往上回推」的兜底；
 仓库搬家 / 换 Python 版本 / 换品牌 logo 后重跑 `python -X utf8 _tools\make_desktop_app.py` 即可。
@@ -88,7 +88,7 @@ baseline=9 windows @ 08:47:52
 | 08:52:56 → 08:52:58 → 08:53:04 | 再点「一键启动」：门户就绪 **+2s** → `全部 15 个服务在线` **+8s** |
 | 08:55 | `supervisor.py status` = **15/15 在线**（`_evidence/shell/D20-supervisor-status.log`） |
 
-「服务状态」图标的弹窗链路也实测通过：抓到 `#32770` 弹窗、标题「云枢智能 · 服务状态」、
+「服务状态」图标的弹窗链路也实测通过：抓到 `#32770` 弹窗、标题「李奕波个人作品矩阵 · 服务状态」、
 正文 20 行端口表（自动关闭，未留模态在屏）。`GET http://127.0.0.1:8800/` → **200**。
 
 ## 边界（别当成已经全好了）

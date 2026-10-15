@@ -1,7 +1,7 @@
 ============================= test session starts =============================
-platform win32 -- Python 3.12.9, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p03-deep-research\.venv\Scripts\python.exe
+platform win32 -- Python 3.12.9, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\作品矩阵\projects\p03-deep-research\.venv\Scripts\python.exe
 cachedir: .pytest_cache
-rootdir: D:\software\PycharmProjects\面试项目\projects\p03-deep-research
+rootdir: D:\software\PycharmProjects\作品矩阵\projects\p03-deep-research
 configfile: pyproject.toml
 plugins: anyio-4.14.2, langsmith-0.11.0
 collecting ... collected 61 items

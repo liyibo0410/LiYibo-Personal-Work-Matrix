@@ -2,5 +2,5 @@ query: 2024年国内新能源车企销量排名前三是哪些？简要说明依
 thread_id: 5be722b321af
 events: 2  elapsed: 1.6s
 
-[session_created] 工作目录已创建: D:/software/PycharmProjects/面试项目/projects/p03-deep-research/output/session_5be722b321af 
+[session_created] 工作目录已创建: D:/software/PycharmProjects/作品矩阵/projects/p03-deep-research/output/session_5be722b321af 
 [error] 未找到可用的模型凭据。请在仓库根目录 .env 里填写 LLM_API_KEY + LLM_BASE_URL（或 LLM_API_KEY_FALLBACK + LLM_BASE_URL_FALLBACK）；当前各处的 Key 仍是占位值或已失效。 

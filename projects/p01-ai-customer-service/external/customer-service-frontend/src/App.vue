@@ -819,7 +819,7 @@ function speakBotReply(botMessages) {
               <!-- 公司名与 logo 由 shared/config/brand.json 下发（外壳 ⚙ 品牌设置里改） -->
               <div class="header-brand">
                 <span class="cp-brandmark header-brand-mark" data-cp-brand="logo">CS</span>
-                <span class="header-brand-name" data-cp-brand="company">云枢智能</span>
+                <span class="header-brand-name" data-cp-brand="company">李奕波个人作品矩阵</span>
               </div>
               <div class="service-info">
                 <div class="service-avatar-wrapper">
@@ -1183,7 +1183,7 @@ function speakBotReply(botMessages) {
 
 <style scoped>
 /* ══════════════════════════════════════════════════════════════════════
-   统一深色主题（CloudPivot 设计规范）
+   统一深色主题（Li Yibo's Personal Portfolio 设计规范）
    ──────────────────────────────────────────────────────────────────────
    设计原则：
      1. 深灰底 + 层次分明，靠「边框 + 微投影」分层

@@ -14,7 +14,7 @@
 | 3 | P04 控制台只有 logo 没有公司名 | 缺 `data-cp-brand-src` 声明与 company 节点 | 同上 |
 | 4 | P05 合同系统不跟品牌走 | 7 个页面都挂了 ui-kit，但**整页零品牌节点**（公司名写死在 `app.js` 的 `BRAND` 常量里） | 修复前 `document.querySelectorAll('[data-cp-brand]').length === 0` |
 | 5 | P01 / P03 不跟品牌走 | 运行时桥只处理 `cp:theme` / `cp:auth`，**没有 `cp:brand` 分支**；页面上也没有品牌位 | `src/main.js` / `src/main.ts` 的 `initCpBridge` |
-| 6 | P02 旗舰不跟品牌走 | 无品牌桥；`layout.tsx` 把「电商运营助手 · 云枢智能」写成 `metadata` 常量；Next 的 origin 上 `/shared/config/brand.json` 是 404 | 修复前 `fetch('/shared/config/brand.json')` → 404，DOM 里 2 处硬编码 |
+| 6 | P02 旗舰不跟品牌走 | 无品牌桥；`layout.tsx` 把「电商运营助手 · 李奕波个人作品矩阵」写成 `metadata` 常量；Next 的 origin 上 `/shared/config/brand.json` 是 404 | 修复前 `fetch('/shared/config/brand.json')` → 404，DOM 里 2 处硬编码 |
 | 7 | 门户 / 移动端画廊时好时坏 | 只声明了相对路径 `../shared/config/brand.json`，**没引 services.js**，所以既没有同源文件可读、也没有网关端口可兜底 | 修复前 8801 上打开门户：能取到 brand.json 却仍渲染默认值（旧网关无接口 + 无端口来源） |
 
 ## 做了什么

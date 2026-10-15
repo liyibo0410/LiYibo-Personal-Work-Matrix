@@ -81,7 +81,7 @@ def main() -> int:
     f_label = font(FONT_BOLD, 19)
     f_note = font(FONT_REG, 14)
 
-    draw.text((MARGIN, 30), "云枢智能 CloudPivot · 十大 AI 能力模块", font=f_title, fill=INK1)
+    draw.text((MARGIN, 30), "李奕波个人作品矩阵 Li Yibo's Personal Portfolio · 十大 AI 能力模块", font=f_title, fill=INK1)
     draw.text(
         (MARGIN, 72),
         "本机 15 进程实跑界面 · 浅色态默认主题 · 2026-10-15 实拍（品牌位取自 shared/config/brand.json）",

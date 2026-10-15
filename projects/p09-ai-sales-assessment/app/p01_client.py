@@ -4,7 +4,7 @@
 落实架构规范「P09 销售考核消费 P01 会话数据，必须走真实 HTTP 调用，
 端口从 SERVICE_REGISTRY 解析，禁止硬编码其他模块端口」：
 
-  * 目标地址由 ``cloudpivot_config.api_url("p01", "/chat/history")`` 解析；
+  * 目标地址由 ``portfolio_config.api_url("p01", "/chat/history")`` 解析；
   * P01 的会话历史接口为 ``GET /api/chat/history?sender_id=xxx``，按用户拉取，
     返回 ``{sender_id, messages:[{session_id, role(user|bot), text, object}]}``；
   * 本客户端把 P01 的 user/bot 角色映射为 P09 的 customer/agent，并按
@@ -21,7 +21,7 @@ from typing import Any
 import httpx
 
 try:
-    from cloudpivot_config import api_url as _api_url
+    from portfolio_config import api_url as _api_url
 except Exception:                                    # noqa: BLE001
     _api_url = None
 
@@ -33,7 +33,7 @@ def _history_url() -> str:
     """P01 会话历史接口地址，从 SERVICE_REGISTRY 解析。
 
     优先级：``CP_P01_HISTORY_URL`` 显式覆盖（降级演练 / 指定实例）
-    → SERVICE_REGISTRY（``cloudpivot_config``）→ 环境变量兜底。
+    → SERVICE_REGISTRY（``portfolio_config``）→ 环境变量兜底。
     三者都不硬编码其他模块端口。
     """
     override = os.environ.get("CP_P01_HISTORY_URL")
@@ -54,7 +54,7 @@ def health() -> dict[str, Any]:
     故用 ``service_url`` 拼根地址，而非 ``api_url``。
     """
     try:
-        from cloudpivot_config import service_url
+        from portfolio_config import service_url
         url = service_url("p01") + "/health"
     except Exception:                                # noqa: BLE001
         url = "http://%s:%s/health" % (os.environ.get("P01_HOST", "127.0.0.1"),

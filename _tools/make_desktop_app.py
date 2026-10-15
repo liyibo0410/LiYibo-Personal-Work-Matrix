@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-"""生成「云枢智能」桌面应用程序并安装到桌面。
+"""生成「李奕波个人作品矩阵」桌面应用程序并安装到桌面。
 
 产物：
-  _tools/assets/cloudpivot.ico      —— 从 shared/config/brand.json 的 logo 生成（多尺寸）
-  _tools/dist/云枢智能.exe            —— csc.exe 编译的无控制台启动器（不依赖额外运行时）
-  桌面\云枢智能 一键启动.lnk           —— 静默起全部服务并自动打开门户
-  桌面\云枢智能 停止服务.lnk           —— 静默停全部服务
-  桌面\云枢智能 服务状态.lnk           —— 弹窗显示 15 个端口探活结果
+  _tools/assets/portfolio.ico      —— 从 shared/config/brand.json 的 logo 生成（多尺寸）
+  _tools/dist/李奕波个人作品矩阵.exe            —— csc.exe 编译的无控制台启动器（不依赖额外运行时）
+  桌面\李奕波个人作品矩阵 一键启动.lnk           —— 静默起全部服务并自动打开门户
+  桌面\李奕波个人作品矩阵 停止服务.lnk           —— 静默停全部服务
+  桌面\李奕波个人作品矩阵 服务状态.lnk           —— 弹窗显示 15 个端口探活结果
 
 改端口/改品牌/移动仓库后重跑本脚本即可（exe 里烘焙了仓库绝对路径，并有「相对自身位置」兜底）。
 
@@ -30,9 +30,9 @@ ASSETS = ROOT / "_tools" / "assets"
 DIST = ROOT / "_tools" / "dist"
 BRAND = ROOT / "shared" / "config" / "brand.json"
 LAUNCHER = ROOT / "_tools" / "launcher.py"
-ICO = ASSETS / "cloudpivot.ico"
-EXE = DIST / "云枢智能.exe"
-CS = DIST / "cloudpivot_launcher.cs"
+ICO = ASSETS / "portfolio.ico"
+EXE = DIST / "李奕波个人作品矩阵.exe"
+CS = DIST / "portfolio_launcher.cs"
 CSC = Path(r"C:/Windows/Microsoft.NET/Framework64/v4.0.30319/csc.exe")
 IS_WIN = os.name == "nt"
 
@@ -91,9 +91,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
-// 云枢智能桌面启动器：无控制台窗口，把活儿交给 _tools\launcher.py（pythonw 静默跑）。
+// 李奕波个人作品矩阵桌面启动器：无控制台窗口，把活儿交给 _tools\launcher.py（pythonw 静默跑）。
 // 由 _tools\make_desktop_app.py 生成并编译，不要手改。
-class CloudPivotLauncher
+class Li Yibo's Personal PortfolioLauncher
 {
     const string BakedRoot = @"@@ROOT@@";
     const string BakedPythonw = @"@@PYTHONW@@";
@@ -176,9 +176,9 @@ class CloudPivotLauncher
 
         if (root == null)
         {
-            Alert("找不到云枢智能工程目录。\n\n期望位置：" + BakedRoot +
+            Alert("找不到李奕波个人作品矩阵工程目录。\n\n期望位置：" + BakedRoot +
                   "\n\n仓库搬家了的话，在新位置运行：\npython -X utf8 _tools\\make_desktop_app.py",
-                  "云枢智能");
+                  "李奕波个人作品矩阵");
             return;
         }
         bool hasPy = !string.IsNullOrEmpty(py) && File.Exists(py);
@@ -186,7 +186,7 @@ class CloudPivotLauncher
         {
             Alert("找不到 pythonw.exe（期望 " + BakedPythonw +
                   "）。装好 Python 3.11+ 后重跑：\npython -X utf8 _tools\\make_desktop_app.py",
-                  "云枢智能");
+                  "李奕波个人作品矩阵");
             return;
         }
 
@@ -204,18 +204,18 @@ class CloudPivotLauncher
                 Process p = Start(root, console, "status 150", true);
                 string text = p.StandardOutput.ReadToEnd();
                 p.WaitForExit(30000);
-                Alert(text.Length > 0 ? text : "没有输出，检查 _tools\\launcher.py", "云枢智能 · 服务状态");
+                Alert(text.Length > 0 ? text : "没有输出，检查 _tools\\launcher.py", "李奕波个人作品矩阵 · 服务状态");
             }
             catch (Exception e)
             {
-                Alert("读取状态失败：" + e.Message, "云枢智能");
+                Alert("读取状态失败：" + e.Message, "李奕波个人作品矩阵");
             }
             return;
         }
 
         // 同一个动作别重复双击：抢不到互斥锁就直接退出，后台那次已在跑。
         bool created;
-        Mutex gate = new Mutex(true, "CloudPivot_Launcher_" + mode, out created);
+        Mutex gate = new Mutex(true, "Li Yibo's Personal Portfolio_Launcher_" + mode, out created);
         if (!created) return;
 
         try
@@ -226,7 +226,7 @@ class CloudPivotLauncher
         }
         catch (Exception e)
         {
-            Alert("启动器没能跑起来：" + e.Message, "云枢智能");
+            Alert("启动器没能跑起来：" + e.Message, "李奕波个人作品矩阵");
         }
         finally
         {
@@ -269,9 +269,9 @@ def psq(text: str) -> str:
 
 def build_shortcuts(desktop: Path) -> None:
     items = [
-        ("云枢智能 一键启动.lnk", "", "静默启动全部服务并打开门户 http://127.0.0.1:8800"),
-        ("云枢智能 停止服务.lnk", "--stop", "静默停止全部服务（含占用端口的旧进程）"),
-        ("云枢智能 服务状态.lnk", "--status", "弹窗查看 15 个服务的端口探活结果"),
+        ("李奕波个人作品矩阵 一键启动.lnk", "", "静默启动全部服务并打开门户 http://127.0.0.1:8800"),
+        ("李奕波个人作品矩阵 停止服务.lnk", "--stop", "静默停止全部服务（含占用端口的旧进程）"),
+        ("李奕波个人作品矩阵 服务状态.lnk", "--status", "弹窗查看 15 个服务的端口探活结果"),
     ]
     ps = ["$ErrorActionPreference = 'Stop'", "$ws = New-Object -ComObject WScript.Shell"]
     for name, arg, desc in items:
@@ -300,7 +300,7 @@ def build_shortcuts(desktop: Path) -> None:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="生成并安装云枢智能桌面应用")
+    ap = argparse.ArgumentParser(description="生成并安装李奕波个人作品矩阵桌面应用")
     ap.add_argument("--no-lnk", action="store_true", help="只重建图标与 exe，不写桌面快捷方式")
     args = ap.parse_args()
 

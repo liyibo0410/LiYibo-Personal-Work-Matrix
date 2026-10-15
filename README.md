@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/github/banner-dark.svg">
-    <img src="docs/assets/github/banner.svg" alt="云枢智能 CloudPivot · AI 电商运营中台" width="100%">
+    <img src="docs/assets/github/banner.svg" alt="李奕波个人作品矩阵 Li Yibo's Personal Portfolio · AI 电商运营中台" width="100%">
   </picture>
 </p>
 
@@ -19,7 +19,7 @@
   <a href="#三平台长什么样截图"><b>先看截图</b></a>
   &nbsp;·&nbsp; <a href="#四快速开始"><b>本地跑起来</b></a>
   &nbsp;·&nbsp; <a href="#六可复核的数字"><b>可复核的数字</b></a>
-  &nbsp;·&nbsp; <a href="#十二怎么用这个项目准备面试"><b>面试阅读路线</b></a>
+  &nbsp;·&nbsp; <a href="#十二阅读路线"><b>阅读路线</b></a>
   &nbsp;·&nbsp; <a href="_evidence/INDEX.md"><b>证据索引</b></a>
 </p>
 
@@ -28,7 +28,7 @@
 > 十个 AI 能力模块，**一套统一系统**。
 > 底层数据中台统一口径 → 模型层沉淀微调能力 → 能力层提供 RAG / 问数 / 素材 / 切片 → 应用层组装成客服、运营、合同、考核四条业务线，并通过数据回流形成闭环。
 
-面向 **AI 应用开发 / AI-FDE** 岗位的工程作品集。它不是一个「能跑的 demo」，而是把十个独立 demo **合并成一套带认证、带服务注册、带统一设计系统、带跨模块真实调用、带评测与证据的项目**。
+这不是十个「能跑的 demo」，而是把十个独立项目 **合并成一套带认证、带服务注册、带统一设计系统、带跨模块真实调用、带评测与证据的系统**。
 
 本仓库最重要的一条纪律：**任何数字都要能复核**。跑不通就写「未跑通 + 原因」，mock 必须在 **UI 与 README 双处**标注 —— 因此下文每一处指标后面都跟着它的证据文件。
 
@@ -39,9 +39,9 @@
 | **是什么** | 十个 AI 能力模块，跑在**同一套**电商运营中台里：一个登录入口、一份服务注册表、一套设计令牌、四条跨模块真实调用链路 |
 | **多大规模** | 10 个业务模块 · 4 层架构 · 15 个受管进程 · 6 条 ADR · 731 passed（全平台 pytest 合计） |
 | **最硬的一条差异** | 跨模块取数走**真实 HTTP**：正常路径标 `source=p06-live`，降级时**「少返回」而不是「编一个」**（`degraded=True` 且响应里直接不含该字段） |
-| **最想被追问的** | 真实 / 模拟边界（[第六章](#七真实与模拟的边界双处标注)）与两个缺陷根因（[第八章](#八两个踩过的坑比功能更值得讲)）—— 未做的就写「未做」 |
+| **最经得起挑的地方** | 真实 / 模拟边界（[第七章](#七真实与模拟的边界双处标注)）与两个缺陷根因（[第八章](#八两个踩过的坑比功能更值得讲)）—— 未做的就写「未做」 |
 | **怎么验** | 每条指标都能在 `_evidence/` 找到日志 / 接口返回 / 截图 / 评测报告；`python _tools\supervisor.py status` 是逐端口 TCP 实测，不是写死的「已运行」 |
-| **作者** | 李奕波 · 求职方向 AI-FDE / AI 应用开发 · 全套从需求拆解到进程托管由一人完成 |
+| **作者** | 李奕波 · 独立完成：业务建模 → 四层拆分 → 后端编排 → 检索与评测 → 前端与设计令牌 → 进程托管 |
 
 ## 目录
 
@@ -56,7 +56,7 @@
 - [九、工程决策记录](#九工程决策记录)
 - [十、已知限制（当前阶段未闭环）](#十已知限制当前阶段未闭环)
 - [十一、目录与证据](#十一目录与证据)
-- [十二、怎么用这个项目准备面试](#十二怎么用这个项目准备面试)
+- [十二、阅读路线](#十二阅读路线)
 
 ## 一、为什么是「一套系统」而不是十个项目
 
@@ -135,7 +135,7 @@ flowchart LR
 
 > **截图为本机实拍**，其中好几张正好拍到「诚实标注」本身：P08 左下角是 `ASR / 评分 / 视频 均为模拟`，P09 顶部是「LLM 评分使用基于规则的启发式算法，而非真实 LLM 调用」，P10 顶部是「训练、评测和部署均为模拟，未实际占用 GPU 资源」，P04 顶部是真实依赖探测（Milvus / MongoDB / MinIO / BGE-M3 / LLM 全部在线）。这不是为了好看补的话术，是第一章那条纪律在页面上的样子。
 
-> **图里的品牌名和正文不同，这是有意的**：截图取自本机运行实例，那里 `shared/config/brand.json`（品牌位单一真源，且不入库）已被换成了「李奕波个人作品矩阵」，用的是本人上传的 logo —— 默认值仍是「云枢智能 / CloudPivot」，外壳左下角 ⚙ 改一下全站即刻生效。这本身就是第一章「品牌可自定义」那条的证据。
+> **图里的品牌名和正文不同，这是有意的**：截图取自本机运行实例，那里 `shared/config/brand.json`（品牌位单一真源，且不入库）已被换成了「李奕波个人作品矩阵」，用的是本人上传的 logo —— 默认值仍是「李奕波个人作品矩阵 / Li Yibo's Personal Portfolio」，外壳左下角 ⚙ 改一下全站即刻生效。这本身就是第一章「品牌可自定义」那条的证据。
 >
 > 逐张大图与说明：`docs/assets/github/screens/p01.png` ~ `p10.png`（本次实拍）与 `_evidence/screenshots/`（历史留档，**注意其中 `pXX.png` 是浅色态改版之前的深色界面**）。截图清单、尺寸、内容与隐私核查见 [`docs/assets/github/SCREENSHOTS.md`](docs/assets/github/SCREENSHOTS.md)。
 > 公网演示入口的**实测可达性**（含失败记录）见 [`docs/assets/github/online-demo.md`](docs/assets/github/online-demo.md)。
@@ -143,7 +143,7 @@ flowchart LR
 ## 四、快速开始
 
 ```bat
-云枢智能 一键启动                              :: 桌面图标，静默零窗口，门户就绪自动开浏览器
+李奕波个人作品矩阵 一键启动                              :: 桌面图标，静默零窗口，门户就绪自动开浏览器
 start-all.bat                                :: = python _tools\supervisor.py start（带一个进度窗口）
 python _tools\supervisor.py status           :: 15 个进程逐个 TCP 实测，不是猜的
 python _tools\supervisor.py status --verbose :: 没起来的，顺带打它自己的日志尾部
@@ -161,7 +161,7 @@ stop-all.bat                                 :: 桌面「停止服务 / 服务�
 | 系统 | 账号 | 口令 |
 |---|---|---|
 | 外壳（全部模块） | `owner` / `ops` / `legal` / `sales` / `admin` | `<用户名>123` |
-| P02 运营助手 | `boss@` / `ops@` / `design@` / `cs@` `cloudpivot.com` | `Test123456` |
+| P02 运营助手 | `boss@` / `ops@` / `design@` / `cs@` `example.com` | `Test123456` |
 | P05 合同审批 | `legal` / `applicant` / `admin` | `Legal@2026` / `Apply@2026` / `Admin@2026` |
 
 > 以上均为**本地演示种子账号**，与任何线上系统无关；生产部署必须自设 `CP_AUTH_SECRET`。
@@ -189,7 +189,7 @@ stop-all.bat                                 :: 桌面「停止服务 / 服务�
 
 **P01 的边界要单说一句**：`human_handoff` 是**流程**（`flow_config/user_flows.yml` 流程 6），而「**负面情绪自动建单转人工**」这条链**不存在** —— 全仓没有情绪判定，也没有建单代码（`grep -r "sentiment"` 零命中），所以它既不在上图链路里，也不在第七章的「真实」列里。这是我在收尾复核时主动从 README 里划掉的一条宣称。
 
-P05 是刻意做的**第二条技术路线**：内网客户不希望为了跑一个工具先装 Docker，所以它 `python run.py` 即跑（[ADR-0006](docs/adr/0006-p05-零依赖例外.md)）。P02 走云原生全栈。面试可讲「因地制宜」的取舍。
+P05 是刻意做的**第二条技术路线**：内网客户不希望为了跑一个工具先装 Docker，所以它 `python run.py` 即跑（[ADR-0006](docs/adr/0006-p05-零依赖例外.md)）。P02 走云原生全栈。同一件事有两种做法，取舍按客户环境定。
 
 ## 六、可复核的数字
 
@@ -263,7 +263,7 @@ P05 是刻意做的**第二条技术路线**：内网客户不希望为了跑一
 
 ## 七、真实与模拟的边界（双处标注）
 
-这是作品集里我最想被追问的部分。**降级一律如实标注，不冒充真实**。
+这是整套系统里最需要说清楚的部分。**降级一律如实标注，不冒充真实**。
 
 | 模块 | 真实 | 模拟 / 未实现（已在 UI + README 标注） |
 |---|---|---|
@@ -309,7 +309,7 @@ MCP 报错被 `try/except` 吞掉 → 功能死了但流程照跑、日志只有
 3. **P10 未真实训练**（无 GPU 可用），loss 曲线与前后对比属模拟演示；页面与本 README 双处标注。
 4. **P02 浅色态**：~~`/` → `/login` 跳转会丢 `?cp-theme`，需改 Cookie 供 SSR 读取（尚未做）~~ **已修复（2026-10-14）**：`web/src/app/layout.tsx` 改从 Cookie `cp_theme_v2` 读主题供 SSR，`src/middleware.ts` 在重定向里显式带 `cp-theme`。
 5. `02-flagship/` 为空占位；门户 `01-portfolio/` 是静态页，不依赖后端进程。
-6. ~~**没有公网入口**~~ **已打通（2026-10-14）**：公网演示走「SSH 反向隧道 + 服务器 nginx 路径分流」——`python _tools/tunnel_remote.py start` 起隧道并自校验，访客入口 `http://39.96.200.45:8070`（shell），模块经 `http://39.96.200.45:8090/pXX/` 挂载。**但它不是常态在线**：2026-10-15 09:40 实测可打开，09:54 同一入口复测已 **502 Bad Gateway**（服务器 nginx 在、上游隧道已断）—— 逐条记录见 `docs/assets/github/online-demo.md`，所以本 README 只写「按需开启、演示时段有限」，不写「现在可用」。设计取舍：① cloudflared Quick Tunnel（`_tools/tunnel.py`）仍可用，但本机代理（FlClash，早先文档里写作「快车VPN」）的 TUN + fake-IP 会对 `argotunnel.com` 做 TLS 中间人，边缘握手 `EOF`、访客侧 530；② 服务器安全组只放通 8070/8090 两个空闲端口，故不回直连各模块端口，而是服务器 nginx 按路径分发到 ssh -R 送上的回环 19000-19010；无前缀路径（vite import 链的 `/src/App.vue`、`/@fs/...`、`/node_modules/.vite/deps/*`，登录跳转的 `/login`、`/console.html`）靠 **cp_mod cookie 路由**——`/pXX/` 入口响应时种 cookie，后续同源请求自动携带，Referer 只作 cookie 缺失时的兜底（vite import 链的 Referer 是上一个模块 URL，单靠 Referer 会漏，2026-10-14 实测教训）；③ 保活由任务计划（CloudPivotDemoTunnel，登录时常驻）托管 python 循环重连，Agent 沙箱回收不到它。**演示结束务必 `python _tools/tunnel_remote.py stop`** —— 演示账号是弱口令且暴露公网。同 WiFi 仍可用 `http://192.168.1.112:8800`（见 D12）。
+6. ~~**没有公网入口**~~ **已打通（2026-10-14）**：公网演示走「SSH 反向隧道 + 服务器 nginx 路径分流」——`python _tools/tunnel_remote.py start` 起隧道并自校验，访客入口 `http://39.96.200.45:8070`（shell），模块经 `http://39.96.200.45:8090/pXX/` 挂载。**但它不是常态在线**：2026-10-15 09:40 实测可打开，09:54 同一入口复测已 **502 Bad Gateway**（服务器 nginx 在、上游隧道已断）—— 逐条记录见 `docs/assets/github/online-demo.md`，所以本 README 只写「按需开启、演示时段有限」，不写「现在可用」。设计取舍：① cloudflared Quick Tunnel（`_tools/tunnel.py`）仍可用，但本机代理（FlClash，早先文档里写作「快车VPN」）的 TUN + fake-IP 会对 `argotunnel.com` 做 TLS 中间人，边缘握手 `EOF`、访客侧 530；② 服务器安全组只放通 8070/8090 两个空闲端口，故不回直连各模块端口，而是服务器 nginx 按路径分发到 ssh -R 送上的回环 19000-19010；无前缀路径（vite import 链的 `/src/App.vue`、`/@fs/...`、`/node_modules/.vite/deps/*`，登录跳转的 `/login`、`/console.html`）靠 **cp_mod cookie 路由**——`/pXX/` 入口响应时种 cookie，后续同源请求自动携带，Referer 只作 cookie 缺失时的兜底（vite import 链的 Referer 是上一个模块 URL，单靠 Referer 会漏，2026-10-14 实测教训）；③ 保活由任务计划（Li Yibo's Personal PortfolioDemoTunnel，登录时常驻）托管 python 循环重连，Agent 沙箱回收不到它。**演示结束务必 `python _tools/tunnel_remote.py stop`** —— 演示账号是弱口令且暴露公网。同 WiFi 仍可用 `http://192.168.1.112:8800`（见 D12）。
 7. **P01 的知识检索已不再是 stub**（`knowledge/providers.py` 的 `FAQProvider` + `knowledge/seed/faq.json`，73 passed），但**「负面情绪自动建单转人工」整链不存在** —— 第七、五章已按实测改口，不再宣称。同类待补：网络搜索仍在 mock、P09 的 Kappa 需真人评满 ≥5 条。
 
 ## 十一、目录与证据
@@ -323,25 +323,26 @@ MCP 报错被 `try/except` 吞掉 → 功能死了但流程照跑、日志只有
 ├── _tools/                supervisor.py（15 进程托管）· shot.py（无头 Edge + CDP 截图取证）
 ├── _evidence/             真实跑出来的日志、接口返回、截图、评测报告
 │   └── INDEX.md           逐条登记「哪份证据证明哪个功能跑通」
-├── 00-总纲/               架构总纲、技术规范、验收门禁、面试讲稿
 └── 01-portfolio/          深色作品集门户
 ```
+
+> 内部规划与协作记录（架构总纲、派活与复核流水等）**不在本仓库内**，只在本地留存 —— 仓库里只有可复核的产物与证据。
 
 验收规则：**任何功能声称完成前，必须有一次真实执行的证据落到 `_evidence/` 并在 INDEX 登记**；跑不通就写「未跑通 + 原因」。全平台截图与联调记录见 `_evidence/shell/INDEX.md`（登录 → 智能体矩阵 → 十模块挂载 → 品牌定制），进度全量登记在 `_evidence/INDEX.md`。
 
 > 原始运行日志属本地证据、已在 `.gitignore` 内，但 `_evidence/**/*.log` 已显式开例外入库；仓库里以各模块 `INDEX.md` 与验收报告 `.md` 的登记为准，每份报告都附**可复现的验证脚本**（`verify_*.py`）。
 
-## 十二、怎么用这个项目准备面试
+## 十二、阅读路线
 
-| 路线 | 看什么 |
+| 如果你关心 | 建议先看 |
 |---|---|
-| **AI-FDE** | 第五章的「P05 零依赖 vs P02 云原生」取舍、第六章的本地/云端评测对照、第十章第 6 条的凭据与私有化边界 |
-| **AI 应用开发** | `shared/llm-gateway` 故障转移与降级、P04 的 rerank 双后端与断崖截断、P02 的合规检测（法条 + span + 建议替换词） |
-| **工程化** | 6 条 ADR、SERVICE_REGISTRY 单一真源、`_evidence/` 证据门禁、第八章两个缺陷的根因分析 |
+| **取舍是怎么做的** | 第五章的「P05 零依赖 vs P02 云原生」、第六章的本地/云端评测对照、第十章第 6 条的凭据与私有化边界 |
+| **一条链路怎么走通** | `shared/llm-gateway` 故障转移与降级、P04 的 rerank 双后端与断崖截断、P02 的合规检测（法条 + span + 建议替换词） |
+| **怎么保证不是 PPT** | 6 条 ADR、SERVICE_REGISTRY 单一真源、`_evidence/` 证据门禁、第八章两个缺陷的根因分析 |
 
 ---
 
-作者：**李奕波** · GitHub [@liyibo0410](https://github.com/liyibo0410) · 求职方向：AI 应用开发 / AI-FDE
+作者：**李奕波** · GitHub [@liyibo0410](https://github.com/liyibo0410)
 
-> 公司名「云枢智能 / CloudPivot」为作品集业务建模设定；所有指标来自本地实测，未做线上部署宣称。
+> 「李奕波个人作品矩阵 / Li Yibo's Personal Portfolio」是这套个人项目的名称；业务场景（品牌电商与 MCN 的 AI 运营中台）属建模设定。所有指标来自本地实测，未做线上部署宣称。
 > 本 README 的每个数字都能在 `_evidence/` 找到对应文件；**未测量的（并发 P95、覆盖率、Kappa）就写「未测」，不做美化**。

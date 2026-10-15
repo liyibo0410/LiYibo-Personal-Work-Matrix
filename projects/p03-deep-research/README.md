@@ -1,6 +1,6 @@
 # P03 NL2SQL 问数系统
 
-> **CloudPivot 云枢智能** | L2 能力层 | 多源数据检索 x Agent 编排 x 流式交互
+> **Li Yibo's Personal Portfolio 李奕波个人作品矩阵** | L2 能力层 | 多源数据检索 x Agent 编排 x 流式交互
 
 ## 一句话定位
 
@@ -215,7 +215,7 @@ p03-deep-research/
 2. **RAGFlow 依赖外部服务** -- 需要独立部署 RAGFlow 服务，未部署时 RAG 助手功能不可用
 3. **Tavily 搜索需要 API Key** -- 无 Key 时网络搜索子 Agent 将报错，但不影响其他功能
 4. **数据库功能需要 MySQL** -- 未配置时数据库子 Agent 将报错
-5. **前端 UI 为教学版本** -- 当前前端为紫色商务风基础界面，后续计划统一到 CloudPivot 深色主题
+5. **前端 UI 为教学版本** -- 当前前端为紫色商务风基础界面，后续计划统一到 Li Yibo's Personal Portfolio 深色主题
 6. **自动化测试仅覆盖确定性护栏层** -- `tests/` 下 61 条 pytest 只覆盖 `sql_guard` 只读护栏与工具接入；
    「幻觉拒答」「SQL 自动生成」「图表生成」等由 LLM + deepagents prompt 驱动，非确定性逻辑，
    **未编写自动化评测**，需在真实 LLM 端点下人工验证（见 `_evidence/p03-deep-research/INDEX.md`）

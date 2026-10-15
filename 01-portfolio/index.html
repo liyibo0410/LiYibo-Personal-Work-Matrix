@@ -119,7 +119,7 @@
 <header class="pf-nav">
   <a class="pf-brand" href="#top">
     <span class="pf-brand-mark">CP</span>
-    <span><b>云枢智能 CloudPivot</b><span>AI 电商运营中台 · 作品集</span></span>
+    <span><b>李奕波个人作品矩阵 Li Yibo's Personal Portfolio</b><span>AI 电商运营中台 · 作品集</span></span>
   </a>
   <nav class="pf-links">
     <a href="#modules">十大模块</a>
@@ -149,7 +149,7 @@
     </div>
     <p class="pf-note" style="margin-top:var(--cp-sp-6);text-align:left">
       关于「在线演示」：十个模块与统一外壳跑在我这台机器上（15 个进程由 <code>_tools/supervisor.py</code> 托管），
-      <b>没有公网部署</b> —— 所以这里不放一个会 502 的假链接。要看真实操作，面试时共享屏幕我现场点；要自己跑，
+      <b>没有公网部署</b> —— 所以这里不放一个会 502 的假链接。要看真实操作，作者演示时共享屏幕现场点；要自己跑，
       按 README 用 <code>start-all.bat</code> 一条命令起。下面每张截图都是当前代码的真实渲染，不是设计稿。
     </p>
   </section>
@@ -285,7 +285,7 @@
   <section class="pf-sec" id="arch">
     <h2 class="pf-h2">一条数据闭环，六个工程决策</h2>
     <p class="pf-sub">闭环的意义是<b>口径只有一份</b>：同一个「GMV」在数据中台、运营看板、销售考核里算的是同一个数；
-      低分会话回流微调层，新模型再回到 P01 / P02 的回复里。下面六条 ADR 是这套合并形态里我认为最该被追问的决策，
+      低分会话回流微调层，新模型再回到 P01 / P02 的回复里。下面六条 ADR 是这套合并形态里最需要交代清楚的决策，
       每条都连同代价一起写 —— 收益谁都会讲。</p>
     <div class="pf-flow">
       <span class="pf-node">P06 数据中台</span><span class="pf-arrow">→</span>
@@ -306,7 +306,7 @@
 
   <section class="pf-sec" id="evidence">
     <h2 class="pf-h2">实测数据，以及它从哪来</h2>
-    <p class="pf-sub">面试里最常被追问的一句是「这个数字怎么来的」，所以每张卡下面都留着证据文件路径，
+    <p class="pf-sub">最常被问到的一句是「这个数字怎么来的」，所以每张卡下面都留着证据文件路径，
       多数报告还带可复跑的 <code>verify_*.py</code>。测试通过数是各模块<b>最近一次 pytest 实跑</b>的结果，
       是「通过数」而不是覆盖率；全平台没做过并发压测，这条写在下一节而不是藏起来。</p>
     <div class="pf-cards">
@@ -361,7 +361,7 @@
     <p class="pf-sub">交付里最容易翻车的不是功能少，是「演示能跑、上线不跑」。所以每个模块我先把线划死：
       <b>哪条链路是真的、哪里是模拟、以及为什么在这一处主动选模拟</b>。同样的话在系统 UI 标注、接口字段与
       <code>_evidence/</code> 里都能对上（如 P08 的 <code>/health</code> 自陈 mock_boundaries、P10 的
-      <code>endpoint_url: null</code>）—— 双处标注是硬规则，不是我挑给面试官看的话术。</p>
+      <code>endpoint_url: null</code>）—— 双处标注是硬规则，不是写给人看的装饰。</p>
     <div class="pf-cards">
       <div class="pf-card"><b>P01 客服</b><p>真实：意图三轨道、对话状态机、转人工建单。模拟：订单与商品来自随附的 mock 商城中台 :18081。</p></div>
       <div class="pf-card"><b>P02 运营</b><p>真实：登录、RBAC、合规、广告实验、跨模块取数全链路。降级：无 Key 时网关降级 mock 生成，前端标「演示」。</p></div>
@@ -378,13 +378,13 @@
       <b>没有测过的数字就不写。</b>全平台<b>未做并发压测</b>（无 P95 / 错误率）、<b>未测覆盖率</b>；
       P10 的四条微调门禁（真实训练 / loss 曲线 / 前后评测对比 / 可调用端点）<b>全部为空</b>；
       P09 的人机一致性 Kappa 要真人评满 ≥5 条才出数 —— 早先用「AI 分 + 随机噪声」冒充人工分的代码已删除，这一项宁可空着。<br>
-      另：公司名「云枢智能 / CloudPivot」与其客户规模是<b>虚构的业务建模设定</b>，不是真实客户数据。
+      另：公司名「李奕波个人作品矩阵 / Li Yibo's Personal Portfolio」与其客户规模是<b>虚构的业务建模设定</b>，不是真实客户数据。
     </p>
   </section>
 
   <section class="pf-sec" id="about">
     <h2 class="pf-h2">关于作者与阅读路线</h2>
-    <p class="pf-sub"><b>李奕波</b> · 求职方向 <b>AI-FDE / AI 应用开发</b>。
+    <p class="pf-sub"><b>李奕波</b> · 定位 <b>AI-FDE / AI 应用开发</b>。
       这一套从需求拆解到进程托管由我一人完成：业务建模与四层拆分、后端编排、RAG 检索与评测、前端界面与设计令牌、
       服务注册与静默启动，以及「什么才算跑通」的验收门禁本身。
       仓库 <a href="https://github.com/liyibo0410" target="_blank" rel="noopener">github.com/liyibo0410</a> ·

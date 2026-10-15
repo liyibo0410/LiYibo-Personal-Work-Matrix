@@ -1,0 +1,807 @@
+{
+  "base": "http://39.96.200.45:8070",
+  "steps": [
+    {
+      "area": "route",
+      "ctl": "未知路由 #/workspace/unknown-xyz (未登录直接打开)",
+      "action": "goto",
+      "after": {
+        "hash": "#/workspace/unknown-xyz",
+        "topbar": "作品集首页",
+        "modalVisible": false,
+        "homeVisible": true,
+        "frameVisible": false
+      },
+      "pass": true,
+      "note": "静默回落到作品集首页",
+      "ts": "2026-10-15T01:37:22.678Z"
+    },
+    {
+      "area": "route",
+      "ctl": "深链 #/workspace/ecommerce-ops (未登录)",
+      "action": "goto",
+      "after": {
+        "hash": "#/",
+        "modalVisible": true,
+        "reason": "「电商运营助手」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:37:25.251Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "深链登录后自动挂载 P02 运营助手(p02)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p02/?cp-theme=light",
+      "banner": "电商运营助手 的服务没有在监听 39.96.200.45:3001 页面空白/拒绝连接是后端没起来，不是页面坏了。启动后点右侧按钮重试： python _tools\\supervisor.py start p02 重试",
+      "finfo": {
+        "title": "502 Bad Gateway",
+        "ready": "complete",
+        "textLen": 28,
+        "snippet": "502 Bad Gateway nginx/1.24.0",
+        "rootKids": 3,
+        "theme": null
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:37:30.246Z"
+    },
+    {
+      "area": "sidebar",
+      "ctl": "作品集首页(data-nav=home)",
+      "action": "click",
+      "after": {
+        "topbar": "作品集首页",
+        "homeVisible": true,
+        "frameVisible": false
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:37:31.246Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "AI 客服(p01)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p01/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "title": "AI 电商客服 · 李奕波个人作品矩阵",
+        "ready": "complete",
+        "textLen": 0,
+        "snippet": "",
+        "rootKids": 0,
+        "theme": "light"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:37:34.009Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "运营助手(p02)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p02/?cp-theme=light",
+      "banner": "电商运营助手 的服务没有在监听 39.96.200.45:3001 页面空白/拒绝连接是后端没起来，不是页面坏了。启动后点右侧按钮重试： python _tools\\supervisor.py start p02 重试",
+      "finfo": {
+        "title": "502 Bad Gateway",
+        "ready": "complete",
+        "textLen": 28,
+        "snippet": "502 Bad Gateway nginx/1.24.0",
+        "rootKids": 3,
+        "theme": null
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:37:38.841Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "合同审批(p05)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p05/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:38:01.838Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "销售考核(p09)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p09/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "title": "P09 AI 销售考核 · 李奕波个人作品矩阵",
+        "ready": "complete",
+        "textLen": 350,
+        "snippet": "李奕波个人作品矩阵 AI 销售考核 P09 模块 ▤ 考核看板 ☆ 坐席排行榜 ✉ 会话列表 ⚙ 质检规则 ⚖ 人机一致性 考核看板 2025 年 3 月客服质量指标概览 ⚠ 演示说明：LLM 评分使用基于规则的启发式算法，而非真实 LLM 调用。所有数据均为演示数据。 22 总会话数 5 活跃坐席",
+        "rootKids": 2,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:04.569Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "NL2SQL 问数(p03)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p03/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "title": "NL2SQL 问数 · 李奕波个人作品矩阵",
+        "ready": "complete",
+        "textLen": 62,
+        "snippet": "欢迎使用问数助手 今天想了解哪方面的经营数据？ 李奕波个人作品矩阵 AI 生成的问数结果可能存在偏差，请以下方溯源报告为准。",
+        "rootKids": 1,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:07.364Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "RAG 知识库(p04)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p04/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:38:30.376Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "素材中心(p07)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p07/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "title": "AI 素材中心 · 李奕波个人作品矩阵",
+        "ready": "complete",
+        "textLen": 412,
+        "snippet": "AI 素材中心 Li Yibo's Personal Portfolio 概览 素材库 以文搜图 AI 生成 效果关联 v2.0.6 素材概览 LLM 已接入 · qwen3.8-max 网关调用 0 次 · 0 tokens · mock 0 总 素材总数 17 含预览文件 13 个 投 已关联投",
+        "rootKids": 3,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:33.120Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "直播切片(p08)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p08/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "title": "P08 直播切片 · 李奕波个人作品矩阵",
+        "ready": "complete",
+        "textLen": 525,
+        "snippet": "P08 直播切片 李奕波个人作品矩阵 Li Yibo's Personal Portfolio ■ 数据概览 ▶ 直播列表 ✂ 切片库 ⚙ 批量任务 v1.0.0 · Mock Mode ASR / 评分 / 视频 均为模拟 数据概览 直播切片系统运行状态总览 直播场次 3 总时长 18.2 分钟 ",
+        "rootKids": 3,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:35.852Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "模型微调平台(p10)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p10/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "title": "P10 模型微调平台 · 李奕波个人作品矩阵",
+        "ready": "complete",
+        "textLen": 293,
+        "snippet": "P10 微调平台 李奕波个人作品矩阵 AI 平台 ■ 总览 ☰ 数据集 ⚙ 训练 ★ 评测 ◆ 模型仓库 平台总览 ⚠ 演示模式：训练、评测和部署均为模拟，未实际占用 GPU 资源。 4 数据集 2 训练任务 3 模型版本 45,722 样本总量 83.7% 平均准确率 1 已部署 最近训练 查看全",
+        "rootKids": 2,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:38.623Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "数据中台(p06)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p06/?cp-theme=light",
+      "banner": "数据中台 的服务没有在监听 39.96.200.45:8060 页面空白/拒绝连接是后端没起来，不是页面坏了。启动后点右侧按钮重试： python _tools\\supervisor.py start p06 重试",
+      "finfo": {
+        "title": "502 Bad Gateway",
+        "ready": "complete",
+        "textLen": 28,
+        "snippet": "502 Bad Gateway nginx/1.24.0",
+        "rootKids": 3,
+        "theme": null
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:43.396Z"
+    },
+    {
+      "area": "sidebar-health",
+      "ctl": "10 个侧栏探活点 + svc-online badge",
+      "action": "read",
+      "after": {
+        "dots": [
+          {
+            "id": "p01",
+            "cls": "cp-nav-dot online",
+            "title": "服务运行中",
+            "label": "P01 AI客服"
+          },
+          {
+            "id": "p02",
+            "cls": "cp-nav-dot offline",
+            "title": "服务未启动",
+            "label": "P02 运营助手"
+          },
+          {
+            "id": "p05",
+            "cls": "cp-nav-dot online",
+            "title": "服务运行中",
+            "label": "P05 合同审批"
+          },
+          {
+            "id": "p09",
+            "cls": "cp-nav-dot online",
+            "title": "服务运行中",
+            "label": "P09 销售考核"
+          },
+          {
+            "id": "p03",
+            "cls": "cp-nav-dot online",
+            "title": "服务运行中",
+            "label": "P03 问数"
+          },
+          {
+            "id": "p04",
+            "cls": "cp-nav-dot online",
+            "title": "服务运行中",
+            "label": "P04 知识库"
+          },
+          {
+            "id": "p07",
+            "cls": "cp-nav-dot online",
+            "title": "服务运行中",
+            "label": "P07 素材中心"
+          },
+          {
+            "id": "p08",
+            "cls": "cp-nav-dot online",
+            "title": "服务运行中",
+            "label": "P08 直播切片"
+          },
+          {
+            "id": "p10",
+            "cls": "cp-nav-dot online",
+            "title": "服务运行中",
+            "label": "P10 微调平台"
+          },
+          {
+            "id": "p06",
+            "cls": "cp-nav-dot offline",
+            "title": "服务未启动",
+            "label": "P06 数据中台"
+          }
+        ],
+        "healthOnline": 8,
+        "badge": "8/10"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:38:45.059Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "运营助手(主题抽查)(p02)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p02/?cp-theme=dark",
+      "banner": "电商运营助手 的服务没有在监听 39.96.200.45:3001 页面空白/拒绝连接是后端没起来，不是页面坏了。启动后点右侧按钮重试： python _tools\\supervisor.py start p02 重试",
+      "finfo": {
+        "title": "502 Bad Gateway",
+        "ready": "complete",
+        "textLen": 28,
+        "snippet": "502 Bad Gateway nginx/1.24.0",
+        "rootKids": 3,
+        "theme": null
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:51.209Z"
+    },
+    {
+      "area": "sidebar-mount",
+      "ctl": "素材中心(主题抽查)(p07)",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p07/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "title": "AI 素材中心 · 李奕波个人作品矩阵",
+        "ready": "complete",
+        "textLen": 412,
+        "snippet": "AI 素材中心 Li Yibo's Personal Portfolio 概览 素材库 以文搜图 AI 生成 效果关联 v2.0.6 素材概览 LLM 已接入 · qwen3.8-max 网关调用 0 次 · 0 tokens · mock 0 总 素材总数 17 含预览文件 13 个 投 已关联投",
+        "rootKids": 3,
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:55.279Z"
+    },
+    {
+      "area": "theme-postmessage",
+      "ctl": "◐ 切换后模块 iframe 跟随",
+      "action": "toggle x4",
+      "after": [
+        {
+          "id": "p06",
+          "before": {
+            "shell": "light",
+            "frame": null
+          },
+          "after": {
+            "shell": "dark",
+            "frame": null
+          },
+          "pass": false
+        },
+        {
+          "id": "p02",
+          "before": {
+            "shell": "dark",
+            "frame": null
+          },
+          "after": {
+            "shell": "light",
+            "frame": null
+          },
+          "pass": false
+        },
+        {
+          "id": "p07",
+          "before": {
+            "shell": "light",
+            "frame": "light"
+          },
+          "after": {
+            "shell": "dark",
+            "frame": "dark"
+          },
+          "pass": true
+        },
+        {
+          "id": "p07",
+          "before": {
+            "shell": "dark",
+            "frame": "dark"
+          },
+          "after": {
+            "shell": "light",
+            "frame": "light"
+          },
+          "pass": true
+        }
+      ],
+      "pass": false,
+      "ts": "2026-10-15T01:38:57.959Z"
+    },
+    {
+      "area": "route",
+      "ctl": "未知路由 #/workspace/unknown-inapp (已登录)",
+      "action": "set hash",
+      "after": {
+        "hash": "#/workspace/unknown-inapp",
+        "topbar": "作品集首页",
+        "homeVisible": true,
+        "frameVisible": false
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:58.874Z"
+    },
+    {
+      "area": "route",
+      "ctl": "乱码路由 #/garbage",
+      "action": "set hash",
+      "after": {
+        "topbar": "作品集首页",
+        "homeVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:38:59.623Z"
+    },
+    {
+      "area": "topbar",
+      "ctl": "⎋ 退出登录",
+      "action": "click",
+      "after": {
+        "bodyPublic": true,
+        "landingVisible": true,
+        "frameVisible": false,
+        "homeVisible": true,
+        "badge": "用户",
+        "ss": [],
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:00.858Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "⚙ 打开品牌设置",
+      "action": "click",
+      "after": {
+        "company": "李奕波个人作品矩阵",
+        "name_en": "Li Yibo's Personal Portfolio",
+        "subtitle": "智能体矩阵",
+        "tagline": "李奕波个人作品矩阵",
+        "version": "v2.0.6",
+        "initials": "YD",
+        "saveText": "保存（仅本机预览）",
+        "gateVisible": true,
+        "previewImg": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:03.170Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "全部字段输入 + Logo 上传(p05 favicon.png)",
+      "action": "fill+upload",
+      "after": {
+        "previewImg": true,
+        "logoDataLen": 31166
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:04.808Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "清除已上传图片",
+      "action": "click",
+      "after": {
+        "previewText": "A1",
+        "previewImg": false
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:05.284Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "保存（仅本机预览）",
+      "action": "click",
+      "after": {
+        "modalOpen": false,
+        "override": "{\"company\":\"Agent1 测试品牌\",\"name_en\":\"Agent1 Test Mark\",\"subtitle\":\"测试副题\",\"tagline\":\"测试标语\",\"version\":\"v9.9.9\",\"initials\":\"A1\",\"logo\":\"\"}",
+        "apiCompany": "李奕波个人作品矩阵",
+        "navBrand": "",
+        "sidebarBrand": "A1",
+        "pageHasMarker": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:06.331Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "恢复默认(非 owner)",
+      "action": "click",
+      "after": {
+        "override": null,
+        "apiCompany": "李奕波个人作品矩阵",
+        "pageHasMarker": false
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:08.015Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "作者通道 owner 口令登录",
+      "action": "submit owner123",
+      "after": {
+        "okVisible": false,
+        "okText": "已连接作者通道（owner），「保存」将写入全站默认。",
+        "saveText": "保存（仅本机预览）",
+        "gateVisible": true,
+        "err": "owner 口令错误",
+        "ss": [
+          "cp_token",
+          "cp_user"
+        ]
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:39:09.797Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "保存并全站生效(owner) — 事后将恢复原状",
+      "action": "click",
+      "after": {
+        "apiCompany": "李奕波个人作品矩阵",
+        "modalOpen": false,
+        "override": "{\"company\":\"A1 全站品牌测试-恢复中\",\"name_en\":\"Li Yibo's Personal Portfolio\",\"subtitle\":\"智能体矩阵\",\"tagline\":\"李奕波个人作品矩阵\",\"version\":\"v2.0.6\",\"initials\":\"A9\"}",
+        "sidebarBrand": ""
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:39:11.403Z"
+    },
+    {
+      "area": "brand-modal",
+      "ctl": "恢复默认(owner→写全站出厂值)",
+      "action": "click",
+      "after": {
+        "apiCompany": "李奕波个人作品矩阵"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:39:13.645Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "自定义材料 打开",
+      "action": "click",
+      "after": {
+        "name": "李奕波",
+        "role": "AI 应用开发 / FDE",
+        "pdf": "/https://github.com/liyibo0410/yunshu-ai-portfolio",
+        "saveText": "保存（仅本机预览）",
+        "gateVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:45.662Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "全部字段输入 + 保存（仅本机预览）",
+      "action": "fill+save",
+      "after": {
+        "override": "{\"name\":\"A1 材料测试\",\"role\":\"测试角色 / FDE\",\"pdf\":\"/https://github.com/liyibo0410/yunshu-ai-portfolio\",\"contacts\":{\"phone\":\"13800000000\",\"email\":\"a1@test.local\",\"github\":\"github.com/agent1-test\",\"edu\":\"测试大学\",\"certs\":\"测试证书A、测试证书B\"},\"educat",
+        "rsName": "A1 材料测试",
+        "modalOpen": false
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:46.768Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "恢复默认(非 owner)",
+      "action": "click",
+      "after": {
+        "override": null,
+        "rsName": "李奕波"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:48.340Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "作者通道 owner 口令登录(与品牌共用会话)",
+      "action": "submit",
+      "after": {
+        "okVisible": false,
+        "okText": "已连接作者通道（owner），「保存」将写入全站默认。",
+        "saveText": "保存（仅本机预览）",
+        "err": "owner 口令错误"
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:39:50.088Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "保存为全站默认(owner) — 事后将恢复原状",
+      "action": "click",
+      "after": {
+        "apiName": "李奕波",
+        "modalOpen": false
+      },
+      "pass": false,
+      "ts": "2026-10-15T01:39:51.589Z"
+    },
+    {
+      "area": "resume-modal",
+      "ctl": "恢复默认(owner→写全站出厂值)",
+      "action": "click",
+      "after": {
+        "apiName": "李奕波"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:39:53.624Z"
+    }
+  ],
+  "logs": [
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://39.96.200.45:8070/#/workspace/unknown-xyz"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://39.96.200.45:8070/#/workspace/unknown-xyz"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://39.96.200.45:8070/favicon.ico"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Access to fetch at 'http://39.96.200.45:8800/api/brand' from origin 'http://39.96.200.45:8070' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "url": "http://39.96.200.45:8070/#/"
+    },
+    {
+      "t": "reqfail",
+      "url": "http://39.96.200.45:8800/api/brand",
+      "err": "net::ERR_FAILED"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_FAILED",
+      "url": "http://39.96.200.45:8800/api/brand"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "reqfail",
+      "url": "http://39.96.200.45:8090/@fs/D:/software/PycharmProjects/%E9%9D%A2%E8%AF%95%E9%A1%B9%E7%9B%AE/shared/config/services.json?t=1791989641359&import",
+      "err": "net::ERR_PROXY_CONNECTION_FAILED"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_PROXY_CONNECTION_FAILED",
+      "url": "http://39.96.200.45:8090/@fs/D:/software/PycharmProjects/%E9%9D%A2%E8%AF%95%E9%A1%B9%E7%9B%AE/shared/config/services.json?t=1791989641359&import"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connecting...",
+      "url": "http://39.96.200.45:8090/@vite/client"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connected.",
+      "url": "http://39.96.200.45:8090/@vite/client"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connecting...",
+      "url": "http://39.96.200.45:8090/@vite/client"
+    },
+    {
+      "t": "console",
+      "type": "debug",
+      "text": "[vite] connected.",
+      "url": "http://39.96.200.45:8090/@vite/client"
+    },
+    {
+      "t": "console",
+      "type": "log",
+      "text": "WebSocket Connected",
+      "url": "http://39.96.200.45:8090/src/App.vue"
+    },
+    {
+      "t": "reqfail",
+      "url": "http://39.96.200.45:8800/api/brand",
+      "err": "net::ERR_ABORTED"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation",
+      "url": "http://39.96.200.45:8090/shared/vendor/tailwind.3.4.17.js"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p06/?cp-theme=light"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p06/?cp-theme=light"
+    },
+    {
+      "t": "http502",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=dark"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=dark"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation",
+      "url": "http://39.96.200.45:8090/shared/vendor/tailwind.3.4.17.js"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "http401",
+      "url": "http://39.96.200.45:8070/api/auth/owner-login"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "url": "http://39.96.200.45:8070/api/auth/owner-login"
+    },
+    {
+      "t": "http401",
+      "url": "http://39.96.200.45:8070/api/auth/owner-login"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "url": "http://39.96.200.45:8070/api/auth/owner-login"
+    }
+  ]
+}

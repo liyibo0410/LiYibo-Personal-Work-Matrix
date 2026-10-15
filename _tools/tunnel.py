@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""云枢智能统一平台 · 对外演示隧道（cloudflared Quick Tunnel）
+"""李奕波个人作品矩阵统一平台 · 对外演示隧道（cloudflared Quick Tunnel）
 
 给「外壳网关 + 各模块前端端口」各开一条临时公网 https 隧道，把随机域名写成
 `_runtime/tunnel/public_urls.json`。网关的 `/api/services/health` 会把它随探活一起下发，
 前端据此挂 iframe —— 所以域名每次重启都变，也不需要重新生成 `services.js`。
 
-    python _tools/tunnel.py start              # 开隧道并打印可发给面试官的链接
+    python _tools/tunnel.py start              # 开隧道并打印可分享的链接
     python _tools/tunnel.py start --only shell,p06,p04
     python _tools/tunnel.py status             # 看当前链接与存活
     python _tools/tunnel.py stop               # 收工：关掉全部隧道
@@ -202,7 +202,7 @@ def cmd_start(only: list[str] | None, protocol: str) -> int:
                "shell": shell_url, "urls": {k: v for k, v in urls.items() if v}}
     OUT_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"发给面试官的链接： {shell_url}   （已实测 /api/health 200）")
+    print(f"可分享的链接： {shell_url}   （已实测 /api/health 200）")
     print("演示账号： owner / owner123（或 ops、legal、sales，口令同为 <用户名>123）")
     print(f"已下发模块地址： {len(payload['urls'])}/{len(targets) - 1}"
           + (f"（缺 {', '.join(missing)}）" if missing else ""))
@@ -226,7 +226,7 @@ def cmd_status() -> int:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="云枢智能对外演示隧道")
+    ap = argparse.ArgumentParser(description="李奕波个人作品矩阵对外演示隧道")
     ap.add_argument("action", choices=["start", "stop", "status"])
     ap.add_argument("--only", default="", help="逗号分隔的标识白名单，如 shell,p06,p04")
     ap.add_argument("--protocol", default=os.environ.get("CP_TUNNEL_PROTOCOL", "http2"),

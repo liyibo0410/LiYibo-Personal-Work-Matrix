@@ -343,7 +343,7 @@
       '<div class="fl">' +
       '<img src="' + mark + '" data-cp-brand-logo-src="' + mark + '" alt="' + BRAND.full + '">' +
       '<span class="sig">（' + BRAND.en + '）</span>' +
-      '<span>© ' + new Date().getFullYear() + ' <span data-cp-brand="company">云枢智能</span> · ' +
+      '<span>© ' + new Date().getFullYear() + ' <span data-cp-brand="company">李奕波个人作品矩阵</span> · ' +
       BRAND.full + ' · 保留所有权利</span>' +
       '</div>' +
       '<div class="spacer"></div>' +

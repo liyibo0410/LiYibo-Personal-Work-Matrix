@@ -50,7 +50,7 @@ graph TB
 ## 快速开始
 
 ```bash
-cd D:\software\PycharmProjects\面试项目\projects\p09-ai-sales-assessment
+cd D:\software\PycharmProjects\作品矩阵\projects\p09-ai-sales-assessment
 
 # 安装依赖
 uv sync
@@ -143,9 +143,9 @@ uv run python app/main.py
 5. 无持久化存储，重启后数据重置（**例外**：真人评分落盘在 `data/human_labels.json`，重启后自动回填）
 6. 被评会话目前多为演示预置数据；要拿真实业务会话做一致性验证，需先 `POST /api/v1/import/from-p01`
 
-## 面试问答
+## 设计与取舍问答
 
-1. **Q: 为什么用规则引擎而不是真实 LLM？** A: 面试演示环境无稳定 LLM 接口，规则引擎确保评分可复现、可解释。生产环境可替换为 LLM 评分，接口不变。
+1. **Q: 为什么用规则引擎而不是真实 LLM？** A: 演示环境无稳定 LLM 接口，规则引擎确保评分可复现、可解释。生产环境可替换为 LLM 评分，接口不变。
 2. **Q: Kappa 系数是什么？** A: Cohen's Kappa 衡量两人评分一致性，排除随机一致。>0.6 为「高度一致」，>0.8 为「近乎完全一致」。
 3. **Q: 评分维度怎么确定的？** A: 参考电商客服质检行业标准，5 维度覆盖服务态度、业务能力、销售转化、合规风险。
 4. **Q: 如何扩展到真实 LLM 评分？** A: 替换 `_rule_based_score()` 为 LLM 调用，输入会话文本，输出结构化 JSON 评分。接口层无需修改。
@@ -159,4 +159,4 @@ uv run python app/main.py
    ③ 本项目**早期版本用「AI 分 + 随机噪声」冒充人工分**，那等于让 AI 和自己比，Kappa 必然虚高 ——
    这条是我主动删掉的，因为一个看起来漂亮但来源假的指标，比没有指标更危险。
 9. **Q: 前端为什么用单 HTML？** A: 零构建部署，适合演示。生产环境可拆分为 Next.js 模块。
-10. **Q: 与 P01 客服模块的关系？** A: P09 通过 `POST /api/v1/import/from-p01` **真实 HTTP 调用** P01 的 `GET /api/chat/history?sender_id=xxx`，按 session 聚合会话、把 P01 的 user/bot 角色映射为 P09 的 customer/agent，再走规则引擎评分——落实「P01 会话 → P09 质检」数据流闭环。目标地址由 `cloudpivot_config.api_url("p01", "/chat/history")` 从 `shared/config/services.json` 解析，**未硬编码端口**；P01 不可达时降级返回 `degraded=true, imported=0`，不伪造会话。验证证据见 `_evidence/p09-ai-sales-assessment/cross-module-p01-*.md`。
+10. **Q: 与 P01 客服模块的关系？** A: P09 通过 `POST /api/v1/import/from-p01` **真实 HTTP 调用** P01 的 `GET /api/chat/history?sender_id=xxx`，按 session 聚合会话、把 P01 的 user/bot 角色映射为 P09 的 customer/agent，再走规则引擎评分——落实「P01 会话 → P09 质检」数据流闭环。目标地址由 `portfolio_config.api_url("p01", "/chat/history")` 从 `shared/config/services.json` 解析，**未硬编码端口**；P01 不可达时降级返回 `degraded=true, imported=0`，不伪造会话。验证证据见 `_evidence/p09-ai-sales-assessment/cross-module-p01-*.md`。

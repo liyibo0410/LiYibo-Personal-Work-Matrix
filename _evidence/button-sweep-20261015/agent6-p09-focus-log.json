@@ -1,0 +1,25 @@
+{
+  "badAll": [],
+  "consoleAll": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "putBodies": [
+    "{\"enabled\":false}",
+    "{\"enabled\":true}"
+  ],
+  "s0": {
+    "domChecked": true,
+    "serverEnabled": true,
+    "ruleId": "rule-001"
+  },
+  "s1": {
+    "domChecked": false,
+    "serverEnabled": false,
+    "ruleId": "rule-001"
+  },
+  "s2": {
+    "domChecked": true,
+    "serverEnabled": true,
+    "ruleId": "rule-001"
+  }
+}

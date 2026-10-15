@@ -1,0 +1,23 @@
+{
+ "startedLocal": "2026/10/15 10:52:59",
+ "steps": [
+  {
+   "area": "P01(公网)",
+   "ctl": "按钮·刷新对象列表",
+   "action": "点击",
+   "expected": "重新拉 orders+products",
+   "actual": {
+    "before": 5,
+    "cards": 5,
+    "err": "",
+    "net": [
+     "10:52:54 200 http://39.96.200.45:8090/commerce/users/u1001/products",
+     "10:52:54 200 http://39.96.200.45:8090/commerce/users/u1001/orders"
+    ]
+   },
+   "verdict": "正常",
+   "shot": "agent2-125-p01w-sidebar-refresh2.png",
+   "t": "10:52:59"
+  }
+ ]
+}

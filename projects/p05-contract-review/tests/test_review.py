@@ -107,7 +107,7 @@ def test_clause_coverage_counts_present_and_missing(clause_types):
 def test_extract_metadata_parties_amount_credit():
     text = (
         "《设备采购合同》\n"
-        "甲方：云枢智能科技有限公司\n"
+        "甲方：李奕波个人作品矩阵科技有限公司\n"
         "乙方：华东机械制造有限公司\n"
         "统一社会信用代码：91310000MA1FL0XX42\n"
         "合同总金额：人民币 120 万元。\n"
@@ -115,7 +115,7 @@ def test_extract_metadata_parties_amount_credit():
     paras, full = make_paras(text.split("\n"))
     meta = review.extract_metadata(paras, full, "设备采购合同.docx")
     assert meta["title"] == "设备采购合同"
-    assert "云枢智能" in meta["party_a"]
+    assert "李奕波个人作品矩阵" in meta["party_a"]
     assert "华东机械" in meta["party_b"]
     assert meta["credit_code"] == "91310000MA1FL0XX42"
     assert meta["amount"] == 120 * 10000

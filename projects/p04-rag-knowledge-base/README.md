@@ -494,7 +494,7 @@ MIT License
 ---
 
 <p align="center">
-  <sub>Made with ❤️ by 云枢智能 CloudPivot</sub>
+  <sub>Made with ❤️ by 李奕波个人作品矩阵 Li Yibo's Personal Portfolio</sub>
 </p>
 
 ---

@@ -9,7 +9,7 @@
 """
 from pathlib import Path
 
-TARGET = Path(r"D:/software/PycharmProjects/面试项目/projects/p04-rag-knowledge-base/utils/milvus_utils.py")
+TARGET = Path(r"D:/software/PycharmProjects/作品矩阵/projects/p04-rag-knowledge-base/utils/milvus_utils.py")
 
 CODE = '''
 

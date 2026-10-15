@@ -10,7 +10,7 @@ import json
 import statistics
 from pathlib import Path
 
-EVID = Path(r"D:\software\PycharmProjects\面试项目\_evidence\p04")
+EVID = Path(r"D:\software\PycharmProjects\作品矩阵\_evidence\p04")
 OUT = EVID / "verify_eval_compare_p1_out.txt"
 buf = []
 

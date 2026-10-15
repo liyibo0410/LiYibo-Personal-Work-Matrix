@@ -1,0 +1,83 @@
+{
+  "error": "TimeoutError: page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#btn-menu')\u001b[22m\n\u001b[2m    - locator resolved to <button title=\"菜单\" id=\"btn-menu\" class=\"cp-icon-btn\">☰</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+  "steps": [
+    {
+      "area": "public-redirect-proof",
+      "ctl": "p02",
+      "action": "mount+7s",
+      "after": {
+        "iframeSrc": "http://39.96.200.45:8090/p02/?cp-theme=light",
+        "allFrames": [
+          "http://39.96.200.45:8070/#/workspace/ecommerce-ops",
+          "http://39.96.200.45:8090/login?cp-theme=light"
+        ],
+        "frameBody": {
+          "url": "http://39.96.200.45:8090/login?cp-theme=light",
+          "text": "电商运营助手 登录工作台 李奕波个人作品矩阵 演示账号（密码均为 Test123456） 点一下就把账号和密码填进下面的表单 老板 boss@example.com 运营 ops@example.com 美工 design@cl"
+        },
+        "nets": [
+          "307 http://39.96.200.45:8090/p02/?cp-theme=light",
+          "200 http://39.96.200.45:8090/login?cp-theme=light",
+          "200 http://39.96.200.45:8090/_next/static/chunks/src_app_1dc_9fd._.css",
+          "200 http://39.96.200.45:8090/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_1di75ot._.js",
+          "200 http://39.96.200.45:8090/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_090k2jm.js",
+          "200 http://39.96.200.45:8090/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js",
+          "200 http://39.96.200.45:8090/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_164kp-6._.js",
+          "200 http://39.96.200.45:8090/_next/static/chunks/node_modules_%40swc_helpers_cjs_1r9vbqw._.js"
+        ]
+      },
+      "pass": false,
+      "note": "看最终落点与状态码",
+      "ts": "2026-10-15T02:08:49.125Z"
+    },
+    {
+      "area": "public-redirect-proof",
+      "ctl": "p04",
+      "action": "mount+7s",
+      "after": {
+        "iframeSrc": "http://39.96.200.45:8090/p04/?cp-theme=light",
+        "allFrames": [
+          "http://39.96.200.45:8070/#/workspace/knowledge",
+          "http://39.96.200.45:8090/console.html"
+        ],
+        "frameBody": {
+          "url": "http://39.96.200.45:8090/console.html",
+          "text": "RAG 知识库 智能知识管理平台 · 李奕波个人作品矩阵 上传导入 文档管理 检索问答 数据看板 依赖正常：依赖全部在线，检索问答与文档导入均可端到端跑通。（检索问答可用） Milvus 向量库：在线 · 硬依赖 MongoDB 文档/历史"
+        },
+        "nets": [
+          "307 http://39.96.200.45:8090/p04/?cp-theme=light",
+          "200 http://39.96.200.45:8090/console.html",
+          "200 http://39.96.200.45:8090/shared/vendor/marked.min.js",
+          "200 http://39.96.200.45:8090/shared/vendor/highlight/github-dark.min.css",
+          "200 http://39.96.200.45:8090/shared/ui-kit/tokens.css",
+          "200 http://39.96.200.45:8090/shared/config/services.js",
+          "200 http://39.96.200.45:8090/shared/vendor/chart.umd.min.js",
+          "200 http://39.96.200.45:8090/shared/vendor/highlight/highlight.min.js"
+        ]
+      },
+      "pass": false,
+      "note": "看最终落点与状态码",
+      "ts": "2026-10-15T02:08:56.247Z"
+    },
+    {
+      "area": "public-redirect-proof",
+      "ctl": "p05",
+      "action": "mount+7s",
+      "after": {
+        "iframeSrc": "http://39.96.200.45:8090/p05/?cp-theme=light",
+        "allFrames": [
+          "http://39.96.200.45:8070/#/workspace/contract",
+          "http://39.96.200.45:8090/console.html"
+        ],
+        "frameBody": {
+          "url": "http://39.96.200.45:8090/console.html",
+          "text": "RAG 知识库 智能知识管理平台 · 李奕波个人作品矩阵 上传导入 文档管理 检索问答 数据看板 依赖正常：依赖全部在线，检索问答与文档导入均可端到端跑通。（检索问答可用） Milvus 向量库：在线 · 硬依赖 MongoDB 文档/历史"
+        },
+        "nets": []
+      },
+      "pass": false,
+      "note": "看最终落点与状态码",
+      "ts": "2026-10-15T02:09:03.322Z"
+    }
+  ]
+}

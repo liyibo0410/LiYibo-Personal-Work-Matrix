@@ -11,7 +11,7 @@ import os
 import shutil
 import sys
 
-ROOT = r"D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base"
+ROOT = r"D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base"
 ENV_PATH = os.path.join(ROOT, ".env")
 BAK_PATH = os.path.join(ROOT, ".env.p1bak")
 

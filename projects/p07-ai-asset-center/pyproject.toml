@@ -8,7 +8,7 @@ package = false
 [project]
 name = "p07-ai-asset-center"
 version = "0.1.0"
-description = "AI 素材中心 - CloudPivot 云枢智能"
+description = "AI 素材中心 - Li Yibo's Personal Portfolio 李奕波个人作品矩阵"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115",
@@ -18,12 +18,12 @@ dependencies = [
     "python-multipart>=0.0.9",
     "pillow>=10.4",
     "httpx>=0.27.0",
-    "cloudpivot-config",
+    "portfolio-config",
     "llm-gateway",
 ]
 
 [tool.uv.sources]
-cloudpivot-config = { path = "../../shared/config", editable = true }
+portfolio-config = { path = "../../shared/config", editable = true }
 llm-gateway = { path = "../../shared/llm-gateway", editable = true }
 
 [dependency-groups]

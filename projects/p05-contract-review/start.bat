@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 >nul 2>&1
-title CloudPivot P05 - 衡鉴合同审查
+title Li Yibo's Personal Portfolio P05 - 衡鉴合同审查
 cd /d "%~dp0"
 
 echo ============================================================

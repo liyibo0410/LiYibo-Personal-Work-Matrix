@@ -98,7 +98,7 @@ precheck  TCP  Connectivity  region1/2.v2.argotunnel.com  FAIL  HTTP/2 connectio
 |---|---|---|
 | A. 在「快车VPN」里给 `argotunnel.com` / `trycloudflare.com` 加 DIRECT 且**不做 TLS 中间人**（或演示时暂停 TUN） | 使用者改本机代理配置（AI 不动系统级设置） | 之后 `python _tools\tunnel.py start` 一条命令出链接；域名每次重启会变 |
 | B. 走阿里云 `39.96.200.45`：SSH 反向隧道 + nginx 多端口 | 使用者给 SSH 授权 + 安全组开端口 | 已实测该机 22 端口 TCP 可达、`known_hosts` 有历史条目；SSH 不是 TLS，代理中间人拦不住；同主机不同端口=**同站点**，iframe 里 P02 的 Cookie 不会被当第三方 Cookie 拦掉（比 trycloudflare 多域名更干净）。代价是服务器内存偏小、8000 端口已被产品管理台占用需避开 |
-| C. 只发静态作品集站（Qoder Sites 已有 `cloudpivot-portfolio-*.qoder.zone`） | 无需改动 | 链接稳定、手机可看、零暴露风险，但面试官点进去是看图不能操作 |
+| C. 只发静态作品集站（Qoder Sites 已有 `portfolio-portfolio-*.qoder.zone`） | 无需改动 | 链接稳定、手机可看、零暴露风险，但读者点进去是看图不能操作 |
 
 ## 四、诚实边界
 

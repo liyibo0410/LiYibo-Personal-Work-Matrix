@@ -1,0 +1,6 @@
+﻿GET /documents 响应头（期望 no-store）:
+HTTP/1.1 200 OK
+cache-control: no-store
+GET /shared/ui-kit/ui-kit.js 响应头（期望 public, max-age=300）:
+HTTP/1.1 200 OK
+cache-control: public, max-age=300

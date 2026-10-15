@@ -1,7 +1,7 @@
 [project]
 name = "p10-model-finetune"
 version = "1.0.0"
-description = "P10 Model Finetune Platform - CloudPivot AI"
+description = "P10 Model Finetune Platform - Li Yibo's Personal Portfolio AI"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.104.0",

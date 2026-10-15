@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>云枢智能 CloudPivot · AI 电商运营中台</title>
+<title>李奕波个人作品矩阵 Li Yibo's Personal Portfolio · AI 电商运营中台</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 :root{--bg:#0B0E14;--surface:#141820;--elevated:#1A1F2B;--line:#2A3040;--ink1:#E8EAF0;--ink2:#9BA3B0;--ink3:#7C8493;--brand:#3370FF;--brand-bg:#0F1A35;--success:#4ADE80;--warning:#FB923C}
@@ -32,7 +32,7 @@ body{background:var(--bg);color:var(--ink1);font-family:'PingFang SC','Microsoft
       全栈 AI 电商运营中台
     </div>
     <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
-      <span class="text-[var(--brand)]">云枢智能</span> CloudPivot
+      <span class="text-[var(--brand)]">李奕波个人作品矩阵</span> Li Yibo's Personal Portfolio
     </h1>
     <p class="mx-auto mt-4 max-w-2xl text-lg text-[var(--ink2)]">
       面向品牌电商与 MCN 的 AI 原生运营服务商<br>
@@ -208,7 +208,7 @@ body{background:var(--bg);color:var(--ink1);font-family:'PingFang SC','Microsoft
 <!-- Footer -->
 <footer class="border-t border-[var(--line)] bg-[var(--surface)]">
   <div class="mx-auto max-w-6xl px-6 py-8 text-center text-sm text-[var(--ink3)]">
-    <p>云枢智能 CloudPivot · AI 电商运营中台作品集</p>
+    <p>李奕波个人作品矩阵 Li Yibo's Personal Portfolio · AI 电商运营中台作品集</p>
     <p class="mt-1">李奕波 · 2026</p>
   </div>
 </footer>

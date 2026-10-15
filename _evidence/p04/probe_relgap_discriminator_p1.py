@@ -21,7 +21,7 @@ import os
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(r"D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base")
+PROJECT_ROOT = Path(r"D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base")
 sys.path.insert(0, str(PROJECT_ROOT))
 os.chdir(PROJECT_ROOT)
 
@@ -29,7 +29,7 @@ from dotenv import load_dotenv
 
 load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
 
-OUT = Path(r"D:\software\PycharmProjects\面试项目\_evidence\p04\probe_relgap_discriminator_out.txt")
+OUT = Path(r"D:\software\PycharmProjects\作品矩阵\_evidence\p04\probe_relgap_discriminator_out.txt")
 _buf = []
 
 

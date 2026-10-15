@@ -6,15 +6,15 @@
 """
 from pathlib import Path
 
-ROOT = Path(r"D:/software/PycharmProjects/面试项目")
+ROOT = Path(r"D:/software/PycharmProjects/作品矩阵")
 
 START = r'''@echo off
 chcp 65001 >nul 2>&1
-title 云枢智能 - 全模块启动
+title 李奕波个人作品矩阵 - 全模块启动
 cd /d "%~dp0"
 
 echo ============================================================
-echo   云枢智能 · 全模块启动（由 _tools\supervisor.py 托管）
+echo   李奕波个人作品矩阵 · 全模块启动（由 _tools\supervisor.py 托管）
 echo   日志：_runtime\logs\^<服务^>.log   PID：_runtime\pids\
 echo ============================================================
 echo.
@@ -29,10 +29,10 @@ echo   统一入口   http://127.0.0.1:8800   （勿用 file:// 打开）
 echo.
 echo   外壳演示账号  owner/owner123  ops/ops123  legal/legal123
 echo                 sales/sales123  admin/admin123
-echo   P02 运营助手  boss@cloudpivot.com / Test123456   （老板）
-echo                 ops@cloudpivot.com / Test123456    （运营）
-echo                 design@cloudpivot.com / Test123456 （美工）
-echo                 cs@cloudpivot.com / Test123456     （客服）
+echo   P02 运营助手  boss@example.com / Test123456   （老板）
+echo                 ops@example.com / Test123456    （运营）
+echo                 design@example.com / Test123456 （美工）
+echo                 cs@example.com / Test123456     （客服）
 echo   P05 合同审批  legal/Legal@2026  applicant/Apply@2026  admin/Admin@2026
 echo.
 echo   查看状态   python _tools\supervisor.py status
@@ -50,7 +50,7 @@ exit /b 1
 
 STOP = r'''@echo off
 chcp 65001 >nul 2>&1
-title 云枢智能 - 全模块停止
+title 李奕波个人作品矩阵 - 全模块停止
 cd /d "%~dp0"
 
 echo 停止全部服务（含手工启动、占用端口的旧进程）...

@@ -1,4 +1,4 @@
-"""P06 Data Platform - CloudPivot 数据中台
+"""P06 Data Platform - Li Yibo's Personal Portfolio 数据中台
 
 FastAPI application entry point. Run with: python -m app.main
 """
@@ -81,7 +81,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="P06 数据中台 - CloudPivot",
+    title="P06 数据中台 - Li Yibo's Personal Portfolio",
     description="电商数据中台：数据接入 · OLAP分析 · 指标服务 · 数据质量 · 数据血缘",
     version="1.0.0",
     lifespan=lifespan,

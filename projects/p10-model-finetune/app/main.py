@@ -1,5 +1,5 @@
 """
-P10 模型微调平台 - 云枢智能（CloudPivot AI）
+P10 模型微调平台 - 李奕波个人作品矩阵（Li Yibo's Personal Portfolio AI）
 模型微调全链路管理平台：数据集 → 训练 → 评测 → 部署（内存态演示数据，无数据库）。
 
 模拟边界（MOCK BOUNDARIES）：
@@ -31,7 +31,7 @@ from pydantic import BaseModel, Field
 
 app = FastAPI(
     title="P10 模型微调平台",
-    description="云枢智能（CloudPivot AI）- 模型微调管理平台（训练/评测/部署均为模拟演示）",
+    description="李奕波个人作品矩阵（Li Yibo's Personal Portfolio AI）- 模型微调管理平台（训练/评测/部署均为模拟演示）",
     version="1.0.0",
 )
 
@@ -851,7 +851,7 @@ async def deploy_model(model_id: str, req: DeployRequest | None = None):
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("  P10 模型微调平台 - 云枢智能（CloudPivot AI）")
+    print("  P10 模型微调平台 - 李奕波个人作品矩阵（Li Yibo's Personal Portfolio AI）")
     print("  http://127.0.0.1:8101")
     print("  【模拟模式】训练、评测、部署均为演示模拟，")
     print("              未做真实 GPU 训练与模型推理。")

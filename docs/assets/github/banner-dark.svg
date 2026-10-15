@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img"
-     aria-label="云枢智能 CloudPivot —— AI 电商运营中台：十个 AI 能力模块，合并成一套统一系统（深色版）"
+     aria-label="李奕波个人作品矩阵 Li Yibo's Personal Portfolio —— AI 电商运营中台：十个 AI 能力模块，合并成一套统一系统（深色版）"
      font-family="'Microsoft YaHei','PingFang SC',Inter,-apple-system,'Segoe UI',sans-serif">
 
-  <title>云枢智能 CloudPivot · AI 电商运营中台（深色版）</title>
+  <title>李奕波个人作品矩阵 Li Yibo's Personal Portfolio · AI 电商运营中台（深色版）</title>
   <desc>深色版头图，与 banner.svg 同构同文案。底色 #151A23、面 #1E2430、线 #2C3442、主文本 #F2F5F9、次文本 #A7B0BE，强调色仍为 #3370FF。右侧为 L3→L0 四层架构色块，底部左侧为跨模块真实调用与 ADR 条数，右侧为仓库地址。封面不含任何入口地址。</desc>
 
   <!-- 深色底色 -->
@@ -33,7 +33,7 @@
   <text x="88" y="114" text-anchor="middle" font-size="26" font-weight="700" letter-spacing="1" fill="#FFFFFF">CP</text>
 
   <!-- 左侧：标题与副标题 -->
-  <text x="144" y="119" font-size="42" font-weight="700" fill="#F2F5F9">云枢智能 CloudPivot</text>
+  <text x="144" y="119" font-size="42" font-weight="700" fill="#F2F5F9">李奕波个人作品矩阵 Li Yibo's Personal Portfolio</text>
   <text x="144" y="153" font-size="18" fill="#A7B0BE">AI 电商运营中台 · 十个 AI 能力模块，一套统一系统</text>
 
   <!-- 左侧：四项实测事实胶囊 -->

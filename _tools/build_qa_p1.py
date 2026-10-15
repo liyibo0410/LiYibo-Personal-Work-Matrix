@@ -10,7 +10,7 @@ import io
 import os
 import shutil
 
-ROOT = r"D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base"
+ROOT = r"D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base"
 EVAL = os.path.join(ROOT, "eval")
 SRC = os.path.join(EVAL, "qa.csv")
 BAK = os.path.join(EVAL, "qa_original_3.csv")

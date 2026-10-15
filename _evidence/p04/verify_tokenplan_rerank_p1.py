@@ -10,7 +10,7 @@ import json
 import io
 from pathlib import Path
 
-ROOT = r"D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base"
+ROOT = r"D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base"
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 

@@ -2,7 +2,7 @@
 """P06 数据中台客户端（跨模块真实 HTTP 调用）。
 
 落实架构规范「P02 取 P06 指标必须走真实 HTTP 调用，端口从 SERVICE_REGISTRY 解析」：
-  * 目标地址由 ``cloudpivot_config.api_url("p06", ...)`` 解析，**不硬编码端口**；
+  * 目标地址由 ``portfolio_config.api_url("p06", ...)`` 解析，**不硬编码端口**；
   * 任何失败（P06 未启动 / 超时 / 非 2xx / 结构异常）都走**降级**：返回
     ``{"ok": False, "degraded": True, "error": ...}``，由调用方在 UI 明确标注，
     绝不把降级结果伪装成真实数据（红线：mock/降级须双处标注）。
@@ -15,7 +15,7 @@ from typing import Any
 import httpx
 
 try:
-    from cloudpivot_config import api_url as _api_url
+    from portfolio_config import api_url as _api_url
 except Exception:                                    # noqa: BLE001
     _api_url = None
 
@@ -27,7 +27,7 @@ def _base_url() -> str:
     """P06 指标接口地址，从 SERVICE_REGISTRY 解析。
 
     优先级：``CP_P06_METRICS_URL`` 显式覆盖（用于降级演练 / 联调指定实例）
-    → SERVICE_REGISTRY（``cloudpivot_config``）→ 环境变量兜底。
+    → SERVICE_REGISTRY（``portfolio_config``）→ 环境变量兜底。
     三者都不硬编码其他模块端口。
     """
     override = os.environ.get("CP_P06_METRICS_URL")
@@ -79,7 +79,7 @@ def fetch_metrics_summary(start_date: str | None = None,
 def health() -> dict[str, Any]:
     """探测 P06 是否在线（供看板标注数据来源状态）。"""
     try:
-        from cloudpivot_config import api_url
+        from portfolio_config import api_url
         url = api_url("p06", "/health")
     except Exception:                                # noqa: BLE001
         url = "http://%s:%s/api/v1/health" % (os.environ.get("P06_HOST", "127.0.0.1"),

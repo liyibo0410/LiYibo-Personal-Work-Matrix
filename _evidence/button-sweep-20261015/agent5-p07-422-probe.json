@@ -1,0 +1,18 @@
+{
+  "ts": "2026-10-15T02:26:08.660Z",
+  "base": "http://127.0.0.1:8070/api/v1",
+  "out": {
+    "upload": {
+      "status": 201,
+      "id": "AST-E90F71"
+    },
+    "invalidPerf": {
+      "status": 422,
+      "body": "{\"detail\":[{\"type\":\"value_error\",\"loc\":[\"body\"],\"msg\":\"Value error, 点击数不能大于曝光数\",\"input\":{\"store_name\":\"UI测试-可删门店\",\"platform\":\"douyin\",\"impressions\":100,\"clicks\":900,\"conversions\":10,\"spend\":10,\"revenue\":20,\"period_start\":\"2026-10-01\",\"period_end\":\"2026-10-13\"},\"ctx\":{\"error\":{}}}]}"
+    },
+    "cleanup": {
+      "status": 200,
+      "body": "{\"ok\":true,\"asset_id\":\"AST-E90F71\",\"file_removed\":true}"
+    }
+  }
+}

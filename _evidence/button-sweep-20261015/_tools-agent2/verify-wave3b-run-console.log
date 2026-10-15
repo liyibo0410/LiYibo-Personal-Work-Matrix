@@ -1,0 +1,2 @@
+﻿[rec] {"area":"P01(鍏綉)","ctl":"鎸夐挳路鍒锋柊瀵硅薄鍒楄〃","action":"鐐瑰嚮","expected":"閲嶆柊鎷?orders+products","actual":{"before":5,"cards":5,"err":"","net":["10:52:54 200 http://39.96.200.45:8090/commerce/users/u1001/products","10:52:54 200 http://39.96.200.45:8090/commerce/users/u1001/orders"]},"verdict":"姝ｅ父","shot":"agent2-125-p01w-sidebar-refresh2.png","t":"10:52:59"}
+WAVE3B DONE

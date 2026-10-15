@@ -1,7 +1,7 @@
 [project]
 name = "p08-live-clip"
 version = "1.0.0"
-description = "P08 直播切片系统 - 云枢智能 (CloudPivot)"
+description = "P08 直播切片系统 - 李奕波个人作品矩阵 (Li Yibo's Personal Portfolio)"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

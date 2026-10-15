@@ -5,7 +5,7 @@ import re
 import subprocess
 from pathlib import Path
 
-ROOT = Path(r"D:\software\PycharmProjects\面试项目")
+ROOT = Path(r"D:\software\PycharmProjects\作品矩阵")
 reg = json.loads((ROOT / "shared" / "config" / "services.json").read_text(encoding="utf-8"))
 
 out = subprocess.run(["netstat", "-ano", "-p", "TCP"], capture_output=True, text=True).stdout

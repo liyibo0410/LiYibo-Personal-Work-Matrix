@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul 2>&1
-title CloudPivot P02 - 电商运营助手
+title Li Yibo's Personal Portfolio P02 - 电商运营助手
 cd /d "%~dp0"
 
 echo ============================================================
-echo   CloudPivot P02 - 电商运营助手 一键启动
+echo   Li Yibo's Personal Portfolio P02 - 电商运营助手 一键启动
 echo ============================================================
 echo.
 

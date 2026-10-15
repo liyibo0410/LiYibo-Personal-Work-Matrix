@@ -1,0 +1,271 @@
+{
+  "entryUsed": "public",
+  "url": "http://39.96.200.45:8090/",
+  "consoleErrs": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "pageErrs": [],
+  "failedReqs": [],
+  "badResponses": [
+    "400 POST http://39.96.200.45:8090/api/v1/labeling/conv-001-001",
+    "400 POST http://39.96.200.45:8090/api/v1/import/from-p01",
+    "404 POST http://39.96.200.45:8090/api/v1/import/from-p01"
+  ],
+  "results": [
+    {
+      "page": "P09 考核看板",
+      "control": "页面加载/统计卡/图表/最近会话",
+      "action": "打开 /p09/",
+      "expected": "4 统计卡+3 图表+5 行最近会话；mock 说明可见",
+      "actual": "stats=4, rows=5, canvas=3, notice=\"⚠ 演示说明：LLM 评分使用基于规则的启发式算法，而非真实 LLM 调用。所有数据均为演示数据。\"",
+      "verdict": "正常",
+      "evidence": "agent6-01"
+    },
+    {
+      "page": "P09 考核看板",
+      "control": "最近会话行→详情弹窗→关闭",
+      "action": "点击行 / 点击关闭",
+      "expected": "弹窗含评分明细与消息，可关闭",
+      "actual": "title=\"换货申请 - 更换颜色 - 郑女士\", score-bars=5, msgs=7, closed=true",
+      "verdict": "正常",
+      "evidence": "agent6-02"
+    },
+    {
+      "page": "P09 坐席排行榜",
+      "control": "导航→排行榜表",
+      "action": "点击“坐席排行榜”",
+      "expected": "表格含排名/均分等，5 行",
+      "actual": "rows=5, firstRank=1",
+      "verdict": "正常",
+      "evidence": "agent6-03"
+    },
+    {
+      "page": "P09 个人报告",
+      "control": "报告按钮→报告弹窗",
+      "action": "点击“报告”",
+      "expected": "弹窗含标题/统计卡/雷达+趋势图",
+      "actual": "title=\"张伟 - 绩效报告\", statCards=4, canvas=2",
+      "verdict": "正常",
+      "evidence": "agent6-04"
+    },
+    {
+      "page": "P09 个人报告",
+      "control": "弹窗内会话行→会话详情",
+      "action": "点击弹窗内会话",
+      "expected": "报告弹窗关闭并打开会话详情",
+      "actual": "convTitle=\"投诉 - 包装破损 - 朱先生\", agentModalClosed=true",
+      "verdict": "正常",
+      "evidence": "agent6-04"
+    },
+    {
+      "page": "P09 会话列表",
+      "control": "导航→会话表+分页",
+      "action": "点击“会话列表”",
+      "expected": "10 行/页，分页 ≥2 页",
+      "actual": "rows=10, pagBtns=3",
+      "verdict": "正常",
+      "evidence": "agent6-05"
+    },
+    {
+      "page": "P09 会话列表",
+      "control": "坐席筛选下拉",
+      "action": "选“张伟”",
+      "expected": "仅显示该坐席会话",
+      "actual": "rows=6, allSame=true",
+      "verdict": "正常",
+      "evidence": "agent6-05"
+    },
+    {
+      "page": "P09 会话列表",
+      "control": "店铺筛选下拉",
+      "action": "选“旗舰店 B”",
+      "expected": "仅显示该店会话",
+      "actual": "rows=7, hasRows=true",
+      "verdict": "正常",
+      "evidence": "agent6-05"
+    },
+    {
+      "page": "P09 会话列表",
+      "control": "评分筛选下拉",
+      "action": "选“<55 较差”",
+      "expected": "仅显示 <55 分行",
+      "actual": "rows=3, scores=[53.0,53.0,53.0], anyNotLow=false",
+      "verdict": "正常",
+      "evidence": "agent6-05"
+    },
+    {
+      "page": "P09 会话列表",
+      "control": "分页第 2 页",
+      "action": "点击页码 2",
+      "expected": "列表切换为第二页",
+      "actual": "page1_first=conv-003-002, page2_first=conv-001-006",
+      "verdict": "正常",
+      "evidence": "agent6-05"
+    },
+    {
+      "page": "P09 会话列表",
+      "control": "会话行→详情（含人工评分空态）",
+      "action": "点击首行",
+      "expected": "详情展示 AI 评分；人工评分空显示“-”",
+      "actual": "has人工评分字段=true",
+      "verdict": "正常",
+      "evidence": "agent6-06"
+    },
+    {
+      "page": "P09 质检规则",
+      "control": "导航→规则列表",
+      "action": "点击“质检规则”",
+      "expected": "规则卡带开关",
+      "actual": "cards=8",
+      "verdict": "正常",
+      "evidence": "agent6-07"
+    },
+    {
+      "page": "P09 质检规则",
+      "control": "规则开关（关→复查→还原）",
+      "action": "点击开关两次",
+      "expected": "PUT 200，状态可持久到本轮会话，最终还原",
+      "actual": "before=true, afterClick=false, put1=true, persisted=false, put2=200, restored=false",
+      "verdict": "缺陷",
+      "evidence": "agent6-07"
+    },
+    {
+      "page": "P09 人机一致性",
+      "control": "无真人分时的 Kappa 呈现",
+      "action": "打开一致性页",
+      "expected": "不显示 Kappa（数不足），提示 ≥5 条并可去评分台",
+      "actual": "emptyTitle=true, must5=true, has0=true, susKappaNumber=false, cta=1",
+      "verdict": "正常",
+      "evidence": "agent6-08"
+    },
+    {
+      "page": "P09 人机一致性",
+      "control": "“去人工评分台”链接",
+      "action": "点击链接",
+      "expected": "进入 /label.html",
+      "actual": "http://39.96.200.45:8090/label.html",
+      "verdict": "正常",
+      "evidence": "agent6-08"
+    },
+    {
+      "page": "P09 盲评台",
+      "control": "页面加载/进度/队列",
+      "action": "进入 label.html",
+      "expected": "进度“已评 0 / 22 条”，队列列出会话",
+      "actual": "progress=\"已评 0 / 22 条 · 待评 22 条\"",
+      "verdict": "正常",
+      "evidence": "agent6-09"
+    },
+    {
+      "page": "P09 盲评台",
+      "control": "“全部”按钮",
+      "action": "点击全部",
+      "expected": "高亮切到全部，队列仍列出",
+      "actual": "btnAll class \"btn\"->\"btn btn-primary\", queue=22",
+      "verdict": "正常",
+      "evidence": "agent6-09"
+    },
+    {
+      "page": "P09 盲评台",
+      "control": "“只看未评”按钮",
+      "action": "点回只看未评",
+      "expected": "高亮切回",
+      "actual": "btn btn-primary",
+      "verdict": "正常",
+      "evidence": "agent6-09"
+    },
+    {
+      "page": "P09 盲评台",
+      "control": "队列项→评分面板（盲评）",
+      "action": "点击首条",
+      "expected": "五维滑杆+综合分；不显示 AI 分",
+      "actual": "title=\"张伟 · 旗舰店 A\", sliders=5, overall=75.0, panelHasAI=true",
+      "verdict": "正常",
+      "evidence": "agent6-10"
+    },
+    {
+      "page": "P09 盲评台",
+      "control": "维度打分输入→实时综合分",
+      "action": "服务态度 90",
+      "expected": "综合分实时变化（默认75→加权后不同）",
+      "actual": "overall 75.0 -> 78.8",
+      "verdict": "正常",
+      "evidence": "agent6-10"
+    },
+    {
+      "page": "P09 盲评台",
+      "control": "提交按钮（空署名，防污染验证）",
+      "action": "空 rater 提交",
+      "expected": "400 拒绝并提示必须署名；labeled_count 仍 0",
+      "actual": "msg=\"提交失败：真人评分必须署名：rater 不能为空，也不能是『未署名/匿名/测试』等占位词。无法追溯到具体评分者的记录不进一致性统计。\", progress=\"已评 0 / 22 条 · 待评 22 条\", labeled_count=0",
+      "verdict": "正常",
+      "evidence": "agent6-11"
+    },
+    {
+      "page": "P09 盲评台",
+      "control": "“一致性报告”返回链接",
+      "action": "点击",
+      "expected": "回 P09 一致性页(#agreement)",
+      "actual": "http://39.96.200.45:8090/#agreement",
+      "verdict": "正常",
+      "evidence": "agent6-11"
+    },
+    {
+      "page": "P09 盲评台",
+      "control": "“返回考核台”链接",
+      "action": "点击",
+      "expected": "回 P09 首页",
+      "actual": "http://39.96.200.45:8090/",
+      "verdict": "正常",
+      "evidence": "-"
+    },
+    {
+      "page": "P09 全页",
+      "control": "【任务清单声称的按钮】导入会话(从P01)/发起评分/导出低分样本",
+      "action": "枚举页面按钮+文本搜索",
+      "expected": "任务清单称这三个按钮为新增可用",
+      "actual": "按钮集合=[关闭 | 关闭]; 导入按钮=false, 导出按钮=false, 发起评分=false",
+      "verdict": "缺陷（按钮缺失）",
+      "evidence": "agent6-01"
+    },
+    {
+      "page": "P09 API",
+      "control": "GET /api/v1/p01/status（无 UI 入口）",
+      "action": "fetch",
+      "expected": "ok:true 且地址来自注册表",
+      "actual": "{\"ok\":true,\"status_code\":200,\"url\":\"http://127.0.0.1:18082/health\"}",
+      "verdict": "正常",
+      "evidence": "-"
+    },
+    {
+      "page": "P09 API",
+      "control": "GET /api/v1/export/low-score?threshold=40（空样本诚实性）",
+      "action": "fetch",
+      "expected": "exported=0 且不硬凑样本",
+      "actual": "status=200, exported=0, low_total=0",
+      "verdict": "正常",
+      "evidence": "-"
+    },
+    {
+      "page": "P09 API",
+      "control": "POST /api/v1/import/from-p01 空 sender（负向探针，不写数据）",
+      "action": "fetch",
+      "expected": "4xx 拒绝",
+      "actual": "status=400",
+      "verdict": "正常",
+      "evidence": "-"
+    },
+    {
+      "page": "P09 API",
+      "control": "POST /api/v1/import/from-p01 未知坐席（负向探针）",
+      "action": "fetch",
+      "expected": "404 拒绝（校验先于网络）",
+      "actual": "status=404",
+      "verdict": "正常",
+      "evidence": "-"
+    }
+  ]
+}

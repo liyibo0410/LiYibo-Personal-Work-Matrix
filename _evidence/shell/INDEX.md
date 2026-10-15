@@ -21,6 +21,9 @@
 | `portfolio-login-gate.png` | 未登录点「进入演示」弹出的登录模态真实渲染（含 5 个演示账号 chip 与拦截原因文案） | ✅ Edge 无头真实截图 |
 | `portfolio-home-authenticated.png` | 登录后的作品集首页：侧栏「作品集首页」高亮、顶栏标题同步、hero 主按钮切为「进入在线演示 · 旗舰 P02」 | ✅ 真实登录（owner/张总）后截图 |
 | `portfolio-home-mobile.png` | 390px 移动端渲染：锚点导航折叠、卡片单列、无横向滚动 | ✅ Edge 无头真实截图 |
+| `D26-隧道状态假阴性与停隧道清理修复.md` | `tunnel_remote.py` 两处修复：① `status` 的服务器回环探测**假阴性**（curl→bash `/dev/tcp`、ssh 失败带 rc+stderr、逐行正则）→ 实测从「0/11 FAIL」变「**11/11 OPEN OK**」；② `stop` **真删** `public_urls.json`（此前只 print「已清」）；另修误导的 `ssh_err.log` 排查提示 | ✅ 真实 status 复验 + 失败分支复验 + stop 隔离单测 |
+| `home-optimized-1.png` / `home-optimized-full.png` | **首页（`http://39.96.200.45:8070/#/`）细节优化层**上线后的真实渲染：字号上浮、字距与节奏、卡片与数字排版、来源贴底对齐 | ✅ 无头 Edge 真实截图（1440×1500 / 1440×3400） |
+| `home-blue-light.png` / `home-blue-dark.png` | **首页蓝色方案 v1「Azure Deep」**：只覆盖本页 `--cp-*`，浅 `#1B64DA` / 暗 `#4C8DFF`，中性色转冷；十个模块（iframe 独立文档）不受影响 | ✅ 无头 Edge 真实截图（浅/暗各 1440×1500） |
 
 ## 构建型前端全量启动实测（2026-10-13 · 续）
 
@@ -137,7 +140,7 @@ python shell/serve.py            # 默认 http://127.0.0.1:8800
 | 系统 | 账号 | 口令 | 依据 |
 |---|---|---|---|
 | 外壳 shell | owner / ops / legal / sales / admin | `<用户名>123` | `shell/serve.py` DEMO_ACCOUNTS |
-| **P02 运营助手** | `boss@cloudpivot.com`（老板）/ `ops@`（运营）/ `design@`（美工）/ `cs@`（客服） | 全部 `Test123456` | `api/scripts/bootstrap_demo_users.py:19-24`，实测登录 200 |
+| **P02 运营助手** | `boss@example.com`（老板）/ `ops@`（运营）/ `design@`（美工）/ `cs@`（客服） | 全部 `Test123456` | `api/scripts/bootstrap_demo_users.py:19-24`，实测登录 200 |
 | P05 合同审批 | `legal` / `applicant` / `admin` | `Legal@2026` / `Apply@2026` / `Admin@2026` | `app/auth.py` DEMO_ACCOUNTS，实测登录 200 |
 
 口令是 PBKDF2-SHA256 存储，**没有重置任何用户数据**；三份凭据已写进 `start-all.bat` 的输出。
@@ -173,7 +176,7 @@ python shell/serve.py            # 默认 http://127.0.0.1:8800
 | 反馈 | 根因 | 处理 | 证据 |
 |---|---|---|---|
 | 聊天窗太宽、两侧卡片太窄 | 两处：① 基础列宽给了两侧 19–20vw；② **`App.vue:2615` 有一条带 `!important` 的规则把两侧压到 `15vw`**（非本会话所写，见下文冲突记录），实测两侧只有 204px、聊天 880px | 删掉该 `!important` 覆盖，两侧统一提到 22–25vw（上限 420/430px） | 实测 `vw=1360` 时列宽由 `204 / 880 / 204` 变为 **`326 / 622 / 340`**；`D12-p01-widths.png` |
-| P02 演示账号要能点击填充 | 原先只是四行静态文字，得手输 | 登录页改成可点的账号卡：`?demo=boss\|ops\|design\|cs` 服务端预填邮箱与口令；`<form key>` 绑定所选账号，避免换点时 `defaultValue` 不刷新 | `curl /login?demo=cs` 返回 `value="cs@cloudpivot.com"` + `value="Test123456"`；`D12-p02-demo-fill.png` |
+| P02 演示账号要能点击填充 | 原先只是四行静态文字，得手输 | 登录页改成可点的账号卡：`?demo=boss\|ops\|design\|cs` 服务端预填邮箱与口令；`<form key>` 绑定所选账号，避免换点时 `defaultValue` 不刷新 | `curl /login?demo=cs` 返回 `value="cs@example.com"` + `value="Test123456"`；`D12-p02-demo-fill.png` |
 | 问数需要配什么 API | —— | 见下方「P03 需要配什么」 | 未改代码 |
 | 智库文档管理要加删除 | 后端 `DELETE /documents/{task_id}` **只删 MongoDB 记录，不删 Milvus 向量** → 删掉的文档仍会被检索命中；实测 `kb_chunks` 里已存在 8 条 Mongo 无对应记录的孤儿向量 | 新增 `count_chunks_by_file_title` / `delete_vectors_by_file_title`；删除按「先清 `kb_chunks`+`kb_item_names` 向量，后删 Mongo」的顺序（反了就永远查不回 file_title）；批量删除复用同一逻辑并逐条回报成败；前端加「操作」列 + 删除按钮 + 明确后果的确认框 | `scripts/verify_cascade_delete.py` 端到端 **PASS**：上传→向量 1 条→删除→`removed_chunks=1`、Mongo 记录清除、Milvus 残留 0、按内容标记查回 0 条；`D12-p04-docs-delete.png` |
 | 数据看板一直向下滚、上传趋势图太长 | `<canvas height="200">` 裸放在无定高的 `.card` 里；Chart.js 在 `responsive + maintainAspectRatio:false` 下按**父容器**高度 sizing，父容器没高度时每轮 resize 都长高一点 | 给两个 canvas 套 `.chart-box{position:relative;height:260px}`；顺手把图表里写死的深灰配色（`#9BA3B0`/`#2A3040`）改为读 `--cp-*`，浅色主题下不再糊 | 探针实测 canvas 稳定 260px、页面高度 3 秒内 `grew=0`；`D12-p04-dashboard.png` |
@@ -230,3 +233,63 @@ P01 的商城库在 3307）。占位值（含 `mock`/`your-`/`xxx`）会被判�
   `delete_vectors_by_file_title('hak180产品安全手册_new')` —— 属于删数据，等确认再做。
 - P03 仍缺有效模型 Key，答不出内容（原因已可见）。
 - P02 浅色态仍未跟外壳同步（本轮只加了 URL 初值读取，`/`→`/login` 跳转仍会丢参数）。
+
+## 2026-10-15 · 首页（`http://39.96.200.45:8070/#/`）细节优化层
+
+用户要求「只优化这个页面，不要大改，只改配色与细节」。因此**只在 `shell/index.html` 自带 `<style>` 末尾追加了一个
+页面作用域的优化层**，并修了两处过期数字；**没有动 `shared/ui-kit/tokens.css`**（那份令牌被十个模块共用，
+改它等于全站改色），所有选择器都限定在 `.lp-*` / `#home-view` 内的 `.cp-stat*`。
+
+改了什么（全部是细节，结构/组件/排版未动）：
+
+| 类别 | 具体 |
+|---|---|
+| 对比度 | `.lp-wrap` 作用域内把 `--cp-ink3` 提到 `#6B7280`（原 `#8A94A3` 在浅底上不足 4.5:1） |
+| 字号 | 平台基准 13px 对首页长文偏小 → 导航 14px、导语 16px、正文/卡片 13.5px |
+| 字距节奏 | `h1` 字距 −1.6px + `text-wrap: balance`；`h2` −0.5px；章节上间距收到 48px；同级标题与副标题间距对齐 |
+| 卡片 | 模块卡/证据卡/材料卡的圆角统一到 `--cp-radius-lg`；hover 用 `--cp-shadow-lg` |
+| 数字排版 | 指标条 / 证据卡大数 / 模块卡测试数 / 材料标签统一 `font-variant-numeric: tabular-nums` |
+| 网格整齐 | 证据卡改 flex 纵排、`.lp-ev-src` 贴底（`margin-top:auto`），一行内来源行对齐 |
+| 边界墙 | 左侧 3px 细条，hover 呼应品牌色 |
+| 无障碍 | 本页所有可点击元素补 `:focus-visible` 环；`prefers-reduced-motion` 下禁用卡片位移与链接过渡 |
+
+顺手修的过期数字（都与「每个指标都能复核」的承诺直接冲突）：
+模块卡 P01 62→**73**、P02 162→**178**、P03 61→**137**、P04 23→**59**、P05 46→**48**、
+P06 44→**48**、P09 41→**55**、P10 28→**35**；证据卡「另跑 46 项 pytest」→**48**；材料标签「506 测试」→**731**。
+（口径同首页 statbar 与证据卡：十模块各自最新一次 pytest 实跑之和 = 731。）
+
+复验：`curl` 公网入口与本机 `8800` 各取一份 HTML，**同 84,618 字节**、都含「首页优化层」与上述新数字；
+截图 `home-optimized-1.png`（1440×1500）、`home-optimized-full.png`（1440×3400）。
+
+**未做（需确认）**：菜单里的金色/彩色图标、`◐` 主题按钮的图标仍是文本字符（换成 SVG 要改交互 JS，属功能改动）；
+若要把首页整体换成某个配色方案（v01–v08 那套），需要先定方案再改 `--cp-*`，那会影响十个模块，得单独评估。
+
+## 2026-10-15 · 首页蓝色方案 v1「Azure Deep」
+
+用户要求「生成一套蓝色的方案」。落地方式是**只覆盖本页的 `--cp-*` 令牌**（写在 `shell/index.html` 自己的
+`<style>` 里，排在 `tokens.css` 之后 → 同权重也生效）。**范围只有这个外壳页面**：十个模块是 iframe 里的
+独立文档，各自加载 `shared/ui-kit/tokens.css`，**不受影响**（因此也没动共享令牌）。
+
+| 令牌 | 浅色（light） | 暗色（dark） | 说明 |
+|---|---|---|---|
+| `--cp-brand` | `#1B64DA` | `#4C8DFF` | 加深一档的湛蓝；比原 `#3370FF` 更沉，少一点「默认蓝」感 |
+| `--cp-brand-hover` | `#144EAE` | `#6BA3FF` | 白底走深 / 深底走亮 |
+| `--cp-brand-bg` | `#E6EEFB` | `#10203C` | 选中态与弱底 |
+| `--cp-on-brand` | `#FFFFFF` | `#06101F` | 压在品牌色上的文字 |
+| `--cp-bg` / `--cp-surface` / `--cp-elevated` | `#F4F6FA` / `#FFFFFF` / `#E9EDF4` | `#0B0E14` / `#131924` / `#1A2130` | 中性色整体转冷，与蓝同调 |
+| `--cp-ink1/2/3` | `#0E1526` / `#46536B` / `#6B7787` | `#E9EDF5` / `#A6B0C0` / `#7C8798` | 冷调近黑 → 弱文本仍 ≥4.5:1 |
+| `--cp-info` / `--cp-info-bg` | `#3A5B8C` / `#EDF1F7` | `#8FB4E8` / `#16202F` | 中性信息色一并转蓝灰，避免青蓝混用 |
+
+**对比度实测（按 WCAG 2.x 相对亮度公式计算）**：浅色 `#1B64DA` 对白底 **5.4:1**、白字压在它上面 **5.4:1**、
+`#1B64DA` 对 `--cp-bg` **4.9:1**、品牌色文字压在 `#E6EEFB` 弱底上 **4.7:1**；暗色 `#4C8DFF` 对 `#0B0E14` **6.1:1**。
+均 ≥4.5:1。
+
+**复验**：公网 `http://39.96.200.45:8070/` 与本机 `8800` 返回同为新版（86,266 字节，含 `Azure Deep` / `#1B64DA` / `#4C8DFF`）；
+截图 `home-blue-light.png`、`home-blue-dark.png`（均 1440×1500，暗色走 `?cp-theme=dark`）。
+
+**备选（同结构，只换色）**，若要更沉或更亮可直接替换上面 4 个蓝令牌：
+- 「Navy Steel」更沉：`--cp-brand: #1D4ED8`、`--cp-bg: #F3F5F9`、`--cp-ink1: #0B1220`
+- 「Bright Azure」更科技：`--cp-brand: #2563EB`、`--cp-brand-hover: #1D4ED8`、`--cp-ink1: #0F172A`
+
+**仍存的视觉差异（诚实标注）**：外壳现在是 `#1B64DA`，而 iframe 里的十个模块仍是 `#3370FF` —— 两者同色系近邻，
+近距离看不出跳色，但**不是同一个色值**。要完全统一必须改 `shared/ui-kit/tokens.css`（会波及十个模块），需另议。

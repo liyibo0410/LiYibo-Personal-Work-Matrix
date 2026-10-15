@@ -1,0 +1,292 @@
+{
+ "results": [
+  {
+   "page": "P04",
+   "control": "入口(本地)",
+   "action": "GET /",
+   "expected": "307 → 落在可用页面",
+   "actual": "final=http://127.0.0.1:8041/console.html; title='RAG 知识库 · 统一控制台'",
+   "verdict": "正常",
+   "shot": "agent2-71-p04rL-landing.png",
+   "t": "09:50:27"
+  },
+  {
+   "page": "P04",
+   "control": "console 首屏",
+   "action": "打开",
+   "expected": "健康条正常",
+   "actual": "health='依赖正常：依赖全部在线，检索问答与文档导入均可端到端跑通。（检索问答可用）\\nMilvus 向量库：在线 · 硬依赖\\nMongoDB 文档/历史库：在线 · 硬依赖\\nMinIO 对象存储：在线\\nBGE-M3 嵌入模型：在线 · 硬依赖\\nLLM 生成凭据：在线 · 硬依赖\\n重新检查'",
+   "verdict": "正常",
+   "shot": "agent2-72-p04rL-console.png",
+   "t": "09:50:32"
+  },
+  {
+   "page": "P04",
+   "control": "文档管理·搜索『UI测试』",
+   "action": "搜索",
+   "expected": "列出崩溃前上传的自建文档 A/B",
+   "actual": "行=['UI测试-可删-B.md | 165 B | \\t-\\t2026/10/15 01:40:24\\t处理中\\t预览切片删除', 'UI测试-可删-A.md | 402 B | \\t-\\t2026/10/15 01:40:21\\t处理中\\t预览切片删除']",
+   "verdict": "正常",
+   "shot": "agent2-73-p04rL-docs-testdoc.png",
+   "t": "09:50:41"
+  },
+  {
+   "page": "P04",
+   "control": "按钮·预览切片",
+   "action": "点自建文档",
+   "expected": "显示切片与数据源口径",
+   "actual": "note='数据源：本地切分备份 chunks.json（切分节点的落盘结果，未经向量库回读校验） · D:\\\\file\\\\20261015\\\\cd8bca71-732f-4ef1-bc3e-26837b4adf98\\\\chunks.json · Milvus 可用但按 file_title 查到 0 条切片（文档未入库成功或向量已被清理'; pos='共 1 块，当前第 1~1 块'; 内容='第 1 / 1 块 # UI测试-可删-B 示例测试文档 84 字 无 chunk_id（备份来源） # UI测试-可删-B 示例测试文档  上传页(import.html)按钮测试用文件，测试结束后会被删除。  - 示例测试标记 ZQB-TEST-20261015。 '",
+   "verdict": "正常",
+   "shot": "agent2-74-p04rL-preview.png",
+   "t": "09:50:45"
+  },
+  {
+   "page": "P04",
+   "control": "检索问答·testdoc",
+   "action": "提问『示例测试网关 CP-GW-01 的默认管理地址和…』",
+   "expected": "命中自建文档并答 10.99.99.1 / 8899",
+   "actual": "引用来源=False; 明确拒答=False; 尾部='我 示例测试网关 CP-GW-01 的默认管理地址和端口是什么？ AI 阶段进度（已完成2，进行中0） 您是想问以下哪个产品：ZZ ZZ-PROBE-9000探针、H3C LA2608室内无线网关、华为擎云B530台式机？请明确一下型号。'",
+   "verdict": "缺陷",
+   "shot": "agent2-75-p04rL-qa-testdoc.png",
+   "t": "09:54:08"
+  },
+  {
+   "page": "P04",
+   "control": "检索问答·seed",
+   "action": "提问『H3C LA2608 交换机的交换容量是多少？…』",
+   "expected": "命中 H3C 手册并答 16 Gbps",
+   "actual": "引用来源=True; 明确拒答=False; 尾部='太网交换机 相关性 0.0112 ## 维护保养 - 定期用干布擦拭交换机表面灰尘 - 避免在潮湿、高温环境中使用 - 不要自行拆卸或维修交换机 - 雷雨天气建议断开电源和网线 ## 安全注意事项 1. 请勿在易燃易爆环境中使用本设备 2. 请勿将液体洒在交换机上 3. 请勿堵塞通风孔 4. 请使用原装电源线 5. 长时间不使用时建议断开电源 ## 保修信息 - **保修期限**：自购买之日起 3 年 - **保修范 [3] test_doc · H3C LA2608千兆以太网交换机 相关性 0.0025 ## 指示灯说明 | 指示灯 | 状态 | 说明 | |--------|------|------| | PWR | 常亮 | 电源正常 | | PWR | 熄灭 | 未接通电源 | | LINK | 常亮 | 端口已连接设备 | | LINK | 闪烁 | 端口正在传输数据 | | ACT | 闪烁 | 数据活动指示 | ## 故障排查 ### 问题：交换机无法开机 **可能原因：'",
+   "verdict": "正常",
+   "shot": "agent2-76-p04rL-qa-seed.png",
+   "t": "09:54:36"
+  },
+  {
+   "page": "P04",
+   "control": "检索问答·refusal",
+   "action": "提问『请告诉我 iPhone 17 Pro Max 的…』",
+   "expected": "文档外问题：明确未记载/拒答",
+   "actual": "引用来源=True; 明确拒答=False; 尾部='. 请使用原装电源线 5. 长时间不使用时建议断开电源 ## 保修信息 - **保修期限**：自购买之日起 3 年 - **保修范 [3] test_doc · H3C LA2608千兆以太网交换机 相关性 0.0025 ## 指示灯说明 | 指示灯 | 状态 | 说明 | |--------|------|------| | PWR | 常亮 | 电源正常 | | PWR | 熄灭 | 未接通电源 | | LINK | 常亮 | 端口已连接设备 | | LINK | 闪烁 | 端口正在传输数据 | | ACT | 闪烁 | 数据活动指示 | ## 故障排查 ### 问题：交换机无法开机 **可能原因： 我 请告诉我 iPhone 17 Pro Max 的电池容量是多少 AI 阶段进度（已完成7，进行中1） 确认问题产品已完成 生成答案已完成 切片搜索已完成 网络搜索已完成 切片搜索(假设性文档)已完成 倒排融合已完成 重排序已完成 正在进行确认问题产品... 正在检索知识库并生成回答…'",
+   "verdict": "缺陷",
+   "shot": "agent2-77-p04rL-qa-refusal.png",
+   "t": "09:54:40"
+  },
+  {
+   "page": "P04",
+   "control": "按钮·清空对话",
+   "action": "点击",
+   "expected": "清空线程（含服务端 DELETE）",
+   "actual": "线程长度=50; 文本[0:80]='你好，我是 RAG 知识库助手\\n\\n输入问题，我从知识库检索后作答，并附上引用来源；检索不到会明确拒答'",
+   "verdict": "正常",
+   "shot": "agent2-78-p04rL-qa-clear.png",
+   "t": "09:54:44"
+  },
+  {
+   "page": "P04",
+   "control": "Tab·数据看板",
+   "action": "点击等待渲染",
+   "expected": "统计卡 + 2 图表 + Top 文档",
+   "actual": "stats={'statTotalDocs': '7', 'statTotalChunks': '36', 'statTodayUploads': '2', 'statTotalQA': '224'}; canvas=['uploadTrendChart:538x260', 'docStatusChart:538x260']; top='1\\t华为擎云B530 用户指南-(PUCZ,Windows11_03,zh-cn).pdf\\t华为擎云B530台式机\\t14\\t2026/10/12 | 2\\thak180产品安全手册.pdf\\t-\\t7\\t2026/10/13 | 3\\thak180产品安全手册.pdf\\tBrother HAK 180 烫金机\\t7\\t2026/10/12 | 4\\tH3C LA2608室内无线网关 用户手'",
+   "verdict": "正常",
+   "shot": "agent2-79-p04rL-dashboard.png",
+   "t": "09:54:51"
+  },
+  {
+   "page": "P04",
+   "control": "chat 首屏(本地 /chat.html)",
+   "action": "打开",
+   "expected": "加载 + 历史 + 健康",
+   "actual": "apiPill='API: 已连接'; 消息数=1",
+   "verdict": "正常",
+   "shot": "agent2-80-p04rL-chat.png",
+   "t": "09:54:56"
+  },
+  {
+   "page": "P04",
+   "control": "chat·发送",
+   "action": "提问『H3C LA2608 的保修期是多久？』",
+   "expected": "回答 + 引用来源",
+   "actual": "有引用=False; 尾部='今天 RAG 知识库 你好，我是RAG 知识库客服。你可以直接提问，我会在\"阶段进度\"里展示处理过程。 提示：可以问\"如何使用万用表测量电压？\" H3C LA2608 的保修期是多久？ 09:54 我 RAG 知识库  您是想问以下哪个产品：H3C LA2608千兆以太网交换机、H3C LA2608室内无线网关、Qoder QD-CASCADE 级联删除探针？请明确一下型号。  阶段进度（已完成2，进行中0，状态：已完成） 这个回答有帮助吗？ 👍 👎 09:54'",
+   "verdict": "部分",
+   "shot": "agent2-81-p04rL-chat-answer.png",
+   "t": "09:58:17"
+  },
+  {
+   "page": "P04",
+   "control": "chat·反馈按钮(有用/没用)",
+   "action": "依次点击两个反馈按钮",
+   "expected": "提交反馈并显示已反馈状态",
+   "actual": "状态=[('up', 'feedback-btn active-up', '👍'), ('down', 'feedback-btn active-down', '👎')]; dialogs=[]",
+   "verdict": "正常",
+   "shot": "agent2-82-p04rL-chat-feedback.png",
+   "t": "09:58:21"
+  },
+  {
+   "page": "P04",
+   "control": "chat·流式开关(关) + 发送",
+   "action": "关闭流式后提问端口数量",
+   "expected": "非流式也能拿到回答",
+   "actual": "checked=False; 尾部='保修期是多久？ 09:54 我 RAG 知识库  您是想问以下哪个产品：H3C LA2608千兆以太网交换机、H3C LA2608室内无线网关、Qoder QD-CASCADE 级联删除探针？请明确一下型号。  阶段进度（已完成2，进行中0，状态：已完成） 这个回答有帮助吗？ 👍 👎 09:54 H3C LA2608 交换机有几个千兆端口？ 09:58 我 RAG 知识库  H3C LA2608千兆以太网交换机提供 8 个 10/100/1000Mbps 自适应端口，即有 8 个千兆端口。  阶段进度（已完成0，进行中0，状态：已完成） 参考来源 (3) 这个回答有帮助吗？ 👍 👎 09:58'",
+   "verdict": "正常",
+   "shot": "agent2-83-p04rL-chat-nostream.png",
+   "t": "10:01:42"
+  },
+  {
+   "page": "P04",
+   "control": "chat·清空对话",
+   "action": "点击（confirm）",
+   "expected": "清空历史",
+   "actual": "消息 5 -> 1; dialog=[{'type': 'confirm', 'message': '确定要清空当前会话的历史记录吗？这将无法恢复。'}]",
+   "verdict": "正常",
+   "shot": "agent2-84-p04rL-chat-clear.png",
+   "t": "10:01:46"
+  },
+  {
+   "page": "P04",
+   "control": "import·上传(UI测试-可删-B.md)",
+   "action": "选择文件",
+   "expected": "上传→解析→完成",
+   "actual": "完成=True; 列表='UI测试-可删-B.md 0.16 KB 日志（已完成4，进行中1，点击展开） 处理中...'",
+   "verdict": "正常",
+   "shot": "agent2-85-p04rL-import-upload.png",
+   "t": "10:01:53"
+  },
+  {
+   "page": "P04",
+   "control": "按钮·删除(清理自建文档)",
+   "action": "逐个删除『UI测试-可删-*』",
+   "expected": "自建文档清干净",
+   "actual": "已删=['UI测试-可删-B.md', 'UI测试-可删-B.md', 'UI测试-可删-B.md', 'UI测试-可删-B.md', 'UI测试-可删-B.md', 'UI测试-可删-B.md']; 剩余='UI测试-可删-B.md | 165 B | 与另一份同名，删除会一并清理其向量 | \\tUI测试-可删-B\\t2026/10/15 02:01:49\\t已完成\\t预览切片删除 | UI测试-可删-B.md | 165 B | 与另一份同名，删除会一并清理其向量 | \\t-\\t2026/10/15 01:40:24\\t处理中\\t预览切片删除 | UI测试-可删-A.md | 402 B | \\t-\\t2026/10/'",
+   "verdict": "部分",
+   "shot": "agent2-86-p04rL-cleanup.png",
+   "t": "10:02:54"
+  },
+  {
+   "page": "P04",
+   "control": "文档管理·全量列表(复核)",
+   "action": "清空搜索框后搜索",
+   "expected": "只剩种子文档（5 份）",
+   "actual": "共 8 行: ['UI测试-可删-B.md', 'UI测试-可删-B.md', 'UI测试-可删-A.md', 'hak180产品安全手册.pdf', '华为擎云B530 用户指南-(PUCZ,Windows11_03,zh-cn).pdf', 'hak180产品安全手册.pdf', 'H3C LA2608室内无线网关 用户手册-6W100-整本手册.pdf', 'test_doc.md']",
+   "verdict": "部分",
+   "shot": "agent2-87-p04rL-docs-final.png",
+   "t": "10:02:58"
+  }
+ ],
+ "dialogs": [
+  {
+   "type": "confirm",
+   "message": "确定要清空当前会话的历史记录吗？这将无法恢复。"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 1 条切片，删除后「检索问答」不再命中该文档。\n\n⚠ 列表里还有同名文件：向量按文件名（去扩展名）归属，同名文档的切片会被一并清理。\n\n服务器上的原始文件保留，未删除。"
+  },
+  {
+   "type": "alert",
+   "message": "已删除：清理切片向量 1 条、主体记录 0 条"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 1 条切片，删除后「检索问答」不再命中该文档。\n\n⚠ 列表里还有同名文件：向量按文件名（去扩展名）归属，同名文档的切片会被一并清理。\n\n服务器上的原始文件保留，未删除。"
+  },
+  {
+   "type": "alert",
+   "message": "删除失败：文档不存在"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 1 条切片，删除后「检索问答」不再命中该文档。\n\n⚠ 列表里还有同名文件：向量按文件名（去扩展名）归属，同名文档的切片会被一并清理。\n\n服务器上的原始文件保留，未删除。"
+  },
+  {
+   "type": "alert",
+   "message": "删除失败：Failed to fetch"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 1 条切片，删除后「检索问答」不再命中该文档。\n\n⚠ 列表里还有同名文件：向量按文件名（去扩展名）归属，同名文档的切片会被一并清理。\n\n服务器上的原始文件保留，未删除。"
+  },
+  {
+   "type": "alert",
+   "message": "删除失败：Failed to fetch"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 1 条切片，删除后「检索问答」不再命中该文档。\n\n⚠ 列表里还有同名文件：向量按文件名（去扩展名）归属，同名文档的切片会被一并清理。\n\n服务器上的原始文件保留，未删除。"
+  },
+  {
+   "type": "alert",
+   "message": "删除失败：文档不存在"
+  },
+  {
+   "type": "confirm",
+   "message": "确定删除「UI测试-可删-B.md」？\n\n会同时删除它在向量库里的 1 条切片，删除后「检索问答」不再命中该文档。\n\n⚠ 列表里还有同名文件：向量按文件名（去扩展名）归属，同名文档的切片会被一并清理。\n\n服务器上的原始文件保留，未删除。"
+  },
+  {
+   "type": "alert",
+   "message": "删除失败：文档不存在"
+  }
+ ],
+ "netprobs": [
+  {
+   "url": "http://127.0.0.1:8041/stream/kb-console-mv8vt7h6-w5gyhn",
+   "fail": "net::ERR_ABORTED"
+  },
+  {
+   "url": "http://127.0.0.1:8041/stream/kb-console-mv8vt7h6-w5gyhn",
+   "fail": "net::ERR_ABORTED"
+  },
+  {
+   "url": "http://127.0.0.1:8041/stream/kb-console-mv8vt7h6-w5gyhn",
+   "fail": "net::ERR_ABORTED"
+  },
+  {
+   "url": "http://127.0.0.1:8041/stream/sess-9w5kavm7drmv8vyyqc",
+   "fail": "net::ERR_ABORTED"
+  },
+  {
+   "url": "http://127.0.0.1:8041/documents/62473bef-782b-45dc-8c16-d185246307cc",
+   "status": 404
+  },
+  {
+   "url": "http://127.0.0.1:8041/documents/62473bef-782b-45dc-8c16-d185246307cc",
+   "fail": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+   "url": "http://127.0.0.1:8041/documents/62473bef-782b-45dc-8c16-d185246307cc",
+   "fail": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+   "url": "http://127.0.0.1:8041/documents/62473bef-782b-45dc-8c16-d185246307cc",
+   "status": 404
+  },
+  {
+   "url": "http://127.0.0.1:8041/documents/62473bef-782b-45dc-8c16-d185246307cc",
+   "status": 404
+  }
+ ],
+ "console_errors": [
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  [
+   "error",
+   "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+  ],
+  [
+   "error",
+   "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+ ]
+}

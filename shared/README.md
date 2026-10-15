@@ -1,12 +1,12 @@
-# shared/ · 云枢智能统一平台共享层
+# shared/ · 李奕波个人作品矩阵统一平台共享层
 
 「四统一」的落地代码。10 个模块与 shell 一律复用本层，禁止各自造一套。
 
 | 子模块 | 状态 | 职责 | 引入方式 |
 |---|---|---|---|
-| `config/` | ✅ 本轮新建 | 服务注册表 SERVICE_REGISTRY —— 端口的唯一真源，跨模块调用禁止硬编码端口 | Python：`pip install -e shared/config` 后 `from cloudpivot_config import api_url`；前端：`<script src=".../shared/config/services.js">` 后用 `CP.apiUrl(id, path)` |
+| `config/` | ✅ 本轮新建 | 服务注册表 SERVICE_REGISTRY —— 端口的唯一真源，跨模块调用禁止硬编码端口 | Python：`pip install -e shared/config` 后 `from portfolio_config import api_url`；前端：`<script src=".../shared/config/services.js">` 后用 `CP.apiUrl(id, path)` |
 | `ui-kit/` | ✅ 本轮新建 | 统一设计系统：设计令牌 + 共享组件样式 + 前端运行时 | 页面依次引入 `tokens.css` → `components.css` → `ui-kit.js` |
-| `auth/` | ✅ 本轮新建 | 共享鉴权：纯标准库 HS256 令牌签发/校验，认证统一 | `pip install -e shared/auth` 后 `from cloudpivot_auth import issue_token, verify_token` |
+| `auth/` | ✅ 本轮新建 | 共享鉴权：纯标准库 HS256 令牌签发/校验，认证统一 | `pip install -e shared/auth` 后 `from portfolio_auth import issue_token, verify_token` |
 | `llm-gateway/` | ✅ 既有 | 统一 LLM 网关：多端点故障转移 + 成本统计 + 无 Key mock 降级 | `from llm_gateway import chat_completion_json, GatewayConfig` |
 | `logging/` | ⛔ 未实现 | 结构化日志 + trace_id（规范规划项，本轮未落地） | — |
 
@@ -15,7 +15,7 @@
 - **真源**：`config/services.json`（10 个模块的 host / api_port / web_port / api_prefix / route / layer / icon）。
 - **前端镜像**：`config/services.js` 由 `python config/build_js.py` 从真源生成，**不要手改**。
 - Python API：`service_url(id)`、`api_url(id, path)`、`port(id, which=)`、`route_path(id)`、`by_layer()`、`get(id)`。
-- 自检：`PYTHONPATH=shared/config/src python -m cloudpivot_config.registry`。
+- 自检：`PYTHONPATH=shared/config/src python -m portfolio_config.registry`。
 
 端口一览（改端口只改 services.json）：P01=18082 / P02=8000(API)+3001(Web) / P03=8030 /
 P04=8041 / P05=8770 / P06=8060 / P07=8070 / P08=8080 / P09=8090 / P10=8101。
@@ -32,7 +32,7 @@ P04=8041 / P05=8770 / P06=8060 / P07=8070 / P08=8080 / P09=8090 / P10=8101。
 - HS256 令牌，结构与标准 JWT 兼容。密钥从环境变量 `CP_AUTH_SECRET` 读取。
 - API：`issue_token(subject, roles, ttl=)`、`verify_token(token)`、`require_role(token, role)`、`parse_bearer(header)`。
 - **红线**：未设置 `CP_AUTH_SECRET` 时用本地演示弱密钥并在 stderr 告警，**生产必须显式配置强密钥**。
-- 自检：`PYTHONPATH=shared/auth/src python -m cloudpivot_auth.token`。
+- 自检：`PYTHONPATH=shared/auth/src python -m portfolio_auth.token`。
 
 ## 已知边界（诚实标注）
 

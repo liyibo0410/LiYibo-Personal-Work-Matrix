@@ -1,0 +1,1088 @@
+{
+  "base": "http://127.0.0.1:8060/",
+  "tag": "local",
+  "started": "2026-10-15T02:25:44.603Z",
+  "finished": "2026-10-15T02:39:33.756Z",
+  "steps": [
+    {
+      "ts": "2026-10-15T02:25:47.832Z",
+      "page": "总览",
+      "widget": "页面加载",
+      "action": "打开 http://127.0.0.1:8060/",
+      "expected": "首屏正常渲染（HTTP 200）",
+      "actual": "HTTP 200；badge=\"14 张表 / 3.24万 行\"；statCards=4；metricCards=7；bg=rgb(245, 247, 250)",
+      "verdict": "正常",
+      "evidence": "agent5-01-p06-local-dashboard.png"
+    },
+    {
+      "ts": "2026-10-15T02:25:47.832Z",
+      "page": "总览",
+      "widget": "导航 Tab 枚举",
+      "action": "读取所有 nav-item",
+      "expected": "总览/数据表/指标/质量/血缘/接入 6 个（无「查询」Tab）",
+      "actual": "[\"dashboard\",\"tables\",\"metrics\",\"quality\",\"lineage\",\"ingest\"]",
+      "verdict": "正常",
+      "evidence": "DOM 快照"
+    },
+    {
+      "ts": "2026-10-15T02:25:47.832Z",
+      "page": "总览",
+      "widget": "指标卡（核心指标概览）",
+      "action": "读取 7 项指标卡文本",
+      "expected": "GMV/订单/转化率/客单价/退货率/UV/PV 齐全且有口径标注",
+      "actual": "[\"成交总额 | 3.60万 | ▲ 33.87%\",\"订单量 | 133 | ▲ 25.47%\",\"转化率 | 0.44% | ▲ 46.67%\",\"客单价 | 270.36 | ▲ 6.69%\",\"退货率 | 20.30% | ▲ 53.67%\",\"独立访客数 | 3.04万 | ▼ 15.17%\",\"页面浏览量 | 9.69万 | ▼ 28.12%\"]",
+      "verdict": "部分",
+      "evidence": "指标卡仅显示 名称/最新值/趋势，未显示口径说明（接口 metric.description 有口径但页面未展示）"
+    },
+    {
+      "ts": "2026-10-15T02:25:47.832Z",
+      "page": "总览",
+      "widget": "健康环/数仓分层",
+      "action": "读取文本",
+      "expected": "健康分与分层显示",
+      "actual": "29\n健康分 / 应用层 ADS; 2 张表; 明细层 DWD; 2 张表; 汇总层 DWS; 2 张表; 原始层 ODS; 6 张表",
+      "verdict": "正常",
+      "evidence": "同截图"
+    },
+    {
+      "ts": "2026-10-15T02:25:48.060Z",
+      "page": "数据表",
+      "widget": "进入 Tab",
+      "action": "点击侧栏「数据表管理」",
+      "expected": "加载表列表",
+      "actual": "14 张表: ads_key_metrics,ads_product_ranking,dwd_customer_profile,dwd_order_detail,tmp_uitest_agent5_json,dws_daily_product,dws_daily_shop,ods_customers,ods_dirty_probe,ods_orders,ods_products,ods_stores,ods_traffic,tmp_uitest_agent5_csv",
+      "verdict": "正常",
+      "evidence": "agent5-02-p06-local-tables-list.png"
+    },
+    {
+      "ts": "2026-10-15T02:25:48.425Z",
+      "page": "数据表",
+      "widget": "分层筛选 select",
+      "action": "选择 ODS",
+      "expected": "仅显示对应分层（或全部）",
+      "actual": "行数=7，分层=ODS",
+      "verdict": "正常",
+      "evidence": "agent5-03-p06-local-tables-filter-ods.png"
+    },
+    {
+      "ts": "2026-10-15T02:25:48.737Z",
+      "page": "数据表",
+      "widget": "分层筛选 select",
+      "action": "选择 DWD",
+      "expected": "仅显示对应分层（或全部）",
+      "actual": "行数=3，分层=DWD",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:25:49.048Z",
+      "page": "数据表",
+      "widget": "分层筛选 select",
+      "action": "选择 DWS",
+      "expected": "仅显示对应分层（或全部）",
+      "actual": "行数=2，分层=DWS",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:25:49.374Z",
+      "page": "数据表",
+      "widget": "分层筛选 select",
+      "action": "选择 ADS",
+      "expected": "仅显示对应分层（或全部）",
+      "actual": "行数=2，分层=ADS",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:25:49.700Z",
+      "page": "数据表",
+      "widget": "分层筛选 select",
+      "action": "选择 全部",
+      "expected": "仅显示对应分层（或全部）",
+      "actual": "行数=14，分层=ADS/DWD/DWS/ODS",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:27:07.762Z",
+      "page": "数据表",
+      "widget": "「查看」 ads_key_metrics",
+      "action": "点击第 1 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ads_key_metrics; 200 tables/ads_key_metrics/preview?limit=50] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/ads_key_metrics; 404 tables/ads_key_metrics/preview?limit=50] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:28:25.845Z",
+      "page": "数据表",
+      "widget": "「查看」 ads_product_ranking",
+      "action": "点击第 2 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ads_product_ranking; 200 tables/ads_product_ranking/preview?limit=50] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ads_product_ranking/preview?limit=50; 200 tables/ads_product_ranking] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:29:43.921Z",
+      "page": "数据表",
+      "widget": "「查看」 dwd_customer_profile",
+      "action": "点击第 3 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/dwd_customer_profile/preview?limit=50; 200 tables/dwd_customer_profile] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/dwd_customer_profile/preview?limit=50; 200 tables/dwd_customer_profile] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:30:23.053Z",
+      "page": "数据表",
+      "widget": "「查看」 dwd_order_detail",
+      "action": "点击第 4 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "打开成功（第2次）：\"订单明细宽表 (dwd_order_detail)\" 列=16 预览行=50",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:30:23.124Z",
+      "page": "数据表",
+      "widget": "「查看」 tmp_uitest_agent5_json",
+      "action": "点击第 5 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "打开成功（第1次）：\"tmp_uitest_agent5_json (tmp_uitest_agent5_json)\" 列=4 预览行=3",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:31:41.194Z",
+      "page": "数据表",
+      "widget": "「查看」 dws_daily_product",
+      "action": "点击第 6 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 200 tables/dws_daily_product/preview?limit=50; 404 tables/dws_daily_product] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/dws_daily_product; 200 tables/dws_daily_product/preview?limit=50] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:32:59.260Z",
+      "page": "数据表",
+      "widget": "「查看」 dws_daily_shop",
+      "action": "点击第 7 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/dws_daily_shop/preview?limit=50; 200 tables/dws_daily_shop] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/dws_daily_shop/preview?limit=50; 200 tables/dws_daily_shop] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:34:17.314Z",
+      "page": "数据表",
+      "widget": "「查看」 ods_customers",
+      "action": "点击第 8 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/ods_customers/preview?limit=50; 200 tables/ods_customers] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ods_customers/preview?limit=50; 200 tables/ods_customers] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:35:35.389Z",
+      "page": "数据表",
+      "widget": "「查看」 ods_dirty_probe",
+      "action": "点击第 9 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/ods_dirty_probe; 200 tables/ods_dirty_probe/preview?limit=50] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/ods_dirty_probe/preview?limit=50; 200 tables/ods_dirty_probe] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:36:53.473Z",
+      "page": "数据表",
+      "widget": "「查看」 ods_orders",
+      "action": "点击第 10 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 200 tables/ods_orders/preview?limit=50; 404 tables/ods_orders] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 500 tables/ods_orders; 200 tables/ods_orders/preview?limit=50] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:37:32.932Z",
+      "page": "数据表",
+      "widget": "「查看」 ods_products",
+      "action": "点击第 11 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "打开成功（第2次）：\"商品主数据 (ods_products)\" 列=12 预览行=3",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:38:12.009Z",
+      "page": "数据表",
+      "widget": "「查看」 ods_stores",
+      "action": "点击第 12 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "打开成功（第2次）：\"店铺主数据 (ods_stores)\" 列=5 预览行=3",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:38:12.067Z",
+      "page": "数据表",
+      "widget": "「查看」 ods_traffic",
+      "action": "点击第 13 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "打开成功（第1次）：\"流量日志表 (ods_traffic)\" 列=8 预览行=50",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:30.153Z",
+      "page": "数据表",
+      "widget": "「查看」 tmp_uitest_agent5_csv",
+      "action": "点击第 14 行「查看」",
+      "expected": "详情面板+预览",
+      "actual": "两次均失败：attempt1:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/tmp_uitest_agent5_csv; 200 tables/tmp_uitest_agent5_csv/preview?limit=50] attempt2:page.waitForFunction: Timeout 9000ms exceeded. [api: 404 tables/tmp_uitest_agent5_csv/preview?limit=50; 200 tables/tmp_uitest_agent5_csv] ",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:30.154Z",
+      "page": "数据表",
+      "widget": "「查看」按钮汇总 × 14",
+      "action": "逐一点击并关闭",
+      "expected": "每张表都能打开详情并关闭",
+      "actual": "成功 5/14；失败 9 张: ads_key_metrics, ads_product_ranking, dwd_customer_profile, dws_daily_product, dws_daily_shop, ods_customers, ods_dirty_probe, ods_orders, tmp_uitest_agent5_csv",
+      "verdict": "缺陷",
+      "evidence": "遍历测试（失败项含重试与相关接口状态）"
+    },
+    {
+      "ts": "2026-10-15T02:39:30.215Z",
+      "page": "指标",
+      "widget": "进入 Tab",
+      "action": "点击侧栏「指标探查」",
+      "expected": "指标下拉含 7 项",
+      "actual": "7 项: 成交总额 (gmv) / 订单量 (order_count) / 转化率 (conversion_rate) / 客单价 (avg_order_value) / 退货率 (return_rate) / 独立访客数 (traffic_uv) / 页面浏览量 (traffic_pv)",
+      "verdict": "正常",
+      "evidence": "DOM"
+    },
+    {
+      "ts": "2026-10-15T02:39:30.559Z",
+      "page": "指标",
+      "widget": "查询按钮（gmv）",
+      "action": "选择指标=gmv, 粒度=day，点击「查询」",
+      "expected": "摘要卡更新 + 图表渲染",
+      "actual": "HTTP 200；摘要=最新值=3.60万 | 平均值=3.60万 | 最大值=5.35万 | 最小值=2.05万；canvas=1；出图耗时≈206ms",
+      "verdict": "正常",
+      "evidence": "agent5-04-p06-local-metrics-gmv.png"
+    },
+    {
+      "ts": "2026-10-15T02:39:30.601Z",
+      "page": "指标",
+      "widget": "查询按钮（order_count）",
+      "action": "选择指标=order_count, 粒度=day，点击「查询」",
+      "expected": "摘要卡更新 + 图表渲染",
+      "actual": "HTTP 200；摘要=最新值=133 | 平均值=126.99 | 最大值=160 | 最小值=80；canvas=1；出图耗时≈36ms",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:30.639Z",
+      "page": "指标",
+      "widget": "查询按钮（conversion_rate）",
+      "action": "选择指标=conversion_rate, 粒度=day，点击「查询」",
+      "expected": "摘要卡更新 + 图表渲染",
+      "actual": "HTTP 200；摘要=最新值=0.44% | 平均值=0.00% | 最大值=1.00% | 最小值=0.00%；canvas=1；出图耗时≈35ms",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:30.668Z",
+      "page": "指标",
+      "widget": "查询按钮（avg_order_value）",
+      "action": "选择指标=avg_order_value, 粒度=day，点击「查询」",
+      "expected": "摘要卡更新 + 图表渲染",
+      "actual": "HTTP 200；摘要=最新值=270.36 | 平均值=283.16 | 最大值=347.37 | 最小值=232.61；canvas=1；出图耗时≈27ms",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:30.709Z",
+      "page": "指标",
+      "widget": "查询按钮（return_rate）",
+      "action": "选择指标=return_rate, 粒度=week，点击「查询」",
+      "expected": "摘要卡更新 + 图表渲染",
+      "actual": "HTTP 200；摘要=最新值=16.75% | 平均值=17.00% | 最大值=20.00% | 最小值=13.00%；canvas=1；出图耗时≈35ms",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:30.739Z",
+      "page": "指标",
+      "widget": "查询按钮（traffic_uv）",
+      "action": "选择指标=traffic_uv, 粒度=day，点击「查询」",
+      "expected": "摘要卡更新 + 图表渲染",
+      "actual": "HTTP 200；摘要=最新值=6.63万 | 平均值=17.56万 | 最大值=20.43万 | 最小值=6.63万；canvas=1；出图耗时≈27ms",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:39:30.816Z",
+      "page": "指标",
+      "widget": "查询按钮（traffic_pv）",
+      "action": "选择指标=traffic_pv, 粒度=month，点击「查询」",
+      "expected": "摘要卡更新 + 图表渲染",
+      "actual": "HTTP 200；摘要=最新值=278.97万 | 平均值=285.38万 | 最大值=292.82万 | 最小值=278.97万；canvas=1；出图耗时≈28ms",
+      "verdict": "正常",
+      "evidence": "agent5-05-p06-local-metrics-pv-month.png"
+    },
+    {
+      "ts": "2026-10-15T02:39:30.817Z",
+      "page": "指标",
+      "widget": "7 项指标逐一查询",
+      "action": "遍历 gmv/order_count/conversion_rate/avg_order_value/return_rate/traffic_uv/traffic_pv",
+      "expected": "7 项全部可查询且出图",
+      "actual": "成功 7/7",
+      "verdict": "正常",
+      "evidence": "遍历测试"
+    },
+    {
+      "ts": "2026-10-15T02:39:31.783Z",
+      "page": "质量",
+      "widget": "「运行质量检查」按钮",
+      "action": "点击运行",
+      "expected": "状态=检查完成，汇总卡与明细更新",
+      "actual": "HTTP 200；status=\"检查完成 - 148 项\"；汇总=健康评分=29 | 通过=135 | 警告=1 | 失败=12；明细行=148；toast=质量检查完成: 135 通过, 1 警告, 12 失败",
+      "verdict": "正常",
+      "evidence": "agent5-06-p06-local-quality-results.png"
+    },
+    {
+      "ts": "2026-10-15T02:39:32.754Z",
+      "page": "血缘",
+      "widget": "进入 Tab",
+      "action": "点击侧栏「数据血缘」",
+      "expected": "渲染出图谱（节点+连线+明细表）",
+      "actual": "节点rect=11，连线path=11，SVG高=718，明细行=11；节点文本=ODS,DWD,DWS,ADS,customers,orders,products,stores,traffic,customer profile",
+      "verdict": "正常",
+      "evidence": "agent5-07-p06-local-lineage.png"
+    },
+    {
+      "ts": "2026-10-15T02:39:32.756Z",
+      "page": "血缘",
+      "widget": "图可交互性",
+      "action": "检查节点是否有点击/悬停交互",
+      "expected": "现状为静态渲染（只读展示）",
+      "actual": "首节点 cursor/onclick = auto",
+      "verdict": "正常",
+      "evidence": "无 click 处理器 — 静态图，非缺陷但注明"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.245Z",
+      "page": "接入",
+      "widget": "进入 Tab",
+      "action": "点击侧栏「数据接入」",
+      "expected": "显示 CSV/JSON 上传区与日志",
+      "actual": "等待上传...",
+      "verdict": "正常",
+      "evidence": "agent5-08-p06-local-ingest-initial.png"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.267Z",
+      "page": "接入",
+      "widget": "CSV 拖拽区点击",
+      "action": "点击上传区",
+      "expected": "弹出文件选择器",
+      "actual": "filechooser 事件触发",
+      "verdict": "正常",
+      "evidence": "未实际上传"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.428Z",
+      "page": "接入",
+      "widget": "CSV 上传（tmp_uitest_agent5_csv）",
+      "action": "填表名+选层+选择CSV文件",
+      "expected": "上传成功并显示行数/列数",
+      "actual": "等待上传... [10:39:33] 开始上传: tmp_uitest_agent5.csv → tmp_uitest_agent5_csv (ODS) [10:39:33] ✓ 成功: 3 行, 4 列",
+      "verdict": "正常",
+      "evidence": "agent5-09-p06-local-ingest-csv-done.png"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.545Z",
+      "page": "接入",
+      "widget": "JSON 上传（tmp_uitest_agent5_json）",
+      "action": "填表名+选层+选择JSON文件",
+      "expected": "上传成功并显示行数/列数",
+      "actual": "等待上传... [10:39:33] 开始上传: tmp_uitest_agent5.csv → tmp_uitest_agent5_csv (ODS) [10:39:33] ✓ 成功: 3 行, 4 列 [10:39:33] 开始上传: tmp_uitest_agent5.json → tmp_uitest_agent5_json (DWD) [10:39:33] ✓ 成功: 3 行, 4 列",
+      "verdict": "正常",
+      "evidence": "agent5-10-p06-local-ingest-json-done.png"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.637Z",
+      "page": "接入",
+      "widget": "非法表名拒绝（tmp_uitest_bad name!）",
+      "action": "表名含空格/感叹号上传",
+      "expected": "被护栏拒绝并给出明确说明",
+      "actual": "log尾: 等待上传... [10:39:33] 开始上传: tmp_uitest_agent5.csv → tmp_uitest_agent5_csv (ODS) [10:39:33] ✓ 成功: 3 行, 4 列 [10:39:33] 开始上传: tmp_uitest_agent5.json → tmp_uitest_agent5_json (DWD) [10:39:33] ✓ 成功: 3 行, 4 列 [10:39:33] 开始上传: tmp_uitest_agent5.json → tmp_uitest_bad name! (DWD) [10:39:33] ✗ 失败: 非法表名：'tmp_uitest_bad name!'。只允许字母、数字与下划线，须以字母或下划线开头，最长 64 字符；toast: 质量检查完成: 135 通过, 1 警告, 12 失败\n上传成功: 3 行导入 tmp_uitest_agent5_csv\n上传成功: 3 行导入 tmp_uitest_agent5_json\n上传失败: 非法表名：'tmp_uitest_bad name!'。只允许字母、数字与下划线，须以字母或下划线开头，最长 64 字符",
+      "verdict": "正常",
+      "evidence": "agent5-11-p06-local-ingest-invalid-rejected.png"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.735Z",
+      "page": "数据表",
+      "widget": "临时表可见性",
+      "action": "上传后回表列表查看（DOM + API 双核对）",
+      "expected": "两张 tmp 表在列，非法名未建表",
+      "actual": "DOM: {\"hasCsv\":true,\"hasJson\":true,\"hasBad\":false,\"totalRows\":14} / API: {\"hasCsv\":true,\"hasJson\":true,\"hasBad\":false,\"total\":14}",
+      "verdict": "正常",
+      "evidence": "agent5-12-p06-local-tables-tmp-visible.png"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.741Z",
+      "page": "查询(API)",
+      "widget": "合法 SELECT",
+      "action": "POST /api/v1/query 跑 SELECT COUNT/SUM",
+      "expected": "返回结果集",
+      "actual": "{\"status\":200,\"code\":0,\"msg\":\"success\",\"sample\":\"{\\\"rows\\\":[{\\\"cnt\\\":92,\\\"gmv\\\":3312522.61}],\\\"count\\\":1,\\\"truncated\\\":false}\"}",
+      "verdict": "正常",
+      "evidence": "无 UI 入口，接口直调（页面无「查询」Tab）"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.745Z",
+      "page": "查询(API)",
+      "widget": "护栏-多语句夹带 DROP",
+      "action": "POST /api/v1/query 载荷 \"SELECT 1; DROP TABLE tmp_uitest_guard_probe\"",
+      "expected": "被拦截且说明清楚",
+      "actual": "{\"status\":400,\"code\":1,\"msg\":\"不允许多条语句：请用分号分隔的单条查询\",\"sample\":null}",
+      "verdict": "正常",
+      "evidence": "无害载荷"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.748Z",
+      "page": "查询(API)",
+      "widget": "护栏-读文件函数",
+      "action": "POST /api/v1/query 载荷 SELECT * FROM read_text('.env')",
+      "expected": "被拦截",
+      "actual": "{\"status\":400,\"code\":1,\"msg\":\"该语句包含不被允许的 DuckDB 能力：read_text\",\"sample\":null}",
+      "verdict": "正常",
+      "evidence": "无害载荷"
+    },
+    {
+      "ts": "2026-10-15T02:39:33.756Z",
+      "page": "查询(API)",
+      "widget": "确认未建表",
+      "action": "GET /api/v1/tables 检查 tmp_uitest_guard_probe",
+      "expected": "载荷未实际建表/删表",
+      "actual": "{\"hasProbe\":false,\"total\":14}",
+      "verdict": "正常",
+      "evidence": "护栏验证"
+    }
+  ],
+  "consoleMsgs": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/favicon.ico"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ads_key_metrics Error: Table 'ads_key_metrics' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ads_key_metrics SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ads_key_metrics/preview?limit=50 Error: Table 'ads_key_metrics' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ads_product_ranking Error: Table 'ads_product_ranking' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ads_product_ranking/preview?limit=50 Error: Table 'ads_product_ranking' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dwd_customer_profile/preview?limit=50 Error: Table 'dwd_customer_profile' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dwd_customer_profile/preview?limit=50 SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_order_detail"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dwd_order_detail SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dws_daily_product Error: Table 'dws_daily_product' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dws_daily_product Error: Table 'dws_daily_product' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dws_daily_shop/preview?limit=50 SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/dws_daily_shop/preview?limit=50 Error: Table 'dws_daily_shop' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_customers/preview?limit=50 SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_customers/preview?limit=50 Error: Table 'ods_customers' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_dirty_probe"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_dirty_probe SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_dirty_probe/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_dirty_probe/preview?limit=50 Error: Table 'ods_dirty_probe' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_orders Error: Table 'ods_orders' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_orders SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_products/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_products/preview?limit=50 Error: Table 'ods_products' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_stores"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/ods_stores SyntaxError: Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_csv"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/tmp_uitest_agent5_csv Error: Table 'tmp_uitest_agent5_csv' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 0)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_csv/preview?limit=50"
+    },
+    {
+      "type": "error",
+      "text": "API error: /tables/tmp_uitest_agent5_csv/preview?limit=50 Error: Table 'tmp_uitest_agent5_csv' not found\n    at api (http://127.0.0.1:8060/:392:32)\n    at async Promise.all (index 1)\n    at async showTableDetail (http://127.0.0.1:8060/:541:29)",
+      "url": "http://127.0.0.1:8060/"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "url": "http://127.0.0.1:8060/api/v1/ingest/json?table_name=tmp_uitest_bad%20name!&layer=DWD"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "url": "http://127.0.0.1:8060/api/v1/query"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "url": "http://127.0.0.1:8060/api/v1/query"
+    }
+  ],
+  "netFails": [],
+  "apiDumps": [
+    {
+      "url": "http://127.0.0.1:8060/api/v1/dashboard",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_count\":14,\"total_rows\":32422,\"layers\":{\"ADS\":2,\"DWD\":2,\"DWS\":2,\"ODS\":6},\"health\":{\"score\":29,\"total_checks\":148,\"passed\":135,\"warned\":1,\"failed\":12},\"metrics\":[{\"code\":\"gmv\",\"name\":\"成交总额\",\"unit\":\"元\",\"latest\":35958.37,\"avg\":36005.68,\"trend\":0.3387},{\"code\":\"order_count\",\"name\":\"订单量\",\"unit\":\"单\",\"latest\":133,\"avg\":126.99,\"trend\":0.2547},{\"code\":\"conversion_rate\",\"name\":\"转化率\",\"unit\":\"%\",\"latest\":0.0044,\"avg\":0,\"trend\":0.4667},{\"code\":\"avg_order_value\",\"name\":\"客单价\",\"unit\":\"元\",\"latest\":270.36,\"avg\":283.16,\"trend\":0.0669},{\"code\":\"return_rate\",\"name\":\"退货率\",\"unit\":\"%\",\"latest\":0.203,\"avg\":0.17,\"trend\":0.5367},{\"code\":\"traffic_uv\",\"name\":\"独立访客数\",\"unit\":\"人\",\"latest\":30410,\"avg\":26728.45,\"trend\":-0.1517},{\"code\":\"traffic_pv\",\"name\":\"页面浏览量\",\"unit\":\"次\",\"latest\":96864,\"avg\":93058.33,\"trend\":-0.2812}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":[{\"table_name\":\"ads_key_metrics\",\"display_name\":\"核心经营指标\",\"layer\":\"ADS\",\"description\":\"全局核心指标：GMV/订单量/转化率/客单价/退货率/流量\",\"row_count\":92,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.509302\"},{\"table_name\":\"ads_product_ranking\",\"display_name\":\"商品排行榜\",\"layer\":\"ADS\",\"description\":\"商品GMV排行榜，含日度排名\",\"row_count\":1104,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.517911\"},{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":2000,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.522364\"},{\"table_name\":\"dwd_order_detail\",\"display_name\":\"订单明细宽表\",\"layer\":\"DWD\",\"description\":\"订单明细宽表，关联店铺/商品/客户维度\",\"row_count\":11683,\"column_count\":16,\"created_at\":\"2026-10-12T14:55:46.525407\"},{\"table_name\":\"tmp_uitest_agent5_json\",\"display_name\":\"tmp_uitest_agent5_json\",\"layer\":\"DWD\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:17.221172\"},{\"table_name\":\"dws_daily_product\",\"display_name\":\"商品日度汇总\",\"layer\":\"DWS\",\"description\":\"按商品+日期聚合的销售指标\",\"row_count\":1104,\"column_count\":7,\"created_at\":\"2026-10-12T14:55:46.529267\"},{\"table_name\":\"dws_daily_shop\",\"display_name\":\"店铺日度汇总\",\"layer\":\"DWS\",\"description\":\"按店铺+日期聚合的经营指标\",\"row_count\":460,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.533470\"},{\"table_name\":\"ods_customers\",\"display_name\":\"客户主数据\",\"layer\":\"ODS\",\"description\":\"客户主数据，包含昵称、性别、省份、注册日期\",\"row_count\":2000,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.536492\"},{\"table_name\":\"ods_dirty_probe\",\"display_name\":\"脏数据探针\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":4,\"column_count\":4,\"created_at\":\"2026-10-14T08:34:38.504299\"},{\"table_name\":\"ods_orders\",\"display_name\":\"原始订单表\",\"layer\":\"ODS\",\"description\":\"各渠道原始订单数据，包含订单号、客户、商品、金额、状态等\",\"row_count\":11683,\"column_count\":11,\"created_at\":\"2026-10-12T14:55:46.539995\"},{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.545131\"},{\"table_name\":\"ods_stores\",\"display_name\":\"店铺主数据\",\"layer\":\"ODS\",\"description\":\"店铺主数据，包含店铺名称、平台、经营品类\",\"row_count\":5,\"column_count\":5,\"created_at\":\"2026-10-12T14:55:46.549035\"},{\"table_name\":\"ods_traffic\",\"display_name\":\"流量日志表\",\"layer\":\"ODS\",\"description\":\"各渠道每日流量数据，UV/PV/跳出率\",\"row_count\":2269,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.552756\"},{\"table_name\":\"tmp_uitest_agent5_csv\",\"display_name\":\"tmp_uitest_agent5_csv\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:16.903692\"}],\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ads_key_metrics' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ads_key_metrics\",\"rows\":[{\"stat_date\":\"2024-07-01\",\"gmv\":28428.45,\"order_count\":93,\"paying_customers\":92,\"avg_order_value\":305.68,\"return_rate\":0.129,\"uv\":24730,\"pv\":94057,\"conversion_rate\":0.0037},{\"stat_date\":\"2024-07-02\",\"gmv\":38194.53,\"order_count\":125,\"paying_customers\":124,\"avg_order_value\":305.56,\"return_rate\":0.136,\"uv\":20857,\"pv\":66488,\"conversion_rate\":0.0059},{\"stat_date\":\"2024-07-03\",\"gmv\":41075.67,\"order_count\":152,\"paying_customers\":151,\"avg_order_value\":270.23,\"return_rate\":0.1842,\"uv\":22193,\"pv\":79112,\"conversion_rate\":0.0068},{\"stat_date\":\"2024-07-04\",\"gmv\":20531.64,\"order_count\":87,\"paying_customers\":86,\"avg_order_value\":236,\"return_rate\":0.1494,\"uv\":23585,\"pv\":92793,\"conversion_rate\":0.0036},{\"stat_date\":\"2024-07-05\",\"gmv\":41562.61,\"order_count\":138,\"paying_customers\":138,\"avg_order_value\":301.18,\"return_rate\":0.1304,\"uv\":22459,\"pv\":80288,\"conversion_rate\":0.0061},{\"stat_date\":\"2024-07-06\",\"gmv\":41878.75,\"order_count\":160,\"paying_customers\":158,\"avg_order_value\":261.74,\"return_rate\":0.1125,\"uv\":32189,\"pv\":114472,\"conversion_rate\":0.0049},{\"stat_date\":\"2024-07-07\",\"gmv\":45070.4,\"order_count\":160,\"paying_customers\":160,\"avg_order_value\":281.69,\"return_rate\":0.2063,\"uv\":40758,\"pv\":139815,\"conversion_rate\":0.0039},{\"stat_date\":\"2024-07-08\",\"gmv\":39214.94,\"order_count\":129,\"paying_customers\":128,\"avg_order_value\":303.99,\"return_rate\":0.2171,\"uv\":25140,\"pv\":77385,\"conversion_rate\":0.0051},{\"stat_date\":\"2024-07-09\",\"gmv\":20823.49,\"order_count\":80,\"paying_customers\":80,\"avg_order_value\":260.29,\"return_rate\":0.1375,\"uv\":30842,\"pv\":113921,\"conversion_rate\":0.0026},{\"stat_date\":\"2024-07-10\",\"gmv\":36955.79,\"order_count\":135,\"paying_customers\":135,\"avg_order_value\":273.75,\"return_rate\":0.2148,\"uv\":17918,\"pv\":60692,\"conversion_rate\":0.0075},{\"stat_date\":\"2024-07-11\",\"gmv\":26353.13,\"order_count\":100,\"paying_customers\":100,\"avg_order_value\":263.53,\"return_rate\":0.15,\"uv\":25706,\"pv\":88489,\"conversion_rate\":0.0039},{\"stat_date\":\"2024-07-12\",\"gmv\":44018.35,\"order_count\":138,\"paying_customers\":137,\"avg_order_value\":318.97,\"return_rate\":0.2536,\"uv\":24806,\"pv\":90511,\"conversion_rate\":0.0055},{\"stat_date\":\"2024-07-13\",\"gmv\":35101.65,\"order_count\":144,\"paying_customers\":144,\"avg_order_value\":243.76,\"return_rate\":0.1944,\"uv\":25368,\"pv\":101121,\"conversion_rate\":0.0057},{\"stat_date\":\"2024-07-14\",\"gmv\":43980.85,\"order_count\":160,\"paying_customers\":158,\"avg_order_value\":274.88,\"return_rate\":0.15,\"uv\":35222,\"pv\":119865,\"conversion_rate\":0.0045},{\"stat_date\":\"2024-07-15\",\"gmv\":43074.1,\"order_count\":124,\"paying_customers\":123,\"avg_order_value\":347.37,\"return_rate\":0.2419,\"uv\":30864,\"pv\":115657,\"conversion_rate\":0.004},{\"stat_date\":\"2024-07-16\",\"gmv\":36092.21,\"order_count\":134,\"paying_customers\":133,\"avg_order_value\":269.34,\"return_rate\":0.1343,\"uv\":29000,\"pv\":93844,\"conversion_rate\":0.0046},{\"stat_date\":\"2024-07-17\",\"gmv\":40752.05,\"order_count\":142,\"paying_customers\":141,\"avg_order_value\":286.99,\"return_rate\":0.1338,\"uv\":21432,\"pv\":77151,\"conversion_rate\":0.0066},{\"stat_date\":\"2024-07-18\",\"gmv\":31805.85,\"order_count\":106,\"paying_customers\":106,\"avg_order_value\":300.06,\"return_rate\":0.1132,\"uv\":24389,\"pv\":85929,\"conversion_rate\":0.0043},{\"stat_date\":\"2024-07-19\",\"gmv\":35197.22,\"order_count\":125,\"paying_customers\":124,\"avg_order_value\":281.58,\"return_rate\":0.168,\"uv\":26285,\"pv\":85015,\"conversion_rate\":0.0047},{\"stat_date\":\"2024-07-20\",\"gmv\":41796.32,\"order_count\":160,\"paying_customers\":158,\"avg_order_value\":261.23,\"return_rate\":0.1688,\"uv\":28844,\"pv\":109118,\"conversion_rate\":0.0055},{\"stat_date\":\"2024-07-21\",\"gmv\":45465.76,\"order_count\":160,\"paying_customers\":159,\"avg_order_value\":284.16,\"return_rate\":0.1438,\"uv\":21269,\"pv\":81260,\"conversion_rate\":0.0075},{\"stat_date\":\"2024-07-22\",\"gmv\":32565.67,\"order_count\":140,\"paying_customers\":139,\"avg_order_value\":232.61,\"return_rate\":0.15,\"uv\":22314,\"pv\":70983,\"conversion_rate\":0.0062},{\"stat_date\":\"2024-07-23\",\"gmv\":38179.27,\"order_count\":127,\"paying_customers\":125,\"avg_order_value\":300.62,\"return_rate\":0.126,\"uv\":32018,\"pv\":113704,\"conversion_rate\":0.0039},{\"stat_date\":\"2024-07-24\",\"gmv\":25940.74,\"order_count\":83,\"paying_customers\":82,\"avg_order_value\":312.54,\"return_rate\":0.1325,\"uv\":26575,\"pv\":88909,\"conversion_rate\":0.0031},{\"stat_date\":\"2024-07-25\",\"gmv\":40830.78,\"order_count\":128,\"paying_customers\":128,\"avg_order_value\":318.99,\"return_rate\":0.1719,\"uv\":21801,\"pv\":73490,\"conversion_rate\":0.0059},{\"stat_date\":\"2024-07-26\",\"gmv\":22611.12,\"order_count\":86,\"paying_customers\":86,\"avg_order_value\":262.92,\"return_rate\":0.1512,\"uv\":27409,\"pv\":90025,\"conversion_rate\":0.0031},{\"stat_date\":\"2024-07-27\",\"gmv\":34867.53,\"order_count\":123,\"paying_customers\":120,\"avg_order_value\":283.48,\"return_rate\":0.1301,\"uv\":31100,\"pv\":94648,\"conversion_rate\":0.0039},{\"stat_date\":\"2024-07-28\",\"gmv\":40067.18,\"order_count\":143,\"paying_customers\":143,\"avg_order_value\":280.19,\"return_rate\":0.2028,\"uv\":27716,\"pv\":98065,\"conversion_rate\":0.0052},{\"stat_date\":\"2024-07-29\",\"gmv\":4"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_key_metrics/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ads_key_metrics' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ads_product_ranking' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ads_product_ranking\",\"rows\":[{\"stat_date\":\"2024-07-27\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"gmv\":5764.13,\"order_count\":8,\"quantity_sold\":20,\"return_rate\":0.125,\"rank_no\":1},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"gmv\":4061.15,\"order_count\":16,\"quantity_sold\":33,\"return_rate\":0.125,\"rank_no\":2},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"gmv\":3842.54,\"order_count\":11,\"quantity_sold\":28,\"return_rate\":0.0909,\"rank_no\":3},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"gmv\":3331.73,\"order_count\":11,\"quantity_sold\":23,\"return_rate\":0.0909,\"rank_no\":4},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"gmv\":3296.19,\"order_count\":11,\"quantity_sold\":28,\"return_rate\":0.0909,\"rank_no\":5},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"gmv\":3240.86,\"order_count\":11,\"quantity_sold\":21,\"return_rate\":0.0909,\"rank_no\":6},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P001\",\"product_name\":\"烟酰胺亮肤精华液 30ml\",\"gmv\":3017.71,\"order_count\":7,\"quantity_sold\":16,\"return_rate\":0.2857,\"rank_no\":7},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"gmv\":2916.49,\"order_count\":12,\"quantity_sold\":35,\"return_rate\":0,\"rank_no\":8},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"gmv\":2406.49,\"order_count\":14,\"quantity_sold\":32,\"return_rate\":0.2143,\"rank_no\":9},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 150ml\",\"gmv\":1553.66,\"order_count\":9,\"quantity_sold\":23,\"return_rate\":0,\"rank_no\":10},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"gmv\":767,\"order_count\":6,\"quantity_sold\":13,\"return_rate\":0.3333,\"rank_no\":11},{\"stat_date\":\"2024-07-27\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"gmv\":669.58,\"order_count\":7,\"quantity_sold\":16,\"return_rate\":0.2857,\"rank_no\":12},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"gmv\":8766.88,\"order_count\":12,\"quantity_sold\":30,\"return_rate\":0.1667,\"rank_no\":1},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P001\",\"product_name\":\"烟酰胺亮肤精华液 30ml\",\"gmv\":4626.14,\"order_count\":11,\"quantity_sold\":24,\"return_rate\":0.0909,\"rank_no\":2},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"gmv\":4615.76,\"order_count\":15,\"quantity_sold\":30,\"return_rate\":0.3333,\"rank_no\":3},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"gmv\":4302.52,\"order_count\":13,\"quantity_sold\":26,\"return_rate\":0.2308,\"rank_no\":4},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"gmv\":4170.6,\"order_count\":17,\"quantity_sold\":30,\"return_rate\":0.0588,\"rank_no\":5},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"gmv\":2987.21,\"order_count\":14,\"quantity_sold\":26,\"return_rate\":0.2143,\"rank_no\":6},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"gmv\":2809.3,\"order_count\":16,\"quantity_sold\":36,\"return_rate\":0.1875,\"rank_no\":7},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"gmv\":2285,\"order_count\":8,\"quantity_sold\":27,\"return_rate\":0.25,\"rank_no\":8},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"gmv\":2244.76,\"order_count\":7,\"quantity_sold\":19,\"return_rate\":0.1429,\"rank_no\":9},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"gmv\":1238.86,\"order_count\":11,\"quantity_sold\":26,\"return_rate\":0.1818,\"rank_no\":10},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"gmv\":1014.11,\"order_count\":9,\"quantity_sold\":18,\"return_rate\":0.4444,\"rank_no\":11},{\"stat_date\":\"2024-07-28\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 150ml\",\"gmv\":1006.04,\"order_count\":10,\"quantity_sold\":15,\"return_rate\":0.2,\"rank_no\":12},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P001\",\"product_name\":\"烟酰胺亮肤精华液 30ml\",\"gmv\":8989.57,\"order_count\":18,\"quantity_sold\":49,\"return_rate\":0.1667,\"rank_no\":1},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"gmv\":8589.6,\"order_count\":9,\"quantity_sold\":31,\"return_rate\":0,\"rank_no\":2},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"gmv\":5322.8,\"order_count\":14,\"quantity_sold\":34,\"return_rate\":0.2143,\"rank_no\":3},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"gmv\":4940.97,\"order_count\":14,\"quantity_sold\":34,\"return_rate\":0.2143,\"rank_no\":4},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"gmv\":3621.24,\"order_count\":11,\"quantity_sold\":25,\"return_rate\":0.1818,\"rank_no\":5},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"gmv\":2755.79,\"order_count\":11,\"quantity_sold\":22,\"return_rate\":0.0909,\"rank_no\":6},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 150ml\",\"gmv\":2528.1,\"order_count\":17,\"quantity_sold\":40,\"return_rate\":0,\"rank_no\":7},{\"stat_date\":\"2024-09-08\",\"pr"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ads_product_ranking' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ads_product_ranking",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ads_product_ranking\",\"display_name\":\"商品排行榜\",\"layer\":\"ADS\",\"description\":\"商品GMV排行榜，含日度排名\",\"row_count\":1104,\"columns\":[{\"name\":\"stat_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"quantity_sold\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"return_rate\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"rank_no\",\"type\":\"BIGINT\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'dwd_customer_profile' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":2000,\"columns\":[{\"name\":\"customer_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"nickname\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"gender\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"province\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"register_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"total_orders\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"total_spent\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"avg_order_value\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"last_order_date\",\"type\":\"DATE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile/preview?limit=50",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_customer_profile",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":2000,\"columns\":[{\"name\":\"nickname\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"gender\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"province\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"register_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"total_orders\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"total_spent\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"avg_order_value\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"last_order_date\",\"type\":\"DATE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_order_detail",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_order_detail/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_order_detail\",\"rows\":[{\"order_id\":\"OD0008194\",\"customer_id\":\"U00316\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"category_name\":\"防晒霜\",\"quantity\":3,\"unit_price\":109.69,\"total_amount\":377.31,\"cost\":38,\"profit\":263.31,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"陕西\"},{\"order_id\":\"OD0008195\",\"customer_id\":\"U01074\",\"store_id\":\"S003\",\"store_name\":\"示例抖音旗舰店\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"category_name\":\"面膜\",\"quantity\":2,\"unit_price\":89,\"total_amount\":161.72,\"cost\":22,\"profit\":117.72,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"四川\"},{\"order_id\":\"OD0008196\",\"customer_id\":\"U00227\",\"store_id\":\"S001\",\"store_name\":\"示例旗舰店\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"category_name\":\"收纳盒\",\"quantity\":1,\"unit_price\":59,\"total_amount\":54.7,\"cost\":15,\"profit\":39.7,\"payment_method\":\"微信支付\",\"status\":\"已取消\",\"order_date\":\"2024-09-04\",\"province\":\"安徽\"},{\"order_id\":\"OD0008197\",\"customer_id\":\"U00609\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"category_name\":\"面膜\",\"quantity\":1,\"unit_price\":89,\"total_amount\":89,\"cost\":22,\"profit\":67,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"河南\"},{\"order_id\":\"OD0008198\",\"customer_id\":\"U00522\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"category_name\":\"面膜\",\"quantity\":2,\"unit_price\":159,\"total_amount\":318,\"cost\":40,\"profit\":238,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"湖南\"},{\"order_id\":\"OD0008199\",\"customer_id\":\"U00118\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"category_name\":\"面膜\",\"quantity\":2,\"unit_price\":89,\"total_amount\":178,\"cost\":22,\"profit\":134,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"安徽\"},{\"order_id\":\"OD0008200\",\"customer_id\":\"U01555\",\"store_id\":\"S001\",\"store_name\":\"示例旗舰店\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"category_name\":\"防晒霜\",\"quantity\":2,\"unit_price\":105.87,\"total_amount\":298,\"cost\":38,\"profit\":222,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"北京\"},{\"order_id\":\"OD0008201\",\"customer_id\":\"U01271\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"category_name\":\"洁面乳\",\"quantity\":1,\"unit_price\":79,\"total_amount\":79,\"cost\":18,\"profit\":61,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"重庆\"},{\"order_id\":\"OD0008202\",\"customer_id\":\"U01659\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"category_name\":\"防晒霜\",\"quantity\":2,\"unit_price\":119,\"total_amount\":238,\"cost\":28,\"profit\":182,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"福建\"},{\"order_id\":\"OD0008203\",\"customer_id\":\"U01874\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"category_name\":\"面部精华\",\"quantity\":1,\"unit_price\":299,\"total_amount\":299,\"cost\":78,\"profit\":221,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"湖南\"},{\"order_id\":\"OD0008204\",\"customer_id\":\"U00289\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"category_name\":\"身体乳\",\"quantity\":2,\"unit_price\":129,\"total_amount\":258,\"cost\":32,\"profit\":194,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"山东\"},{\"order_id\":\"OD0008205\",\"customer_id\":\"U00186\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"category_name\":\"面膜\",\"quantity\":2,\"unit_price\":89,\"total_amount\":163.11,\"cost\":22,\"profit\":119.11,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"湖北\"},{\"order_id\":\"OD0008206\",\"customer_id\":\"U00580\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"category_name\":\"洁面乳\",\"quantity\":1,\"unit_price\":49,\"total_amount\":49,\"cost\":12,\"profit\":37,\"payment_method\":\"京东白条\",\"status\":\"已取消\",\"order_date\":\"2024-09-04\",\"province\":\"浙江\"},{\"order_id\":\"OD0008207\",\"customer_id\":\"U00999\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"category_name\":\"身体乳\",\"quantity\":1,\"unit_price\":129,\"total_amount\":129,\"cost\":32,\"profit\":97,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"天津\"},{\"order_id\":\"OD0008208\",\"customer_id\":\"U00901\",\"store_id\":\"S001\",\"store_name\":\"示例旗舰店\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"category_name\":\"防晒霜\",\"quantity\":1,\"unit_price\":119,\"total_amount\":119,\"cost\":28,\"profit\":91,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"湖南\"},{\"order_id\":\"OD0008209\",\"customer_id\":\"U01908\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"category_name\":\"香薰蜡烛\",\"quantity\":2,\"unit_price\":168,\"total_amount\":336,\"cost\":45,\"profit\":246,\"pa"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_order_detail/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_order_detail\",\"rows\":[{\"order_id\":\"OD0008193\",\"customer_id\":\"U01495\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"category_name\":\"洁面乳\",\"quantity\":3,\"unit_price\":79,\"total_amount\":199.7,\"cost\":18,\"profit\":145.7,\"payment_method\":\"微信支付\",\"status\":\"已取消\",\"order_date\":\"2024-09-04\",\"province\":\"湖南\"},{\"order_id\":\"OD0008194\",\"customer_id\":\"U00316\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"category_name\":\"防晒霜\",\"quantity\":3,\"unit_price\":109.69,\"total_amount\":377.31,\"cost\":38,\"profit\":263.31,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"陕西\"},{\"order_id\":\"OD0008195\",\"customer_id\":\"U01074\",\"store_id\":\"S003\",\"store_name\":\"示例抖音旗舰店\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"category_name\":\"面膜\",\"quantity\":2,\"unit_price\":89,\"total_amount\":161.72,\"cost\":22,\"profit\":117.72,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"四川\"},{\"order_id\":\"OD0008196\",\"customer_id\":\"U00227\",\"store_id\":\"S001\",\"store_name\":\"示例旗舰店\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"category_name\":\"收纳盒\",\"quantity\":1,\"unit_price\":59,\"total_amount\":54.7,\"cost\":15,\"profit\":39.7,\"payment_method\":\"微信支付\",\"status\":\"已取消\",\"order_date\":\"2024-09-04\",\"province\":\"安徽\"},{\"order_id\":\"OD0008197\",\"customer_id\":\"U00609\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"category_name\":\"面膜\",\"quantity\":1,\"unit_price\":89,\"total_amount\":89,\"cost\":22,\"profit\":67,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"河南\"},{\"order_id\":\"OD0008198\",\"customer_id\":\"U00522\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"category_name\":\"面膜\",\"quantity\":2,\"unit_price\":159,\"total_amount\":318,\"cost\":40,\"profit\":238,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"湖南\"},{\"order_id\":\"OD0008199\",\"customer_id\":\"U00118\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"category_name\":\"面膜\",\"quantity\":2,\"unit_price\":89,\"total_amount\":178,\"cost\":22,\"profit\":134,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"安徽\"},{\"order_id\":\"OD0008200\",\"customer_id\":\"U01555\",\"store_id\":\"S001\",\"store_name\":\"示例旗舰店\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"category_name\":\"防晒霜\",\"quantity\":2,\"unit_price\":105.87,\"total_amount\":298,\"cost\":38,\"profit\":222,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"北京\"},{\"order_id\":\"OD0008201\",\"customer_id\":\"U01271\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"category_name\":\"洁面乳\",\"quantity\":1,\"unit_price\":79,\"total_amount\":79,\"cost\":18,\"profit\":61,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"重庆\"},{\"order_id\":\"OD0008202\",\"customer_id\":\"U01659\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"category_name\":\"防晒霜\",\"quantity\":2,\"unit_price\":119,\"total_amount\":238,\"cost\":28,\"profit\":182,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"福建\"},{\"order_id\":\"OD0008203\",\"customer_id\":\"U01874\",\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"category_name\":\"面部精华\",\"quantity\":1,\"unit_price\":299,\"total_amount\":299,\"cost\":78,\"profit\":221,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"湖南\"},{\"order_id\":\"OD0008204\",\"customer_id\":\"U00289\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"category_name\":\"身体乳\",\"quantity\":2,\"unit_price\":129,\"total_amount\":258,\"cost\":32,\"profit\":194,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"山东\"},{\"order_id\":\"OD0008205\",\"customer_id\":\"U00186\",\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"category_name\":\"面膜\",\"quantity\":2,\"unit_price\":89,\"total_amount\":163.11,\"cost\":22,\"profit\":119.11,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"湖北\"},{\"order_id\":\"OD0008206\",\"customer_id\":\"U00580\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"category_name\":\"洁面乳\",\"quantity\":1,\"unit_price\":49,\"total_amount\":49,\"cost\":12,\"profit\":37,\"payment_method\":\"京东白条\",\"status\":\"已取消\",\"order_date\":\"2024-09-04\",\"province\":\"浙江\"},{\"order_id\":\"OD0008207\",\"customer_id\":\"U00999\",\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"category_name\":\"身体乳\",\"quantity\":1,\"unit_price\":129,\"total_amount\":129,\"cost\":32,\"profit\":97,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04\",\"province\":\"天津\"},{\"order_id\":\"OD0008208\",\"customer_id\":\"U00901\",\"store_id\":\"S001\",\"store_name\":\"示例旗舰店\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"category_name\":\"防晒霜\",\"quantity\":1,\"unit_price\":119,\"total_amount\":119,\"cost\":28,\"profit\":"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dwd_order_detail",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dwd_order_detail\",\"display_name\":\"订单明细宽表\",\"layer\":\"DWD\",\"description\":\"订单明细宽表，关联店铺/商品/客户维度\",\"row_count\":11683,\"columns\":[{\"name\":\"order_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"customer_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"category_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"quantity\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"unit_price\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"total_amount\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"cost\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"profit\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"payment_method\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"status\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"order_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"province\",\"type\":\"VARCHAR\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_json/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_json\",\"rows\":[{\"sku\":\"UI-TEST-1\",\"name\":\"测试商品A\",\"price\":19.9,\"qty\":3},{\"sku\":\"UI-TEST-2\",\"name\":\"测试商品B\",\"price\":29.9,\"qty\":1},{\"sku\":\"UI-TEST-3\",\"name\":\"测试商品C\",\"price\":9.9,\"qty\":10}],\"count\":3},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_json",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_json\",\"display_name\":\"tmp_uitest_agent5_json\",\"layer\":\"DWD\",\"description\":\"\",\"row_count\":3,\"columns\":[{\"name\":\"sku\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"price\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"qty\",\"type\":\"INTEGER\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dws_daily_product\",\"rows\":[{\"stat_date\":\"2024-09-04\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"order_count\":14,\"quantity_sold\":28,\"gmv\":2163.88,\"return_count\":2},{\"stat_date\":\"2024-09-04\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"order_count\":9,\"quantity_sold\":21,\"gmv\":2892.52,\"return_count\":2},{\"stat_date\":\"2024-09-04\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"order_count\":13,\"quantity_sold\":29,\"gmv\":3314.39,\"return_count\":4},{\"stat_date\":\"2024-09-04\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"order_count\":10,\"quantity_sold\":20,\"gmv\":2463.9,\"return_count\":2},{\"stat_date\":\"2024-09-05\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"order_count\":11,\"quantity_sold\":31,\"gmv\":8794.13,\"return_count\":2},{\"stat_date\":\"2024-09-05\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"order_count\":16,\"quantity_sold\":41,\"gmv\":5191.6,\"return_count\":3},{\"stat_date\":\"2024-09-05\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"order_count\":14,\"quantity_sold\":41,\"gmv\":6091.82,\"return_count\":2},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"order_count\":7,\"quantity_sold\":20,\"gmv\":1611.44,\"return_count\":0},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"order_count\":14,\"quantity_sold\":35,\"gmv\":5326.16,\"return_count\":3},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 150ml\",\"order_count\":12,\"quantity_sold\":28,\"gmv\":1872.21,\"return_count\":2},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"order_count\":13,\"quantity_sold\":29,\"gmv\":2267.73,\"return_count\":4},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"order_count\":10,\"quantity_sold\":25,\"gmv\":2712.67,\"return_count\":2},{\"stat_date\":\"2024-09-07\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"order_count\":18,\"quantity_sold\":39,\"gmv\":4421.48,\"return_count\":1},{\"stat_date\":\"2024-09-07\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"order_count\":12,\"quantity_sold\":34,\"gmv\":1594.07,\"return_count\":1},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"order_count\":11,\"quantity_sold\":22,\"gmv\":2755.79,\"return_count\":1},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"order_count\":11,\"quantity_sold\":21,\"gmv\":1592.14,\"return_count\":2},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"order_count\":13,\"quantity_sold\":23,\"gmv\":1324.12,\"return_count\":2},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 150ml\",\"order_count\":17,\"quantity_sold\":40,\"gmv\":2528.1,\"return_count\":0},{\"stat_date\":\"2024-09-09\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"order_count\":10,\"quantity_sold\":14,\"gmv\":1766.22,\"return_count\":2},{\"stat_date\":\"2024-09-09\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"order_count\":9,\"quantity_sold\":17,\"gmv\":814.9,\"return_count\":2},{\"stat_date\":\"2024-09-10\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"order_count\":11,\"quantity_sold\":22,\"gmv\":1641.01,\"return_count\":2},{\"stat_date\":\"2024-09-10\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"order_count\":13,\"quantity_sold\":31,\"gmv\":8965.51,\"return_count\":1},{\"stat_date\":\"2024-09-11\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"order_count\":12,\"quantity_sold\":27,\"gmv\":1501.17,\"return_count\":3},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"order_count\":12,\"quantity_sold\":27,\"gmv\":4391.49,\"return_count\":2},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"order_count\":8,\"quantity_sold\":15,\"gmv\":667.57,\"return_count\":1},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 150ml\",\"order_count\":7,\"quantity_sold\":13,\"gmv\":844.08,\"return_count\":0},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P001\",\"product_name\":\"烟酰胺亮肤精华液 30ml\",\"order_count\":12,\"quantity_sold\":25,\"gmv\":4868.22,\"return_count\":3},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"order_count\":7,\"quantity_sold\":11,\"gmv\":3233.48,\"return_count\":1},{\"stat_date\":\"2024-09-13\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"order_count\":11,\"quantity_sold\":21,\"gmv\":3228.48,\"return_count\":1},{\"stat_date\":\"2024-09-13\",\"product_id\":\"P001\",\"product_name\":\"烟酰胺亮肤精华液 30ml\",\"order_count\":6,\"quantity_sold\":15,\"gmv\":2664,\"return_count\":2},{\"stat_date\":\"2024-09-13\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"order_count\":8,\"quantity_sold\":15,\"gmv\":2172.36,\"return_count\":2},{\"stat_date\":\"2024-09-13\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"order_count\":8,\"quantity_sold\":25,\"gmv\":3698.74,\"return_count\":1},{\"stat_date\":\"2024-09-14\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"order_count\":4,\"quantity_sold\":8,\"gmv\":1250.81,\"return_count\":0},{\"stat_date\":\"2024-09-14\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"order_count\":12,\"quantity_sold\":29,\"gmv\":1656.83,\"return_count\":1},{\"stat_date\":\"2024-09-14\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 15"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'dws_daily_product' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'dws_daily_product' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_product/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dws_daily_product\",\"rows\":[{\"stat_date\":\"2024-09-04\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"order_count\":14,\"quantity_sold\":28,\"gmv\":2163.88,\"return_count\":2},{\"stat_date\":\"2024-09-04\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"order_count\":9,\"quantity_sold\":21,\"gmv\":2892.52,\"return_count\":2},{\"stat_date\":\"2024-09-04\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"order_count\":13,\"quantity_sold\":29,\"gmv\":3314.39,\"return_count\":4},{\"stat_date\":\"2024-09-04\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"order_count\":10,\"quantity_sold\":20,\"gmv\":2463.9,\"return_count\":2},{\"stat_date\":\"2024-09-05\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"order_count\":11,\"quantity_sold\":31,\"gmv\":8794.13,\"return_count\":2},{\"stat_date\":\"2024-09-05\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"order_count\":16,\"quantity_sold\":41,\"gmv\":5191.6,\"return_count\":3},{\"stat_date\":\"2024-09-05\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"order_count\":14,\"quantity_sold\":41,\"gmv\":6091.82,\"return_count\":2},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P002\",\"product_name\":\"玻尿酸补水面膜 5片装\",\"order_count\":7,\"quantity_sold\":20,\"gmv\":1611.44,\"return_count\":0},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"order_count\":14,\"quantity_sold\":35,\"gmv\":5326.16,\"return_count\":3},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 150ml\",\"order_count\":12,\"quantity_sold\":28,\"gmv\":1872.21,\"return_count\":2},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"order_count\":13,\"quantity_sold\":29,\"gmv\":2267.73,\"return_count\":4},{\"stat_date\":\"2024-09-06\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"order_count\":10,\"quantity_sold\":25,\"gmv\":2712.67,\"return_count\":2},{\"stat_date\":\"2024-09-07\",\"product_id\":\"P011\",\"product_name\":\"物理防晒隔离霜 60ml\",\"order_count\":18,\"quantity_sold\":39,\"gmv\":4421.48,\"return_count\":1},{\"stat_date\":\"2024-09-07\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"order_count\":12,\"quantity_sold\":34,\"gmv\":1594.07,\"return_count\":1},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"order_count\":11,\"quantity_sold\":22,\"gmv\":2755.79,\"return_count\":1},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"order_count\":11,\"quantity_sold\":21,\"gmv\":1592.14,\"return_count\":2},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"order_count\":13,\"quantity_sold\":23,\"gmv\":1324.12,\"return_count\":2},{\"stat_date\":\"2024-09-08\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 150ml\",\"order_count\":17,\"quantity_sold\":40,\"gmv\":2528.1,\"return_count\":0},{\"stat_date\":\"2024-09-09\",\"product_id\":\"P005\",\"product_name\":\"神经酰胺身体乳 400ml\",\"order_count\":10,\"quantity_sold\":14,\"gmv\":1766.22,\"return_count\":2},{\"stat_date\":\"2024-09-09\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"order_count\":9,\"quantity_sold\":17,\"gmv\":814.9,\"return_count\":2},{\"stat_date\":\"2024-09-10\",\"product_id\":\"P004\",\"product_name\":\"氨基酸温和洁面乳 120ml\",\"order_count\":11,\"quantity_sold\":22,\"gmv\":1641.01,\"return_count\":2},{\"stat_date\":\"2024-09-10\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"order_count\":13,\"quantity_sold\":31,\"gmv\":8965.51,\"return_count\":1},{\"stat_date\":\"2024-09-11\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"order_count\":12,\"quantity_sold\":27,\"gmv\":1501.17,\"return_count\":3},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"order_count\":12,\"quantity_sold\":27,\"gmv\":4391.49,\"return_count\":2},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P012\",\"product_name\":\"茶树精油洁面皂 100g\",\"order_count\":8,\"quantity_sold\":15,\"gmv\":667.57,\"return_count\":1},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 150ml\",\"order_count\":7,\"quantity_sold\":13,\"gmv\":844.08,\"return_count\":0},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P001\",\"product_name\":\"烟酰胺亮肤精华液 30ml\",\"order_count\":12,\"quantity_sold\":25,\"gmv\":4868.22,\"return_count\":3},{\"stat_date\":\"2024-09-12\",\"product_id\":\"P009\",\"product_name\":\"维C美白精华 50ml\",\"order_count\":7,\"quantity_sold\":11,\"gmv\":3233.48,\"return_count\":1},{\"stat_date\":\"2024-09-13\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"order_count\":11,\"quantity_sold\":21,\"gmv\":3228.48,\"return_count\":1},{\"stat_date\":\"2024-09-13\",\"product_id\":\"P001\",\"product_name\":\"烟酰胺亮肤精华液 30ml\",\"order_count\":6,\"quantity_sold\":15,\"gmv\":2664,\"return_count\":2},{\"stat_date\":\"2024-09-13\",\"product_id\":\"P003\",\"product_name\":\"清透防晒乳 SPF50+\",\"order_count\":8,\"quantity_sold\":15,\"gmv\":2172.36,\"return_count\":2},{\"stat_date\":\"2024-09-13\",\"product_id\":\"P006\",\"product_name\":\"白茶香薰蜡烛 200g\",\"order_count\":8,\"quantity_sold\":25,\"gmv\":3698.74,\"return_count\":1},{\"stat_date\":\"2024-09-14\",\"product_id\":\"P010\",\"product_name\":\"胶原蛋白面膜 10片装\",\"order_count\":4,\"quantity_sold\":8,\"gmv\":1250.81,\"return_count\":0},{\"stat_date\":\"2024-09-14\",\"product_id\":\"P007\",\"product_name\":\"桌面收纳盒 三件套\",\"order_count\":12,\"quantity_sold\":29,\"gmv\":1656.83,\"return_count\":1},{\"stat_date\":\"2024-09-14\",\"product_id\":\"P008\",\"product_name\":\"玫瑰保湿喷雾 15"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop/preview?limit=50",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dws_daily_shop\",\"display_name\":\"店铺日度汇总\",\"layer\":\"DWS\",\"description\":\"按店铺+日期聚合的经营指标\",\"row_count\":460,\"columns\":[{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"paying_customers\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"avg_order_value\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"return_count\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"return_rate\",\"type\":\"DOUBLE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'dws_daily_shop' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/dws_daily_shop",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"dws_daily_shop\",\"display_name\":\"店铺日度汇总\",\"layer\":\"DWS\",\"description\":\"按店铺+日期聚合的经营指标\",\"row_count\":460,\"columns\":[{\"name\":\"stat_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"store_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"order_count\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"gmv\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"paying_customers\",\"type\":\"BIGINT\",\"nullable\":true},{\"name\":\"avg_order_value\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"return_count\",\"type\":\"HUGEINT\",\"nullable\":true},{\"name\":\"return_rate\",\"type\":\"DOUBLE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers/preview?limit=50",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_customers\",\"display_name\":\"客户主数据\",\"layer\":\"ODS\",\"description\":\"客户主数据，包含昵称、性别、省份、注册日期\",\"row_count\":2000,\"columns\":[{\"name\":\"nickname\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"gender\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"province\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"register_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"last_login\",\"type\":\"DATE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_customers' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_customers",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_customers\",\"display_name\":\"客户主数据\",\"layer\":\"ODS\",\"description\":\"客户主数据，包含昵称、性别、省份、注册日期\",\"row_count\":2000,\"columns\":[{\"name\":\"customer_id\",\"type\":\"VARCHAR\",\"nullable\":false},{\"name\":\"nickname\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"gender\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"province\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"register_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"last_login\",\"type\":\"DATE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_dirty_probe",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_dirty_probe/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_dirty_probe\",\"rows\":[{\"order_id\":\"O-9002\",\"customer_id\":\"C002\",\"total_amount\":120.5,\"stat_date\":\"2024-09-29T00:00:00\"},{\"order_id\":\"O-9002\",\"customer_id\":\"C002\",\"total_amount\":120.5,\"stat_date\":\"2024-09-29T00:00:00\"},{\"order_id\":\"O-9003\",\"customer_id\":null,\"total_amount\":88,\"stat_date\":\"2024-09-30T00:00:00\"}],\"count\":3},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_dirty_probe/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_dirty_probe' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_dirty_probe",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_dirty_probe\",\"display_name\":\"脏数据探针\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":4,\"columns\":[{\"name\":\"order_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"customer_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"total_amount\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"stat_date\",\"type\":\"TIMESTAMP\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_orders\",\"rows\":[{\"order_id\":\"OD0008193\",\"customer_id\":\"U01495\",\"store_id\":\"S005\",\"product_id\":\"P004\",\"quantity\":3,\"unit_price\":79,\"total_amount\":199.7,\"payment_method\":\"微信支付\",\"status\":\"已取消\",\"order_date\":\"2024-09-04T08:31:00\",\"pay_date\":null},{\"order_id\":\"OD0008194\",\"customer_id\":\"U00316\",\"store_id\":\"S002\",\"product_id\":\"P003\",\"quantity\":3,\"unit_price\":109.69,\"total_amount\":377.31,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T02:41:00\",\"pay_date\":\"2024-09-04T03:00:00\"},{\"order_id\":\"OD0008195\",\"customer_id\":\"U01074\",\"store_id\":\"S003\",\"product_id\":\"P002\",\"quantity\":2,\"unit_price\":89,\"total_amount\":161.72,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T08:45:00\",\"pay_date\":\"2024-09-04T08:53:00\"},{\"order_id\":\"OD0008196\",\"customer_id\":\"U00227\",\"store_id\":\"S001\",\"product_id\":\"P007\",\"quantity\":1,\"unit_price\":59,\"total_amount\":54.7,\"payment_method\":\"微信支付\",\"status\":\"已取消\",\"order_date\":\"2024-09-04T16:56:00\",\"pay_date\":null},{\"order_id\":\"OD0008197\",\"customer_id\":\"U00609\",\"store_id\":\"S005\",\"product_id\":\"P002\",\"quantity\":1,\"unit_price\":89,\"total_amount\":89,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T22:40:00\",\"pay_date\":\"2024-09-04T22:51:00\"},{\"order_id\":\"OD0008198\",\"customer_id\":\"U00522\",\"store_id\":\"S004\",\"product_id\":\"P010\",\"quantity\":2,\"unit_price\":159,\"total_amount\":318,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T23:03:00\",\"pay_date\":\"2024-09-04T23:31:00\"},{\"order_id\":\"OD0008199\",\"customer_id\":\"U00118\",\"store_id\":\"S005\",\"product_id\":\"P002\",\"quantity\":2,\"unit_price\":89,\"total_amount\":178,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T03:42:00\",\"pay_date\":\"2024-09-04T03:50:00\"},{\"order_id\":\"OD0008200\",\"customer_id\":\"U01555\",\"store_id\":\"S001\",\"product_id\":\"P003\",\"quantity\":2,\"unit_price\":105.87,\"total_amount\":298,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T08:27:00\",\"pay_date\":\"2024-09-04T08:55:00\"},{\"order_id\":\"OD0008201\",\"customer_id\":\"U01271\",\"store_id\":\"S005\",\"product_id\":\"P004\",\"quantity\":1,\"unit_price\":79,\"total_amount\":79,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T21:33:00\",\"pay_date\":\"2024-09-04T21:39:00\"},{\"order_id\":\"OD0008202\",\"customer_id\":\"U01659\",\"store_id\":\"S002\",\"product_id\":\"P011\",\"quantity\":2,\"unit_price\":119,\"total_amount\":238,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T19:23:00\",\"pay_date\":\"2024-09-04T19:38:00\"},{\"order_id\":\"OD0008203\",\"customer_id\":\"U01874\",\"store_id\":\"S005\",\"product_id\":\"P009\",\"quantity\":1,\"unit_price\":299,\"total_amount\":299,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T04:00:00\",\"pay_date\":\"2024-09-04T04:26:00\"},{\"order_id\":\"OD0008204\",\"customer_id\":\"U00289\",\"store_id\":\"S004\",\"product_id\":\"P005\",\"quantity\":2,\"unit_price\":129,\"total_amount\":258,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T17:07:00\",\"pay_date\":\"2024-09-04T17:14:00\"},{\"order_id\":\"OD0008205\",\"customer_id\":\"U00186\",\"store_id\":\"S002\",\"product_id\":\"P002\",\"quantity\":2,\"unit_price\":89,\"total_amount\":163.11,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T16:10:00\",\"pay_date\":\"2024-09-04T16:23:00\"},{\"order_id\":\"OD0008206\",\"customer_id\":\"U00580\",\"store_id\":\"S004\",\"product_id\":\"P012\",\"quantity\":1,\"unit_price\":49,\"total_amount\":49,\"payment_method\":\"京东白条\",\"status\":\"已取消\",\"order_date\":\"2024-09-04T02:43:00\",\"pay_date\":null},{\"order_id\":\"OD0008207\",\"customer_id\":\"U00999\",\"store_id\":\"S004\",\"product_id\":\"P005\",\"quantity\":1,\"unit_price\":129,\"total_amount\":129,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T18:20:00\",\"pay_date\":\"2024-09-04T18:48:00\"},{\"order_id\":\"OD0008208\",\"customer_id\":\"U00901\",\"store_id\":\"S001\",\"product_id\":\"P011\",\"quantity\":1,\"unit_price\":119,\"total_amount\":119,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T00:00:00\",\"pay_date\":\"2024-09-04T00:23:00\"},{\"order_id\":\"OD0008209\",\"customer_id\":\"U01908\",\"store_id\":\"S002\",\"product_id\":\"P006\",\"quantity\":2,\"unit_price\":168,\"total_amount\":336,\"payment_method\":\"京东白条\",\"status\":\"已退货\",\"order_date\":\"2024-09-04T19:35:00\",\"pay_date\":\"2024-09-04T19:57:00\"},{\"order_id\":\"OD0008210\",\"customer_id\":\"U01172\",\"store_id\":\"S001\",\"product_id\":\"P007\",\"quantity\":1,\"unit_price\":59,\"total_amount\":59,\"payment_method\":\"信用卡\",\"status\":\"已退货\",\"order_date\":\"2024-09-04T18:07:00\",\"pay_date\":\"2024-09-04T18:13:00\"},{\"order_id\":\"OD0008211\",\"customer_id\":\"U01023\",\"store_id\":\"S003\",\"product_id\":\"P010\",\"quantity\":2,\"unit_price\":159,\"total_amount\":247.93,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T19:16:00\",\"pay_date\":\"2024-09-04T19:22:00\"},{\"order_id\":\"OD0008212\",\"customer_id\":\"U01268\",\"store_id\":\"S002\",\"product_id\":\"P009\",\"quantity\":1,\"unit_price\":235.08,\"total_amount\":214.12,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T18:11:00\",\"pay_date\":\"2024-09-04T18:30:00\"},{\"order_id\":\"OD0008213\",\"customer_id\":\"U00028\",\"store_id\":\"S002\",\"product_id\":\"P001\",\"quantity\":3,\"unit_price\":199,\"total_amount\":597,\"payment_method\":\"支付宝"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_orders' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_orders/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_orders\",\"rows\":[{\"order_id\":\"OD0008194\",\"customer_id\":\"U00316\",\"store_id\":\"S002\",\"product_id\":\"P003\",\"quantity\":3,\"unit_price\":109.69,\"total_amount\":377.31,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T02:41:00\",\"pay_date\":\"2024-09-04T03:00:00\"},{\"order_id\":\"OD0008195\",\"customer_id\":\"U01074\",\"store_id\":\"S003\",\"product_id\":\"P002\",\"quantity\":2,\"unit_price\":89,\"total_amount\":161.72,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T08:45:00\",\"pay_date\":\"2024-09-04T08:53:00\"},{\"order_id\":\"OD0008196\",\"customer_id\":\"U00227\",\"store_id\":\"S001\",\"product_id\":\"P007\",\"quantity\":1,\"unit_price\":59,\"total_amount\":54.7,\"payment_method\":\"微信支付\",\"status\":\"已取消\",\"order_date\":\"2024-09-04T16:56:00\",\"pay_date\":null},{\"order_id\":\"OD0008197\",\"customer_id\":\"U00609\",\"store_id\":\"S005\",\"product_id\":\"P002\",\"quantity\":1,\"unit_price\":89,\"total_amount\":89,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T22:40:00\",\"pay_date\":\"2024-09-04T22:51:00\"},{\"order_id\":\"OD0008198\",\"customer_id\":\"U00522\",\"store_id\":\"S004\",\"product_id\":\"P010\",\"quantity\":2,\"unit_price\":159,\"total_amount\":318,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T23:03:00\",\"pay_date\":\"2024-09-04T23:31:00\"},{\"order_id\":\"OD0008199\",\"customer_id\":\"U00118\",\"store_id\":\"S005\",\"product_id\":\"P002\",\"quantity\":2,\"unit_price\":89,\"total_amount\":178,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T03:42:00\",\"pay_date\":\"2024-09-04T03:50:00\"},{\"order_id\":\"OD0008200\",\"customer_id\":\"U01555\",\"store_id\":\"S001\",\"product_id\":\"P003\",\"quantity\":2,\"unit_price\":105.87,\"total_amount\":298,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T08:27:00\",\"pay_date\":\"2024-09-04T08:55:00\"},{\"order_id\":\"OD0008201\",\"customer_id\":\"U01271\",\"store_id\":\"S005\",\"product_id\":\"P004\",\"quantity\":1,\"unit_price\":79,\"total_amount\":79,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T21:33:00\",\"pay_date\":\"2024-09-04T21:39:00\"},{\"order_id\":\"OD0008202\",\"customer_id\":\"U01659\",\"store_id\":\"S002\",\"product_id\":\"P011\",\"quantity\":2,\"unit_price\":119,\"total_amount\":238,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T19:23:00\",\"pay_date\":\"2024-09-04T19:38:00\"},{\"order_id\":\"OD0008203\",\"customer_id\":\"U01874\",\"store_id\":\"S005\",\"product_id\":\"P009\",\"quantity\":1,\"unit_price\":299,\"total_amount\":299,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T04:00:00\",\"pay_date\":\"2024-09-04T04:26:00\"},{\"order_id\":\"OD0008204\",\"customer_id\":\"U00289\",\"store_id\":\"S004\",\"product_id\":\"P005\",\"quantity\":2,\"unit_price\":129,\"total_amount\":258,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T17:07:00\",\"pay_date\":\"2024-09-04T17:14:00\"},{\"order_id\":\"OD0008205\",\"customer_id\":\"U00186\",\"store_id\":\"S002\",\"product_id\":\"P002\",\"quantity\":2,\"unit_price\":89,\"total_amount\":163.11,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T16:10:00\",\"pay_date\":\"2024-09-04T16:23:00\"},{\"order_id\":\"OD0008206\",\"customer_id\":\"U00580\",\"store_id\":\"S004\",\"product_id\":\"P012\",\"quantity\":1,\"unit_price\":49,\"total_amount\":49,\"payment_method\":\"京东白条\",\"status\":\"已取消\",\"order_date\":\"2024-09-04T02:43:00\",\"pay_date\":null},{\"order_id\":\"OD0008207\",\"customer_id\":\"U00999\",\"store_id\":\"S004\",\"product_id\":\"P005\",\"quantity\":1,\"unit_price\":129,\"total_amount\":129,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T18:20:00\",\"pay_date\":\"2024-09-04T18:48:00\"},{\"order_id\":\"OD0008208\",\"customer_id\":\"U00901\",\"store_id\":\"S001\",\"product_id\":\"P011\",\"quantity\":1,\"unit_price\":119,\"total_amount\":119,\"payment_method\":\"微信支付\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T00:00:00\",\"pay_date\":\"2024-09-04T00:23:00\"},{\"order_id\":\"OD0008209\",\"customer_id\":\"U01908\",\"store_id\":\"S002\",\"product_id\":\"P006\",\"quantity\":2,\"unit_price\":168,\"total_amount\":336,\"payment_method\":\"京东白条\",\"status\":\"已退货\",\"order_date\":\"2024-09-04T19:35:00\",\"pay_date\":\"2024-09-04T19:57:00\"},{\"order_id\":\"OD0008210\",\"customer_id\":\"U01172\",\"store_id\":\"S001\",\"product_id\":\"P007\",\"quantity\":1,\"unit_price\":59,\"total_amount\":59,\"payment_method\":\"信用卡\",\"status\":\"已退货\",\"order_date\":\"2024-09-04T18:07:00\",\"pay_date\":\"2024-09-04T18:13:00\"},{\"order_id\":\"OD0008211\",\"customer_id\":\"U01023\",\"store_id\":\"S003\",\"product_id\":\"P010\",\"quantity\":2,\"unit_price\":159,\"total_amount\":247.93,\"payment_method\":\"京东白条\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T19:16:00\",\"pay_date\":\"2024-09-04T19:22:00\"},{\"order_id\":\"OD0008212\",\"customer_id\":\"U01268\",\"store_id\":\"S002\",\"product_id\":\"P009\",\"quantity\":1,\"unit_price\":235.08,\"total_amount\":214.12,\"payment_method\":\"花呗\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T18:11:00\",\"pay_date\":\"2024-09-04T18:30:00\"},{\"order_id\":\"OD0008213\",\"customer_id\":\"U00028\",\"store_id\":\"S002\",\"product_id\":\"P001\",\"quantity\":3,\"unit_price\":199,\"total_amount\":597,\"payment_method\":\"支付宝\",\"status\":\"已完成\",\"order_date\":\"2024-09-04T11:20:00\",\"pay_date\":\"2024-09-04T11:40:00\"},{\"order_id\":\"OD0008214\",\"customer_id\":\"U01731\",\"store_id\":\"S004\",\"product_id\":\"P001\",\"quantity\":3,\"unit_price\":199,\"total_amount\":597,\"payme"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_products/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'ods_products' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_products",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"columns\":[{\"name\":\"product_id\",\"type\":\"VARCHAR\",\"nullable\":false},{\"name\":\"product_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"category_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"price\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"cost\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"created_at\",\"type\":\"DATE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_products/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_products\",\"rows\":[],\"count\":0},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_products",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"columns\":[{\"name\":\"P001\",\"type\":\"烟酰胺亮肤精华液 30ml\",\"nullable\":false},{\"name\":\"P002\",\"type\":\"玻尿酸补水面膜 5片装\",\"nullable\":false},{\"name\":\"P003\",\"type\":\"清透防晒乳 SPF50+\",\"nullable\":false},{\"name\":\"P004\",\"type\":\"氨基酸温和洁面乳 120ml\",\"nullable\":false},{\"name\":\"P005\",\"type\":\"神经酰胺身体乳 400ml\",\"nullable\":false},{\"name\":\"P006\",\"type\":\"白茶香薰蜡烛 200g\",\"nullable\":false},{\"name\":\"P007\",\"type\":\"桌面收纳盒 三件套\",\"nullable\":false},{\"name\":\"P008\",\"type\":\"玫瑰保湿喷雾 150ml\",\"nullable\":false},{\"name\":\"P009\",\"type\":\"维C美白精华 50ml\",\"nullable\":false},{\"name\":\"P010\",\"type\":\"胶原蛋白面膜 10片装\",\"nullable\":false},{\"name\":\"P011\",\"type\":\"物理防晒隔离霜 60ml\",\"nullable\":false},{\"name\":\"P012\",\"type\":\"茶树精油洁面皂 100g\",\"nullable\":false}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_stores",
+      "status": 500,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_stores/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_stores\",\"rows\":[{\"store_id\":\"S002\",\"store_name\":\"示例京东自营店\",\"platform\":\"京东\",\"category\":\"美妆\",\"created_at\":\"2024-02-20\"},{\"store_id\":\"S003\",\"store_name\":\"示例抖音旗舰店\",\"platform\":\"抖音\",\"category\":\"美妆\",\"created_at\":\"2024-03-10\"},{\"store_id\":\"S004\",\"store_name\":\"示例拼多多官方店\",\"platform\":\"拼多多\",\"category\":\"家居\",\"created_at\":\"2024-04-05\"},{\"store_id\":\"S005\",\"store_name\":\"示例小红书旗舰店\",\"platform\":\"小红书\",\"category\":\"个护\",\"created_at\":\"2024-05-01\"}],\"count\":4},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_stores",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_stores\",\"display_name\":\"店铺主数据\",\"layer\":\"ODS\",\"description\":\"店铺主数据，包含店铺名称、平台、经营品类\",\"row_count\":5,\"columns\":[{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":false},{\"name\":\"store_name\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"platform\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"category\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"created_at\",\"type\":\"DATE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_stores/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_stores\",\"rows\":[],\"count\":0},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_traffic/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_traffic\",\"rows\":[{\"id\":1,\"store_id\":\"S001\",\"visit_date\":\"2024-07-02\",\"channel\":\"自然搜索\",\"uv\":361,\"pv\":1596,\"avg_duration\":51.2,\"bounce_rate\":0.254},{\"id\":2,\"store_id\":\"S001\",\"visit_date\":\"2024-07-03\",\"channel\":\"自然搜索\",\"uv\":992,\"pv\":3662,\"avg_duration\":208.9,\"bounce_rate\":0.678},{\"id\":3,\"store_id\":\"S001\",\"visit_date\":\"2024-07-05\",\"channel\":\"自然搜索\",\"uv\":1013,\"pv\":4460,\"avg_duration\":206.8,\"bounce_rate\":0.603},{\"id\":4,\"store_id\":\"S001\",\"visit_date\":\"2024-07-06\",\"channel\":\"自然搜索\",\"uv\":486,\"pv\":1621,\"avg_duration\":227.4,\"bounce_rate\":0.371},{\"id\":5,\"store_id\":\"S001\",\"visit_date\":\"2024-07-07\",\"channel\":\"自然搜索\",\"uv\":1475,\"pv\":3101,\"avg_duration\":105.2,\"bounce_rate\":0.507},{\"id\":6,\"store_id\":\"S001\",\"visit_date\":\"2024-07-08\",\"channel\":\"自然搜索\",\"uv\":826,\"pv\":2837,\"avg_duration\":223,\"bounce_rate\":0.552},{\"id\":7,\"store_id\":\"S001\",\"visit_date\":\"2024-07-09\",\"channel\":\"自然搜索\",\"uv\":780,\"pv\":2334,\"avg_duration\":102.1,\"bounce_rate\":0.406},{\"id\":8,\"store_id\":\"S001\",\"visit_date\":\"2024-07-11\",\"channel\":\"自然搜索\",\"uv\":970,\"pv\":4020,\"avg_duration\":198.6,\"bounce_rate\":0.578},{\"id\":9,\"store_id\":\"S001\",\"visit_date\":\"2024-07-12\",\"channel\":\"自然搜索\",\"uv\":709,\"pv\":1860,\"avg_duration\":214.4,\"bounce_rate\":0.412},{\"id\":10,\"store_id\":\"S001\",\"visit_date\":\"2024-07-13\",\"channel\":\"自然搜索\",\"uv\":1453,\"pv\":6042,\"avg_duration\":194,\"bounce_rate\":0.516},{\"id\":11,\"store_id\":\"S001\",\"visit_date\":\"2024-07-14\",\"channel\":\"自然搜索\",\"uv\":684,\"pv\":3037,\"avg_duration\":263.8,\"bounce_rate\":0.468},{\"id\":12,\"store_id\":\"S001\",\"visit_date\":\"2024-07-15\",\"channel\":\"自然搜索\",\"uv\":1309,\"pv\":2951,\"avg_duration\":221.5,\"bounce_rate\":0.277},{\"id\":13,\"store_id\":\"S001\",\"visit_date\":\"2024-07-16\",\"channel\":\"自然搜索\",\"uv\":412,\"pv\":931,\"avg_duration\":191.2,\"bounce_rate\":0.302},{\"id\":14,\"store_id\":\"S001\",\"visit_date\":\"2024-07-18\",\"channel\":\"自然搜索\",\"uv\":1293,\"pv\":3127,\"avg_duration\":131.8,\"bounce_rate\":0.642},{\"id\":15,\"store_id\":\"S001\",\"visit_date\":\"2024-07-19\",\"channel\":\"自然搜索\",\"uv\":525,\"pv\":1663,\"avg_duration\":278.2,\"bounce_rate\":0.629},{\"id\":16,\"store_id\":\"S001\",\"visit_date\":\"2024-07-20\",\"channel\":\"自然搜索\",\"uv\":472,\"pv\":2351,\"avg_duration\":195,\"bounce_rate\":0.205},{\"id\":17,\"store_id\":\"S001\",\"visit_date\":\"2024-07-22\",\"channel\":\"自然搜索\",\"uv\":690,\"pv\":2185,\"avg_duration\":282.2,\"bounce_rate\":0.423},{\"id\":18,\"store_id\":\"S001\",\"visit_date\":\"2024-07-23\",\"channel\":\"自然搜索\",\"uv\":938,\"pv\":4139,\"avg_duration\":278.7,\"bounce_rate\":0.378},{\"id\":19,\"store_id\":\"S001\",\"visit_date\":\"2024-07-25\",\"channel\":\"自然搜索\",\"uv\":1401,\"pv\":5429,\"avg_duration\":248.3,\"bounce_rate\":0.442},{\"id\":20,\"store_id\":\"S001\",\"visit_date\":\"2024-07-26\",\"channel\":\"自然搜索\",\"uv\":867,\"pv\":2168,\"avg_duration\":141.2,\"bounce_rate\":0.537},{\"id\":21,\"store_id\":\"S001\",\"visit_date\":\"2024-07-27\",\"channel\":\"自然搜索\",\"uv\":1048,\"pv\":4055,\"avg_duration\":103.3,\"bounce_rate\":0.325},{\"id\":22,\"store_id\":\"S001\",\"visit_date\":\"2024-07-28\",\"channel\":\"自然搜索\",\"uv\":1508,\"pv\":4593,\"avg_duration\":107.1,\"bounce_rate\":0.325},{\"id\":23,\"store_id\":\"S001\",\"visit_date\":\"2024-07-29\",\"channel\":\"自然搜索\",\"uv\":1346,\"pv\":3097,\"avg_duration\":190.6,\"bounce_rate\":0.472},{\"id\":24,\"store_id\":\"S001\",\"visit_date\":\"2024-07-30\",\"channel\":\"自然搜索\",\"uv\":959,\"pv\":3256,\"avg_duration\":237.7,\"bounce_rate\":0.5},{\"id\":25,\"store_id\":\"S001\",\"visit_date\":\"2024-07-31\",\"channel\":\"自然搜索\",\"uv\":1219,\"pv\":4299,\"avg_duration\":37.3,\"bounce_rate\":0.235},{\"id\":26,\"store_id\":\"S001\",\"visit_date\":\"2024-08-02\",\"channel\":\"自然搜索\",\"uv\":1486,\"pv\":4979,\"avg_duration\":40.3,\"bounce_rate\":0.337},{\"id\":27,\"store_id\":\"S001\",\"visit_date\":\"2024-08-03\",\"channel\":\"自然搜索\",\"uv\":1758,\"pv\":4228,\"avg_duration\":48,\"bounce_rate\":0.61},{\"id\":28,\"store_id\":\"S001\",\"visit_date\":\"2024-08-04\",\"channel\":\"自然搜索\",\"uv\":594,\"pv\":1293,\"avg_duration\":182.2,\"bounce_rate\":0.403},{\"id\":29,\"store_id\":\"S001\",\"visit_date\":\"2024-08-05\",\"channel\":\"自然搜索\",\"uv\":1255,\"pv\":6259,\"avg_duration\":106.5,\"bounce_rate\":0.282},{\"id\":30,\"store_id\":\"S001\",\"visit_date\":\"2024-08-09\",\"channel\":\"自然搜索\",\"uv\":1256,\"pv\":5061,\"avg_duration\":159.3,\"bounce_rate\":0.641},{\"id\":31,\"store_id\":\"S001\",\"visit_date\":\"2024-08-10\",\"channel\":\"自然搜索\",\"uv\":1692,\"pv\":4619,\"avg_duration\":206.3,\"bounce_rate\":0.618},{\"id\":32,\"store_id\":\"S001\",\"visit_date\":\"2024-08-11\",\"channel\":\"自然搜索\",\"uv\":1081,\"pv\":4294,\"avg_duration\":146.5,\"bounce_rate\":0.445},{\"id\":33,\"store_id\":\"S001\",\"visit_date\":\"2024-08-12\",\"channel\":\"自然搜索\",\"uv\":189,\"pv\":541,\"avg_duration\":232.1,\"bounce_rate\":0.631},{\"id\":34,\"store_id\":\"S001\",\"visit_date\":\"2024-08-13\",\"channel\":\"自然搜索\",\"uv\":1476,\"pv\":3865,\"avg_duration\":105.6,\"bounce_rate\":0.311},{\"id\":35,\"store_id\":\"S001\",\"visit_date\":\"2024-08-14\",\"channel\":\"自然搜索\",\"uv\":465,\"pv\":1453,\"avg_duration\":90.2,\"bounce_rate\":0.258},{\"id\":36,\"store_id\":\"S001\",\"visit_date\":\"2024-08-15\",\"channel\":\"自然搜索\",\"uv\":526,\"pv\":2420,\"avg_duration\":168.4,\"bounce_rate\":0.312},{\"id\":37,\"store_id\":\"S001\",\"visit_date\":\"2024-08-16\",\"channel\":\"自然搜索\",\"uv\":1376,\"pv\":3921,\"avg_duration\":255.7,\"bounce_rate\":0.559},{\"id\":38,\"store_id\":\"S001\",\"visit_date\":\"2024-08-17\",\"channel\":\"自然搜索\",\"uv\":705,\"pv\":3264,\"avg_duration\":275.1"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/ods_traffic",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"ods_traffic\",\"display_name\":\"流量日志表\",\"layer\":\"ODS\",\"description\":\"各渠道每日流量数据，UV/PV/跳出率\",\"row_count\":2269,\"columns\":[{\"name\":\"id\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"store_id\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"visit_date\",\"type\":\"DATE\",\"nullable\":true},{\"name\":\"channel\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"uv\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"pv\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"avg_duration\",\"type\":\"DOUBLE\",\"nullable\":true},{\"name\":\"bounce_rate\",\"type\":\"DOUBLE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_csv",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'tmp_uitest_agent5_csv' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_csv/preview?limit=50",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_csv\",\"rows\":[{\"campaign\":\"ui_test_banner\",\"impressions\":1000,\"clicks\":55,\"cost\":120.5},{\"campaign\":\"ui_test_video\",\"impressions\":2000,\"clicks\":80,\"cost\":300},{\"campaign\":\"ui_test_post\",\"impressions\":800,\"clicks\":20,\"cost\":50}],\"count\":3},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_csv/preview?limit=50",
+      "status": 404,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"Table 'tmp_uitest_agent5_csv' not found\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables/tmp_uitest_agent5_csv",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_csv\",\"display_name\":\"tmp_uitest_agent5_csv\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"columns\":[{\"name\":\"campaign\",\"type\":\"VARCHAR\",\"nullable\":true},{\"name\":\"impressions\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"clicks\",\"type\":\"INTEGER\",\"nullable\":true},{\"name\":\"cost\",\"type\":\"DOUBLE\",\"nullable\":true}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":[{\"code\":\"gmv\",\"name\":\"成交总额\",\"description\":\"所有已完成订单的成交金额总和\",\"unit\":\"元\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"gmv\",\"aggregation\":\"SUM\"},{\"code\":\"order_count\",\"name\":\"订单量\",\"description\":\"所有订单数量（含已完成和已退货）\",\"unit\":\"单\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"order_count\",\"aggregation\":\"SUM\"},{\"code\":\"conversion_rate\",\"name\":\"转化率\",\"description\":\"支付用户数 / 独立访客数\",\"unit\":\"%\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"conversion_rate\",\"aggregation\":\"AVG\"},{\"code\":\"avg_order_value\",\"name\":\"客单价\",\"description\":\"成交总额 / 订单量\",\"unit\":\"元\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"avg_order_value\",\"aggregation\":\"AVG\"},{\"code\":\"return_rate\",\"name\":\"退货率\",\"description\":\"退货订单数 / 总订单数\",\"unit\":\"%\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"return_rate\",\"aggregation\":\"AVG\"},{\"code\":\"traffic_uv\",\"name\":\"独立访客数\",\"description\":\"每日独立访客数量\",\"unit\":\"人\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"uv\",\"aggregation\":\"SUM\"},{\"code\":\"traffic_pv\",\"name\":\"页面浏览量\",\"description\":\"每日页面浏览次数\",\"unit\":\"次\",\"source_table\":\"ads_key_metrics\",\"value_column\":\"pv\",\"aggregation\":\"SUM\"}],\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/gmv/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"gmv\",\"name\":\"成交总额\",\"unit\":\"元\",\"description\":\"所有已完成订单的成交金额总和\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":28428.45},{\"period\":\"2024-07-02\",\"value\":38194.53},{\"period\":\"2024-07-03\",\"value\":41075.67},{\"period\":\"2024-07-04\",\"value\":20531.64},{\"period\":\"2024-07-05\",\"value\":41562.61},{\"period\":\"2024-07-06\",\"value\":41878.75},{\"period\":\"2024-07-07\",\"value\":45070.4},{\"period\":\"2024-07-08\",\"value\":39214.94},{\"period\":\"2024-07-09\",\"value\":20823.49},{\"period\":\"2024-07-10\",\"value\":36955.79},{\"period\":\"2024-07-11\",\"value\":26353.13},{\"period\":\"2024-07-12\",\"value\":44018.35},{\"period\":\"2024-07-13\",\"value\":35101.65},{\"period\":\"2024-07-14\",\"value\":43980.85},{\"period\":\"2024-07-15\",\"value\":43074.1},{\"period\":\"2024-07-16\",\"value\":36092.21},{\"period\":\"2024-07-17\",\"value\":40752.05},{\"period\":\"2024-07-18\",\"value\":31805.85},{\"period\":\"2024-07-19\",\"value\":35197.22},{\"period\":\"2024-07-20\",\"value\":41796.32},{\"period\":\"2024-07-21\",\"value\":45465.76},{\"period\":\"2024-07-22\",\"value\":32565.67},{\"period\":\"2024-07-23\",\"value\":38179.27},{\"period\":\"2024-07-24\",\"value\":25940.74},{\"period\":\"2024-07-25\",\"value\":40830.78},{\"period\":\"2024-07-26\",\"value\":22611.12},{\"period\":\"2024-07-27\",\"value\":34867.53},{\"period\":\"2024-07-28\",\"value\":40067.18},{\"period\":\"2024-07-29\",\"value\":44341.89},{\"period\":\"2024-07-30\",\"value\":29944.29},{\"period\":\"2024-07-31\",\"value\":35426.52},{\"period\":\"2024-08-01\",\"value\":40547.83},{\"period\":\"2024-08-02\",\"value\":36371.46},{\"period\":\"2024-08-03\",\"value\":30346.61},{\"period\":\"2024-08-04\",\"value\":35139.07},{\"period\":\"2024-08-05\",\"value\":37054.65},{\"period\":\"2024-08-06\",\"value\":40306.44},{\"period\":\"2024-08-07\",\"value\":32405.19},{\"period\":\"2024-08-08\",\"value\":43970.93},{\"period\":\"2024-08-09\",\"value\":35314.86},{\"period\":\"2024-08-10\",\"value\":42399.28},{\"period\":\"2024-08-11\",\"value\":43402.47},{\"period\":\"2024-08-12\",\"value\":31138.54},{\"period\":\"2024-08-13\",\"value\":45609.97},{\"period\":\"2024-08-14\",\"value\":40890.21},{\"period\":\"2024-08-15\",\"value\":31976.98},{\"period\":\"2024-08-16\",\"value\":21550.16},{\"period\":\"2024-08-17\",\"value\":43391.4},{\"period\":\"2024-08-18\",\"value\":28621.83},{\"period\":\"2024-08-19\",\"value\":40794.24},{\"period\":\"2024-08-20\",\"value\":35269.3},{\"period\":\"2024-08-21\",\"value\":33152.95},{\"period\":\"2024-08-22\",\"value\":27149.35},{\"period\":\"2024-08-23\",\"value\":33671.7},{\"period\":\"2024-08-24\",\"value\":27907.84},{\"period\":\"2024-08-25\",\"value\":36645.32},{\"period\":\"2024-08-26\",\"value\":23701.24},{\"period\":\"2024-08-27\",\"value\":24404.03},{\"period\":\"2024-08-28\",\"value\":22079.86},{\"period\":\"2024-08-29\",\"value\":34322.64},{\"period\":\"2024-08-30\",\"value\":30984.57},{\"period\":\"2024-08-31\",\"value\":48844.94},{\"period\":\"2024-09-01\",\"value\":41665.62},{\"period\":\"2024-09-02\",\"value\":33027.33},{\"period\":\"2024-09-03\",\"value\":28872.08},{\"period\":\"2024-09-04\",\"value\":30925.71},{\"period\":\"2024-09-05\",\"value\":40243.07},{\"period\":\"2024-09-06\",\"value\":47534.55},{\"period\":\"2024-09-07\",\"value\":53507.7},{\"period\":\"2024-09-08\",\"value\":45855.86},{\"period\":\"2024-09-09\",\"value\":22814.98},{\"period\":\"2024-09-10\",\"value\":42454.85},{\"period\":\"2024-09-11\",\"value\":44938.31},{\"period\":\"2024-09-12\",\"value\":28209.13},{\"period\":\"2024-09-13\",\"value\":25966.97},{\"period\":\"2024-09-14\",\"value\":27855.43},{\"period\":\"2024-09-15\",\"value\":40244.45},{\"period\":\"2024-09-16\",\"value\":35717.84},{\"period\":\"2024-09-17\",\"value\":22113.7},{\"period\":\"2024-09-18\",\"value\":33562.28},{\"period\":\"2024-09-19\",\"value\":33989.13},{\"period\":\"2024-09-20\",\"value\":45765.98},{\"period\":\"2024-09-21\",\"value\":47982.33},{\"period\":\"2024-09-22\",\"value\":52290.02},{\"period\":\"2024-09-23\",\"value\":36610.21},{\"period\":\"2024-09-24\",\"value\":41523.56},{\"period\":\"2024-09-25\",\"value\":24243.72},{\"period\":\"2024-09-26\",\"value\":31817.44},{\"period\":\"2024-09-27\",\"value\":43254.74},{\"period\":\"2024-09-28\",\"value\":45201.95},{\"period\":\"2024-09-29\",\"value\":26860.69},{\"period\":\"2024-09-30\",\"value\":35958.37}],\"summary\":{\"total\":3312522.61,\"avg\":36005.68,\"max\":53507.7,\"min\":20531.64,\"count\":92,\"latest\":35958.37,\"trend\":0.3387}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/gmv/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"gmv\",\"name\":\"成交总额\",\"unit\":\"元\",\"description\":\"所有已完成订单的成交金额总和\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":28428.45},{\"period\":\"2024-07-02\",\"value\":38194.53},{\"period\":\"2024-07-03\",\"value\":41075.67},{\"period\":\"2024-07-04\",\"value\":20531.64},{\"period\":\"2024-07-05\",\"value\":41562.61},{\"period\":\"2024-07-06\",\"value\":41878.75},{\"period\":\"2024-07-07\",\"value\":45070.4},{\"period\":\"2024-07-08\",\"value\":39214.94},{\"period\":\"2024-07-09\",\"value\":20823.49},{\"period\":\"2024-07-10\",\"value\":36955.79},{\"period\":\"2024-07-11\",\"value\":26353.13},{\"period\":\"2024-07-12\",\"value\":44018.35},{\"period\":\"2024-07-13\",\"value\":35101.65},{\"period\":\"2024-07-14\",\"value\":43980.85},{\"period\":\"2024-07-15\",\"value\":43074.1},{\"period\":\"2024-07-16\",\"value\":36092.21},{\"period\":\"2024-07-17\",\"value\":40752.05},{\"period\":\"2024-07-18\",\"value\":31805.85},{\"period\":\"2024-07-19\",\"value\":35197.22},{\"period\":\"2024-07-20\",\"value\":41796.32},{\"period\":\"2024-07-21\",\"value\":45465.76},{\"period\":\"2024-07-22\",\"value\":32565.67},{\"period\":\"2024-07-23\",\"value\":38179.27},{\"period\":\"2024-07-24\",\"value\":25940.74},{\"period\":\"2024-07-25\",\"value\":40830.78},{\"period\":\"2024-07-26\",\"value\":22611.12},{\"period\":\"2024-07-27\",\"value\":34867.53},{\"period\":\"2024-07-28\",\"value\":40067.18},{\"period\":\"2024-07-29\",\"value\":44341.89},{\"period\":\"2024-07-30\",\"value\":29944.29},{\"period\":\"2024-07-31\",\"value\":35426.52},{\"period\":\"2024-08-01\",\"value\":40547.83},{\"period\":\"2024-08-02\",\"value\":36371.46},{\"period\":\"2024-08-03\",\"value\":30346.61},{\"period\":\"2024-08-04\",\"value\":35139.07},{\"period\":\"2024-08-05\",\"value\":37054.65},{\"period\":\"2024-08-06\",\"value\":40306.44},{\"period\":\"2024-08-07\",\"value\":32405.19},{\"period\":\"2024-08-08\",\"value\":43970.93},{\"period\":\"2024-08-09\",\"value\":35314.86},{\"period\":\"2024-08-10\",\"value\":42399.28},{\"period\":\"2024-08-11\",\"value\":43402.47},{\"period\":\"2024-08-12\",\"value\":31138.54},{\"period\":\"2024-08-13\",\"value\":45609.97},{\"period\":\"2024-08-14\",\"value\":40890.21},{\"period\":\"2024-08-15\",\"value\":31976.98},{\"period\":\"2024-08-16\",\"value\":21550.16},{\"period\":\"2024-08-17\",\"value\":43391.4},{\"period\":\"2024-08-18\",\"value\":28621.83},{\"period\":\"2024-08-19\",\"value\":40794.24},{\"period\":\"2024-08-20\",\"value\":35269.3},{\"period\":\"2024-08-21\",\"value\":33152.95},{\"period\":\"2024-08-22\",\"value\":27149.35},{\"period\":\"2024-08-23\",\"value\":33671.7},{\"period\":\"2024-08-24\",\"value\":27907.84},{\"period\":\"2024-08-25\",\"value\":36645.32},{\"period\":\"2024-08-26\",\"value\":23701.24},{\"period\":\"2024-08-27\",\"value\":24404.03},{\"period\":\"2024-08-28\",\"value\":22079.86},{\"period\":\"2024-08-29\",\"value\":34322.64},{\"period\":\"2024-08-30\",\"value\":30984.57},{\"period\":\"2024-08-31\",\"value\":48844.94},{\"period\":\"2024-09-01\",\"value\":41665.62},{\"period\":\"2024-09-02\",\"value\":33027.33},{\"period\":\"2024-09-03\",\"value\":28872.08},{\"period\":\"2024-09-04\",\"value\":30925.71},{\"period\":\"2024-09-05\",\"value\":40243.07},{\"period\":\"2024-09-06\",\"value\":47534.55},{\"period\":\"2024-09-07\",\"value\":53507.7},{\"period\":\"2024-09-08\",\"value\":45855.86},{\"period\":\"2024-09-09\",\"value\":22814.98},{\"period\":\"2024-09-10\",\"value\":42454.85},{\"period\":\"2024-09-11\",\"value\":44938.31},{\"period\":\"2024-09-12\",\"value\":28209.13},{\"period\":\"2024-09-13\",\"value\":25966.97},{\"period\":\"2024-09-14\",\"value\":27855.43},{\"period\":\"2024-09-15\",\"value\":40244.45},{\"period\":\"2024-09-16\",\"value\":35717.84},{\"period\":\"2024-09-17\",\"value\":22113.7},{\"period\":\"2024-09-18\",\"value\":33562.28},{\"period\":\"2024-09-19\",\"value\":33989.13},{\"period\":\"2024-09-20\",\"value\":45765.98},{\"period\":\"2024-09-21\",\"value\":47982.33},{\"period\":\"2024-09-22\",\"value\":52290.02},{\"period\":\"2024-09-23\",\"value\":36610.21},{\"period\":\"2024-09-24\",\"value\":41523.56},{\"period\":\"2024-09-25\",\"value\":24243.72},{\"period\":\"2024-09-26\",\"value\":31817.44},{\"period\":\"2024-09-27\",\"value\":43254.74},{\"period\":\"2024-09-28\",\"value\":45201.95},{\"period\":\"2024-09-29\",\"value\":26860.69},{\"period\":\"2024-09-30\",\"value\":35958.37}],\"summary\":{\"total\":3312522.61,\"avg\":36005.68,\"max\":53507.7,\"min\":20531.64,\"count\":92,\"latest\":35958.37,\"trend\":0.3387}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/order_count/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"order_count\",\"name\":\"订单量\",\"unit\":\"单\",\"description\":\"所有订单数量（含已完成和已退货）\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":93},{\"period\":\"2024-07-02\",\"value\":125},{\"period\":\"2024-07-03\",\"value\":152},{\"period\":\"2024-07-04\",\"value\":87},{\"period\":\"2024-07-05\",\"value\":138},{\"period\":\"2024-07-06\",\"value\":160},{\"period\":\"2024-07-07\",\"value\":160},{\"period\":\"2024-07-08\",\"value\":129},{\"period\":\"2024-07-09\",\"value\":80},{\"period\":\"2024-07-10\",\"value\":135},{\"period\":\"2024-07-11\",\"value\":100},{\"period\":\"2024-07-12\",\"value\":138},{\"period\":\"2024-07-13\",\"value\":144},{\"period\":\"2024-07-14\",\"value\":160},{\"period\":\"2024-07-15\",\"value\":124},{\"period\":\"2024-07-16\",\"value\":134},{\"period\":\"2024-07-17\",\"value\":142},{\"period\":\"2024-07-18\",\"value\":106},{\"period\":\"2024-07-19\",\"value\":125},{\"period\":\"2024-07-20\",\"value\":160},{\"period\":\"2024-07-21\",\"value\":160},{\"period\":\"2024-07-22\",\"value\":140},{\"period\":\"2024-07-23\",\"value\":127},{\"period\":\"2024-07-24\",\"value\":83},{\"period\":\"2024-07-25\",\"value\":128},{\"period\":\"2024-07-26\",\"value\":86},{\"period\":\"2024-07-27\",\"value\":123},{\"period\":\"2024-07-28\",\"value\":143},{\"period\":\"2024-07-29\",\"value\":154},{\"period\":\"2024-07-30\",\"value\":104},{\"period\":\"2024-07-31\",\"value\":120},{\"period\":\"2024-08-01\",\"value\":144},{\"period\":\"2024-08-02\",\"value\":113},{\"period\":\"2024-08-03\",\"value\":105},{\"period\":\"2024-08-04\",\"value\":122},{\"period\":\"2024-08-05\",\"value\":133},{\"period\":\"2024-08-06\",\"value\":151},{\"period\":\"2024-08-07\",\"value\":135},{\"period\":\"2024-08-08\",\"value\":157},{\"period\":\"2024-08-09\",\"value\":140},{\"period\":\"2024-08-10\",\"value\":160},{\"period\":\"2024-08-11\",\"value\":160},{\"period\":\"2024-08-12\",\"value\":96},{\"period\":\"2024-08-13\",\"value\":155},{\"period\":\"2024-08-14\",\"value\":133},{\"period\":\"2024-08-15\",\"value\":107},{\"period\":\"2024-08-16\",\"value\":88},{\"period\":\"2024-08-17\",\"value\":143},{\"period\":\"2024-08-18\",\"value\":109},{\"period\":\"2024-08-19\",\"value\":133},{\"period\":\"2024-08-20\",\"value\":124},{\"period\":\"2024-08-21\",\"value\":126},{\"period\":\"2024-08-22\",\"value\":103},{\"period\":\"2024-08-23\",\"value\":135},{\"period\":\"2024-08-24\",\"value\":110},{\"period\":\"2024-08-25\",\"value\":141},{\"period\":\"2024-08-26\",\"value\":82},{\"period\":\"2024-08-27\",\"value\":91},{\"period\":\"2024-08-28\",\"value\":81},{\"period\":\"2024-08-29\",\"value\":111},{\"period\":\"2024-08-30\",\"value\":118},{\"period\":\"2024-08-31\",\"value\":160},{\"period\":\"2024-09-01\",\"value\":156},{\"period\":\"2024-09-02\",\"value\":97},{\"period\":\"2024-09-03\",\"value\":113},{\"period\":\"2024-09-04\",\"value\":123},{\"period\":\"2024-09-05\",\"value\":119},{\"period\":\"2024-09-06\",\"value\":157},{\"period\":\"2024-09-07\",\"value\":160},{\"period\":\"2024-09-08\",\"value\":160},{\"period\":\"2024-09-09\",\"value\":91},{\"period\":\"2024-09-10\",\"value\":138},{\"period\":\"2024-09-11\",\"value\":159},{\"period\":\"2024-09-12\",\"value\":100},{\"period\":\"2024-09-13\",\"value\":94},{\"period\":\"2024-09-14\",\"value\":104},{\"period\":\"2024-09-15\",\"value\":132},{\"period\":\"2024-09-16\",\"value\":134},{\"period\":\"2024-09-17\",\"value\":89},{\"period\":\"2024-09-18\",\"value\":114},{\"period\":\"2024-09-19\",\"value\":120},{\"period\":\"2024-09-20\",\"value\":151},{\"period\":\"2024-09-21\",\"value\":160},{\"period\":\"2024-09-22\",\"value\":160},{\"period\":\"2024-09-23\",\"value\":137},{\"period\":\"2024-09-24\",\"value\":133},{\"period\":\"2024-09-25\",\"value\":82},{\"period\":\"2024-09-26\",\"value\":117},{\"period\":\"2024-09-27\",\"value\":158},{\"period\":\"2024-09-28\",\"value\":160},{\"period\":\"2024-09-29\",\"value\":106},{\"period\":\"2024-09-30\",\"value\":133}],\"summary\":{\"total\":11683,\"avg\":126.99,\"max\":160,\"min\":80,\"count\":92,\"latest\":133,\"trend\":0.2547}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/conversion_rate/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"conversion_rate\",\"name\":\"转化率\",\"unit\":\"%\",\"description\":\"支付用户数 / 独立访客数\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":0.0037},{\"period\":\"2024-07-02\",\"value\":0.0059},{\"period\":\"2024-07-03\",\"value\":0.0068},{\"period\":\"2024-07-04\",\"value\":0.0036},{\"period\":\"2024-07-05\",\"value\":0.0061},{\"period\":\"2024-07-06\",\"value\":0.0049},{\"period\":\"2024-07-07\",\"value\":0.0039},{\"period\":\"2024-07-08\",\"value\":0.0051},{\"period\":\"2024-07-09\",\"value\":0.0026},{\"period\":\"2024-07-10\",\"value\":0.0075},{\"period\":\"2024-07-11\",\"value\":0.0039},{\"period\":\"2024-07-12\",\"value\":0.0055},{\"period\":\"2024-07-13\",\"value\":0.0057},{\"period\":\"2024-07-14\",\"value\":0.0045},{\"period\":\"2024-07-15\",\"value\":0.004},{\"period\":\"2024-07-16\",\"value\":0.0046},{\"period\":\"2024-07-17\",\"value\":0.0066},{\"period\":\"2024-07-18\",\"value\":0.0043},{\"period\":\"2024-07-19\",\"value\":0.0047},{\"period\":\"2024-07-20\",\"value\":0.0055},{\"period\":\"2024-07-21\",\"value\":0.0075},{\"period\":\"2024-07-22\",\"value\":0.0062},{\"period\":\"2024-07-23\",\"value\":0.0039},{\"period\":\"2024-07-24\",\"value\":0.0031},{\"period\":\"2024-07-25\",\"value\":0.0059},{\"period\":\"2024-07-26\",\"value\":0.0031},{\"period\":\"2024-07-27\",\"value\":0.0039},{\"period\":\"2024-07-28\",\"value\":0.0052},{\"period\":\"2024-07-29\",\"value\":0.0091},{\"period\":\"2024-07-30\",\"value\":0.0035},{\"period\":\"2024-07-31\",\"value\":0.0049},{\"period\":\"2024-08-01\",\"value\":0.0052},{\"period\":\"2024-08-02\",\"value\":0.0045},{\"period\":\"2024-08-03\",\"value\":0.0034},{\"period\":\"2024-08-04\",\"value\":0.0035},{\"period\":\"2024-08-05\",\"value\":0.0064},{\"period\":\"2024-08-06\",\"value\":0.0069},{\"period\":\"2024-08-07\",\"value\":0.0051},{\"period\":\"2024-08-08\",\"value\":0.0053},{\"period\":\"2024-08-09\",\"value\":0.0039},{\"period\":\"2024-08-10\",\"value\":0.0044},{\"period\":\"2024-08-11\",\"value\":0.0062},{\"period\":\"2024-08-12\",\"value\":0.0047},{\"period\":\"2024-08-13\",\"value\":0.0055},{\"period\":\"2024-08-14\",\"value\":0.0052},{\"period\":\"2024-08-15\",\"value\":0.0055},{\"period\":\"2024-08-16\",\"value\":0.0033},{\"period\":\"2024-08-17\",\"value\":0.0043},{\"period\":\"2024-08-18\",\"value\":0.0041},{\"period\":\"2024-08-19\",\"value\":0.0038},{\"period\":\"2024-08-20\",\"value\":0.005},{\"period\":\"2024-08-21\",\"value\":0.0043},{\"period\":\"2024-08-22\",\"value\":0.004},{\"period\":\"2024-08-23\",\"value\":0.0072},{\"period\":\"2024-08-24\",\"value\":0.0038},{\"period\":\"2024-08-25\",\"value\":0.0042},{\"period\":\"2024-08-26\",\"value\":0.0026},{\"period\":\"2024-08-27\",\"value\":0.0046},{\"period\":\"2024-08-28\",\"value\":0.003},{\"period\":\"2024-08-29\",\"value\":0.0039},{\"period\":\"2024-08-30\",\"value\":0.0047},{\"period\":\"2024-08-31\",\"value\":0.0051},{\"period\":\"2024-09-01\",\"value\":0.0047},{\"period\":\"2024-09-02\",\"value\":0.0039},{\"period\":\"2024-09-03\",\"value\":0.0042},{\"period\":\"2024-09-04\",\"value\":0.005},{\"period\":\"2024-09-05\",\"value\":0.0054},{\"period\":\"2024-09-06\",\"value\":0.0061},{\"period\":\"2024-09-07\",\"value\":0.0044},{\"period\":\"2024-09-08\",\"value\":0.0045},{\"period\":\"2024-09-09\",\"value\":0.0038},{\"period\":\"2024-09-10\",\"value\":0.006},{\"period\":\"2024-09-11\",\"value\":0.0062},{\"period\":\"2024-09-12\",\"value\":0.0042},{\"period\":\"2024-09-13\",\"value\":0.0045},{\"period\":\"2024-09-14\",\"value\":0.0038},{\"period\":\"2024-09-15\",\"value\":0.0047},{\"period\":\"2024-09-16\",\"value\":0.0047},{\"period\":\"2024-09-17\",\"value\":0.0038},{\"period\":\"2024-09-18\",\"value\":0.0042},{\"period\":\"2024-09-19\",\"value\":0.0051},{\"period\":\"2024-09-20\",\"value\":0.0062},{\"period\":\"2024-09-21\",\"value\":0.005},{\"period\":\"2024-09-22\",\"value\":0.0056},{\"period\":\"2024-09-23\",\"value\":0.0059},{\"period\":\"2024-09-24\",\"value\":0.0065},{\"period\":\"2024-09-25\",\"value\":0.0037},{\"period\":\"2024-09-26\",\"value\":0.0043},{\"period\":\"2024-09-27\",\"value\":0.0067},{\"period\":\"2024-09-28\",\"value\":0.0053},{\"period\":\"2024-09-29\",\"value\":0.003},{\"period\":\"2024-09-30\",\"value\":0.0044}],\"summary\":{\"total\":0.45,\"avg\":0,\"max\":0.01,\"min\":0,\"count\":92,\"latest\":0.0044,\"trend\":0.4667}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/avg_order_value/query?granularity=day&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"avg_order_value\",\"name\":\"客单价\",\"unit\":\"元\",\"description\":\"成交总额 / 订单量\"},\"granularity\":\"day\",\"data\":[{\"period\":\"2024-07-01\",\"value\":305.68},{\"period\":\"2024-07-02\",\"value\":305.56},{\"period\":\"2024-07-03\",\"value\":270.23},{\"period\":\"2024-07-04\",\"value\":236},{\"period\":\"2024-07-05\",\"value\":301.18},{\"period\":\"2024-07-06\",\"value\":261.74},{\"period\":\"2024-07-07\",\"value\":281.69},{\"period\":\"2024-07-08\",\"value\":303.99},{\"period\":\"2024-07-09\",\"value\":260.29},{\"period\":\"2024-07-10\",\"value\":273.75},{\"period\":\"2024-07-11\",\"value\":263.53},{\"period\":\"2024-07-12\",\"value\":318.97},{\"period\":\"2024-07-13\",\"value\":243.76},{\"period\":\"2024-07-14\",\"value\":274.88},{\"period\":\"2024-07-15\",\"value\":347.37},{\"period\":\"2024-07-16\",\"value\":269.34},{\"period\":\"2024-07-17\",\"value\":286.99},{\"period\":\"2024-07-18\",\"value\":300.06},{\"period\":\"2024-07-19\",\"value\":281.58},{\"period\":\"2024-07-20\",\"value\":261.23},{\"period\":\"2024-07-21\",\"value\":284.16},{\"period\":\"2024-07-22\",\"value\":232.61},{\"period\":\"2024-07-23\",\"value\":300.62},{\"period\":\"2024-07-24\",\"value\":312.54},{\"period\":\"2024-07-25\",\"value\":318.99},{\"period\":\"2024-07-26\",\"value\":262.92},{\"period\":\"2024-07-27\",\"value\":283.48},{\"period\":\"2024-07-28\",\"value\":280.19},{\"period\":\"2024-07-29\",\"value\":287.93},{\"period\":\"2024-07-30\",\"value\":287.93},{\"period\":\"2024-07-31\",\"value\":295.22},{\"period\":\"2024-08-01\",\"value\":281.58},{\"period\":\"2024-08-02\",\"value\":321.87},{\"period\":\"2024-08-03\",\"value\":289.02},{\"period\":\"2024-08-04\",\"value\":288.03},{\"period\":\"2024-08-05\",\"value\":278.61},{\"period\":\"2024-08-06\",\"value\":266.93},{\"period\":\"2024-08-07\",\"value\":240.04},{\"period\":\"2024-08-08\",\"value\":280.07},{\"period\":\"2024-08-09\",\"value\":252.25},{\"period\":\"2024-08-10\",\"value\":265},{\"period\":\"2024-08-11\",\"value\":271.27},{\"period\":\"2024-08-12\",\"value\":324.36},{\"period\":\"2024-08-13\",\"value\":294.26},{\"period\":\"2024-08-14\",\"value\":307.45},{\"period\":\"2024-08-15\",\"value\":298.85},{\"period\":\"2024-08-16\",\"value\":244.89},{\"period\":\"2024-08-17\",\"value\":303.44},{\"period\":\"2024-08-18\",\"value\":262.59},{\"period\":\"2024-08-19\",\"value\":306.72},{\"period\":\"2024-08-20\",\"value\":284.43},{\"period\":\"2024-08-21\",\"value\":263.12},{\"period\":\"2024-08-22\",\"value\":263.59},{\"period\":\"2024-08-23\",\"value\":249.42},{\"period\":\"2024-08-24\",\"value\":253.71},{\"period\":\"2024-08-25\",\"value\":259.9},{\"period\":\"2024-08-26\",\"value\":289.04},{\"period\":\"2024-08-27\",\"value\":268.18},{\"period\":\"2024-08-28\",\"value\":272.59},{\"period\":\"2024-08-29\",\"value\":309.21},{\"period\":\"2024-08-30\",\"value\":262.58},{\"period\":\"2024-08-31\",\"value\":305.28},{\"period\":\"2024-09-01\",\"value\":267.09},{\"period\":\"2024-09-02\",\"value\":340.49},{\"period\":\"2024-09-03\",\"value\":255.51},{\"period\":\"2024-09-04\",\"value\":251.43},{\"period\":\"2024-09-05\",\"value\":338.18},{\"period\":\"2024-09-06\",\"value\":302.77},{\"period\":\"2024-09-07\",\"value\":334.42},{\"period\":\"2024-09-08\",\"value\":286.6},{\"period\":\"2024-09-09\",\"value\":250.71},{\"period\":\"2024-09-10\",\"value\":307.64},{\"period\":\"2024-09-11\",\"value\":282.63},{\"period\":\"2024-09-12\",\"value\":282.09},{\"period\":\"2024-09-13\",\"value\":276.24},{\"period\":\"2024-09-14\",\"value\":267.84},{\"period\":\"2024-09-15\",\"value\":304.88},{\"period\":\"2024-09-16\",\"value\":266.55},{\"period\":\"2024-09-17\",\"value\":248.47},{\"period\":\"2024-09-18\",\"value\":294.41},{\"period\":\"2024-09-19\",\"value\":283.24},{\"period\":\"2024-09-20\",\"value\":303.09},{\"period\":\"2024-09-21\",\"value\":299.89},{\"period\":\"2024-09-22\",\"value\":326.81},{\"period\":\"2024-09-23\",\"value\":267.23},{\"period\":\"2024-09-24\",\"value\":312.21},{\"period\":\"2024-09-25\",\"value\":295.66},{\"period\":\"2024-09-26\",\"value\":271.94},{\"period\":\"2024-09-27\",\"value\":273.76},{\"period\":\"2024-09-28\",\"value\":282.51},{\"period\":\"2024-09-29\",\"value\":253.4},{\"period\":\"2024-09-30\",\"value\":270.36}],\"summary\":{\"total\":26050.74,\"avg\":283.16,\"max\":347.37,\"min\":232.61,\"count\":92,\"latest\":270.36,\"trend\":0.0669}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/return_rate/query?granularity=week&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"return_rate\",\"name\":\"退货率\",\"unit\":\"%\",\"description\":\"退货订单数 / 总订单数\"},\"granularity\":\"week\",\"data\":[{\"period\":\"2024-06-30\",\"value\":0.14025},{\"period\":\"2024-07-07\",\"value\":0.19624285714285714},{\"period\":\"2024-07-14\",\"value\":0.15857142857142859},{\"period\":\"2024-07-21\",\"value\":0.14364285714285716},{\"period\":\"2024-07-28\",\"value\":0.17439999999999997},{\"period\":\"2024-08-04\",\"value\":0.18378571428571427},{\"period\":\"2024-08-11\",\"value\":0.16938571428571428},{\"period\":\"2024-08-18\",\"value\":0.17852857142857143},{\"period\":\"2024-08-25\",\"value\":0.1694142857142857},{\"period\":\"2024-09-01\",\"value\":0.17618571428571433},{\"period\":\"2024-09-08\",\"value\":0.15148571428571428},{\"period\":\"2024-09-15\",\"value\":0.1280285714285714},{\"period\":\"2024-09-22\",\"value\":0.17932857142857145},{\"period\":\"2024-09-29\",\"value\":0.16755}],\"summary\":{\"total\":2.32,\"avg\":0.17,\"max\":0.2,\"min\":0.13,\"count\":14,\"latest\":0.16755,\"trend\":-0.0657}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/traffic_uv/query?granularity=week&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"traffic_uv\",\"name\":\"独立访客数\",\"unit\":\"人\",\"description\":\"每日独立访客数量\"},\"granularity\":\"week\",\"data\":[{\"period\":\"2024-06-30\",\"value\":146013},{\"period\":\"2024-07-07\",\"value\":190538},{\"period\":\"2024-07-14\",\"value\":196036},{\"period\":\"2024-07-21\",\"value\":182486},{\"period\":\"2024-07-28\",\"value\":181174},{\"period\":\"2024-08-04\",\"value\":204268},{\"period\":\"2024-08-11\",\"value\":176957},{\"period\":\"2024-08-18\",\"value\":189031},{\"period\":\"2024-08-25\",\"value\":194399},{\"period\":\"2024-09-01\",\"value\":192571},{\"period\":\"2024-09-08\",\"value\":179389},{\"period\":\"2024-09-15\",\"value\":186640},{\"period\":\"2024-09-22\",\"value\":173257},{\"period\":\"2024-09-29\",\"value\":66258}],\"summary\":{\"total\":2459017,\"avg\":175644.07,\"max\":204268,\"min\":66258,\"count\":14,\"latest\":66258,\"trend\":-0.6176}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/metrics/traffic_pv/query?granularity=month&start_date=2024-07-01&end_date=2024-09-30",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"metric\":{\"code\":\"traffic_pv\",\"name\":\"页面浏览量\",\"unit\":\"次\",\"description\":\"每日页面浏览次数\"},\"granularity\":\"month\",\"data\":[{\"period\":\"2024-07\",\"value\":2843466},{\"period\":\"2024-08\",\"value\":2928224},{\"period\":\"2024-09\",\"value\":2789676}],\"summary\":{\"total\":8561366,\"avg\":2853788.67,\"max\":2928224,\"min\":2789676,\"count\":3,\"latest\":2789676,\"trend\":-0.0473}},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/quality/check",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"checks\":[{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - stat_date\",\"column_name\":\"stat_date\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - gmv\",\"column_name\":\"gmv\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - order_count\",\"column_name\":\"order_count\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - paying_customers\",\"column_name\":\"paying_customers\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - avg_order_value\",\"column_name\":\"avg_order_value\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - return_rate\",\"column_name\":\"return_rate\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - uv\",\"column_name\":\"uv\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - pv\",\"column_name\":\"pv\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - conversion_rate\",\"column_name\":\"conversion_rate\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 92, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"duplication\",\"check_name\":\"重复行检查\",\"column_name\":\"\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.01,\"details\":\"总行数: 92, 重复行: 0, 重复率: 0.00%\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"primary_key\",\"check_name\":\"主键唯一性检查 - stat_date\",\"column_name\":\"stat_date\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0,\"details\":\"主键列: stat_date, 总行数: 92, 唯一值: 92, 重复: 0\"},{\"table_name\":\"ads_key_metrics\",\"check_type\":\"freshness\",\"check_name\":\"数据新鲜度检查 - stat_date\",\"column_name\":\"stat_date\",\"status\":\"FAIL\",\"severity\":\"CRITICAL\",\"metric_value\":745,\"threshold\":7,\"details\":\"最新日期: 2024-09-30, 距今: 745天\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - stat_date\",\"column_name\":\"stat_date\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - product_id\",\"column_name\":\"product_id\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - product_name\",\"column_name\":\"product_name\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - gmv\",\"column_name\":\"gmv\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - order_count\",\"column_name\":\"order_count\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - quantity_sold\",\"column_name\":\"quantity_sold\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - return_rate\",\"column_name\":\"return_rate\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"null_rate\",\"check_name\":\"空值率检查 - rank_no\",\"column_name\":\"rank_no\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.2,\"details\":\"总行数: 1104, 空值: 0, 空值率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"duplication\",\"check_name\":\"重复行检查\",\"column_name\":\"\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":0,\"threshold\":0.01,\"details\":\"总行数: 1104, 重复行: 0, 重复率: 0.00%\"},{\"table_name\":\"ads_product_ranking\",\"check_type\":\"primary_key\",\"check_name\":\"主键唯一性检查 - stat_date\",\"column_name\":\"stat_date\",\"status\":\"PASS\",\"severity\":\"INFO\",\"metric_value\":1012,\"threshold\":0,\"details\":\"主键列: stat_date, 总行数: 1104, 唯一值:"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/lineage",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"nodes\":[{\"id\":\"ads_key_metrics\",\"layer\":\"ADS\"},{\"id\":\"ads_product_ranking\",\"layer\":\"ADS\"},{\"id\":\"dwd_customer_profile\",\"layer\":\"DWD\"},{\"id\":\"dwd_order_detail\",\"layer\":\"DWD\"},{\"id\":\"dws_daily_product\",\"layer\":\"DWS\"},{\"id\":\"dws_daily_shop\",\"layer\":\"DWS\"},{\"id\":\"ods_customers\",\"layer\":\"ODS\"},{\"id\":\"ods_orders\",\"layer\":\"ODS\"},{\"id\":\"ods_products\",\"layer\":\"ODS\"},{\"id\":\"ods_stores\",\"layer\":\"ODS\"},{\"id\":\"ods_traffic\",\"layer\":\"ODS\"}],\"edges\":[{\"source\":\"ods_orders\",\"target\":\"dwd_order_detail\",\"transform_type\":\"JOIN\",\"description\":\"订单表关联店铺、商品、客户维度\"},{\"source\":\"ods_stores\",\"target\":\"dwd_order_detail\",\"transform_type\":\"JOIN\",\"description\":\"店铺维度关联到订单明细\"},{\"source\":\"ods_products\",\"target\":\"dwd_order_detail\",\"transform_type\":\"JOIN\",\"description\":\"商品维度关联到订单明细\"},{\"source\":\"ods_customers\",\"target\":\"dwd_order_detail\",\"transform_type\":\"JOIN\",\"description\":\"客户维度关联到订单明细\"},{\"source\":\"ods_customers\",\"target\":\"dwd_customer_profile\",\"transform_type\":\"AGGREGATE\",\"description\":\"客户基础信息 + 订单汇总统计\"},{\"source\":\"ods_orders\",\"target\":\"dwd_customer_profile\",\"transform_type\":\"AGGREGATE\",\"description\":\"客户消费行为聚合\"},{\"source\":\"dwd_order_detail\",\"target\":\"dws_daily_shop\",\"transform_type\":\"AGGREGATE\",\"description\":\"按店铺+日期聚合订单数据\"},{\"source\":\"dwd_order_detail\",\"target\":\"dws_daily_product\",\"transform_type\":\"AGGREGATE\",\"description\":\"按商品+日期聚合销售数据\"},{\"source\":\"dws_daily_shop\",\"target\":\"ads_key_metrics\",\"transform_type\":\"AGGREGATE\",\"description\":\"全店日度汇总至核心指标\"},{\"source\":\"ods_traffic\",\"target\":\"ads_key_metrics\",\"transform_type\":\"JOIN\",\"description\":\"流量数据关联到核心指标\"},{\"source\":\"dws_daily_product\",\"target\":\"ads_product_ranking\",\"transform_type\":\"DERIVE\",\"description\":\"商品维度排行计算\"}]},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/ingest/csv?table_name=tmp_uitest_agent5_csv&layer=ODS",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_csv\",\"row_count\":3,\"columns\":4,\"column_details\":[{\"name\":\"campaign\",\"type\":\"VARCHAR\"},{\"name\":\"impressions\",\"type\":\"INTEGER\"},{\"name\":\"clicks\",\"type\":\"INTEGER\"},{\"name\":\"cost\",\"type\":\"DOUBLE\"}]},\"msg\":\"Successfully ingested 3 rows\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/ingest/json?table_name=tmp_uitest_agent5_json&layer=DWD",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"table_name\":\"tmp_uitest_agent5_json\",\"row_count\":3,\"columns\":4,\"column_details\":[{\"name\":\"sku\",\"type\":\"VARCHAR\"},{\"name\":\"name\",\"type\":\"VARCHAR\"},{\"name\":\"price\",\"type\":\"DOUBLE\"},{\"name\":\"qty\",\"type\":\"INTEGER\"}]},\"msg\":\"Successfully ingested 3 rows\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/ingest/json?table_name=tmp_uitest_bad%20name!&layer=DWD",
+      "status": 400,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"非法表名：'tmp_uitest_bad name!'。只允许字母、数字与下划线，须以字母或下划线开头，最长 64 字符\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":[{\"table_name\":\"ads_key_metrics\",\"display_name\":\"核心经营指标\",\"layer\":\"ADS\",\"description\":\"全局核心指标：GMV/订单量/转化率/客单价/退货率/流量\",\"row_count\":92,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.509302\"},{\"table_name\":\"ads_product_ranking\",\"display_name\":\"商品排行榜\",\"layer\":\"ADS\",\"description\":\"商品GMV排行榜，含日度排名\",\"row_count\":1104,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.517911\"},{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":2000,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.522364\"},{\"table_name\":\"dwd_order_detail\",\"display_name\":\"订单明细宽表\",\"layer\":\"DWD\",\"description\":\"订单明细宽表，关联店铺/商品/客户维度\",\"row_count\":11683,\"column_count\":16,\"created_at\":\"2026-10-12T14:55:46.525407\"},{\"table_name\":\"tmp_uitest_agent5_json\",\"display_name\":\"tmp_uitest_agent5_json\",\"layer\":\"DWD\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:17.221172\"},{\"table_name\":\"dws_daily_product\",\"display_name\":\"商品日度汇总\",\"layer\":\"DWS\",\"description\":\"按商品+日期聚合的销售指标\",\"row_count\":1104,\"column_count\":7,\"created_at\":\"2026-10-12T14:55:46.529267\"},{\"table_name\":\"dws_daily_shop\",\"display_name\":\"店铺日度汇总\",\"layer\":\"DWS\",\"description\":\"按店铺+日期聚合的经营指标\",\"row_count\":460,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.533470\"},{\"table_name\":\"ods_customers\",\"display_name\":\"客户主数据\",\"layer\":\"ODS\",\"description\":\"客户主数据，包含昵称、性别、省份、注册日期\",\"row_count\":2000,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.536492\"},{\"table_name\":\"ods_dirty_probe\",\"display_name\":\"脏数据探针\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":4,\"column_count\":4,\"created_at\":\"2026-10-14T08:34:38.504299\"},{\"table_name\":\"ods_orders\",\"display_name\":\"原始订单表\",\"layer\":\"ODS\",\"description\":\"各渠道原始订单数据，包含订单号、客户、商品、金额、状态等\",\"row_count\":11683,\"column_count\":11,\"created_at\":\"2026-10-12T14:55:46.539995\"},{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.545131\"},{\"table_name\":\"ods_stores\",\"display_name\":\"店铺主数据\",\"layer\":\"ODS\",\"description\":\"店铺主数据，包含店铺名称、平台、经营品类\",\"row_count\":5,\"column_count\":5,\"created_at\":\"2026-10-12T14:55:46.549035\"},{\"table_name\":\"ods_traffic\",\"display_name\":\"流量日志表\",\"layer\":\"ODS\",\"description\":\"各渠道每日流量数据，UV/PV/跳出率\",\"row_count\":2269,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.552756\"},{\"table_name\":\"tmp_uitest_agent5_csv\",\"display_name\":\"tmp_uitest_agent5_csv\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:16.903692\"}],\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/tables",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":[{\"table_name\":\"ads_key_metrics\",\"display_name\":\"核心经营指标\",\"layer\":\"ADS\",\"description\":\"全局核心指标：GMV/订单量/转化率/客单价/退货率/流量\",\"row_count\":92,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.509302\"},{\"table_name\":\"ads_product_ranking\",\"display_name\":\"商品排行榜\",\"layer\":\"ADS\",\"description\":\"商品GMV排行榜，含日度排名\",\"row_count\":1104,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.517911\"},{\"table_name\":\"dwd_customer_profile\",\"display_name\":\"客户画像表\",\"layer\":\"DWD\",\"description\":\"客户画像，汇总消费行为指标\",\"row_count\":2000,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.522364\"},{\"table_name\":\"dwd_order_detail\",\"display_name\":\"订单明细宽表\",\"layer\":\"DWD\",\"description\":\"订单明细宽表，关联店铺/商品/客户维度\",\"row_count\":11683,\"column_count\":16,\"created_at\":\"2026-10-12T14:55:46.525407\"},{\"table_name\":\"tmp_uitest_agent5_json\",\"display_name\":\"tmp_uitest_agent5_json\",\"layer\":\"DWD\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:17.221172\"},{\"table_name\":\"dws_daily_product\",\"display_name\":\"商品日度汇总\",\"layer\":\"DWS\",\"description\":\"按商品+日期聚合的销售指标\",\"row_count\":1104,\"column_count\":7,\"created_at\":\"2026-10-12T14:55:46.529267\"},{\"table_name\":\"dws_daily_shop\",\"display_name\":\"店铺日度汇总\",\"layer\":\"DWS\",\"description\":\"按店铺+日期聚合的经营指标\",\"row_count\":460,\"column_count\":9,\"created_at\":\"2026-10-12T14:55:46.533470\"},{\"table_name\":\"ods_customers\",\"display_name\":\"客户主数据\",\"layer\":\"ODS\",\"description\":\"客户主数据，包含昵称、性别、省份、注册日期\",\"row_count\":2000,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.536492\"},{\"table_name\":\"ods_dirty_probe\",\"display_name\":\"脏数据探针\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":4,\"column_count\":4,\"created_at\":\"2026-10-14T08:34:38.504299\"},{\"table_name\":\"ods_orders\",\"display_name\":\"原始订单表\",\"layer\":\"ODS\",\"description\":\"各渠道原始订单数据，包含订单号、客户、商品、金额、状态等\",\"row_count\":11683,\"column_count\":11,\"created_at\":\"2026-10-12T14:55:46.539995\"},{\"table_name\":\"ods_products\",\"display_name\":\"商品主数据\",\"layer\":\"ODS\",\"description\":\"商品主数据，包含SKU、名称、品类、售价、成本\",\"row_count\":12,\"column_count\":6,\"created_at\":\"2026-10-12T14:55:46.545131\"},{\"table_name\":\"ods_stores\",\"display_name\":\"店铺主数据\",\"layer\":\"ODS\",\"description\":\"店铺主数据，包含店铺名称、平台、经营品类\",\"row_count\":5,\"column_count\":5,\"created_at\":\"2026-10-12T14:55:46.549035\"},{\"table_name\":\"ods_traffic\",\"display_name\":\"流量日志表\",\"layer\":\"ODS\",\"description\":\"各渠道每日流量数据，UV/PV/跳出率\",\"row_count\":2269,\"column_count\":8,\"created_at\":\"2026-10-12T14:55:46.552756\"},{\"table_name\":\"tmp_uitest_agent5_csv\",\"display_name\":\"tmp_uitest_agent5_csv\",\"layer\":\"ODS\",\"description\":\"\",\"row_count\":3,\"column_count\":4,\"created_at\":\"2026-10-15T01:32:16.903692\"}],\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/query",
+      "status": 200,
+      "body": "{\"code\":0,\"data\":{\"rows\":[{\"cnt\":92,\"gmv\":3312522.61}],\"count\":1,\"truncated\":false},\"msg\":\"success\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/query",
+      "status": 400,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"不允许多条语句：请用分号分隔的单条查询\"}"
+    },
+    {
+      "url": "http://127.0.0.1:8060/api/v1/query",
+      "status": 400,
+      "body": "{\"code\":1,\"data\":null,\"msg\":\"该语句包含不被允许的 DuckDB 能力：read_text\"}"
+    }
+  ]
+}

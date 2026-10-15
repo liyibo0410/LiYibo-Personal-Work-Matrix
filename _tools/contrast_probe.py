@@ -38,7 +38,7 @@ P02_BASE = "http://127.0.0.1:3001"
 P02_LOGIN = (
     "fetch('%s/login/submit',{method:'POST',"
     "headers:{'Content-Type':'application/x-www-form-urlencoded'},"
-    "body:'email=boss@cloudpivot.com&password=Test123456',credentials:'include'})"
+    "body:'email=boss@example.com&password=Test123456',credentials:'include'})"
     ".then(r=>r.status)" % P02_BASE
 )
 

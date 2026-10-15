@@ -16,26 +16,26 @@
 
 | 账号 | 角色 | 密码 |
 |---|---|---|
-| boss@cloudpivot.com | owner | Test123456 |
-| ops@cloudpivot.com | operator | Test123456 |
-| design@cloudpivot.com | designer | Test123456 |
-| cs@cloudpivot.com | cs | Test123456 |
+| boss@example.com | owner | Test123456 |
+| ops@example.com | operator | Test123456 |
+| design@example.com | designer | Test123456 |
+| cs@example.com | cs | Test123456 |
 
 ## 3. 权限验证结果
 
 ### 3.1 各角色权限矩阵
 
 ```
-boss@cloudpivot.com  → role: owner
+boss@example.com  → role: owner
   can_read=True can_edit=True can_manage_users=True can_confirm_ad=True
 
-ops@cloudpivot.com   → role: operator
+ops@example.com   → role: operator
   can_read=True can_edit=True can_manage_users=False can_confirm_ad=True
 
-design@cloudpivot.com → role: designer
+design@example.com → role: designer
   can_read=True can_edit=True can_manage_users=False can_confirm_ad=False
 
-cs@cloudpivot.com    → role: cs
+cs@example.com    → role: cs
   can_read=True can_edit=False can_manage_users=False can_confirm_ad=False
 ```
 

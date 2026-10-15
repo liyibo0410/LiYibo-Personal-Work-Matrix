@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""云枢智能作品集 · GitHub 仓库「门面」元数据落地脚本（About / topics / homepage）。
+"""李奕波个人作品矩阵作品集 · GitHub 仓库「门面」元数据落地脚本（About / topics / homepage）。
 
 设计约束（与 AGENTS.md 的证据纪律一致）：
   * 纯标准库（urllib.request），不引入任何新依赖，不需要 uv / requests。
@@ -52,7 +52,7 @@ MAX_DESCRIPTION_LEN = 350  # GitHub About 简介上限
 # 默认 About 简介（≤350 字符，中文按 1 字符算）。
 # 与 docs/github-repo-metadata.md「候选 A」一致；要改就文档 + 这里两处一起改。
 DEFAULT_DESCRIPTION = (
-    "云枢智能 CloudPivot · AI 电商运营中台：10 个 AI 能力模块（AI 客服 / 电商运营助手 / "
+    "李奕波个人作品矩阵 Li Yibo's Personal Portfolio · AI 电商运营中台：10 个 AI 能力模块（AI 客服 / 电商运营助手 / "
     "NL2SQL 问数 / RAG 知识库 / 合同审批 / 数据中台 / 素材中心 / 直播切片 / 销售考核 / 微调平台）"
     "合并成一套统一系统——微前端外壳 + 统一认证 + 端口注册表 + 跨模块真实调用，731 passed。"
     "Python 3.12 · FastAPI · LangGraph · Next.js。"
@@ -89,7 +89,7 @@ DEFAULT_TOPICS = [
 BANNED_TOPICS = {
     "awesome": "空泛的「收藏夹」词，搜到的人不是来找可运行项目的，无曝光价值",
     "awesome-list": "同上，且会被理解为「资源清单」而非「一套可运行的系统」",
-    "hacktoberfest": "季节性引流标签，面试官视角是噪声，且本仓库并不收外部 PR",
+    "hacktoberfest": "季节性引流标签，对读者是噪声，且本仓库并不收外部 PR",
     "good-first-issue": "表示「欢迎新人练手」，与「工程作品集」定位相反",
     "help-wanted": "同上，暗示项目未完成 / 缺人手",
     "first-timers-only": "同上",

@@ -1,0 +1,73 @@
+{
+  "steps": [
+    {
+      "area": "topbar",
+      "ctl": "☰ 祖先链探测 (390px 公共态)",
+      "action": "read",
+      "after": {
+        "width": 390,
+        "btnChain": [
+          {
+            "tag": "BUTTON#btn-menu.cp-icon-btn",
+            "display": "flex",
+            "visibility": "visible",
+            "rect": "0x0"
+          },
+          {
+            "tag": "DIV.cp-topbar-title",
+            "display": "flex",
+            "visibility": "visible",
+            "rect": "0x0"
+          },
+          {
+            "tag": "HEADER.cp-topbar",
+            "display": "none",
+            "visibility": "visible",
+            "rect": "0x0"
+          },
+          {
+            "tag": "DIV.cp-main",
+            "display": "flex",
+            "visibility": "visible",
+            "rect": "390x11983.375"
+          },
+          {
+            "tag": "DIV#app-view.cp-layout",
+            "display": "flex",
+            "visibility": "visible",
+            "rect": "390x11983.375"
+          },
+          {
+            "tag": "BODY.cp-app.cp-public",
+            "display": "block",
+            "visibility": "visible",
+            "rect": "390x844"
+          }
+        ]
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:11:29.067Z"
+    },
+    {
+      "area": "topbar",
+      "ctl": "☰ 登录后 (390px)",
+      "action": "read+click",
+      "after": {
+        "probe2": {
+          "display": "flex",
+          "visibility": "visible",
+          "w": 34,
+          "h": 34,
+          "topbarDisplay": "flex"
+        },
+        "clicked": {
+          "before": "cp-sidebar|matrix(1, 0, 0, 1, -240, 0)",
+          "after": "cp-sidebar open|matrix(1, 0, 0, 1, 0, 0)",
+          "changed": true
+        }
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:11:31.386Z"
+    }
+  ]
+}

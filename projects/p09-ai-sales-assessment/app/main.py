@@ -33,7 +33,7 @@ except ImportError:  # pragma: no cover - 取决于启动方式
 # App
 # ---------------------------------------------------------------------------
 
-app = FastAPI(title="P09 AI 销售考核 · 云枢智能", version="1.0.0")
+app = FastAPI(title="P09 AI 销售考核 · 李奕波个人作品矩阵", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
@@ -186,7 +186,7 @@ def _make_messages(topic: str, agent_quality: str) -> list[Message]:
 
     # Greeting
     if agent_quality in ("good", "excellent"):
-        msgs.append({"role": "agent", "content": "您好，欢迎光临云枢智能旗舰店！很高兴为您服务，请问有什么可以帮您的吗？", "offset": 0})
+        msgs.append({"role": "agent", "content": "您好，欢迎光临李奕波个人作品矩阵旗舰店！很高兴为您服务，请问有什么可以帮您的吗？", "offset": 0})
     else:
         msgs.append({"role": "agent", "content": "在的，您有什么事？", "offset": 0})
 
@@ -266,7 +266,7 @@ def _poor_response(topic: str) -> str:
 
 
 def _excellent_closing(topic: str) -> str:
-    return "很高兴能帮到您！请问还有其他可以为您做的吗？另外同步一个信息，我们刚上了一批新品，还有一套和您这次选购很搭配的组合装，或许您会感兴趣，需要我把详细资料发给您看看吗？感谢您选择云枢智能，祝您生活愉快，期待下次再为您服务，再见！"
+    return "很高兴能帮到您！请问还有其他可以为您做的吗？另外同步一个信息，我们刚上了一批新品，还有一套和您这次选购很搭配的组合装，或许您会感兴趣，需要我把详细资料发给您看看吗？感谢您选择李奕波个人作品矩阵，祝您生活愉快，期待下次再为您服务，再见！"
 
 
 def _good_closing() -> str:
@@ -1264,7 +1264,7 @@ async def serve_label():
 if __name__ == "__main__":
     import uvicorn
     print("=" * 60)
-    print("  P09 AI 销售考核 - 云枢智能")
+    print("  P09 AI 销售考核 - 李奕波个人作品矩阵")
     print("  http://localhost:8090")
     print("  [MOCK] 质检评分: 基于规则的模拟算法，非真实 LLM 调用")
     print("=" * 60)

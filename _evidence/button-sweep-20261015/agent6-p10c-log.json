@@ -1,0 +1,82 @@
+{
+  "dialogs": [
+    {
+      "type": "alert",
+      "message": "训练已完成（模拟演示，未真实训练）！任务 ID：train-103，最终损失：0.3610"
+    }
+  ],
+  "consoleErrs": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found) || src=http://127.0.0.1:8101/favicon.ico:0",
+    "Failed to load resource: the server responded with a status of 404 (Not Found) || src=http://127.0.0.1:8101/favicon.ico:0"
+  ],
+  "badResponses": [],
+  "stats2": {
+    "datasets": 5,
+    "training_runs": 3,
+    "completed_runs": 3,
+    "model_versions": 3,
+    "deployed_models": 2,
+    "deployed_simulated_models": 2,
+    "real_served_models": 0,
+    "total_samples": 45726,
+    "avg_accuracy": 0.8367,
+    "mock_mode": true,
+    "metrics_provenance": "total_samples / avg_accuracy 是由预置演示数据算出来的聚合值，其中模型 accuracy 是模拟评分、未上传数据集的样本数是预置常量，均非实测"
+  },
+  "results": [
+    {
+      "page": "P10 模型仓库",
+      "control": "模型卡“训练曲线”按钮",
+      "action": "点击（在模型仓库页）",
+      "expected": "应看到该模型的损失曲线（弹出/跳转/图表可见）",
+      "actual": "inline display=block, 实际可见=false, 被隐藏于非激活页=page-training, 标题已设置=\"损失曲线 - CS-QA-LoRA v1.0\"",
+      "verdict": "缺陷",
+      "evidence": "agent6-29"
+    },
+    {
+      "page": "P10 模型仓库",
+      "control": "上一步的曲线状态泄漏验证",
+      "action": "切到训练页",
+      "expected": "—",
+      "actual": "训练页可见=true, canvas=1, title=\"损失曲线 - CS-QA-LoRA v1.0\"",
+      "verdict": "正常（状态泄漏：切页后才可见）",
+      "evidence": "agent6-30"
+    },
+    {
+      "page": "P10 训练",
+      "control": "“开始训练（演示）”（大数据集 ds-001 正常路径）",
+      "action": "填名+选 ds-001 点击",
+      "expected": "成功：弹窗明确模拟；形状曲线展示",
+      "actual": "dialogs=[\"训练已完成（模拟演示，未真实训练）！任务 ID：train-103，最终损失：0.3610\"], 曲线可见=true, canvas=1, stats.training_runs=3, 历史含新任务=false",
+      "verdict": "正常",
+      "evidence": "agent6-31"
+    },
+    {
+      "page": "P10 训练",
+      "control": "训练历史列表（成功新建后）",
+      "action": "检查训练历史",
+      "expected": "新任务可在此再次访问",
+      "actual": "rows=2, 含新任务=false",
+      "verdict": "缺陷",
+      "evidence": "agent6-31"
+    },
+    {
+      "page": "P10 全页",
+      "control": "【任务清单声称的按钮】从 P09 拉取低分样本 / 注册模型",
+      "action": "枚举按钮+文本搜索",
+      "expected": "任务清单称“从 P09 拉取”为新增闭环按钮",
+      "actual": "数据集页按钮=[查看全部 | 详情 | 详情 | 详情 | 详情 | 详情 | 关闭 | ▶ 开始训练（演示） | 损失曲线 | 损失曲线 | 关闭 | 开始对比 | 已模拟部署 | 训练曲线 | 已模拟部署 | 训练曲线 | 模拟部署 | 训练曲线]; 训练页按钮=[查看全部 | 详情 | 详情 | 详情 | 详情 | 详情 | 关闭 | ▶ 开始训练（演示） | 损失曲线 | 损失曲线 | 关闭 | 开始对比 | 已模拟部署 | 训练曲线 | 已模拟部署 | 训练曲线 | 模拟部署 | 训练曲线]",
+      "verdict": "缺陷（按钮缺失）",
+      "evidence": "agent6-32"
+    },
+    {
+      "page": "P10 全页",
+      "control": "favicon.ico + 控制台错误",
+      "action": "检查",
+      "expected": "无无关 4xx",
+      "actual": "favicon=404, consoleErrs=[\"Failed to load resource: the server responded with a status of 404 (Not Found) || src=http://127.0.0.1:8101/favicon.ico:0\",\"Failed to load resource: the server responded with a status of 404 (Not Found) || src=http://127.0.0.1:8101/favicon.ico:0\"], badResponses=[]",
+      "verdict": "记录",
+      "evidence": "-"
+    }
+  ]
+}

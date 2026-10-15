@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 >nul 2>&1
-title CloudPivot P04 - RAG 知识库
+title Li Yibo's Personal Portfolio P04 - RAG 知识库
 cd /d "%~dp0"
 
 echo ============================================================

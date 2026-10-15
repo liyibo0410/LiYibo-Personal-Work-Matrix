@@ -1,10 +1,10 @@
 # P10 Model Finetune Platform
 
-> CloudPivot AI - Model fine-tuning management platform
+> Li Yibo's Personal Portfolio AI - Model fine-tuning management platform
 
 ## Positioning
 
-Centralized platform for managing the full lifecycle of model fine-tuning: dataset preparation, LoRA/QLoRA training configuration, evaluation with multiple metrics, model versioning, and deployment registration. Part of the CloudPivot (L1 Model Layer) architecture.
+Centralized platform for managing the full lifecycle of model fine-tuning: dataset preparation, LoRA/QLoRA training configuration, evaluation with multiple metrics, model versioning, and deployment registration. Part of the Li Yibo's Personal Portfolio (L1 Model Layer) architecture.
 
 ## Business Pain Points
 
@@ -132,4 +132,4 @@ All mock boundaries are labeled in the UI (yellow banner + per-field 「未测�
 
 9. **Q: What's the model registry design?** A: Each version tracks: base model, training ID (lineage), config snapshot, metrics, deployment status, endpoint URL. Supports registered/deployed/archived states.
 
-10. **Q: How does this integrate with the broader CloudPivot platform?** A: Fine-tuned models serve P01 (customer service) and P02 (ops assistant) via OpenAI-compatible endpoints. Evaluation data feeds back into P09 (sales assessment) for quality tracking.
+10. **Q: How does this integrate with the broader Li Yibo's Personal Portfolio platform?** A: Fine-tuned models serve P01 (customer service) and P02 (ops assistant) via OpenAI-compatible endpoints. Evaluation data feeds back into P09 (sales assessment) for quality tracking.

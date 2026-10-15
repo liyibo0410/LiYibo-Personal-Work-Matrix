@@ -52,7 +52,7 @@ wheels = [
 ]
 
 [[package]]
-name = "cloudpivot-config"
+name = "portfolio-config"
 version = "1.0.0"
 source = { editable = "../../shared/config" }
 
@@ -257,7 +257,7 @@ name = "p09-ai-sales-assessment"
 version = "1.0.0"
 source = { editable = "." }
 dependencies = [
-    { name = "cloudpivot-config" },
+    { name = "portfolio-config" },
     { name = "fastapi" },
     { name = "httpx" },
     { name = "pydantic" },
@@ -273,7 +273,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "cloudpivot-config", editable = "../../shared/config" },
+    { name = "portfolio-config", editable = "../../shared/config" },
     { name = "fastapi", specifier = ">=0.110.0" },
     { name = "httpx", specifier = ">=0.27.0" },
     { name = "pydantic", specifier = ">=2.0" },

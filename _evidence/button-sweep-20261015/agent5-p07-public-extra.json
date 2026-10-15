@@ -1,0 +1,13 @@
+{
+  "ts": "2026-10-15T02:29:36.337Z",
+  "steps": [
+    {
+      "ts": "2026-10-15T02:29:36.335Z",
+      "w": "补充控件",
+      "a": "脚本异常",
+      "e": "-",
+      "act": "page.goto: Timeout 60000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://39.96.200.45:8090/p07/\", waiting until \"load\"\u001b[22m\n",
+      "v": "缺陷"
+    }
+  ]
+}

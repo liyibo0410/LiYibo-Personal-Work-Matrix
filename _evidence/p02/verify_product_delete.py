@@ -52,8 +52,8 @@ def main() -> int:
     out(f"1) 路由注册 /api/v1/products/{{product_id}} → {delete_ops}")
     assert "DELETE" in delete_ops, "DELETE 路由未注册"
 
-    boss = token_for("boss@cloudpivot.com")
-    cs = token_for("cs@cloudpivot.com")
+    boss = token_for("boss@example.com")
+    cs = token_for("cs@example.com")
     boss_headers = {"Authorization": f"Bearer {boss}"}
     cs_headers = {"Authorization": f"Bearer {cs}"}
 

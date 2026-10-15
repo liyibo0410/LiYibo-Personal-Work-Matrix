@@ -1,0 +1,31 @@
+{
+  "steps": [
+    {
+      "area": "hero-cta-loggedin",
+      "ctl": "进入演示 · 旗舰 P02 运营助手",
+      "action": "click",
+      "after": {
+        "hash": "#/workspace/ecommerce-ops",
+        "topbar": "电商运营助手",
+        "frameVisible": true,
+        "frame": {
+          "url": "http://localhost:3001/login?cp-theme=light",
+          "title": "电商运营助手 · 李奕波个人作品矩阵"
+        }
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:01:59.270Z"
+    },
+    {
+      "area": "hero-secondary",
+      "ctl": "看十大模块与实测数据 ↓",
+      "action": "click",
+      "after": {
+        "scrollY": 620,
+        "sectionVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:02:01.737Z"
+    }
+  ]
+}

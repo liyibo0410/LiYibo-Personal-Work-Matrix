@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-cp-brand-title="{company} · 统一平台">云枢智能 · 统一平台</title>
+<title data-cp-brand-title="{company} · 统一平台">李奕波个人作品矩阵 · 统一平台</title>
 <link rel="stylesheet" href="/shared/ui-kit/tokens.css">
 <link rel="stylesheet" href="/shared/ui-kit/components.css">
 <style>
@@ -121,12 +121,161 @@
     text-align: center; font-size: var(--cp-fs-sm); color: var(--cp-ink2); line-height: 1.8; }
   .lp-foot a { color: var(--cp-brand); text-decoration: none; }
   .lp-foot a:hover { text-decoration: underline; }
+    border: 1px solid var(--cp-line); border-radius: var(--cp-radius); padding: var(--cp-sp-5); }
+    background: var(--cp-brand-bg); border: 1px solid var(--cp-line);
+    border-radius: var(--cp-radius-pill); padding: 1px var(--cp-sp-2); margin: 4px 6px 0 0; }
   /* 登录模态：外壳网关在隧道/局域网下仍是唯一认证入口，模块内不再各造一套登录页 */
   .lp-modal-mask { position: fixed; inset: 0; background: rgba(16,24,40,.45); z-index: 120;
     display: flex; align-items: center; justify-content: center; padding: var(--cp-sp-4); }
   .lp-modal { width: 380px; max-width: 100%; box-shadow: var(--cp-shadow-lg); }
   .lp-modal-head { display: flex; align-items: center; gap: var(--cp-sp-3); margin-bottom: var(--cp-sp-5); }
+
+  /* ══════════════════════════════════════════════════════════════════
+     首页优化层（2026-10-15，opencode）
+     只做配色与细节：字阶/行高/字距、间距节奏、卡片与数字排版、焦点态、对比度。
+     **不改结构、不改组件、不动 shared/ui-kit 令牌** —— 选择器一律限定在本页
+     （.lp-* / #home-view 内的 .cp-stat*），因此不会影响十个模块。
+     ══════════════════════════════════════════════════════════════════ */
+
+  /* 1) 作用域内提升弱文字对比度：--cp-ink3(#8A94A3) 在浅底上不足 4.5:1 */
+  .lp-wrap { --cp-ink3: #6B7280; }
+
+  /* 2) 阅读字号整体上浮一档：平台基准 13px 对「首页长文」偏小 */
+  .lp-nav-links a { font-size: 14px; }
+  .lp-lead { font-size: 16px; }
+  .lp-sub { font-size: 13.5px; }
+  .lp-mod .cp-agent-desc, .lp-ev-lbl, .lp-bound-item { font-size: 13.5px; }
+  .lp-mod-metric, .lp-foot { font-size: 13.5px; }
+
+  /* 3) Hero：字阶、字距与呼吸 */
+  .lp-hero { padding: var(--cp-sp-7) 0 var(--cp-sp-6); }
+  .lp-h1 { font-size: clamp(2.05rem, 5vw, 3.1rem); line-height: 1.12;
+           letter-spacing: -1.6px; text-wrap: balance; }
+  .lp-eyebrow { font-family: var(--cp-font-mono); letter-spacing: .04em; }
+  .lp-ctas .cp-btn { min-height: 46px; padding-inline: var(--cp-sp-5); }
+
+  /* 4) 章节节奏与标题层级 */
+  .lp-section { padding: var(--cp-sp-7) 0 var(--cp-sp-6); }
+  .lp-section:first-of-type { border-top: 0; }
+  .lp-h2 { font-size: clamp(1.4rem, 2.4vw, 1.75rem); letter-spacing: -.5px; }
+  .lp-h2 + .lp-sub { margin-top: var(--cp-sp-2); }
+  .lp-sub { max-width: 80ch; line-height: 1.75; }
+
+  /* 5) 模块卡：细节打磨（结构不变） */
+  .lp-mod { border-radius: var(--cp-radius-lg); }
+  .lp-mod:hover { box-shadow: var(--cp-shadow-lg); }
+  .lp-mod-metric { font-variant-numeric: tabular-nums; }
+  .lp-mod-mock { border-left-width: 3px; }
+
+  /* 6) 证据 / ADR 卡：数字等宽 + 来源贴底对齐，网格更整齐 */
+  .lp-ev-card { display: flex; flex-direction: column; gap: var(--cp-sp-1); border-radius: var(--cp-radius-lg); }
+  .lp-ev-num { font-variant-numeric: tabular-nums; font-size: clamp(1.6rem, 3vw, 2.1rem); line-height: 1.1; }
+  .lp-ev-src { margin-top: auto; padding-top: var(--cp-sp-2); }
+
+  /* 7) 边界墙：左侧细条 + hover 呼应品牌色 */
+  .lp-bound-item { border-radius: var(--cp-radius); border-left: 3px solid var(--cp-line); }
+  .lp-bound-item:hover { border-left-color: var(--cp-brand); }
+  .lp-honest { line-height: 1.8; }
+
+
+  /* 9) 关键数字统一等宽对齐 */
+  .cp-stat-value, .lp-ev-num, .lp-mod-metric { font-variant-numeric: tabular-nums; }
+
+  /* 10) 焦点态：本页所有可点击元素（无障碍） */
+  .lp-wrap a:focus-visible, .lp-wrap button:focus-visible,
+  .lp-nav a:focus-visible, .lp-nav button:focus-visible,
+  .lp-modal a:focus-visible, .lp-modal button:focus-visible, .lp-modal input:focus-visible {
+    outline: 2px solid var(--cp-brand); outline-offset: 2px; border-radius: var(--cp-radius-sm);
+  }
+
+  /* 11) 尊重系统「减弱动效」 */
+  @media (prefers-reduced-motion: reduce) {
+    .lp-mod, .lp-nav-links a { transition: none !important; }
+    .lp-mod:hover { transform: none; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     蓝色方案（2026-10-15）：**已改为统一**
+     强调色不再由本页单独覆盖 —— 已把共享令牌 shared/ui-kit/tokens.css 的
+     brand 家族换成 Navy Steel（浅 #1D4ED8 / 暗 #5B8DEF），并把弱文本
+     --cp-ink3 提到 #6B7787（原来对底色只有 2.77:1）。
+     因此外壳与十个模块（iframe 独立文档，各自加载同一份 tokens.css）现在是**同一套色**。
+     ⚠ P01 / P02 / P03 是「构建期内联令牌」的模块（ADR-0005），改共享令牌后需要重新构建才生效。
+     ══════════════════════════════════════════════════════════════════ */
+
+  /* ══════════════════════════════════════════════════════════════════
+     动画细节层（2026-10-15）
+     原则：200–340ms；只动 opacity / transform / box-shadow（不触发布局抖动）；
+     全部在 prefers-reduced-motion 下退回静态。
+     ══════════════════════════════════════════════════════════════════ */
+
+  /* 1) 滚动入场：JS 加 .lp-reveal，进入视口后加 .is-in */
+  .lp-reveal { opacity: 0; transform: translateY(14px); }
+  .lp-reveal.is-in {
+    opacity: 1; transform: none;
+    transition: opacity .34s var(--cp-ease), transform .34s var(--cp-ease);
+  }
+
+  /* 2) 顶栏导航：下划线从左滑入 */
+  .lp-nav-links a { position: relative; }
+  .lp-nav-links a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 1px; height: 2px;
+    background: var(--cp-brand); transform: scaleX(0); transform-origin: left;
+    transition: transform .28s var(--cp-ease);
+  }
+  .lp-nav-links a:hover::after, .lp-nav-links a:focus-visible::after { transform: scaleX(1); }
+
+  /* 3) 品牌标：hover 轻微转动 + 品牌色投影 */
+  .lp-nav-brand .cp-logo { transition: transform .28s var(--cp-ease), box-shadow .28s var(--cp-ease); }
+  .lp-nav-brand:hover .cp-logo { transform: rotate(-6deg) scale(1.06); box-shadow: 0 8px 20px -8px var(--cp-brand); }
+
+  /* 4) 按钮：按下回弹（只在本页） */
+  .lp-wrap .cp-btn:active, .lp-nav .cp-btn:active { transform: translateY(1px) scale(.985); }
+  .lp-wrap .cp-btn { transition: transform .18s var(--cp-ease), background .18s var(--cp-ease),
+                                 box-shadow .18s var(--cp-ease), border-color .18s var(--cp-ease); }
+
+  /* 5) 指标数字：数字到位时轻微上浮 */
+  .cp-stat-value.is-count { animation: lp-count-pop .42s var(--cp-ease); }
+  @keyframes lp-count-pop { from { transform: translateY(6px); opacity: .25 } to { transform: none; opacity: 1 } }
+
+  /* 6) 技术栈小块：错峰弹入 + hover 抬升 */
+  .lp-chips { display: flex; flex-wrap: wrap; gap: 0; }
+  .lp-chip {
+    display: inline-flex; align-items: center;
+    font-family: var(--cp-font-mono); font-size: var(--cp-fs-xs); line-height: 1.9;
+    color: var(--cp-brand); background: var(--cp-brand-bg);
+    border: 1px solid color-mix(in srgb, var(--cp-brand) 26%, transparent);
+    border-radius: var(--cp-radius-pill); padding: 0 10px; margin: 0 6px 6px 0;
+    opacity: 0; transform: translateY(6px) scale(.96);
+    transition: transform .22s var(--cp-ease), box-shadow .22s var(--cp-ease),
+                background .22s var(--cp-ease), color .22s var(--cp-ease);
+  }
+  .lp-chip.is-in {
+    opacity: 1; transform: none;
+    transition: opacity .3s var(--cp-ease) var(--d, 0ms), transform .3s var(--cp-ease) var(--d, 0ms);
+  }
+  .lp-chip:hover {
+    transform: translateY(-2px); background: var(--cp-surface); color: var(--cp-brand-hover);
+    box-shadow: 0 8px 18px -10px var(--cp-brand);
+  }
+
+  /* 7) 闭环节点与箭头 */
+  .cp-flow-node { transition: transform .22s var(--cp-ease), box-shadow .22s var(--cp-ease); }
+  .cp-flow-node:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -12px var(--cp-brand); }
+  .cp-flow-arrow { animation: lp-nudge 1.9s ease-in-out infinite; display: inline-block; }
+  @keyframes lp-nudge { 0%, 100% { transform: translateX(0); opacity: .55 } 50% { transform: translateX(3px); opacity: 1 } }
+
+
+
+  @media (prefers-reduced-motion: reduce) {
+    .lp-reveal, .lp-chip { opacity: 1 !important; transform: none !important; }
+    .lp-reveal { transition: none !important; }
+    .cp-flow-arrow { animation: none !important; }
+    .lp-nav-links a::after { transition: none !important; }
+    *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  }
 </style>
+<link rel="icon" type="image/svg+xml" href="/shared/ui-kit/favicon.svg">
 </head>
 <body class="cp-app">
 
@@ -136,8 +285,8 @@
     <div class="lp-modal-head">
       <div class="cp-login-logo cp-logo" data-cp-brand="logo">CP</div>
       <div>
-        <div data-cp-brand="company" style="font-size:var(--cp-fs-lg);font-weight:700">云枢智能</div>
-        <div class="cp-muted" style="font-size:var(--cp-fs-sm)"><span data-cp-brand="name_en">CloudPivot</span> · <span data-cp-brand="tagline">AI 电商运营中台</span></div>
+        <div data-cp-brand="company" style="font-size:var(--cp-fs-lg);font-weight:700">李奕波个人作品矩阵</div>
+        <div class="cp-muted" style="font-size:var(--cp-fs-sm)"><span data-cp-brand="name_en">Li Yibo's Personal Portfolio</span> · <span data-cp-brand="tagline">AI 电商运营中台</span></div>
       </div>
     </div>
     <div class="cp-hint" id="login-reason" style="margin-bottom:var(--cp-sp-4)">五个演示账号对应五种业务角色（老板 / 运营 / 法务 / 销售 / 管理员）。登录后模块里的数据、拦截与降级标注都是本机真实行为，不是录屏。点下方账号即填充。</div>
@@ -167,7 +316,7 @@
     <div class="cp-sidebar-header">
       <div class="cp-logo" data-cp-brand="logo">CP</div>
       <div class="cp-brand-text">
-        <div class="cp-brand-name" data-cp-brand="company">云枢智能</div>
+        <div class="cp-brand-name" data-cp-brand="company">李奕波个人作品矩阵</div>
         <div class="cp-brand-sub" data-cp-brand="subtitle">统一平台</div>
       </div>
     </div>
@@ -176,20 +325,20 @@
       <button class="cp-brand-cfg" id="btn-brand-settings" title="自定义公司名与 logo">
         <span class="cp-brand-cfg-ic"></span>品牌设置
       </button>
-      <span class="cp-sidebar-ver"><span data-cp-brand="version">v1.0</span> · <span data-cp-brand="name_en">CloudPivot</span></span>
+      <span class="cp-sidebar-ver"><span data-cp-brand="version">v1.0</span> · <span data-cp-brand="name_en">Li Yibo's Personal Portfolio</span></span>
     </div>
   </aside>
 
   <div class="cp-main">
     <header class="cp-topbar">
       <div class="cp-topbar-title">
-        <button class="cp-icon-btn" id="btn-menu" title="菜单" style="display:none">☰</button>
+        <button class="cp-icon-btn" id="btn-menu" title="菜单" aria-label="打开菜单" style="display:none"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></button>
         <span id="topbar-title">作品集首页</span>
       </div>
       <div class="cp-topbar-actions">
-        <button class="cp-icon-btn" id="btn-theme" title="切换主题">◐</button>
+        <button class="cp-icon-btn" id="btn-theme" title="切换主题" aria-label="切换深浅主题"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"></path></svg></button>
         <span class="cp-badge" id="user-badge"></span>
-        <button class="cp-icon-btn" id="btn-logout" title="退出登录">⎋</button>
+        <button class="cp-icon-btn" id="btn-logout" title="退出登录" aria-label="退出登录"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="M10 17l5-5-5-5"></path><path d="M15 12H3"></path></svg></button>
       </div>
     </header>
 
@@ -198,7 +347,7 @@
       <a class="lp-nav-brand" href="#/">
         <span class="cp-logo" data-cp-brand="logo">CP</span>
         <span class="cp-brand-text">
-          <span class="cp-brand-name"><span data-cp-brand="company">云枢智能</span> <span data-cp-brand="name_en">CloudPivot</span></span>
+          <span class="cp-brand-name"><span data-cp-brand="company">李奕波个人作品矩阵</span> <span data-cp-brand="name_en">Li Yibo's Personal Portfolio</span></span>
           <span class="cp-brand-sub">全栈 AI 作品集</span>
         </span>
       </a>
@@ -210,7 +359,7 @@
         <a href="#lp-about">关于我</a>
       </div>
       <div class="lp-nav-actions">
-        <button class="cp-icon-btn" id="btn-theme-public" title="切换主题" type="button">◐</button>
+        <button class="cp-icon-btn" id="btn-theme-public" title="切换主题" type="button" aria-label="切换深浅主题"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"></path></svg></button>
         <button class="cp-btn primary" id="btn-login-open" type="button">登录进入演示</button>
       </div>
     </nav>
@@ -245,7 +394,7 @@
 
         <section class="lp-section" id="lp-arch">
           <h2 class="lp-h2">一条数据闭环，六个工程决策</h2>
-          <p class="lp-sub">闭环的意义是<b style="color:var(--cp-ink1)">口径只有一份</b>：同一个「GMV」在数据中台、运营看板、销售考核里算的是同一个数；低分会话回流微调层，新模型再回到 P01 / P02 的回复里。下面六条 ADR 是这套合并形态里我认为最该被追问的决策，每条都连同代价一起写 —— 收益谁都会讲。</p>
+          <p class="lp-sub">闭环的意义是<b style="color:var(--cp-ink1)">口径只有一份</b>：同一个「GMV」在数据中台、运营看板、销售考核里算的是同一个数；低分会话回流微调层，新模型再回到 P01 / P02 的回复里。下面六条 ADR 是这套合并形态里最需要交代清楚的决策，每条都连同代价一起写 —— 收益谁都会讲。</p>
           <div class="cp-flow">
             <span class="cp-flow-node">P06 数据中台</span><span class="cp-flow-arrow">→</span>
             <span class="cp-flow-node">P04 知识库 / P07 素材</span><span class="cp-flow-arrow">→</span>
@@ -265,12 +414,12 @@
 
         <section class="lp-section" id="lp-evidence">
           <h2 class="lp-h2">实测数据，以及它从哪来</h2>
-          <p class="lp-sub">面试里最常被追问的一句是「这个数字怎么来的」，所以每张卡下面都留着证据文件路径，多数报告还带可复跑的 <code>verify_*.py</code>。测试通过数是各模块<b style="color:var(--cp-ink1)">最近一次 pytest 实跑</b>的结果，是「通过数」而不是覆盖率；全平台没做过并发压测，这条写在下一节而不是藏起来。</p>
+          <p class="lp-sub">最常被问到的一句是「这个数字怎么来的」，所以每张卡下面都留着证据文件路径，多数报告还带可复跑的 <code>verify_*.py</code>。测试通过数是各模块<b style="color:var(--cp-ink1)">最近一次 pytest 实跑</b>的结果，是「通过数」而不是覆盖率；全平台没做过并发压测，这条写在下一节而不是藏起来。</p>
           <div class="lp-ev-grid">
-            <div class="lp-ev-card"><div class="lp-ev-num">565</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">十个模块的 pytest 通过总数</b><br>逐模块取最新一次运行，日志已入仓库可查<br>P01 62 · P02 162 · P03 61 · P04 23 · P05 46 · P06 44 · P07 68 · P08 30 · P09 41 · P10 28</div><div class="lp-ev-src">_evidence/*/pytest-*.log · _evidence/*/INDEX.md</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-num">731</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">十个模块的 pytest 通过总数</b><br>2026-10-14 全平台回归实测重算，日志已入仓库可查<br>P01 73 · P02 178 · P03 137 · P04 59 · P05 48 · P06 48 · P07 68 · P08 30 · P09 55 · P10 35</div><div class="lp-ev-src">_evidence/regression-20261014-pytest.log · _evidence/*/INDEX.md</div></div>
             <div class="lp-ev-card"><div class="lp-ev-num">18/18</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P02 广告法合规：高危表述全部召回</b><br>命中项带 span、建议替换词与<b style="color:var(--cp-ink1)">法条</b>；合规文案误报 0/10，对抗样本 0/6 绕过（零宽字符 / 全角空格 / 形近字归一化后仍命中；36 条用例 / 108 条规则词库）</div><div class="lp-ev-src">_evidence/p02/合规检测评测报告.md · verify_compliance.py</div></div>
             <div class="lp-ev-card"><div class="lp-ev-num">36 题</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P04 RAG 评测集</b><br>easy 22 · medium 11 · hard 3，覆盖 21 个维度；ground_truth 逐条对照源文档、零编造，跑 Ragas 五指标</div><div class="lp-ev-src">_evidence/p04/rag_compare_report.json</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-num">66/66</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P05 零依赖自检通过</b><br>纯标准库，另跑 46 项 pytest；LLM 二阶段语义复核实测 confirm 2 / need_human 1 / false_positive 0</div><div class="lp-ev-src">_evidence/p05/D4任务卡2-3验收报告-P1复核.md · verify_llm_review.json</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-num">66/66</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P05 零依赖自检通过</b><br>纯标准库，另跑 48 项 pytest；LLM 二阶段语义复核实测 confirm 2 / need_human 1 / false_positive 0</div><div class="lp-ev-src">_evidence/p05/D4任务卡2-3验收报告-P1复核.md · verify_llm_review.json</div></div>
             <div class="lp-ev-card"><div class="lp-ev-num">7 项</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P02→P06 真实跨模块取数</b><br>GMV / 订单 / 转化率 / 客单价 / 退货率 / UV / PV，响应标 <code>metrics_source=p06-live</code>；指向死端口则 <code>degraded=True</code> 且响应里<b style="color:var(--cp-ink1)">不带</b> metrics 字段</div><div class="lp-ev-src">_evidence/p02-ecommerce-ops-assistant/cross-module-p06-20261013.md</div></div>
             <div class="lp-ev-card"><div class="lp-ev-num">65.5 / 70.5</div><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">P09→P01 真实拉取会话后的质检评分</b><br>按 session 聚合再打分；P01 不可用时 <code>imported=0</code>，不编样本充数</div><div class="lp-ev-src">_evidence/p09-ai-sales-assessment/cross-module-p01-20261013.md</div></div>
           </div>
@@ -298,9 +447,9 @@
 
         <section class="lp-section" id="lp-boundary">
           <h2 class="lp-h2">真实 / 模拟边界</h2>
-          <p class="lp-sub">交付里最容易翻车的不是功能少，是「演示能跑、上线不跑」。所以每个模块我先把线划死：<b style="color:var(--cp-ink1)">哪条链路是真的、哪里是模拟、以及为什么在这一处主动选模拟</b>。同样的话在各模块的 UI 标注、接口字段与 <code>_evidence/</code> 里都能对上（如 P08 的 <code>/health</code> 自陈 mock_boundaries、P10 的 <code>endpoint_url: null</code>）—— 双处标注是硬规则，不是我挑给面试官看的话术。</p>
+          <p class="lp-sub">交付里最容易翻车的不是功能少，是「演示能跑、上线不跑」。所以每个模块我先把线划死：<b style="color:var(--cp-ink1)">哪条链路是真的、哪里是模拟、以及为什么在这一处主动选模拟</b>。同样的话在各模块的 UI 标注、接口字段与 <code>_evidence/</code> 里都能对上（如 P08 的 <code>/health</code> 自陈 mock_boundaries、P10 的 <code>endpoint_url: null</code>）—— 双处标注是硬规则，不是写给人看的装饰。</p>
           <div class="lp-bound">
-            <div class="lp-bound-item"><b>P01 客服</b> 真实：意图三轨道、对话状态机、转人工建单（62 单测）。模拟：订单与商品来自随附的 mock 商城中台 :18081。</div>
+            <div class="lp-bound-item"><b>P01 客服</b> 真实：意图三轨道、对话状态机、FAQ/RAG 文本层检索（种子知识，命中不足拒答，73 单测）。未实现：负面情绪自动建单转人工。模拟：订单与商品来自随附的 mock 商城中台 :18081。</div>
             <div class="lp-bound-item"><b>P02 运营</b> 真实：登录、RBAC、合规、广告实验、跨模块取数全链路。降级：无 Key 时网关降级 mock 生成，前端标「演示」。</div>
             <div class="lp-bound-item"><b>P03 问数</b> 真实：只读 SQL 护栏（DROP/多语句/注释绕过全拦）、执行链路，模型层已接通。未闭环：MySQL(3306)/RAGFlow(9380) 未启动、联网搜索仍是 mock Key；库里没有的数据会明确拒答。</div>
             <div class="lp-bound-item"><b>P04 知识库</b> 真实：入库/检索/重排/评测，BGE-M3 本地嵌入 + 本地或云端重排双后端。已修：MCP 联网搜索曾恒 0（异常被静默吞掉）。</div>
@@ -320,20 +469,22 @@
 
         <section class="lp-section" id="lp-about">
           <h2 class="lp-h2">关于作者与阅读路线</h2>
-          <p class="lp-sub"><b style="color:var(--cp-ink1)">李奕波</b> · 求职方向 <b style="color:var(--cp-ink1)">AI-FDE / AI 应用开发</b>。
+          <p class="lp-sub"><b style="color:var(--cp-ink1)">李奕波</b> · 独立完成。
             这一套从需求拆解到进程托管由我一人完成：业务建模与四层拆分、后端编排、RAG 检索与评测、前端界面与设计令牌、服务注册与静默启动，
             以及「什么才算跑通」的验收门禁本身。仓库：<a href="https://github.com/liyibo0410" target="_blank" rel="noopener">github.com/liyibo0410</a> ·
             证据：<code>_evidence/</code>，进度登记 D1–D20。</p>
           <div class="cp-grid cols-3">
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">按 AI-FDE 聊 · 取舍</b><br>P05 为什么敢不装依赖、P02 为什么不并进外壳认证（ADR-0006 / 0003）、私有化那张对照表该按什么标准拍板。现场可以让我从登录一路走到广告实验对比 —— 走的就是验收门禁里那条路径。</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">按 AI 应用开发聊 · 链路</b><br>llm-gateway 的双端点故障转移与无 Key 降级、rerank 断崖截断的根因分析（量纲，不是阈值）、合规检测为什么必须落到法条与 span，而不是给一个「风险分」。</div></div>
-            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">按工程化聊 · 约束</b><br>SERVICE_REGISTRY 单一真源、设计令牌的两类注入方式与构建期耦合代价、<code>_tools/supervisor.py</code> 进程托管与静默启动，以及 <code>_evidence/</code> 证据门禁是怎么挡住「假完成」的。</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">按取舍聊 · 架构决策</b><br>P05 为什么敢不装依赖、P02 为什么不并进外壳认证（ADR-0006 / 0003）、私有化那张对照表该按什么标准拍板。现场可以从登录一路走到广告实验对比 —— 走的就是验收门禁里那条路径。</div></div>
+            <div class="lp-ev-card"><div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">按链路聊 · 应用开发</b><br>llm-gateway 的双端点故障转移与无 Key 降级、rerank 断崖截断的根因分析（量纲，不是阈值）、合规检测为什么必须落到法条与 span，而不是给一个「风险分」。</div></div>
+            <div class="lp-ev-card">            <div class="lp-ev-lbl"><b style="color:var(--cp-ink1)">按工程化聊 · 约束</b><br>SERVICE_REGISTRY 单一真源、设计令牌的两类注入方式与构建期耦合代价、<code>_tools/supervisor.py</code> 进程托管与静默启动，以及 <code>_evidence/</code> 证据门禁是怎么挡住「假完成」的。</div></div>
           </div>
         </section>
 
+
+
         <footer class="lp-foot">
-          <div><span data-cp-brand="company">云枢智能</span> <span data-cp-brand="name_en">CloudPivot</span> · <span data-cp-brand="tagline">AI 电商运营中台</span></div>
-          <div class="cp-hint">公司名与业务场景是这套作品集的业务建模设定（登录后用侧栏「⚙ 品牌设置」可换成任意品牌，全站生效）；<br>
+          <div><span data-cp-brand="company">李奕波个人作品矩阵</span> <span data-cp-brand="name_en">Li Yibo's Personal Portfolio</span> · <span data-cp-brand="tagline">AI 电商运营中台</span></div>
+          <div class="cp-hint">公司名与业务场景是这套作品集的业务建模设定（用侧栏「⚙ 品牌设置」可换成任意品牌；默认仅本机预览，作者登录后可保存为全站默认）；<br>
             本页指标来自本机实跑与本地评测，逐条可在 <code>_evidence/</code> 复核 —— 跑不通的地方一律写「未跑通 + 原因」，不粉饰。</div>
         </footer>
       </div>
@@ -356,15 +507,15 @@
 <div id="brand-settings" class="cp-brand-settings-mask" style="display:none">
   <div class="cp-brand-settings">
     <h3>品牌定制</h3>
-    <div class="cp-hint" style="margin-bottom:var(--cp-sp-3)">保存后写入 <code>shared/config/brand.json</code>，外壳与十个模块全站生效。</div>
+    <div class="cp-hint" style="margin-bottom:var(--cp-sp-3)">修改默认只保存在<b>本机浏览器</b>（仅本机预览，不影响其他访客与全站默认）；作者用 owner 口令登录后，可「保存并全站生效」（写入 <code>shared/config/brand.json</code>）。</div>
     <div class="bs-grid">
       <div class="cp-field">
         <label class="cp-label">公司名</label>
-        <input class="cp-input" id="bs-company" placeholder="云枢智能" maxlength="20">
+        <input class="cp-input" id="bs-company" placeholder="李奕波个人作品矩阵" maxlength="20">
       </div>
       <div class="cp-field">
         <label class="cp-label">英文名</label>
-        <input class="cp-input" id="bs-name-en" placeholder="CloudPivot" maxlength="30">
+        <input class="cp-input" id="bs-name-en" placeholder="Li Yibo's Personal Portfolio" maxlength="30">
       </div>
       <div class="cp-field">
         <label class="cp-label">侧栏副标题</label>
@@ -394,13 +545,23 @@
       </div>
       <button class="cp-btn secondary" id="bs-clear-logo" style="margin-top:var(--cp-sp-2);font-size:var(--cp-fs-xs)">清除已上传图片</button>
     </div>
+    <div class="cp-field" id="bs-owner-gate" style="margin-top:var(--cp-sp-3)">
+      <label class="cp-label">作者通道（owner）</label>
+      <div style="display:flex;gap:var(--cp-sp-2)">
+        <input class="cp-input" id="bs-owner-pass" type="password" placeholder="owner 口令（仅作者本人）" autocomplete="off">
+        <button class="cp-btn secondary" id="bs-owner-login" type="button" style="flex-shrink:0">登录</button>
+      </div>
+      <div class="cp-hint" style="margin-top:4px">登录后「保存」按钮会改为写入全站默认，所有访客可见。</div>
+    </div>
+    <div class="cp-hint" id="bs-owner-ok" style="display:none;margin-top:var(--cp-sp-3);color:var(--cp-success)">已连接作者通道（owner），「保存」将写入全站默认。</div>
     <div class="cp-login-err" id="bs-error"></div>
     <div class="bs-actions">
       <button class="cp-btn secondary" id="bs-reset">恢复默认</button>
-      <button class="cp-btn primary" id="bs-save">保存并全站生效</button>
+      <button class="cp-btn primary" id="bs-save">保存（仅本机预览）</button>
     </div>
   </div>
 </div>
+
 
 <script src="/shared/config/services.js"></script>
 <script src="/shared/ui-kit/ui-kit.js"></script>
@@ -408,6 +569,8 @@
 (function () {
   "use strict";
   var TOKEN_KEY = "cp_token", USER_KEY = "cp_user";
+  var OWNER_TOKEN_KEY = "cp_owner_token";            // owner 私密通道令牌（sessionStorage）
+  var BRAND_OVERRIDE_KEY = "cp_brand_override";      // 本机品牌覆盖（localStorage）
   var REG = window.CP_REGISTRY || { services: {}, layers: {}, host: "127.0.0.1" };
   var LAYER_ORDER = ["L3", "L2", "L1", "L0"];
   var els = {};
@@ -417,7 +580,8 @@
    "btn-menu","home-view","frame-view","matrix","statbar","module-frame","frame-loading",
    "sidebar-footer","svc-banner","btn-brand-settings","brand-settings","bs-company","bs-name-en",
    "bs-subtitle","bs-tagline","bs-version","bs-initials","bs-logo-preview","bs-logo-file",
-   "bs-clear-logo","bs-error","bs-save","bs-reset"].forEach(function(id){ els[id] = document.getElementById(id); });
+   "bs-clear-logo","bs-error","bs-save","bs-reset","bs-owner-gate","bs-owner-ok",
+   "bs-owner-pass","bs-owner-login"].forEach(function(id){ els[id] = document.getElementById(id); });
 
   /* ---------- 会话 ---------- */
   function getToken(){ try{ return sessionStorage.getItem(TOKEN_KEY)||""; }catch(e){ return ""; } }
@@ -431,7 +595,10 @@
   function webHost(){ return location.hostname || REG.host || "127.0.0.1"; }
   /* 本机/局域网访客继续用 host:port（同站点，Cookie 才不被浏览器拦），只有从公网域名打开
      页面时才改用网关注入的隧道 https 地址。 */
-  var IS_LOCAL = /^(127\.|localhost|\[::1\]|0\.0\.0\.0)$/.test(webHost())
+  /* 注意 127 的写法：原 /^(127\.|…)$/ 要求整串只等于 "127."，127.0.0.1 实际
+     判不中 → 本机打开的挂载会误用公网隧道 URL（隧道一断整排白屏）。
+     2026-10-15 按钮实测 D1：改为 127.x.x.x 全段匹配。 */
+  var IS_LOCAL = /^(127(\.\d{1,3}){3}|localhost|\[::1\]|0\.0\.0\.0)$/.test(webHost())
               || /^192\.168\./.test(webHost()) || /^10\./.test(webHost())
               || /^172\.(1[6-9]|2\d|3[01])\./.test(webHost());
   function webUrl(id){
@@ -529,7 +696,7 @@
     var total=Object.keys(REG.services).length;
     var layers=Object.keys(idsByLayer()).length;
     var stats=[["能力模块 · 本机实跑",total],["架构分层 L0–L3",layers],
-               ["pytest 实跑通过","565"],["跨模块真实取数","3"],
+               ["pytest 实跑通过","731"],["跨模块真实取数","4"],
                ["工程决策 ADR","6"],["服务探活 · 实时",'<span id="svc-online">检测中</span>']];
     els["statbar"].innerHTML=stats.map(function(s){
       return '<div class="cp-stat"><div class="cp-stat-value">'+s[1]+'</div><div class="cp-stat-label">'+s[0]+'</div></div>';
@@ -539,22 +706,22 @@
      metric = 实测数字，mock = 真实链路与模拟链路的分界。数字一律照抄证据文件，不做美化。 */
   var MODULE_INFO = {
     p01: { tech:"FastAPI · LangChain · MySQL · Vue 3",
-           metric:"<b>62</b> 项单测 · 意图三轨道判定、幻觉流程名拦截、中断压栈恢复",
-           mock:"真实：意图识别、对话状态机、负面情绪自动建单转人工。模拟：订单与商品来自随附的 mock 商城中台 :18081。" },
+           metric:"<b>73</b> 项单测 · 意图三轨道判定、幻觉流程名拦截、中断压栈恢复",
+           mock:"真实：意图识别、对话状态机、FAQ/RAG 文本层检索（种子知识、命中不足拒答）。未实现：负面情绪自动建单转人工。模拟：订单与商品来自随附的 mock 商城中台 :18081。" },
     p02: { tech:"FastAPI · LangGraph · SQLAlchemy · Next.js",
-           metric:"<b>162</b> 项测试 · 合规高危召回 <b>18/18</b> · 误报 0/10 · 对抗绕过 0/6",
+           metric:"<b>178</b> 项测试 · 合规高危召回 <b>18/18</b> · 误报 0/10 · 对抗绕过 0/6",
            mock:"真实：登录与四角色 RBAC、合规拦截、广告实验、跨模块取数全链路。降级：无 Key 时网关退回 mock 生成，前端标「演示」。" },
     p03: { tech:"DeepAgents · LangChain · FastAPI · Vue 3",
-           metric:"<b>61</b> 项测试 · 只读护栏在执行前拦下 DROP / DELETE / 多语句 / 注释绕过",
+           metric:"<b>137</b> 项测试 · 只读护栏在执行前拦下 DROP / DELETE / 多语句 / 注释绕过",
            mock:"真实：SQL 护栏与执行链路，模型层已真实接通。未闭环：MySQL(3306)、RAGFlow(9380) 未启动，联网搜索仍是 mock Key；问库里没有的数据会明确拒答而不是编。" },
     p04: { tech:"LangGraph · FastAPI · Milvus · MongoDB · BGE-M3",
-           metric:"<b>23</b> 项测试 · <b>36</b> 题评测集 · Ragas 五指标本地/云端对照（见下方表格）",
+           metric:"<b>59</b> 项测试 · <b>36</b> 题评测集 · Ragas 五指标本地/云端对照（见下方表格）",
            mock:"真实：入库、检索、重排、评测四段全真，BGE-M3 本地嵌入。边界：云端重排要出网，对外演示建议换按量付费 Key。" },
     p05: { tech:"纯标准库 · ThreadingHTTPServer · SQLite",
-           metric:"<b>66/66</b> 零依赖自检 + <b>46</b> 项 pytest · LLM 二阶段复核 confirm 2 / need_human 1",
+           metric:"<b>66/66</b> 零依赖自检 + <b>48</b> 项 pytest · LLM 二阶段复核 confirm 2 / need_human 1",
            mock:"真实：规则风险判定、审批流与报告出具。刻意设计：审批「模拟回写」子系统；LLM 二阶段默认 enabled=false。" },
     p06: { tech:"FastAPI · DuckDB · ECharts",
-           metric:"<b>44</b> 项测试 · ODS/DWD/DWS/ADS 分层 + 指标口径 + 血缘 + 质量校验抓脏数据",
+           metric:"<b>48</b> 项测试 · ODS/DWD/DWS/ADS 分层 + 指标口径 + 血缘 + 质量校验抓脏数据",
            mock:"真实：DuckDB 分层与指标计算。演示数据：自动 seed 的样例集，不是真实店铺流水。" },
     p07: { tech:"FastAPI · SQLite · ECharts",
            metric:"<b>68</b> 项测试 · 检索 Recall@5 从 0.05 提到 1.0（中文 n-gram + 同义归一 + 字段加权，带拒答）",
@@ -563,10 +730,10 @@
            metric:"<b>30</b> 项测试 · 四维得分每段给出构成（文本理由 + 同进程确定性）+ 批量队列",
            mock:"真实：批量队列与进度、打点结果可解释。模拟：ASR 为模拟文本、评分为规则，无 ffmpeg 真实出片（/health 自陈 mock_boundaries）。" },
     p09: { tech:"FastAPI · ECharts · LLM 结构化",
-           metric:"<b>41</b> 项测试（含 P09→P01 集成 4 例）· 真实会话按 session 聚合评分 65.5 / 70.5",
+           metric:"<b>55</b> 项测试（含 P09→P01 集成 4 例）· 真实会话按 session 聚合评分 65.5 / 70.5",
            mock:"真实：会话导入、评分、排行榜与个人报告。模拟：评分器是规则引擎（Mock LLM），页面挂 Mock Notice。未完成：人机一致性 Kappa 需真人评满 ≥5 条才出数。" },
     p10: { tech:"FastAPI · LoRA 生命周期编排",
-           metric:"<b>28</b> 项测试 · 数据集 → 训练 → 评测 → 注册表 全生命周期编排与状态机",
+           metric:"<b>35</b> 项测试 · 数据集 → 训练 → 评测 → 注册表 全生命周期编排与状态机",
            mock:"真实：生命周期编排、接口与状态机。模拟：未真实训练（本机无 GPU 余量），loss 曲线由公式生成；不存在可调用的 OpenAI 兼容端点（接口返回 endpoint_url: null），无测量来源的延迟一律为 null。" }
   };
   function renderMatrix(){
@@ -695,7 +862,9 @@
   els["btn-theme"].addEventListener("click", toggleTheme);
   els["btn-theme-public"].addEventListener("click", toggleTheme);
   els["btn-logout"].addEventListener("click",function(){
-    clearSession(); closeLogin(); location.hash="#/"; enterPublic();
+    clearSession();
+    try{ sessionStorage.removeItem(OWNER_TOKEN_KEY); }catch(e){}
+    closeLogin(); location.hash="#/"; enterPublic();
   });
   els["btn-menu"].addEventListener("click",function(){ CP.toggleSidebar(); });
   function syncMenuBtn(){ els["btn-menu"].style.display = window.innerWidth<=640 ? "inline-flex":"none"; }
@@ -709,7 +878,11 @@
     if(d.type==="cp:ready"){ pushToModule(); }
   });
 
-  /* ---------- 品牌定制（真源：shared/config/brand.json，经 /api/brand 读写）---------- */
+  /* ---------- 品牌定制（两层：全站默认 /api/brand + 本机覆盖 localStorage）----------
+   * 根因：brand.json 是全站单一真源，演示账号又是公开的 —— 任何访客都能把全局默认
+   * 改掉，所有人跟着变。现在非 owner 的修改只写本机 localStorage（仅本机预览）；
+   * 只有作者用 owner 口令走 /api/auth/owner-login 拿到令牌后，才能 POST /api/brand
+   * 写全站默认。页面加载顺序：先应用全局默认，再叠加本机覆盖。 */
   var _brand = CP.DEFAULT_BRAND;
   function currentBrand(){ return _brand; }
   function renderBrand(b){
@@ -719,11 +892,32 @@
   function broadcastBrand(){
     if(currentId){ pushToModule(); }
   }
+  function getOwnerToken(){ try{ return sessionStorage.getItem(OWNER_TOKEN_KEY)||""; }catch(e){ return ""; } }
+  function isOwnerAuthed(){ return !!getOwnerToken(); }
+  function readBrandOverride(){
+    try{ return JSON.parse(localStorage.getItem(BRAND_OVERRIDE_KEY)||"null"); }
+    catch(e){ return null; }
+  }
+  // 把本机覆盖叠在当前品牌之上（只接受字符串字段）
+  function applyBrandOverlay(){
+    var ov = readBrandOverride();
+    if(!ov || typeof ov !== "object") return;
+    var merged = {};
+    Object.keys(_brand).forEach(function(k){ merged[k] = _brand[k]; });
+    Object.keys(ov).forEach(function(k){ if(typeof ov[k] === "string") merged[k] = ov[k]; });
+    _brand = CP.applyBrand(merged) || _brand;
+    broadcastBrand();
+  }
   function fetchBrand(){
+    // 顺序：全局默认先行，本机覆盖后叠加 —— 覆盖只在「本机」比默认优先
     return fetch("/api/brand",{cache:"no-store"})
       .then(function(r){ return r.json(); })
-      .then(function(j){ if(j && j.brand){ _brand = CP.applyBrand(j.brand); } return _brand; })
-      .catch(function(){ return _brand; });   // 网关没起来也要用默认值把页面渲染完
+      .then(function(j){
+        if(j && j.brand){ _brand = CP.applyBrand(j.brand); }
+        applyBrandOverlay();
+        return _brand;
+      })
+      .catch(function(){ applyBrandOverlay(); return _brand; });   // 网关没起来也要用默认值把页面渲染完
   }
 
   function openBrandSettings(){
@@ -739,9 +933,18 @@
     els["bs-logo-preview"]._logoData = null;   // null=未改动，""=清除，dataURL=新上传
     els["bs-logo-file"].value = "";
     els["bs-error"].textContent = "";
+    syncBrandPanelMode();
     els["brand-settings"].style.display = "flex";
   }
   function closeBrandSettings(){ els["brand-settings"].style.display = "none"; }
+
+  // 面板两层语义随 owner 登录态切换：访客/演示 → 仅本机预览；owner → 可写全站默认
+  function syncBrandPanelMode(){
+    var owner = isOwnerAuthed();
+    els["bs-owner-gate"].style.display = owner ? "none" : "";
+    els["bs-owner-ok"].style.display = owner ? "" : "none";
+    els["bs-save"].textContent = owner ? "保存并全站生效" : "保存（仅本机预览）";
+  }
 
   els["btn-brand-settings"].addEventListener("click", openBrandSettings);
   els["brand-settings"].addEventListener("click", function(e){ if(e.target === els["brand-settings"]) closeBrandSettings(); });
@@ -790,17 +993,42 @@
     setLogoPreview("");
   });
 
-  function postBrand(payload){
-    // 写接口要求登录令牌：外壳绑 0.0.0.0 时局域网访客不能改品牌位
+  function postBrand(payload, token){
+    // 写接口现在只认 owner 私密通道令牌：演示账号令牌会被网关 403
     var headers = {"Content-Type":"application/json"};
-    var token = getToken();
-    if(token){ headers["Authorization"] = "Bearer " + token; }
+    var t = token || getToken();
+    if(t){ headers["Authorization"] = "Bearer " + t; }
     return fetch("/api/brand",{method:"POST",headers:headers,
       body:JSON.stringify(payload)})
       .then(function(r){ return r.json().then(function(j){ return {code:r.status, body:j}; }); });
   }
 
-  els["bs-save"].addEventListener("click", function(){
+  // owner 登录：口令换令牌，存 sessionStorage（关标签页即失效）
+  function ownerLogin(){
+    var pass = els["bs-owner-pass"].value;
+    if(!pass){ els["bs-error"].textContent = "请输入 owner 口令"; return; }
+    els["bs-owner-login"].disabled = true;
+    fetch("/api/auth/owner-login",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({password:pass})})
+      .then(function(r){ return r.json().then(function(j){ return {code:r.status, body:j}; }); })
+      .then(function(res){
+        if(res.code===200 && res.body.ok){
+          try{ sessionStorage.setItem(OWNER_TOKEN_KEY, res.body.token); }catch(e){}
+          els["bs-owner-pass"].value = "";
+          els["bs-error"].textContent = "";
+          syncBrandPanelMode();
+        } else {
+          els["bs-error"].textContent = (res.body && res.body.error) || "owner 登录失败（HTTP "+res.code+"）";
+        }
+      })
+      .catch(function(e){ els["bs-error"].textContent = "无法连接外壳网关：" + e; })
+      .finally(function(){ els["bs-owner-login"].disabled = false; });
+  }
+  els["bs-owner-login"].addEventListener("click", ownerLogin);
+  els["bs-owner-pass"].addEventListener("keydown", function(ev){ if(ev.key === "Enter"){ ev.preventDefault(); ownerLogin(); } });
+
+  // 收集面板当前值；logo 仅在用户明确改过（含清除）时携带
+  function collectBrandPayload(){
     var preview = els["bs-logo-preview"];
     var payload = {
       company:  els["bs-company"].value.trim(),
@@ -811,30 +1039,65 @@
       initials: els["bs-initials"].value.trim()
     };
     if(preview._logoData !== null){ payload.logo = preview._logoData; }
+    return payload;
+  }
+
+  els["bs-save"].addEventListener("click", function(){
+    var payload = collectBrandPayload();
     els["bs-save"].disabled = true;
-    postBrand(payload)
-      .then(function(res){
-        if(res.code===200 && res.body.ok){
-          renderBrand(res.body.brand);
-          closeBrandSettings();
-        } else {
-          els["bs-error"].textContent = (res.body && res.body.error) || "保存失败（HTTP "+res.code+"）";
-        }
-      })
-      .catch(function(e){ els["bs-error"].textContent = "无法连接外壳网关：" + e; })
-      .finally(function(){ els["bs-save"].disabled = false; });
+    if(isOwnerAuthed()){
+      // owner：写入全站默认（brand.json），成功后清掉本机覆盖以免旧覆盖盖住新默认
+      postBrand(payload, getOwnerToken())
+        .then(function(res){
+          if(res.code===200 && res.body.ok){
+            try{ localStorage.removeItem(BRAND_OVERRIDE_KEY); }catch(e){}
+            renderBrand(res.body.brand);
+            closeBrandSettings();
+          } else {
+            els["bs-error"].textContent = (res.body && res.body.error) || "保存失败（HTTP "+res.code+"）";
+          }
+        })
+        .catch(function(e){ els["bs-error"].textContent = "无法连接外壳网关：" + e; })
+        .finally(function(){ els["bs-save"].disabled = false; });
+      return;
+    }
+    // 非 owner：只写本机 localStorage，绝不发 /api/brand —— 不影响其他访客与全站默认
+    var stored = {};
+    Object.keys(payload).forEach(function(k){
+      // 与服务端语义一致：空字符串字段忽略（logo 除外，"" 表示清除图片）
+      if(payload[k] !== "" || k === "logo"){ stored[k] = payload[k]; }
+    });
+    try{ localStorage.setItem(BRAND_OVERRIDE_KEY, JSON.stringify(stored)); }
+    catch(e){ els["bs-error"].textContent = "本机保存失败（浏览器存储不可用）"; els["bs-save"].disabled = false; return; }
+    renderBrand(Object.assign({}, currentBrand(), stored));
+    closeBrandSettings();
+    els["bs-save"].disabled = false;
   });
 
   els["bs-reset"].addEventListener("click", function(){
-    var defaults = {};
-    Object.keys(CP.DEFAULT_BRAND).forEach(function(k){ defaults[k] = CP.DEFAULT_BRAND[k]; });
+    if(isOwnerAuthed()){
+      // owner：把全站默认恢复为出厂值（同样需要 owner 令牌）
+      var defaults = {};
+      Object.keys(CP.DEFAULT_BRAND).forEach(function(k){ defaults[k] = CP.DEFAULT_BRAND[k]; });
+      els["bs-save"].disabled = true;
+      postBrand(defaults, getOwnerToken())
+        .then(function(res){
+          if(res.code===200 && res.body.ok){
+            try{ localStorage.removeItem(BRAND_OVERRIDE_KEY); }catch(e){}
+            renderBrand(res.body.brand); closeBrandSettings();
+          }
+          else { els["bs-error"].textContent = (res.body && res.body.error) || "恢复失败"; }
+        })
+        .catch(function(e){ els["bs-error"].textContent = "无法连接外壳网关：" + e; })
+        .finally(function(){ els["bs-save"].disabled = false; });
+      return;
+    }
+    // 非 owner：只清本机覆盖，回到全站默认（不动 brand.json）
+    try{ localStorage.removeItem(BRAND_OVERRIDE_KEY); }catch(e){}
     els["bs-save"].disabled = true;
-    postBrand(defaults)
-      .then(function(res){
-        if(res.code===200 && res.body.ok){ renderBrand(res.body.brand); closeBrandSettings(); }
-        else { els["bs-error"].textContent = (res.body && res.body.error) || "恢复失败"; }
-      })
-      .catch(function(e){ els["bs-error"].textContent = "无法连接外壳网关：" + e; })
+    fetchBrand()
+      .then(function(){ closeBrandSettings(); })
+      .catch(function(){ els["bs-error"].textContent = "无法连接外壳网关，本机覆盖已清除但默认值未刷新"; })
       .finally(function(){ els["bs-save"].disabled = false; });
   });
 
@@ -936,6 +1199,102 @@
       .catch(function(){ clearSession(); enterPublic(); });
   }
   boot();
+})();
+</script>
+
+<script>
+/* ══ 首页动画细节（2026-10-15，opencode）═════════════════════════════
+   独立 IIFE，不改动页面已有逻辑；全部尊重 prefers-reduced-motion。
+   （原「技术栈小块生成」一段已移除；以下为滚动入场与数字动效）
+   2) 滚动入场：给区块加 .lp-reveal，进入视口后加 .is-in
+   3) 指标数字：纯整数做 count-up（10/10、65.5 这类不动，避免弄坏口径） */
+(function () {
+  'use strict';
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+
+  /* 2) 滚动入场 */
+  var SEL = '.lp-section .lp-mod, .lp-section .lp-ev-card, .lp-section .lp-bound-item, ' +
+            '.lp-section .lp-honest, .lp-section .cp-table, ' +
+            '.lp-section .cp-flow, .cp-statbar';
+  var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 }) : null;
+
+  var cio = ('IntersectionObserver' in window) ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); cio.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 }) : null;
+
+  function prime() {
+    var nodes = document.querySelectorAll(SEL);
+    Array.prototype.forEach.call(nodes, function (el) {
+      if (el.dataset.lpReady) return;
+      el.dataset.lpReady = '1';
+      el.classList.add('lp-reveal');
+      var sibs = el.parentNode ? el.parentNode.children : [];
+      var idx = Array.prototype.indexOf.call(sibs, el);
+      el.style.transitionDelay = (Math.max(0, idx % 4) * 60) + 'ms';   // 同组错峰
+      if (reduce || !io) { el.classList.add('is-in'); } else { io.observe(el); }
+    });
+    var chips = document.querySelectorAll('.lp-chip:not(.is-in)');
+    Array.prototype.forEach.call(chips, function (c) {
+      if (reduce || !cio) { c.classList.add('is-in'); } else { cio.observe(c); }
+    });
+  }
+  prime();
+
+  /* 模块矩阵与指标条是异步渲染的：内容变化后再补一次（只盯 #matrix，避免自触发） */
+  if ('MutationObserver' in window) {
+    var mo = new MutationObserver(function () { prime(); });
+    var mx = document.getElementById('matrix');
+    if (mx) { mo.observe(mx, { childList: true, subtree: true }); }
+    /* 指标条在 1200ms 的兜底之后才渲染（要等 /api/brand 返回），
+       所以再挂一条观察：只看**直接子节点**，count-up 改的是 .cp-stat-value 的文本
+       （孙级），不会回来触发这条 —— 不会自激。 */
+    var sb = document.getElementById('statbar');
+    if (sb) {
+      new MutationObserver(function () { prime(); primeCount(); })
+        .observe(sb, { childList: true, subtree: false });
+    }
+  }
+  setTimeout(function () { prime(); primeCount(); }, 400);
+  setTimeout(function () { prime(); primeCount(); }, 1200);
+
+  /* 3) 指标数字 count-up */
+  function countUp(el) {
+    if (reduce || el.dataset.lpCounted) return;
+    var raw = (el.textContent || '').trim();
+    if (!/^\d{1,6}$/.test(raw)) return;                 // 只处理纯整数
+    el.dataset.lpCounted = '1';
+    var target = parseInt(raw, 10), t0 = null, dur = 700;
+    el.classList.add('is-count');
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = String(Math.round(target * eased));
+      if (p < 1) { requestAnimationFrame(step); } else { el.textContent = String(target); }
+    }
+    requestAnimationFrame(step);
+  }
+  var io2 = ('IntersectionObserver' in window) ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { countUp(e.target); io2.unobserve(e.target); }
+    });
+  }, { threshold: 0.5 }) : null;
+  function primeCount() {
+    Array.prototype.forEach.call(document.querySelectorAll('.cp-stat-value'), function (v) {
+      if (v.dataset.lpCounted) return;
+      if (reduce || !io2) return;
+      io2.observe(v);
+    });
+  }
+  primeCount();
 })();
 </script>
 </body>

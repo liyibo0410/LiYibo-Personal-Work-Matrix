@@ -18,8 +18,8 @@ import os
 import shutil
 
 SRC = r"D:\software\PycharmProjects\合同审批系统-李奕波\05-可运行系统-contract-review-v2.0"
-DST = r"D:\software\PycharmProjects\面试项目\projects\p05-contract-review"
-REPORT = r"D:\software\PycharmProjects\面试项目\_evidence\p05\copy_report.json"
+DST = r"D:\software\PycharmProjects\作品矩阵\projects\p05-contract-review"
+REPORT = r"D:\software\PycharmProjects\作品矩阵\_evidence\p05\copy_report.json"
 
 IGNORE_DIRS = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".idea", ".venv", "venv"}
 IGNORE_SUFFIX = (".pyc", ".pyo", ".bak")

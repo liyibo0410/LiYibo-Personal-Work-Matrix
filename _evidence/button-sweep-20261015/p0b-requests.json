@@ -1,0 +1,87 @@
+[
+  {
+    "phase": "req",
+    "url": "http://39.96.200.45:8070/",
+    "rt": "document"
+  },
+  {
+    "phase": "resp",
+    "url": "http://39.96.200.45:8070/",
+    "status": 200
+  },
+  {
+    "phase": "req",
+    "url": "http://39.96.200.45:8070/shared/ui-kit/tokens.css",
+    "rt": "stylesheet"
+  },
+  {
+    "phase": "req",
+    "url": "http://39.96.200.45:8070/shared/ui-kit/components.css",
+    "rt": "stylesheet"
+  },
+  {
+    "phase": "req",
+    "url": "http://39.96.200.45:8070/shared/config/services.js",
+    "rt": "script"
+  },
+  {
+    "phase": "req",
+    "url": "http://39.96.200.45:8070/shared/ui-kit/ui-kit.js",
+    "rt": "script"
+  },
+  {
+    "phase": "resp",
+    "url": "http://39.96.200.45:8070/shared/ui-kit/tokens.css",
+    "status": 200
+  },
+  {
+    "phase": "resp",
+    "url": "http://39.96.200.45:8070/shared/ui-kit/components.css",
+    "status": 200
+  },
+  {
+    "phase": "resp",
+    "url": "http://39.96.200.45:8070/shared/config/services.js",
+    "status": 200
+  },
+  {
+    "phase": "resp",
+    "url": "http://39.96.200.45:8070/shared/ui-kit/ui-kit.js",
+    "status": 200
+  },
+  {
+    "phase": "req",
+    "url": "http://39.96.200.45:8070/api/brand",
+    "rt": "fetch"
+  },
+  {
+    "phase": "req",
+    "url": "http://39.96.200.45:8070/api/resume",
+    "rt": "fetch"
+  },
+  {
+    "phase": "req",
+    "url": "http://39.96.200.45:8070/api/services/health",
+    "rt": "fetch"
+  },
+  {
+    "phase": "req",
+    "url": "http://39.96.200.45:8800/api/brand",
+    "rt": "fetch"
+  },
+  {
+    "phase": "resp",
+    "url": "http://39.96.200.45:8070/api/resume",
+    "status": 200
+  },
+  {
+    "phase": "resp",
+    "url": "http://39.96.200.45:8070/api/brand",
+    "status": 200
+  },
+  {
+    "phase": "resp",
+    "url": "http://39.96.200.45:8070/api/services/health",
+    "status": 200
+  }
+]

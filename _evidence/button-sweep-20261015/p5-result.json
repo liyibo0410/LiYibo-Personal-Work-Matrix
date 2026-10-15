@@ -1,0 +1,94 @@
+{
+  "steps": [
+    {
+      "area": "public-spot",
+      "ctl": "p01",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p01/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://39.96.200.45:8090/p01/?cp-theme=light",
+        "title": "AI 电商客服 · 李奕波个人作品矩阵",
+        "textLen": 7062,
+        "snippet": "◈ 商务版式 数字人 听澜 数字人未连接 连接后由数字人朗读客服回复 连接数字人 数字人未连接 电商客服系统 李奕波个人作品矩阵 听澜 在线 导出 新对话 用户标识 刷新对象列表 对话 #1 你 用户 我要退款 听澜 金牌客服 好的，我们先处理退款申请。 请告",
+        "rootKids": 1
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:03:10.944Z"
+    },
+    {
+      "area": "public-spot",
+      "ctl": "p02",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p02/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T02:03:42.009Z"
+    },
+    {
+      "area": "public-spot",
+      "ctl": "p04",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p04/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T02:04:13.029Z"
+    },
+    {
+      "area": "public-spot",
+      "ctl": "p05",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p05/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "err": "frame-not-found"
+      },
+      "pass": false,
+      "ts": "2026-10-15T02:04:44.150Z"
+    },
+    {
+      "area": "public-spot",
+      "ctl": "p06",
+      "action": "click",
+      "src": "http://39.96.200.45:8090/p06/?cp-theme=light",
+      "banner": null,
+      "finfo": {
+        "url": "http://39.96.200.45:8090/p06/?cp-theme=light",
+        "title": "P06 数据中台 · Li Yibo's Personal Portfolio",
+        "textLen": 398,
+        "snippet": "李奕波个人作品矩阵 P06 数据中台 数据总览 数据表管理 指标探查 数据质量 数据血缘 数据接入 v1.0.0 · DuckDB + FastAPI 数据总览 14 张表 / 3.24万 行 数据表 14 12 张 总行数 3.24万 健康评分 29 135",
+        "rootKids": 3
+      },
+      "pass": true,
+      "ts": "2026-10-15T02:04:47.524Z"
+    }
+  ],
+  "logs": [
+    {
+      "t": "reqfail",
+      "url": "http://39.96.200.45:8800/api/brand",
+      "err": "net::ERR_EMPTY_RESPONSE"
+    },
+    {
+      "t": "reqfail",
+      "url": "http://39.96.200.45:8800/api/brand",
+      "err": "net::ERR_EMPTY_RESPONSE"
+    },
+    {
+      "t": "reqfail",
+      "url": "http://39.96.200.45:8090/p02/?cp-theme=light",
+      "err": "net::ERR_ABORTED"
+    },
+    {
+      "t": "reqfail",
+      "url": "http://39.96.200.45:8090/p04/?cp-theme=light",
+      "err": "net::ERR_ABORTED"
+    }
+  ]
+}

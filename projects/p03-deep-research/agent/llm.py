@@ -30,7 +30,7 @@ _ROOT_ENV_MARKER = "LLM_API_KEY_FALLBACK"
 def _find_repo_root() -> Path:
     """向上找到含百炼凭证的仓库根 .env 所在目录。
 
-    别再用硬编码层数：上一版写 parents[2] 并注释「即面试项目根」，实际指到 projects/，
+    别再用硬编码层数：上一版写 parents[2] 并注释「即作品矩阵根」，实际指到 projects/，
     根 .env 读不到 → 明明配了两套 Key 却报「未找到可用的模型凭据」。
     """
     here = Path(__file__).resolve()

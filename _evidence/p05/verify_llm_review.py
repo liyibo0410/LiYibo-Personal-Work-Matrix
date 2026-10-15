@@ -17,9 +17,9 @@ import os
 import sys
 import time
 
-ROOT = r"D:\software\PycharmProjects\面试项目\projects\p05-contract-review"
-WORKSPACE = r"D:\software\PycharmProjects\面试项目"
-OUT = r"D:\software\PycharmProjects\面试项目\_evidence\p05"
+ROOT = r"D:\software\PycharmProjects\作品矩阵\projects\p05-contract-review"
+WORKSPACE = r"D:\software\PycharmProjects\作品矩阵"
+OUT = r"D:\software\PycharmProjects\作品矩阵\_evidence\p05"
 PORT = 8782
 
 sys.path.insert(0, ROOT)

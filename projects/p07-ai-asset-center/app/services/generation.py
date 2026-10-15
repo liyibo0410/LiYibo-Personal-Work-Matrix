@@ -49,7 +49,7 @@ def render_spec_card(prompt: str, asset_type: str, style: str, out_path: Path) -
     meta = f"{style} · {w}x{h} · programmatic card (not AI-drawn)"
     draw.text((int(w * 0.08), band_h + int(h * 0.06)), meta, fill="#5A6472", font=small_font)
     draw.text((int(w * 0.08), band_h + int(h * 0.16)),
-              f"CloudPivot P07 {datetime.now():%Y-%m-%d %H:%M}", fill="#8A94A3", font=small_font)
+              f"Li Yibo's Personal Portfolio P07 {datetime.now():%Y-%m-%d %H:%M}", fill="#8A94A3", font=small_font)
     img.save(out_path, "PNG")
     return {"width": w, "height": h}
 

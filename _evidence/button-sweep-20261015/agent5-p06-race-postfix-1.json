@@ -1,0 +1,166 @@
+{
+  "base": "http://127.0.0.1:8060",
+  "ts": "2026-10-15T02:45:02.242Z",
+  "rounds": 12,
+  "parallel": [
+    {
+      "round": 1,
+      "table": "ads_key_metrics",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 2,
+      "table": "ads_product_ranking",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 3,
+      "table": "dwd_customer_profile",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 4,
+      "table": "dwd_order_detail",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 5,
+      "table": "dws_daily_shop",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 6,
+      "table": "ods_products",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 7,
+      "table": "ods_stores",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 8,
+      "table": "ods_traffic",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 9,
+      "table": "ods_orders",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 10,
+      "table": "ads_key_metrics",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 11,
+      "table": "ads_product_ranking",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    },
+    {
+      "round": 12,
+      "table": "dwd_customer_profile",
+      "info": 200,
+      "infoMsg": "success",
+      "preview": 200
+    }
+  ],
+  "serial": [
+    {
+      "round": 1,
+      "table": "ads_key_metrics",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 2,
+      "table": "ads_product_ranking",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 3,
+      "table": "dwd_customer_profile",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 4,
+      "table": "dwd_order_detail",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 5,
+      "table": "dws_daily_shop",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 6,
+      "table": "ods_products",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 7,
+      "table": "ods_stores",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 8,
+      "table": "ods_traffic",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 9,
+      "table": "ods_orders",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 10,
+      "table": "ads_key_metrics",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 11,
+      "table": "ads_product_ranking",
+      "info": 200,
+      "preview": 200
+    },
+    {
+      "round": 12,
+      "table": "dwd_customer_profile",
+      "info": 200,
+      "preview": 200
+    }
+  ],
+  "contradictions": 0
+}

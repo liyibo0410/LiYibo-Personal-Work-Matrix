@@ -1,5 +1,5 @@
 """
-P08 直播切片系统 - 云枢智能 (CloudPivot)
+P08 直播切片系统 - 李奕波个人作品矩阵 (Li Yibo's Personal Portfolio)
 FastAPI backend with mock ASR, scoring, and batch task management.
 
 MOCK BOUNDARIES:
@@ -428,7 +428,7 @@ random.seed()  # Re-randomize
 
 app = FastAPI(
     title="P08 直播切片系统",
-    description="云枢智能 (CloudPivot) - 直播切片提取与管理平台",
+    description="李奕波个人作品矩阵 (Li Yibo's Personal Portfolio) - 直播切片提取与管理平台",
     version="1.0.0",
 )
 
@@ -653,7 +653,7 @@ async def serve_index():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("  P08 直播切片系统 - 云枢智能 (CloudPivot)")
+    print("  P08 直播切片系统 - 李奕波个人作品矩阵 (Li Yibo's Personal Portfolio)")
     print("  http://127.0.0.1:8080")
     print()
     print("  [MOCK] ASR: 模拟语音转文字")

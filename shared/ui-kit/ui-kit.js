@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════
-   云枢智能统一平台 · 共享前端运行时（ui-kit.js）
+   李奕波个人作品矩阵统一平台 · 共享前端运行时（ui-kit.js）
    提供：主题切换、侧栏折叠/移动端抽屉、shell↔模块 postMessage 桥、
         SERVICE_REGISTRY 读取助手（配合 services.js 的 window.CP_REGISTRY）。
    无第三方依赖。模块页面与 shell 均可引入。
@@ -77,7 +77,7 @@
      用 postMessage(cp:brand) 下发给 iframe 模块；独立访问模块时（不在 iframe
      里）由这里自行同源拉取。页面用 data-cp-brand="字段名" 声明要绑定的节点。 */
   CP.DEFAULT_BRAND = {
-    company: "云枢智能", name_en: "CloudPivot", subtitle: "统一平台",
+    company: "李奕波个人作品矩阵", name_en: "Li Yibo's Personal Portfolio", subtitle: "统一平台",
     tagline: "AI 电商运营中台", version: "v1.0", logo: "", initials: "CP"
   };
   CP.getBrand = function () { return CP._brand || CP.DEFAULT_BRAND; };
@@ -139,8 +139,18 @@
     var reg = global.CP_REGISTRY || {};
     var port = reg.gateway && reg.gateway.web_port;
     if (port) {
-      urls.push("http://" + (global.location.hostname || reg.host || "127.0.0.1") +
-        ":" + port + "/api/brand");
+      // 公网访客：外壳网关只可能出现在同源（8070 的 nginx 已把 /api 反代到外壳）
+      // —— host:8800 在公网被安全组挡死，每次页面加载都刷一条失败请求（2026-10-15 实测）。
+      // 本机/局域网访客才追加 host:8800 直连兜底，保留 file:// 与 dev server 场景。
+      var h = global.location.hostname || reg.host || "127.0.0.1";
+      var isLocal = /^(127(\.\d{1,3}){3}|localhost|\[::1\]|0\.0\.0\.0)$/.test(h)
+        || /^192\.168\./.test(h) || /^10\./.test(h)
+        || /^172\.(1[6-9]|2\d|3[01])\./.test(h);
+      if (isLocal) {
+        urls.push("http://" + h + ":" + port + "/api/brand");
+      } else {
+        urls.push(global.location.origin + "/api/brand");
+      }
     }
     return urls;
   };

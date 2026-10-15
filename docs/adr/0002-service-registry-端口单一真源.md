@@ -11,7 +11,7 @@
 
 建立 `shared/config/services.json` 作为**端口的唯一真源**：每个服务一条记录，含 `api_port / web_port / route / api_prefix / layer / icon / status`。
 
-- Python 侧：`cloudpivot_config` 提供 `api_url(id, path)` / `service_url(id)`，跨模块调用一律从这里解析端口。
+- Python 侧：`portfolio_config` 提供 `api_url(id, path)` / `service_url(id)`，跨模块调用一律从这里解析端口。
 - 前端侧：`build_js.py` 把 JSON 生成镜像 `services.js`（`window.CP_REGISTRY`），外壳据此解析挂载端口；也可运行时读 `/api/registry`。
 - 改端口只改 `services.json`，再跑 `build_js.py` 重新生成前端镜像。
 - 约定：模块可以硬编码**自己**的后端端口（如 P03 Vite proxy → 8030），但**禁止**硬编码**其他模块**端口。

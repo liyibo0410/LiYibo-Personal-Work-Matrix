@@ -22,7 +22,7 @@ for root, dirs, files in os.walk(REPO):
             continue
         binds = re.findall(r'data-cp-brand(?:-title)?="([^"]+)"', text)
         calls = len(re.findall(r'CP\.loadBrand|loadBrand\(|applyBrand\(|cp:brand', text))
-        hard = len(re.findall(r'云枢智能|CloudPivot', text))
+        hard = len(re.findall(r'李奕波个人作品矩阵|Li Yibo's Personal Portfolio', text))
         if not (binds or hard or calls):
             continue
         rows.append({

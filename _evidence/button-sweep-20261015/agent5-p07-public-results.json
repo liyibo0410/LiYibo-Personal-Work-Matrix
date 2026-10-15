@@ -1,0 +1,815 @@
+{
+  "base": "http://39.96.200.45:8090/p07/",
+  "tag": "public",
+  "started": "2026-10-15T02:14:49.123Z",
+  "finished": "2026-10-15T02:17:00.122Z",
+  "steps": [
+    {
+      "ts": "2026-10-15T02:14:55.459Z",
+      "page": "概览",
+      "widget": "页面加载",
+      "action": "打开 http://39.96.200.45:8090/p07/",
+      "expected": "首屏渲染 + LLM 状态徽章",
+      "actual": "HTTP 200；badges=\"LLM 已接入 · qwen3.8-max ; 网关调用 0 次 · 0 tokens · mock 0\"；nav=dashboard/library/search/generate/report",
+      "verdict": "正常",
+      "evidence": "agent5-01-p07-public-dashboard.png"
+    },
+    {
+      "ts": "2026-10-15T02:14:55.865Z",
+      "page": "概览",
+      "widget": "图表渲染（6 图）",
+      "action": "等待 echarts 懒加载并画图",
+      "expected": "6 张图全部渲染出 canvas",
+      "actual": "canvas=6；卡片=[\"总==素材总数==17==含预览文件 13 个\",\"投==已关联投放==8==覆盖率 47%\",\"费==总花费==¥45,200==收入 ¥463,300\",\"ROI==整体 ROI==10.25x==收入 / 花费\"]",
+      "verdict": "正常",
+      "evidence": "agent5-02-p07-public-dashboard-charts.png"
+    },
+    {
+      "ts": "2026-10-15T02:14:57.869Z",
+      "page": "素材库",
+      "widget": "进入 Tab",
+      "action": "点击侧栏「素材库」",
+      "expected": "显示上传表单+素材网格",
+      "actual": "共 17 条，显示 17 条；自动打标勾选=true（上传后自动智能打标（LLM 真实调用，约 2-8 秒））",
+      "verdict": "正常",
+      "evidence": "agent5-03-p07-public-library-initial.png"
+    },
+    {
+      "ts": "2026-10-15T02:14:58.315Z",
+      "page": "素材库",
+      "widget": "文件选择",
+      "action": "选中 AST-18356A.png",
+      "expected": "显示已选文件与大小",
+      "actual": "已选：AST-18356A.png（5 KB）",
+      "verdict": "正常",
+      "evidence": "agent5-04-p07-public-library-form-filled.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:08.308Z",
+      "page": "素材库",
+      "widget": "「上传入库」按钮",
+      "action": "上传 PNG + 自动打标",
+      "expected": "201 入库；真实打标或如实降级",
+      "actual": "HTTP 201；asset_id=AST-6A7FAE；tag_source=llm；tags=[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"]；degraded=-；宽高=640x480；file_url=/api/v1/assets/AST-6A7FAE/file；toast=\"已入库 AST-6A7FAE · 打标来源 llm\"",
+      "verdict": "正常",
+      "evidence": "agent5-05-p07-public-library-upload-done.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:08.736Z",
+      "page": "素材库",
+      "widget": "上传校验",
+      "action": "不填名称点上传",
+      "expected": "提示「请填写素材名称」",
+      "actual": "toast=\"请填写素材名称\"",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:15:09.840Z",
+      "page": "素材库",
+      "widget": "搜索按钮",
+      "action": "关键字「防晒」",
+      "expected": "按关键字过滤",
+      "actual": "共 3 条，显示 3 条",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:15:10.338Z",
+      "page": "素材库",
+      "widget": "类型筛选",
+      "action": "type=copy + 关键字",
+      "expected": "仅文案类",
+      "actual": "共 0 条，显示 0 条",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:15:10.899Z",
+      "page": "素材库",
+      "widget": "重置按钮",
+      "action": "点击重置",
+      "expected": "恢复全量列表",
+      "actual": "共 18 条，显示 18 条",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:15:10.978Z",
+      "page": "以文搜图",
+      "widget": "进入 Tab",
+      "action": "点击侧栏「以文搜图」",
+      "expected": "显示检索框+示例词",
+      "actual": "检索框/示例词渲染",
+      "verdict": "正常",
+      "evidence": "agent5-06-p07-public-search-initial.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:11.641Z",
+      "page": "以文搜图",
+      "widget": "搜索按钮/示例词（命中）",
+      "action": "查询「夏天清爽的防晒霜」",
+      "expected": "命中相关素材（含刚上传的图）",
+      "actual": "refused=false；total=5；threshold=0.18；query_terms=[\"夏天\",\"天清\",\"晒霜\",\"清爽\",\"爽的\",\"的防\",\"防晒/防晒霜\"]；包含刚传素材=true；items=[{\"id\":\"AST-007\",\"n\":\"防晒霜对比图\",\"rel\":0.461},{\"id\":\"AST-6A7FAE\",\"n\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"rel\":0.424},{\"id\":\"AST-B1AB14\",\"n\":\"夏季控油防晒喷雾户外主图\",\"rel\":0.217},{\"id\":\"AST-001\",\"n\":\"春季护肤主图A\",\"rel\":0.097},{\"id\":\"AST-8BADF6\",\"n\":\"春季氨基酸洗发 温和去油蓬松\",\"rel\":0.032}]；UI=\"命中 5 条（候选 5 条，阈值 0.18）· 切词 夏天 / 天清 / 晒霜 / 清爽 / 爽的 / 的防 / 防晒/防晒霜 |  | 相关度 46% | 图片 |  | 防晒霜对比图 |  | 防晒霜SPF50 vs SPF30对比图 |  | 命中理由（词 → 命中的字段）： |  | 防晒/防晒霜→tags,name,description | 清爽→tags | 夏天→tags | 晒霜→name,description | \"",
+      "verdict": "正常",
+      "evidence": "agent5-07-p07-public-search-hit.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:12.301Z",
+      "page": "以文搜图",
+      "widget": "搜索（拒答）",
+      "action": "查询「库里没有的无人机航拍素材」",
+      "expected": "refused=true 且说明原因",
+      "actual": "refused=true；reason=最高相关度 0.049 低于阈值 0.18，判定为库内无匹配素材（拒答而非返回弱相关结果）；query_terms=[\"人机\",\"库里\",\"拍素\",\"无人\",\"有的\",\"机航\",\"没有\",\"的无\",\"素材\",\"航拍\",\"里没\"]；UI=\"库内无匹配素材（已拒答） |  | 最高相关度 0.049 低于阈值 0.18，判定为库内无匹配素材（拒答而非返回弱相关结果） |  | 切出的检索词：人机 / 库里 / 拍素 / 无人 / 有的 / 机航 / 没有 / 的无 / 素材 / 航拍 / 里没\"",
+      "verdict": "正常",
+      "evidence": "agent5-08-p07-public-search-refused.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:12.633Z",
+      "page": "以文搜图",
+      "widget": "类型筛选 + TopN",
+      "action": "type=image, Top10",
+      "expected": "只返回图片类",
+      "actual": "refused=false；total=4；类型=[\"image\"]",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:15:12.742Z",
+      "page": "AI 生成",
+      "widget": "进入 Tab",
+      "action": "点击侧栏「AI 生成」",
+      "expected": "页面标注图片为程序化绘制（mock）",
+      "actual": "note=\"文案与视频分镜脚本经 shared/llm-gateway 真实生成（prompt 版本化在 prompts/）； 图片类型为程序化绘制的投放规格卡片，不是 AI 出图 —— 真实图像模型接口在本环境未验证，未验证不宣称已跑通。\"",
+      "verdict": "正常",
+      "evidence": "agent5-09-p07-public-generate-initial.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:14.293Z",
+      "page": "AI 生成",
+      "widget": "「生成」按钮（图片/mock）",
+      "action": "prompt=618大促主图规格卡, type=image, 保存勾选",
+      "expected": "程序化规格卡 + UI 标注 mock + 入库",
+      "actual": "source=programmatic；content_type=image；note=\"非真实 AI 出图：Pillow 按投放规格绘制的占位卡片。真实图像模型（wan2.7-image 等）的调用接口形状尚未在本环境验证，未验证不宣称已跑通。\"；badges=[\"程序化占位图\",\"commercial\",\"演示图\",\"UI测试-可删：\"]；noteUI=\"非真实 AI 出图：Pillow 按投放规格绘制的占位卡片。真实图像模型（wan2.7-image 等）的调用接口形状尚未在本环境验证，未验证不宣称已跑通。\"；saved=AST-9FB3F0；hasImg=true",
+      "verdict": "正常",
+      "evidence": "agent5-10-p07-public-generate-image-mock.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:34.744Z",
+      "page": "AI 生成",
+      "widget": "「生成」按钮（文案/真实 LLM）",
+      "action": "prompt=防晒喷雾卖点文案, type=copy, 不保存",
+      "expected": "真实 LLM 生成或如实降级为规则模板",
+      "actual": "source=llm；content_type=copy；meta={\"model\":\"qwen3.8-max\",\"endpoint\":\"token-plan.cn-beijing.maas.aliyuncs.com\",\"latency_ms\":19004.8,\"prompt_tokens\":285,\"completion_tokens\":620,\"total_tokens\":905,\"prompt_version\":\"generate_copy_v1.md\"}；badge=\"LLM 真实生成|立即选购|防晒喷雾|夏季|清爽|补涂|户外\"；saved=false；err=undefined",
+      "verdict": "正常",
+      "evidence": "agent5-11-p07-public-generate-copy-real.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:37.165Z",
+      "page": "效果关联",
+      "widget": "进入 Tab（大盘对照）",
+      "action": "点击侧栏「效果关联」",
+      "expected": "真实调用 P06 指标（available + source_url）",
+      "actual": "接口: platform_metrics.available=true；source_url=http://127.0.0.1:8060/api/v1/metrics/summary；fetched_at=2026-10-15T10:15:35；reason=-；metrics=[\"成交总额\",\"转化率\",\"客单价\",\"独立访客数\"]；页面src文本=\"http://127.0.0.1:8060/api/v1/metrics/summary\"；页面不可用提示=\"\"",
+      "verdict": "正常",
+      "evidence": "agent5-12-p07-public-report-platform-metrics.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:38.704Z",
+      "page": "效果关联",
+      "widget": "平台筛选 select",
+      "action": "选择 抖音",
+      "expected": "只显示抖音平台记录",
+      "actual": "接口total=4；页面计数=4；平台字段=[\"douyin\"]",
+      "verdict": "正常",
+      "evidence": "agent5-13-p07-public-report-filter-douyin.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:40.288Z",
+      "page": "素材详情",
+      "widget": "深链打开 + 文件预览",
+      "action": "#asset/AST-6A7FAE",
+      "expected": "file 接口真实出图（naturalWidth>0）",
+      "actual": "imgOk=true；src=/api/v1/assets/AST-6A7FAE/file；标签徽章=LLM 真实生成 | 防晒喷雾 | 主图 | 控油 | 清爽 | 夏季；投放条数=0",
+      "verdict": "正常",
+      "evidence": "agent5-14-p07-public-asset-detail.png"
+    },
+    {
+      "ts": "2026-10-15T02:15:41.459Z",
+      "page": "素材详情",
+      "widget": "「提交」投放数据（合法）",
+      "action": "店铺=UI测试-可删门店, 曝光40000/点击2500/转化100/花费1500/收入12000",
+      "expected": "201 入库并出现在表格",
+      "actual": "HTTP=201；页面投放行=1；body={\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads",
+      "verdict": "正常",
+      "evidence": "agent5-15-p07-public-asset-perf-saved.png"
+    },
+    {
+      "ts": "2026-10-15T02:16:41.894Z",
+      "page": "素材详情",
+      "widget": "「提交」投放数据（非法载荷）",
+      "action": "点击900 > 曝光100",
+      "expected": "后端 422 拒绝并提示",
+      "actual": "HTTP=undefined；toast=\"请填写店铺名\"；body=undefined",
+      "verdict": "缺陷",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:16:51.175Z",
+      "page": "素材详情",
+      "widget": "「重新打标（覆盖）」",
+      "action": "点击覆盖打标",
+      "expected": "LLM 或规则兜底并标注来源",
+      "actual": "tag_source=llm；tags=[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\",\"UI测试\"]；latency=8453.5；degraded=-",
+      "verdict": "正常",
+      "evidence": "agent5-16-p07-public-asset-retag.png"
+    },
+    {
+      "ts": "2026-10-15T02:16:57.898Z",
+      "page": "素材详情",
+      "widget": "「追加」打标",
+      "action": "点击追加",
+      "expected": "标签合并",
+      "actual": "tag_source=llm；tags=[\"UI测试\",\"主图\",\"夏季\",\"控油\",\"清爽\",\"美妆\",\"防晒喷雾\"]",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:16:59.064Z",
+      "page": "素材详情",
+      "widget": "「删除 AST-6A7FAE」",
+      "action": "点击删除（确认弹窗自动确认）",
+      "expected": "DELETE 200，文件一并删除，列表消失",
+      "actual": "dialog=\"确认删除素材 AST-6A7FAE？文件与投放关联会一并删除。\"；HTTP=200；file_removed=true；删除后页面仍含ID=true；body={\"ok\":true,\"asset_id\":\"AST-6A7FAE\",\"file_removed\":true}",
+      "verdict": "正常",
+      "evidence": "agent5-17-p07-public-asset-deleted.png"
+    },
+    {
+      "ts": "2026-10-15T02:16:59.920Z",
+      "page": "素材详情",
+      "widget": "清理生成的规格卡（AST-9FB3F0）",
+      "action": "删除",
+      "expected": "删除成功",
+      "actual": "HTTP=200；file_removed=true",
+      "verdict": "正常",
+      "evidence": ""
+    },
+    {
+      "ts": "2026-10-15T02:17:00.122Z",
+      "page": "概览",
+      "widget": "LLM 网关累计",
+      "action": "读取 /llm/status",
+      "expected": "调用次数/Token 随真实调用增长",
+      "actual": "configured=true；model=qwen3.8-max；cost={\"total_calls\":4,\"total_tokens\":3304,\"mock_calls\":0,\"total_latency_ms\":42205.7,\"calls_by_model\":{\"qwen3.8-flash\":3,\"qwen3.8-max\":1}}",
+      "verdict": "正常",
+      "evidence": ""
+    }
+  ],
+  "consoleMsgs": [
+    {
+      "type": "warning",
+      "text": "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation",
+      "url": "http://39.96.200.45:8090/shared/vendor/tailwind.3.4.17.js"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://39.96.200.45:8090/favicon.ico"
+    }
+  ],
+  "netFails": [],
+  "apiDumps": [
+    {
+      "ts": "2026-10-15T02:14:54.492Z",
+      "url": "http://39.96.200.45:8090/api/v1/llm/status",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"configured\":true,\"model\":\"qwen3.8-max\",\"endpoint\":\"token-plan.cn-beijing.maas.aliyuncs.com\",\"endpoint_label\":\"fallback\",\"reason\":\"\",\"cost\":{\"total_calls\":0,\"total_tokens\":0,\"mock_calls\":0,\"total_latency_ms\":0,\"calls_by_model\":{}}}"
+    },
+    {
+      "ts": "2026-10-15T02:14:54.614Z",
+      "url": "http://39.96.200.45:8090/api/v1/stats",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total_assets\":17,\"with_preview_file\":13,\"by_type\":{\"copy\":2,\"image\":13,\"video\":2},\"by_source\":{\"demo\":12,\"generated\":2,\"ingest:p02-ecommerce-ops\":2,\"upload\":1},\"by_tag_source\":{\"llm\":3,\"manual\":14},\"linked_assets\":8,\"linked_performance\":8,\"coverage_rate\":0.4706,\"total_spend\":45200,\"total_revenue\":463300,\"roi\":10.25}"
+    },
+    {
+      "ts": "2026-10-15T02:14:54.614Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=100",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":17,\"page\":1,\"size\":100,\"items\":[{\"id\":25,\"asset_id\":\"AST-C9B117\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:03:41\",\"updated_at\":\"2026-10-14T23:03:41\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"p02-ga-1\",\"file_url\":null},{\"id\":24,\"asset_id\":\"AST-EB8C35\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:02:32\",\"updated_at\":\"2026-10-14T23:02:32\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"\",\"file_url\":null},{\"id\":16,\"asset_id\":\"AST-A906B6\",\"name\":\"618大促家电横版海报｜800×800 投放规格卡\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"海报\",\"横版\",\"大促\",\"商业风\",\"程序化\",\"投放\"],\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-53C694.png\",\"file_size\":27627,\"width\":800,\"height\":800,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-14T00:04:34\",\"updated_at\":\"2026-10-14T08:59:42\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-A906B6/file\"},{\"id\":14,\"asset_id\":\"AST-8BADF6\",\"name\":\"春季氨基酸洗发 温和去油蓬松\",\"asset_type\":\"copy\",\"tags\":[\"春季新品\",\"氨基酸洗发水\",\"温和去油\",\"蓬松\",\"信息流素材\"],\"description\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:44:45\",\"updated_at\":\"2026-10-13T23:44:45\",\"mime_type\":\"\",\"tag_source\":\"llm\",\"content\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"origin_id\":\"\",\"file_url\":null},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-B1AB14/file\"},{\"id\":12,\"asset_id\":\"AST-012\",\"name\":\"家电以旧换新Banner\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"以旧换新\",\"Banner\",\"绿色\"],\"description\":\"家电以旧换新活动Banner\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-012.png\",\"file_size\":6212,\"width\":1200,\"height\":400,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-11T10:00:00\",\"updated_at\":\"2026-10-11T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-012/file\"},{\"id\":11,\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"description\":\"零食大礼包产品主图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-011.png\",\"file_size\":7060,\"width\":800,\"height\":800,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-10T10:00:00\",\"updated_at\":\"2026-10-10T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-011/file\"},{\"id\":10,\"asset_id\":\"AST-010\",\"name\":\"洗发水成分解析图\",\"asset_type\":\"image\",\"tags\":[\"洗发水\",\"成分\",\"解析\",\"科普\"],\"description\":\"洗发水核心成分科普图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-010.png\",\"file_size\":9083,\"width\":800,\"height\":1200,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-09T10:00:00\",\"updated_at\":\"2026-10-09T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-010/file\"},{\"id\":9,\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"description\":\"双11预售启动海报\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-009.png\",\"file_size\":14243,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-08T10:00:00\",\"updated_at\":\"2026-10-08T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-009/file\"},{\"id\":8,\"asset_id\":\"AST-008\",\"name\":\"品牌故事短视频\",\"asset_type\":\"video\",\"tags\":[\"品牌\",\"故事\",\"情感\",\"短视频\"],\"description\":\"品牌创立故事短视频脚本\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-008.png\",\"file_size\":14201,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-07T10:00:00\",\"updated_at\":\"2026-10-07T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\""
+    },
+    {
+      "ts": "2026-10-15T02:14:54.614Z",
+      "url": "http://39.96.200.45:8090/api/v1/reports/performance?with_platform_metrics=false",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":8,\"items\":[{\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"source\":\"demo\",\"store_name\":\"示例全店\",\"platform\":\"taobao\",\"impressions\":380000,\"clicks\":26600,\"conversions\":1330,\"spend\":15000,\"revenue\":195000,\"period_start\":\"2025-11-01\",\"period_end\":\"2025-11-11\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":13},{\"asset_id\":\"AST-003\",\"name\":\"618大促Banner\",\"asset_type\":\"image\",\"tags\":[\"618\",\"大促\",\"Banner\",\"红色\"],\"source\":\"demo\",\"store_name\":\"示例美妆店\",\"platform\":\"taobao\",\"impressions\":210000,\"clicks\":14700,\"conversions\":735,\"spend\":8000,\"revenue\":96000,\"period_start\":\"2026-06-01\",\"period_end\":\"2026-06-20\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":12},{\"asset_id\":\"AST-002\",\"name\":\"口红试色短视频脚本\",\"asset_type\":\"video\",\"tags\":[\"口红\",\"试色\",\"短视频\",\"种草\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":89000,\"clicks\":7120,\"conversions\":356,\"spend\":5600,\"revenue\":42000,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.08,\"cvr\":0.05,\"roi\":7.5},{\"asset_id\":\"AST-007\",\"name\":\"防晒霜对比图\",\"asset_type\":\"image\",\"tags\":[\"防晒\",\"对比\",\"夏天\",\"清爽\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":156000,\"clicks\":10920,\"conversions\":546,\"spend\":4100,\"revenue\":38200,\"period_start\":\"2026-07-01\",\"period_end\":\"2026-07-31\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":9.32},{\"asset_id\":\"AST-004\",\"name\":\"运动鞋详情页长图\",\"asset_type\":\"image\",\"tags\":[\"运动鞋\",\"详情页\",\"长图\",\"科技\"],\"source\":\"demo\",\"store_name\":\"示例运动店\",\"platform\":\"tmall\",\"impressions\":67000,\"clicks\":4020,\"conversions\":201,\"spend\":4500,\"revenue\":31500,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.06,\"cvr\":0.05,\"roi\":7},{\"asset_id\":\"AST-001\",\"name\":\"春季护肤主图A\",\"asset_type\":\"image\",\"tags\":[\"护肤\",\"春季\",\"主图\",\"清爽\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":125000,\"clicks\":8750,\"conversions\":437,\"spend\":3200,\"revenue\":28800,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.07,\"cvr\":0.0499,\"roi\":9},{\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"source\":\"demo\",\"store_name\":\"示例零食店\",\"platform\":\"pinduoduo\",\"impressions\":95000,\"clicks\":6650,\"conversions\":332,\"spend\":2800,\"revenue\":16800,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.07,\"cvr\":0.0499,\"roi\":6},{\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"source\":\"upload\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":18000,\"clicks\":1200,\"conversions\":60,\"spend\":2000,\"revenue\":15000,\"period_start\":\"2026-10-01\",\"period_end\":\"2026-10-13\",\"ctr\":0.0667,\"cvr\":0.05,\"roi\":7.5}]}"
+    },
+    {
+      "ts": "2026-10-15T02:14:56.993Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=50",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":17,\"page\":1,\"size\":50,\"items\":[{\"id\":25,\"asset_id\":\"AST-C9B117\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:03:41\",\"updated_at\":\"2026-10-14T23:03:41\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"p02-ga-1\",\"file_url\":null},{\"id\":24,\"asset_id\":\"AST-EB8C35\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:02:32\",\"updated_at\":\"2026-10-14T23:02:32\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"\",\"file_url\":null},{\"id\":16,\"asset_id\":\"AST-A906B6\",\"name\":\"618大促家电横版海报｜800×800 投放规格卡\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"海报\",\"横版\",\"大促\",\"商业风\",\"程序化\",\"投放\"],\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-53C694.png\",\"file_size\":27627,\"width\":800,\"height\":800,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-14T00:04:34\",\"updated_at\":\"2026-10-14T08:59:42\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-A906B6/file\"},{\"id\":14,\"asset_id\":\"AST-8BADF6\",\"name\":\"春季氨基酸洗发 温和去油蓬松\",\"asset_type\":\"copy\",\"tags\":[\"春季新品\",\"氨基酸洗发水\",\"温和去油\",\"蓬松\",\"信息流素材\"],\"description\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:44:45\",\"updated_at\":\"2026-10-13T23:44:45\",\"mime_type\":\"\",\"tag_source\":\"llm\",\"content\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"origin_id\":\"\",\"file_url\":null},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-B1AB14/file\"},{\"id\":12,\"asset_id\":\"AST-012\",\"name\":\"家电以旧换新Banner\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"以旧换新\",\"Banner\",\"绿色\"],\"description\":\"家电以旧换新活动Banner\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-012.png\",\"file_size\":6212,\"width\":1200,\"height\":400,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-11T10:00:00\",\"updated_at\":\"2026-10-11T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-012/file\"},{\"id\":11,\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"description\":\"零食大礼包产品主图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-011.png\",\"file_size\":7060,\"width\":800,\"height\":800,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-10T10:00:00\",\"updated_at\":\"2026-10-10T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-011/file\"},{\"id\":10,\"asset_id\":\"AST-010\",\"name\":\"洗发水成分解析图\",\"asset_type\":\"image\",\"tags\":[\"洗发水\",\"成分\",\"解析\",\"科普\"],\"description\":\"洗发水核心成分科普图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-010.png\",\"file_size\":9083,\"width\":800,\"height\":1200,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-09T10:00:00\",\"updated_at\":\"2026-10-09T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-010/file\"},{\"id\":9,\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"description\":\"双11预售启动海报\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-009.png\",\"file_size\":14243,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-08T10:00:00\",\"updated_at\":\"2026-10-08T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-009/file\"},{\"id\":8,\"asset_id\":\"AST-008\",\"name\":\"品牌故事短视频\",\"asset_type\":\"video\",\"tags\":[\"品牌\",\"故事\",\"情感\",\"短视频\"],\"description\":\"品牌创立故事短视频脚本\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-008.png\",\"file_size\":14201,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-07T10:00:00\",\"updated_at\":\"2026-10-07T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":"
+    },
+    {
+      "ts": "2026-10-15T02:14:57.532Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-A906B6/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:57.547Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-B1AB14/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:57.557Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=50",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":17,\"page\":1,\"size\":50,\"items\":[{\"id\":25,\"asset_id\":\"AST-C9B117\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:03:41\",\"updated_at\":\"2026-10-14T23:03:41\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"p02-ga-1\",\"file_url\":null},{\"id\":24,\"asset_id\":\"AST-EB8C35\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:02:32\",\"updated_at\":\"2026-10-14T23:02:32\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"\",\"file_url\":null},{\"id\":16,\"asset_id\":\"AST-A906B6\",\"name\":\"618大促家电横版海报｜800×800 投放规格卡\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"海报\",\"横版\",\"大促\",\"商业风\",\"程序化\",\"投放\"],\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-53C694.png\",\"file_size\":27627,\"width\":800,\"height\":800,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-14T00:04:34\",\"updated_at\":\"2026-10-14T08:59:42\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-A906B6/file\"},{\"id\":14,\"asset_id\":\"AST-8BADF6\",\"name\":\"春季氨基酸洗发 温和去油蓬松\",\"asset_type\":\"copy\",\"tags\":[\"春季新品\",\"氨基酸洗发水\",\"温和去油\",\"蓬松\",\"信息流素材\"],\"description\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:44:45\",\"updated_at\":\"2026-10-13T23:44:45\",\"mime_type\":\"\",\"tag_source\":\"llm\",\"content\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"origin_id\":\"\",\"file_url\":null},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-B1AB14/file\"},{\"id\":12,\"asset_id\":\"AST-012\",\"name\":\"家电以旧换新Banner\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"以旧换新\",\"Banner\",\"绿色\"],\"description\":\"家电以旧换新活动Banner\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-012.png\",\"file_size\":6212,\"width\":1200,\"height\":400,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-11T10:00:00\",\"updated_at\":\"2026-10-11T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-012/file\"},{\"id\":11,\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"description\":\"零食大礼包产品主图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-011.png\",\"file_size\":7060,\"width\":800,\"height\":800,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-10T10:00:00\",\"updated_at\":\"2026-10-10T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-011/file\"},{\"id\":10,\"asset_id\":\"AST-010\",\"name\":\"洗发水成分解析图\",\"asset_type\":\"image\",\"tags\":[\"洗发水\",\"成分\",\"解析\",\"科普\"],\"description\":\"洗发水核心成分科普图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-010.png\",\"file_size\":9083,\"width\":800,\"height\":1200,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-09T10:00:00\",\"updated_at\":\"2026-10-09T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-010/file\"},{\"id\":9,\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"description\":\"双11预售启动海报\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-009.png\",\"file_size\":14243,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-08T10:00:00\",\"updated_at\":\"2026-10-08T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-009/file\"},{\"id\":8,\"asset_id\":\"AST-008\",\"name\":\"品牌故事短视频\",\"asset_type\":\"video\",\"tags\":[\"品牌\",\"故事\",\"情感\",\"短视频\"],\"description\":\"品牌创立故事短视频脚本\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-008.png\",\"file_size\":14201,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-07T10:00:00\",\"updated_at\":\"2026-10-07T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":"
+    },
+    {
+      "ts": "2026-10-15T02:14:57.560Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-010/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:57.560Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-012/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:57.589Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-011/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:58.462Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-009/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:58.463Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-004/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:58.467Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-008/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:58.487Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-003/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:58.487Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-005/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:58.497Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-007/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:59.539Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-002/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:14:59.555Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-001/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:15:07.742Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets",
+      "status": 201,
+      "m": "POST",
+      "body": "{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:15:07\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-6A7FAE/file\",\"tagging\":{\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"tag_source\":\"llm\",\"meta\":{\"source\":\"llm\",\"model\":\"qwen3.8-flash\",\"endpoint\":\"token-plan.cn-beijing.maas.aliyuncs.com\",\"prompt_version\":\"tag_asset_v1.md\",\"latency_ms\":8173,\"prompt_tokens\":333,\"completion_tokens\":437,\"total_tokens\":770,\"reason\":\"\"},\"category\":\"美妆\",\"season\":\"夏季\"}}"
+    },
+    {
+      "ts": "2026-10-15T02:15:08.207Z",
+      "url": "http://39.96.200.45:8090/api/v1/llm/status",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"configured\":true,\"model\":\"qwen3.8-max\",\"endpoint\":\"token-plan.cn-beijing.maas.aliyuncs.com\",\"endpoint_label\":\"fallback\",\"reason\":\"\",\"cost\":{\"total_calls\":1,\"total_tokens\":770,\"mock_calls\":0,\"total_latency_ms\":8171.3,\"calls_by_model\":{\"qwen3.8-flash\":1}}}"
+    },
+    {
+      "ts": "2026-10-15T02:15:08.228Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=50",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":18,\"page\":1,\"size\":50,\"items\":[{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:15:07\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-6A7FAE/file\"},{\"id\":25,\"asset_id\":\"AST-C9B117\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:03:41\",\"updated_at\":\"2026-10-14T23:03:41\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"p02-ga-1\",\"file_url\":null},{\"id\":24,\"asset_id\":\"AST-EB8C35\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:02:32\",\"updated_at\":\"2026-10-14T23:02:32\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"\",\"file_url\":null},{\"id\":16,\"asset_id\":\"AST-A906B6\",\"name\":\"618大促家电横版海报｜800×800 投放规格卡\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"海报\",\"横版\",\"大促\",\"商业风\",\"程序化\",\"投放\"],\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-53C694.png\",\"file_size\":27627,\"width\":800,\"height\":800,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-14T00:04:34\",\"updated_at\":\"2026-10-14T08:59:42\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-A906B6/file\"},{\"id\":14,\"asset_id\":\"AST-8BADF6\",\"name\":\"春季氨基酸洗发 温和去油蓬松\",\"asset_type\":\"copy\",\"tags\":[\"春季新品\",\"氨基酸洗发水\",\"温和去油\",\"蓬松\",\"信息流素材\"],\"description\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:44:45\",\"updated_at\":\"2026-10-13T23:44:45\",\"mime_type\":\"\",\"tag_source\":\"llm\",\"content\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"origin_id\":\"\",\"file_url\":null},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-B1AB14/file\"},{\"id\":12,\"asset_id\":\"AST-012\",\"name\":\"家电以旧换新Banner\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"以旧换新\",\"Banner\",\"绿色\"],\"description\":\"家电以旧换新活动Banner\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-012.png\",\"file_size\":6212,\"width\":1200,\"height\":400,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-11T10:00:00\",\"updated_at\":\"2026-10-11T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-012/file\"},{\"id\":11,\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"description\":\"零食大礼包产品主图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-011.png\",\"file_size\":7060,\"width\":800,\"height\":800,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-10T10:00:00\",\"updated_at\":\"2026-10-10T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-011/file\"},{\"id\":10,\"asset_id\":\"AST-010\",\"name\":\"洗发水成分解析图\",\"asset_type\":\"image\",\"tags\":[\"洗发水\",\"成分\",\"解析\",\"科普\"],\"description\":\"洗发水核心成分科普图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-010.png\",\"file_size\":9083,\"width\":800,\"height\":1200,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-09T10:00:00\",\"updated_at\":\"2026-10-09T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-010/file\"},{\"id\":9,\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"description\":\"双11预售启动海报\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-009.png\",\"file_size\":14243,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-08T10:00:00\",\"updated_at\":\"2026-10-08T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manu"
+    },
+    {
+      "ts": "2026-10-15T02:15:08.621Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-6A7FAE/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:15:09.433Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=50&keyword=%E9%98%B2%E6%99%92",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":3,\"page\":1,\"size\":50,\"items\":[{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:15:07\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-6A7FAE/file\"},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-B1AB14/file\"},{\"id\":7,\"asset_id\":\"AST-007\",\"name\":\"防晒霜对比图\",\"asset_type\":\"image\",\"tags\":[\"防晒\",\"对比\",\"夏天\",\"清爽\"],\"description\":\"防晒霜SPF50 vs SPF30对比图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-007.png\",\"file_size\":6269,\"width\":800,\"height\":600,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-06T10:00:00\",\"updated_at\":\"2026-10-06T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-007/file\"}]}"
+    },
+    {
+      "ts": "2026-10-15T02:15:09.955Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=50&keyword=%E9%98%B2%E6%99%92&asset_type=copy",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":0,\"page\":1,\"size\":50,\"items\":[]}"
+    },
+    {
+      "ts": "2026-10-15T02:15:10.059Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=50&keyword=%E9%98%B2%E6%99%92&asset_type=copy",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":0,\"page\":1,\"size\":50,\"items\":[]}"
+    },
+    {
+      "ts": "2026-10-15T02:15:10.497Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=50",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":18,\"page\":1,\"size\":50,\"items\":[{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:15:07\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-6A7FAE/file\"},{\"id\":25,\"asset_id\":\"AST-C9B117\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:03:41\",\"updated_at\":\"2026-10-14T23:03:41\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"p02-ga-1\",\"file_url\":null},{\"id\":24,\"asset_id\":\"AST-EB8C35\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:02:32\",\"updated_at\":\"2026-10-14T23:02:32\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"\",\"file_url\":null},{\"id\":16,\"asset_id\":\"AST-A906B6\",\"name\":\"618大促家电横版海报｜800×800 投放规格卡\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"海报\",\"横版\",\"大促\",\"商业风\",\"程序化\",\"投放\"],\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-53C694.png\",\"file_size\":27627,\"width\":800,\"height\":800,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-14T00:04:34\",\"updated_at\":\"2026-10-14T08:59:42\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-A906B6/file\"},{\"id\":14,\"asset_id\":\"AST-8BADF6\",\"name\":\"春季氨基酸洗发 温和去油蓬松\",\"asset_type\":\"copy\",\"tags\":[\"春季新品\",\"氨基酸洗发水\",\"温和去油\",\"蓬松\",\"信息流素材\"],\"description\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:44:45\",\"updated_at\":\"2026-10-13T23:44:45\",\"mime_type\":\"\",\"tag_source\":\"llm\",\"content\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"origin_id\":\"\",\"file_url\":null},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-B1AB14/file\"},{\"id\":12,\"asset_id\":\"AST-012\",\"name\":\"家电以旧换新Banner\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"以旧换新\",\"Banner\",\"绿色\"],\"description\":\"家电以旧换新活动Banner\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-012.png\",\"file_size\":6212,\"width\":1200,\"height\":400,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-11T10:00:00\",\"updated_at\":\"2026-10-11T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-012/file\"},{\"id\":11,\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"description\":\"零食大礼包产品主图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-011.png\",\"file_size\":7060,\"width\":800,\"height\":800,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-10T10:00:00\",\"updated_at\":\"2026-10-10T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-011/file\"},{\"id\":10,\"asset_id\":\"AST-010\",\"name\":\"洗发水成分解析图\",\"asset_type\":\"image\",\"tags\":[\"洗发水\",\"成分\",\"解析\",\"科普\"],\"description\":\"洗发水核心成分科普图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-010.png\",\"file_size\":9083,\"width\":800,\"height\":1200,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-09T10:00:00\",\"updated_at\":\"2026-10-09T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-010/file\"},{\"id\":9,\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"description\":\"双11预售启动海报\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-009.png\",\"file_size\":14243,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-08T10:00:00\",\"updated_at\":\"2026-10-08T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manu"
+    },
+    {
+      "ts": "2026-10-15T02:15:11.088Z",
+      "url": "http://39.96.200.45:8090/api/v1/search",
+      "status": 200,
+      "m": "POST",
+      "body": "{\"engine\":\"cn-ngram+synonym+weighted-field（文本检索，非 CLIP 多模态向量）\",\"query\":\"夏天清爽的防晒霜\",\"query_terms\":[\"夏天\",\"天清\",\"晒霜\",\"清爽\",\"爽的\",\"的防\",\"防晒/防晒霜\"],\"refused\":false,\"total\":5,\"items\":[{\"id\":7,\"asset_id\":\"AST-007\",\"name\":\"防晒霜对比图\",\"asset_type\":\"image\",\"tags\":[\"防晒\",\"对比\",\"夏天\",\"清爽\"],\"description\":\"防晒霜SPF50 vs SPF30对比图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-007.png\",\"file_size\":6269,\"width\":800,\"height\":600,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-06T10:00:00\",\"updated_at\":\"2026-10-06T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"relevance_score\":0.461,\"matched_terms\":[{\"term\":\"防晒/防晒霜\",\"fields\":[\"tags\",\"name\",\"description\"]},{\"term\":\"清爽\",\"fields\":[\"tags\"]},{\"term\":\"夏天\",\"fields\":[\"tags\"]},{\"term\":\"晒霜\",\"fields\":[\"name\",\"description\"]}]},{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:15:07\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"relevance_score\":0.424,\"matched_terms\":[{\"term\":\"防晒/防晒霜\",\"fields\":[\"tags\",\"name\",\"description\"]},{\"term\":\"清爽\",\"fields\":[\"tags\",\"name\",\"description\"]},{\"term\":\"夏天\",\"fields\":[\"description\"]},{\"term\":\"天清\",\"fields\":[\"description\"]},{\"term\":\"爽的\",\"fields\":[\"description\"]},{\"term\":\"的防\",\"fields\":[\"description\"]}]},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"relevance_score\":0.217,\"matched_terms\":[{\"term\":\"防晒/防晒霜\",\"fields\":[\"tags\",\"name\",\"description\"]},{\"term\":\"清爽\",\"fields\":[\"tags\",\"name\",\"description\"]}]},{\"id\":1,\"asset_id\":\"AST-001\",\"name\":\"春季护肤主图A\",\"asset_type\":\"image\",\"tags\":[\"护肤\",\"春季\",\"主图\",\"清爽\"],\"description\":\"春季主推护肤品主图方案A\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-001.png\",\"file_size\":6991,\"width\":800,\"height\":800,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-09-30T10:00:00\",\"updated_at\":\"2026-09-30T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"relevance_score\":0.097,\"matched_terms\":[{\"term\":\"清爽\",\"fields\":[\"tags\"]}]},{\"id\":14,\"asset_id\":\"AST-8BADF6\",\"name\":\"春季氨基酸洗发 温和去油蓬松\",\"asset_type\":\"copy\",\"tags\":[\"春季新品\",\"氨基酸洗发水\",\"温和去油\",\"蓬松\",\"信息流素材\"],\"description\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:44:45\",\"updated_at\":\"2026-10-13T23:44:45\",\"mime_type\":\"\",\"tag_source\":\"llm\",\"content\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"origin_id\":\"\",\"relevance_score\":0.032,\"matched_terms\":[{\"term\":\"清爽\",\"fields\":[\"description\"]}]}],\"candidates\":5,\"threshold\":0.18}"
+    },
+    {
+      "ts": "2026-10-15T02:15:11.766Z",
+      "url": "http://39.96.200.45:8090/api/v1/search",
+      "status": 200,
+      "m": "POST",
+      "body": "{\"engine\":\"cn-ngram+synonym+weighted-field（文本检索，非 CLIP 多模态向量）\",\"query\":\"库里没有的无人机航拍素材\",\"query_terms\":[\"人机\",\"库里\",\"拍素\",\"无人\",\"有的\",\"机航\",\"没有\",\"的无\",\"素材\",\"航拍\",\"里没\"],\"refused\":true,\"reason\":\"最高相关度 0.049 低于阈值 0.18，判定为库内无匹配素材（拒答而非返回弱相关结果）\",\"total\":0,\"items\":[],\"threshold\":0.18}"
+    },
+    {
+      "ts": "2026-10-15T02:15:12.633Z",
+      "url": "http://39.96.200.45:8090/api/v1/search",
+      "status": 200,
+      "m": "POST",
+      "body": "{\"engine\":\"cn-ngram+synonym+weighted-field（文本检索，非 CLIP 多模态向量）\",\"query\":\"夏天清爽的防晒霜\",\"query_terms\":[\"夏天\",\"天清\",\"晒霜\",\"清爽\",\"爽的\",\"的防\",\"防晒/防晒霜\"],\"refused\":false,\"total\":4,\"items\":[{\"id\":7,\"asset_id\":\"AST-007\",\"name\":\"防晒霜对比图\",\"asset_type\":\"image\",\"tags\":[\"防晒\",\"对比\",\"夏天\",\"清爽\"],\"description\":\"防晒霜SPF50 vs SPF30对比图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-007.png\",\"file_size\":6269,\"width\":800,\"height\":600,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-06T10:00:00\",\"updated_at\":\"2026-10-06T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"relevance_score\":0.462,\"matched_terms\":[{\"term\":\"防晒/防晒霜\",\"fields\":[\"tags\",\"name\",\"description\"]},{\"term\":\"清爽\",\"fields\":[\"tags\"]},{\"term\":\"夏天\",\"fields\":[\"tags\"]},{\"term\":\"晒霜\",\"fields\":[\"name\",\"description\"]}]},{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:15:07\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"relevance_score\":0.426,\"matched_terms\":[{\"term\":\"防晒/防晒霜\",\"fields\":[\"tags\",\"name\",\"description\"]},{\"term\":\"清爽\",\"fields\":[\"tags\",\"name\",\"description\"]},{\"term\":\"夏天\",\"fields\":[\"description\"]},{\"term\":\"天清\",\"fields\":[\"description\"]},{\"term\":\"爽的\",\"fields\":[\"description\"]},{\"term\":\"的防\",\"fields\":[\"description\"]}]},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"relevance_score\":0.22,\"matched_terms\":[{\"term\":\"防晒/防晒霜\",\"fields\":[\"tags\",\"name\",\"description\"]},{\"term\":\"清爽\",\"fields\":[\"tags\",\"name\",\"description\"]}]},{\"id\":1,\"asset_id\":\"AST-001\",\"name\":\"春季护肤主图A\",\"asset_type\":\"image\",\"tags\":[\"护肤\",\"春季\",\"主图\",\"清爽\"],\"description\":\"春季主推护肤品主图方案A\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-001.png\",\"file_size\":6991,\"width\":800,\"height\":800,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-09-30T10:00:00\",\"updated_at\":\"2026-09-30T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"relevance_score\":0.104,\"matched_terms\":[{\"term\":\"清爽\",\"fields\":[\"tags\"]}]}],\"candidates\":4,\"threshold\":0.18}"
+    },
+    {
+      "ts": "2026-10-15T02:15:13.442Z",
+      "url": "http://39.96.200.45:8090/api/v1/generate",
+      "status": 200,
+      "m": "POST",
+      "body": "{\"content_type\":\"image\",\"source\":\"programmatic\",\"result\":{\"title\":\"UI测试-可删：618大促防晒喷雾主图规｜800×800 投放规格卡\",\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"tags\":[\"commercial\",\"演示图\",\"UI测试-可删：\"],\"preview_asset_id\":\"AST-617E3C\"},\"file\":{\"path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-617E3C.png\",\"size\":32504,\"mime_type\":\"image/png\",\"width\":800,\"height\":800},\"preview_data_url\":\"data:image/png;base64,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"
+    },
+    {
+      "ts": "2026-10-15T02:15:14.227Z",
+      "url": "http://39.96.200.45:8090/api/v1/llm/status",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"configured\":true,\"model\":\"qwen3.8-max\",\"endpoint\":\"token-plan.cn-beijing.maas.aliyuncs.com\",\"endpoint_label\":\"fallback\",\"reason\":\"\",\"cost\":{\"total_calls\":1,\"total_tokens\":770,\"mock_calls\":0,\"total_latency_ms\":8171.3,\"calls_by_model\":{\"qwen3.8-flash\":1}}}"
+    },
+    {
+      "ts": "2026-10-15T02:15:14.353Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-9FB3F0/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:15:33.894Z",
+      "url": "http://39.96.200.45:8090/api/v1/generate",
+      "status": 200,
+      "m": "POST",
+      "body": "{\"content_type\":\"copy\",\"source\":\"llm\",\"result\":{\"title\":\"夏日防晒喷雾 清爽轻负担\",\"subtitle\":\"细腻水雾，均匀覆盖，户外通勤随身补涂\",\"bullets\":[\"细腻水雾，覆盖均匀\",\"清爽轻薄，不易黏腻\",\"随身补涂，通勤户外\"],\"cta\":\"立即选购\",\"tags\":[\"防晒喷雾\",\"夏季\",\"清爽\",\"补涂\",\"户外\"]},\"meta\":{\"model\":\"qwen3.8-max\",\"endpoint\":\"token-plan.cn-beijing.maas.aliyuncs.com\",\"latency_ms\":19004.8,\"prompt_tokens\":285,\"completion_tokens\":620,\"total_tokens\":905,\"prompt_version\":\"generate_copy_v1.md\"},\"note\":\"\"}"
+    },
+    {
+      "ts": "2026-10-15T02:15:34.498Z",
+      "url": "http://39.96.200.45:8090/api/v1/llm/status",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"configured\":true,\"model\":\"qwen3.8-max\",\"endpoint\":\"token-plan.cn-beijing.maas.aliyuncs.com\",\"endpoint_label\":\"fallback\",\"reason\":\"\",\"cost\":{\"total_calls\":2,\"total_tokens\":1675,\"mock_calls\":0,\"total_latency_ms\":27175.7,\"calls_by_model\":{\"qwen3.8-flash\":1,\"qwen3.8-max\":1}}}"
+    },
+    {
+      "ts": "2026-10-15T02:15:35.440Z",
+      "url": "http://39.96.200.45:8090/api/v1/reports/performance",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":8,\"items\":[{\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"source\":\"demo\",\"store_name\":\"示例全店\",\"platform\":\"taobao\",\"impressions\":380000,\"clicks\":26600,\"conversions\":1330,\"spend\":15000,\"revenue\":195000,\"period_start\":\"2025-11-01\",\"period_end\":\"2025-11-11\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":13},{\"asset_id\":\"AST-003\",\"name\":\"618大促Banner\",\"asset_type\":\"image\",\"tags\":[\"618\",\"大促\",\"Banner\",\"红色\"],\"source\":\"demo\",\"store_name\":\"示例美妆店\",\"platform\":\"taobao\",\"impressions\":210000,\"clicks\":14700,\"conversions\":735,\"spend\":8000,\"revenue\":96000,\"period_start\":\"2026-06-01\",\"period_end\":\"2026-06-20\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":12},{\"asset_id\":\"AST-002\",\"name\":\"口红试色短视频脚本\",\"asset_type\":\"video\",\"tags\":[\"口红\",\"试色\",\"短视频\",\"种草\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":89000,\"clicks\":7120,\"conversions\":356,\"spend\":5600,\"revenue\":42000,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.08,\"cvr\":0.05,\"roi\":7.5},{\"asset_id\":\"AST-007\",\"name\":\"防晒霜对比图\",\"asset_type\":\"image\",\"tags\":[\"防晒\",\"对比\",\"夏天\",\"清爽\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":156000,\"clicks\":10920,\"conversions\":546,\"spend\":4100,\"revenue\":38200,\"period_start\":\"2026-07-01\",\"period_end\":\"2026-07-31\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":9.32},{\"asset_id\":\"AST-004\",\"name\":\"运动鞋详情页长图\",\"asset_type\":\"image\",\"tags\":[\"运动鞋\",\"详情页\",\"长图\",\"科技\"],\"source\":\"demo\",\"store_name\":\"示例运动店\",\"platform\":\"tmall\",\"impressions\":67000,\"clicks\":4020,\"conversions\":201,\"spend\":4500,\"revenue\":31500,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.06,\"cvr\":0.05,\"roi\":7},{\"asset_id\":\"AST-001\",\"name\":\"春季护肤主图A\",\"asset_type\":\"image\",\"tags\":[\"护肤\",\"春季\",\"主图\",\"清爽\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":125000,\"clicks\":8750,\"conversions\":437,\"spend\":3200,\"revenue\":28800,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.07,\"cvr\":0.0499,\"roi\":9},{\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"source\":\"demo\",\"store_name\":\"示例零食店\",\"platform\":\"pinduoduo\",\"impressions\":95000,\"clicks\":6650,\"conversions\":332,\"spend\":2800,\"revenue\":16800,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.07,\"cvr\":0.0499,\"roi\":6},{\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"source\":\"upload\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":18000,\"clicks\":1200,\"conversions\":60,\"spend\":2000,\"revenue\":15000,\"period_start\":\"2026-10-01\",\"period_end\":\"2026-10-13\",\"ctr\":0.0667,\"cvr\":0.05,\"roi\":7.5}],\"platform_metrics\":{\"source_url\":\"http://127.0.0.1:8060/api/v1/metrics/summary\",\"fetched_at\":\"2026-10-15T10:15:35\",\"requested\":[\"conversion_rate\",\"traffic_uv\",\"avg_order_value\",\"gmv\"],\"available\":true,\"metrics\":[{\"code\":\"gmv\",\"name\":\"成交总额\",\"unit\":\"元\",\"latest\":35958.37,\"avg\":36005.68,\"trend\":0.3387},{\"code\":\"conversion_rate\",\"name\":\"转化率\",\"unit\":\"%\",\"latest\":0.0044,\"avg\":0,\"trend\":0.4667},{\"code\":\"avg_order_value\",\"name\":\"客单价\",\"unit\":\"元\",\"latest\":270.36,\"avg\":283.16,\"trend\":0.0669},{\"code\":\"traffic_uv\",\"name\":\"独立访客数\",\"unit\":\"人\",\"latest\":30410,\"avg\":26728.45,\"trend\":-0.1517}],\"note\":\"真实跨模块调用：P07 → P06 /api/v1/metrics/summary\"}}"
+    },
+    {
+      "ts": "2026-10-15T02:15:37.225Z",
+      "url": "http://39.96.200.45:8090/api/v1/reports/performance",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":8,\"items\":[{\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"source\":\"demo\",\"store_name\":\"示例全店\",\"platform\":\"taobao\",\"impressions\":380000,\"clicks\":26600,\"conversions\":1330,\"spend\":15000,\"revenue\":195000,\"period_start\":\"2025-11-01\",\"period_end\":\"2025-11-11\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":13},{\"asset_id\":\"AST-003\",\"name\":\"618大促Banner\",\"asset_type\":\"image\",\"tags\":[\"618\",\"大促\",\"Banner\",\"红色\"],\"source\":\"demo\",\"store_name\":\"示例美妆店\",\"platform\":\"taobao\",\"impressions\":210000,\"clicks\":14700,\"conversions\":735,\"spend\":8000,\"revenue\":96000,\"period_start\":\"2026-06-01\",\"period_end\":\"2026-06-20\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":12},{\"asset_id\":\"AST-002\",\"name\":\"口红试色短视频脚本\",\"asset_type\":\"video\",\"tags\":[\"口红\",\"试色\",\"短视频\",\"种草\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":89000,\"clicks\":7120,\"conversions\":356,\"spend\":5600,\"revenue\":42000,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.08,\"cvr\":0.05,\"roi\":7.5},{\"asset_id\":\"AST-007\",\"name\":\"防晒霜对比图\",\"asset_type\":\"image\",\"tags\":[\"防晒\",\"对比\",\"夏天\",\"清爽\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":156000,\"clicks\":10920,\"conversions\":546,\"spend\":4100,\"revenue\":38200,\"period_start\":\"2026-07-01\",\"period_end\":\"2026-07-31\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":9.32},{\"asset_id\":\"AST-004\",\"name\":\"运动鞋详情页长图\",\"asset_type\":\"image\",\"tags\":[\"运动鞋\",\"详情页\",\"长图\",\"科技\"],\"source\":\"demo\",\"store_name\":\"示例运动店\",\"platform\":\"tmall\",\"impressions\":67000,\"clicks\":4020,\"conversions\":201,\"spend\":4500,\"revenue\":31500,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.06,\"cvr\":0.05,\"roi\":7},{\"asset_id\":\"AST-001\",\"name\":\"春季护肤主图A\",\"asset_type\":\"image\",\"tags\":[\"护肤\",\"春季\",\"主图\",\"清爽\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":125000,\"clicks\":8750,\"conversions\":437,\"spend\":3200,\"revenue\":28800,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.07,\"cvr\":0.0499,\"roi\":9},{\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"source\":\"demo\",\"store_name\":\"示例零食店\",\"platform\":\"pinduoduo\",\"impressions\":95000,\"clicks\":6650,\"conversions\":332,\"spend\":2800,\"revenue\":16800,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.07,\"cvr\":0.0499,\"roi\":6},{\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"source\":\"upload\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":18000,\"clicks\":1200,\"conversions\":60,\"spend\":2000,\"revenue\":15000,\"period_start\":\"2026-10-01\",\"period_end\":\"2026-10-13\",\"ctr\":0.0667,\"cvr\":0.05,\"roi\":7.5}],\"platform_metrics\":{\"source_url\":\"http://127.0.0.1:8060/api/v1/metrics/summary\",\"fetched_at\":\"2026-10-15T10:15:35\",\"requested\":[\"conversion_rate\",\"traffic_uv\",\"avg_order_value\",\"gmv\"],\"available\":true,\"metrics\":[{\"code\":\"gmv\",\"name\":\"成交总额\",\"unit\":\"元\",\"latest\":35958.37,\"avg\":36005.68,\"trend\":0.3387},{\"code\":\"conversion_rate\",\"name\":\"转化率\",\"unit\":\"%\",\"latest\":0.0044,\"avg\":0,\"trend\":0.4667},{\"code\":\"avg_order_value\",\"name\":\"客单价\",\"unit\":\"元\",\"latest\":270.36,\"avg\":283.16,\"trend\":0.0669},{\"code\":\"traffic_uv\",\"name\":\"独立访客数\",\"unit\":\"人\",\"latest\":30410,\"avg\":26728.45,\"trend\":-0.1517}],\"note\":\"真实跨模块调用：P07 → P06 /api/v1/metrics/summary\"}}"
+    },
+    {
+      "ts": "2026-10-15T02:15:38.159Z",
+      "url": "http://39.96.200.45:8090/api/v1/reports/performance?platform=douyin",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":4,\"items\":[{\"asset_id\":\"AST-002\",\"name\":\"口红试色短视频脚本\",\"asset_type\":\"video\",\"tags\":[\"口红\",\"试色\",\"短视频\",\"种草\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":89000,\"clicks\":7120,\"conversions\":356,\"spend\":5600,\"revenue\":42000,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.08,\"cvr\":0.05,\"roi\":7.5},{\"asset_id\":\"AST-007\",\"name\":\"防晒霜对比图\",\"asset_type\":\"image\",\"tags\":[\"防晒\",\"对比\",\"夏天\",\"清爽\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":156000,\"clicks\":10920,\"conversions\":546,\"spend\":4100,\"revenue\":38200,\"period_start\":\"2026-07-01\",\"period_end\":\"2026-07-31\",\"ctr\":0.07,\"cvr\":0.05,\"roi\":9.32},{\"asset_id\":\"AST-001\",\"name\":\"春季护肤主图A\",\"asset_type\":\"image\",\"tags\":[\"护肤\",\"春季\",\"主图\",\"清爽\"],\"source\":\"demo\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":125000,\"clicks\":8750,\"conversions\":437,\"spend\":3200,\"revenue\":28800,\"period_start\":\"2026-09-01\",\"period_end\":\"2026-09-30\",\"ctr\":0.07,\"cvr\":0.0499,\"roi\":9},{\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"source\":\"upload\",\"store_name\":\"示例旗舰店\",\"platform\":\"douyin\",\"impressions\":18000,\"clicks\":1200,\"conversions\":60,\"spend\":2000,\"revenue\":15000,\"period_start\":\"2026-10-01\",\"period_end\":\"2026-10-13\",\"ctr\":0.0667,\"cvr\":0.05,\"roi\":7.5}],\"platform_metrics\":{\"source_url\":\"http://127.0.0.1:8060/api/v1/metrics/summary\",\"fetched_at\":\"2026-10-15T10:15:37\",\"requested\":[\"conversion_rate\",\"traffic_uv\",\"avg_order_value\",\"gmv\"],\"available\":true,\"metrics\":[{\"code\":\"gmv\",\"name\":\"成交总额\",\"unit\":\"元\",\"latest\":35958.37,\"avg\":36005.68,\"trend\":0.3387},{\"code\":\"conversion_rate\",\"name\":\"转化率\",\"unit\":\"%\",\"latest\":0.0044,\"avg\":0,\"trend\":0.4667},{\"code\":\"avg_order_value\",\"name\":\"客单价\",\"unit\":\"元\",\"latest\":270.36,\"avg\":283.16,\"trend\":0.0669},{\"code\":\"traffic_uv\",\"name\":\"独立访客数\",\"unit\":\"人\",\"latest\":30410,\"avg\":26728.45,\"trend\":-0.1517}],\"note\":\"真实跨模块调用：P07 → P06 /api/v1/metrics/summary\"}}"
+    },
+    {
+      "ts": "2026-10-15T02:15:39.052Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-6A7FAE/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:15:39.054Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-6A7FAE",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:15:07\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-6A7FAE/file\",\"performance\":[]}"
+    },
+    {
+      "ts": "2026-10-15T02:15:40.813Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-6A7FAE/performance",
+      "status": 201,
+      "m": "POST",
+      "body": "{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:15:07\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-6A7FAE/file\",\"performance\":[{\"id\":9,\"asset_id\":\"AST-6A7FAE\",\"store_name\":\"UI测试-可删门店\",\"platform\":\"douyin\",\"impressions\":40000,\"clicks\":2500,\"conversions\":100,\"spend\":1500,\"revenue\":12000,\"period_start\":\"2026-10-01\",\"period_end\":\"2026-10-13\",\"created_at\":\"2026-10-15T10:15:40\"}]}"
+    },
+    {
+      "ts": "2026-10-15T02:15:41.103Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-6A7FAE",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:15:07\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-6A7FAE/file\",\"performance\":[{\"id\":9,\"asset_id\":\"AST-6A7FAE\",\"store_name\":\"UI测试-可删门店\",\"platform\":\"douyin\",\"impressions\":40000,\"clicks\":2500,\"conversions\":100,\"spend\":1500,\"revenue\":12000,\"period_start\":\"2026-10-01\",\"period_end\":\"2026-10-13\",\"created_at\":\"2026-10-15T10:15:40\"}]}"
+    },
+    {
+      "ts": "2026-10-15T02:16:50.528Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-6A7FAE/tag",
+      "status": 200,
+      "m": "POST",
+      "body": "{\"asset_id\":\"AST-6A7FAE\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\",\"UI测试\"],\"tag_source\":\"llm\",\"previous_tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\"],\"meta\":{\"source\":\"llm\",\"model\":\"qwen3.8-flash\",\"endpoint\":\"token-plan.cn-beijing.maas.aliyuncs.com\",\"prompt_version\":\"tag_asset_v1.md\",\"latency_ms\":8453.5,\"prompt_tokens\":333,\"completion_tokens\":482,\"total_tokens\":815,\"reason\":\"\"},\"degraded_reason\":\"\",\"asset\":{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\",\"UI测试\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:16:50\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-6A7FAE/file\",\"performance\":[{\"id\":9,\"asset_id\":\"AST-6A7FAE\",\"store_name\":\"UI测试-可删门店\",\"platform\":\"douyin\",\"impressions\":40000,\"clicks\":2500,\"conversions\":100,\"spend\":1500,\"revenue\":12000,\"period_start\":\"2026-10-01\",\"period_end\":\"2026-10-13\",\"created_at\":\"2026-10-15T10:15:40\"}]}}"
+    },
+    {
+      "ts": "2026-10-15T02:16:57.898Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-6A7FAE/tag",
+      "status": 200,
+      "m": "POST",
+      "body": "{\"asset_id\":\"AST-6A7FAE\",\"tags\":[\"UI测试\",\"主图\",\"夏季\",\"控油\",\"清爽\",\"美妆\",\"防晒喷雾\"],\"tag_source\":\"llm\",\"previous_tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"夏季\",\"UI测试\"],\"meta\":{\"source\":\"llm\",\"model\":\"qwen3.8-flash\",\"endpoint\":\"token-plan.cn-beijing.maas.aliyuncs.com\",\"prompt_version\":\"tag_asset_v1.md\",\"latency_ms\":6576.9,\"prompt_tokens\":333,\"completion_tokens\":481,\"total_tokens\":814,\"reason\":\"\"},\"degraded_reason\":\"\",\"asset\":{\"id\":26,\"asset_id\":\"AST-6A7FAE\",\"name\":\"UI测试-可删-夏季控油防晒喷雾主图\",\"asset_type\":\"image\",\"tags\":[\"UI测试\",\"主图\",\"夏季\",\"控油\",\"清爽\",\"美妆\",\"防晒喷雾\"],\"description\":\"UI测试素材（可删）：夏天清爽的防晒喷雾，用于以文搜图命中验证\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-6A7FAE.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:07\",\"updated_at\":\"2026-10-15T10:16:57\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-6A7FAE/file\",\"performance\":[{\"id\":9,\"asset_id\":\"AST-6A7FAE\",\"store_name\":\"UI测试-可删门店\",\"platform\":\"douyin\",\"impressions\":40000,\"clicks\":2500,\"conversions\":100,\"spend\":1500,\"revenue\":12000,\"period_start\":\"2026-10-01\",\"period_end\":\"2026-10-13\",\"created_at\":\"2026-10-15T10:15:40\"}]}}"
+    },
+    {
+      "ts": "2026-10-15T02:16:58.177Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-6A7FAE",
+      "status": 200,
+      "m": "DELETE",
+      "body": "{\"ok\":true,\"asset_id\":\"AST-6A7FAE\",\"file_removed\":true}"
+    },
+    {
+      "ts": "2026-10-15T02:16:58.453Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=50",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":18,\"page\":1,\"size\":50,\"items\":[{\"id\":27,\"asset_id\":\"AST-9FB3F0\",\"name\":\"UI测试-可删：618大促防晒喷雾主图规｜800×800 投放规格卡\",\"asset_type\":\"image\",\"tags\":[\"commercial\",\"演示图\",\"UI测试-可删：\"],\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-617E3C.png\",\"file_size\":32504,\"width\":800,\"height\":800,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:13\",\"updated_at\":\"2026-10-15T10:15:13\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-9FB3F0/file\"},{\"id\":25,\"asset_id\":\"AST-C9B117\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:03:41\",\"updated_at\":\"2026-10-14T23:03:41\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"p02-ga-1\",\"file_url\":null},{\"id\":24,\"asset_id\":\"AST-EB8C35\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:02:32\",\"updated_at\":\"2026-10-14T23:02:32\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"\",\"file_url\":null},{\"id\":16,\"asset_id\":\"AST-A906B6\",\"name\":\"618大促家电横版海报｜800×800 投放规格卡\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"海报\",\"横版\",\"大促\",\"商业风\",\"程序化\",\"投放\"],\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-53C694.png\",\"file_size\":27627,\"width\":800,\"height\":800,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-14T00:04:34\",\"updated_at\":\"2026-10-14T08:59:42\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-A906B6/file\"},{\"id\":14,\"asset_id\":\"AST-8BADF6\",\"name\":\"春季氨基酸洗发 温和去油蓬松\",\"asset_type\":\"copy\",\"tags\":[\"春季新品\",\"氨基酸洗发水\",\"温和去油\",\"蓬松\",\"信息流素材\"],\"description\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:44:45\",\"updated_at\":\"2026-10-13T23:44:45\",\"mime_type\":\"\",\"tag_source\":\"llm\",\"content\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"origin_id\":\"\",\"file_url\":null},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-B1AB14/file\"},{\"id\":12,\"asset_id\":\"AST-012\",\"name\":\"家电以旧换新Banner\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"以旧换新\",\"Banner\",\"绿色\"],\"description\":\"家电以旧换新活动Banner\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-012.png\",\"file_size\":6212,\"width\":1200,\"height\":400,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-11T10:00:00\",\"updated_at\":\"2026-10-11T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-012/file\"},{\"id\":11,\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"description\":\"零食大礼包产品主图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-011.png\",\"file_size\":7060,\"width\":800,\"height\":800,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-10T10:00:00\",\"updated_at\":\"2026-10-10T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-011/file\"},{\"id\":10,\"asset_id\":\"AST-010\",\"name\":\"洗发水成分解析图\",\"asset_type\":\"image\",\"tags\":[\"洗发水\",\"成分\",\"解析\",\"科普\"],\"description\":\"洗发水核心成分科普图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-010.png\",\"file_size\":9083,\"width\":800,\"height\":1200,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-09T10:00:00\",\"updated_at\":\"2026-10-09T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-010/file\"},{\"id\":9,\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"description\":\"双11预售启动海报\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-009.png\",\"file_size\":14243,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-08T10:00:00\",\"updated_at\":\"2026-10-08T10:00:00\",\"mime_type\""
+    },
+    {
+      "ts": "2026-10-15T02:16:58.454Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-9FB3F0/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.455Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-A906B6/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.455Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-B1AB14/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.456Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-012/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.456Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-011/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.456Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-010/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.456Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-009/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.456Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-008/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.456Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-007/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.457Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-005/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.457Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-004/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.457Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-003/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.457Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-002/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:58.457Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-001/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:16:59.298Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-9FB3F0",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"id\":27,\"asset_id\":\"AST-9FB3F0\",\"name\":\"UI测试-可删：618大促防晒喷雾主图规｜800×800 投放规格卡\",\"asset_type\":\"image\",\"tags\":[\"commercial\",\"演示图\",\"UI测试-可删：\"],\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-617E3C.png\",\"file_size\":32504,\"width\":800,\"height\":800,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-15T10:15:13\",\"updated_at\":\"2026-10-15T10:15:13\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-9FB3F0/file\",\"performance\":[]}"
+    },
+    {
+      "ts": "2026-10-15T02:16:59.920Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-9FB3F0",
+      "status": 200,
+      "m": "DELETE",
+      "body": "{\"ok\":true,\"asset_id\":\"AST-9FB3F0\",\"file_removed\":true}"
+    },
+    {
+      "ts": "2026-10-15T02:17:00.072Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets?size=50",
+      "status": 200,
+      "m": "GET",
+      "body": "{\"total\":17,\"page\":1,\"size\":50,\"items\":[{\"id\":25,\"asset_id\":\"AST-C9B117\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:03:41\",\"updated_at\":\"2026-10-14T23:03:41\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"p02-ga-1\",\"file_url\":null},{\"id\":24,\"asset_id\":\"AST-EB8C35\",\"name\":\"控糖代餐场景主图\",\"asset_type\":\"image\",\"tags\":[\"办公室\",\"低糖\"],\"description\":\"演示素材，用于素材库和投放归因展示。\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"ingest:p02-ecommerce-ops\",\"status\":\"active\",\"created_at\":\"2026-10-14T23:02:32\",\"updated_at\":\"2026-10-14T23:02:32\",\"mime_type\":\"\",\"tag_source\":\"manual\",\"content\":\"/uploads/demo-oat-main-image.png\",\"origin_id\":\"\",\"file_url\":null},{\"id\":16,\"asset_id\":\"AST-A906B6\",\"name\":\"618大促家电横版海报｜800×800 投放规格卡\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"海报\",\"横版\",\"大促\",\"商业风\",\"程序化\",\"投放\"],\"description\":\"按 commercial 风格生成的演示图（程序化绘制，非 AI 出图）\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-53C694.png\",\"file_size\":27627,\"width\":800,\"height\":800,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-14T00:04:34\",\"updated_at\":\"2026-10-14T08:59:42\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-A906B6/file\"},{\"id\":14,\"asset_id\":\"AST-8BADF6\",\"name\":\"春季氨基酸洗发 温和去油蓬松\",\"asset_type\":\"copy\",\"tags\":[\"春季新品\",\"氨基酸洗发水\",\"温和去油\",\"蓬松\",\"信息流素材\"],\"description\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"file_path\":\"\",\"file_size\":0,\"width\":null,\"height\":null,\"source\":\"generated\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:44:45\",\"updated_at\":\"2026-10-13T23:44:45\",\"mime_type\":\"\",\"tag_source\":\"llm\",\"content\":\"春季氨基酸洗发 温和去油蓬松\\n清爽洁净不负担，发丝轻盈更蓬松\\n- 氨基酸系清洁，温和净澈\\n- 清爽去油，发根轻盈\\n- 春季新品，蓬松空气感\\n立即体验新品\",\"origin_id\":\"\",\"file_url\":null},{\"id\":13,\"asset_id\":\"AST-B1AB14\",\"name\":\"夏季控油防晒喷雾户外主图\",\"asset_type\":\"image\",\"tags\":[\"防晒喷雾\",\"主图\",\"控油\",\"清爽\",\"户外\",\"实拍\"],\"description\":\"防晒喷雾户外场景实拍，主打清爽不油腻\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-18356A.png\",\"file_size\":4853,\"width\":640,\"height\":480,\"source\":\"upload\",\"status\":\"active\",\"created_at\":\"2026-10-13T23:41:52\",\"updated_at\":\"2026-10-13T23:41:52\",\"mime_type\":\"image/png\",\"tag_source\":\"llm\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-B1AB14/file\"},{\"id\":12,\"asset_id\":\"AST-012\",\"name\":\"家电以旧换新Banner\",\"asset_type\":\"image\",\"tags\":[\"家电\",\"以旧换新\",\"Banner\",\"绿色\"],\"description\":\"家电以旧换新活动Banner\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-012.png\",\"file_size\":6212,\"width\":1200,\"height\":400,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-11T10:00:00\",\"updated_at\":\"2026-10-11T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-012/file\"},{\"id\":11,\"asset_id\":\"AST-011\",\"name\":\"零食大礼包主图\",\"asset_type\":\"image\",\"tags\":[\"零食\",\"大礼包\",\"主图\",\"美食\"],\"description\":\"零食大礼包产品主图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-011.png\",\"file_size\":7060,\"width\":800,\"height\":800,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-10T10:00:00\",\"updated_at\":\"2026-10-10T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-011/file\"},{\"id\":10,\"asset_id\":\"AST-010\",\"name\":\"洗发水成分解析图\",\"asset_type\":\"image\",\"tags\":[\"洗发水\",\"成分\",\"解析\",\"科普\"],\"description\":\"洗发水核心成分科普图\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-010.png\",\"file_size\":9083,\"width\":800,\"height\":1200,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-09T10:00:00\",\"updated_at\":\"2026-10-09T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-010/file\"},{\"id\":9,\"asset_id\":\"AST-009\",\"name\":\"双11预售海报\",\"asset_type\":\"image\",\"tags\":[\"双11\",\"预售\",\"海报\",\"狂欢\"],\"description\":\"双11预售启动海报\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-009.png\",\"file_size\":14243,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-08T10:00:00\",\"updated_at\":\"2026-10-08T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":\"/api/v1/assets/AST-009/file\"},{\"id\":8,\"asset_id\":\"AST-008\",\"name\":\"品牌故事短视频\",\"asset_type\":\"video\",\"tags\":[\"品牌\",\"故事\",\"情感\",\"短视频\"],\"description\":\"品牌创立故事短视频脚本\",\"file_path\":\"D:\\\\software\\\\PycharmProjects\\\\作品矩阵\\\\projects\\\\p07-ai-asset-center\\\\data\\\\uploads\\\\AST-008.png\",\"file_size\":14201,\"width\":1080,\"height\":1920,\"source\":\"demo\",\"status\":\"active\",\"created_at\":\"2026-10-07T10:00:00\",\"updated_at\":\"2026-10-07T10:00:00\",\"mime_type\":\"image/png\",\"tag_source\":\"manual\",\"content\":\"\",\"origin_id\":\"\",\"file_url\":"
+    },
+    {
+      "ts": "2026-10-15T02:17:00.073Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-A906B6/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.074Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-B1AB14/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.074Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-012/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.075Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-011/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.075Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-010/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.075Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-009/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.075Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-008/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.075Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-007/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.076Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-005/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.076Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-004/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.076Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-003/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.076Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-002/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    },
+    {
+      "ts": "2026-10-15T02:17:00.076Z",
+      "url": "http://39.96.200.45:8090/api/v1/assets/AST-001/file",
+      "status": 200,
+      "m": "GET",
+      "body": null
+    }
+  ]
+}

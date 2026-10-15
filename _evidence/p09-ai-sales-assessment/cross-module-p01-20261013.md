@@ -6,7 +6,7 @@
 P01 客服会话 → P09 销售考核质检评分（架构规范要求的跨模块真实调用）
 
 ## 架构规范落实
-- 地址由 cloudpivot_config.api_url('p01','/chat/history') 从 shared/config/services.json 解析，**未硬编码端口**
+- 地址由 portfolio_config.api_url('p01','/chat/history') 从 shared/config/services.json 解析，**未硬编码端口**
 - P01 health 探针在根路径 /health，用 service_url 拼接（不在 /api 前缀下）
 - 支持 CP_P01_HISTORY_URL 显式覆盖（降级演练用）
 - 角色映射：P01 user/bot → P09 customer/agent；按 session_id 聚合
@@ -46,7 +46,7 @@ conversations key present: False -> 降级不伪造会话
 
 ## 5. pytest（含新增跨模块集成测试，monkeypatch 不依赖 P01 在线）
 ```
-  D:\software\PycharmProjects\面试项目\projects\p09-ai-sales-assessment\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  D:\software\PycharmProjects\作品矩阵\projects\p09-ai-sales-assessment\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html

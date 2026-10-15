@@ -1,0 +1,20 @@
+[
+ {
+  "q": "请告诉我 iPhone 17 Pro Max 的电池容量是多少",
+  "answer": "抱歉，未找到相关产品，请提供准确型号以便我为您查询。",
+  "sources_len": 0,
+  "progress": "阶段进度（已完成2，进行中0）",
+  "refusal_words": [],
+  "elapsed_s": 20,
+  "shot": "agent2-95-p04rL-refusal-iphone.png"
+ },
+ {
+  "q": "2026 年世界杯冠军是哪支球队？",
+  "answer": "您是想问以下哪个产品：H3C LA2608室内无线网关、H3C LA2608千兆以太网交换机？请明确一下型号。",
+  "sources_len": 0,
+  "progress": "阶段进度（已完成2，进行中0）",
+  "refusal_words": [],
+  "elapsed_s": 12,
+  "shot": "agent2-95-p04rL-refusal-worldcup.png"
+ }
+]

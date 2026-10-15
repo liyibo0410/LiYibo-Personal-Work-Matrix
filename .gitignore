@@ -43,9 +43,22 @@ _runtime/
 _tmp_issue/
 
 # 个人档案与含个人信息的文件：远端是公开仓库，一律不入库
-# （.workbuddy/ 是各项目的会话记忆与交接档案，03-resume/ 是简历，_resume_dump.txt 是简历文本转储）
+# （.workbuddy/ 是各项目的会话记忆与交接档案，03-resume/ 是个人档案，_resume_dump.txt 是其文本转储）
 .workbuddy/
 03-resume/
 _tools/_resume_dump.txt
 # 品牌位真源里存着用户上传的 logo dataURL，属本机数据；仓库靠各模块默认值兜底
 shared/config/brand.json
+
+# 构建产物：pip/uv 安装时生成的包元数据，不入库
+*.egg-info/
+
+# 内部规划与 AI 协作记录（00-总纲/）：公开仓库不再包含，本地保留
+00-总纲/
+
+# 内部规划文档（PRD/设计稿/主题草案），与 00-总纲/ 同理：公开仓库不含
+portfolio-matrix/_process/
+
+# 浏览器工具缓存（Playwright CLI 快照）与本地作者信息，不入库
+.playwright-cli/
+shared/config/resume.json

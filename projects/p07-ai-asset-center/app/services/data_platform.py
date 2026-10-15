@@ -1,6 +1,6 @@
 """P07 → P06 数据中台：真实 HTTP 取大盘指标，用于「素材效果 vs 店铺大盘」对比。
 
-端口从 SERVICE_REGISTRY 解析（`cloudpivot_config.api_url`），禁止硬编码。
+端口从 SERVICE_REGISTRY 解析（`portfolio_config.api_url`），禁止硬编码。
 P06 没起来就返回 `available=false` + 原因，绝不返回编造的大盘数字。
 """
 from __future__ import annotations
@@ -8,7 +8,7 @@ from __future__ import annotations
 from typing import Any
 
 import httpx
-from cloudpivot_config import api_url
+from portfolio_config import api_url
 
 from app.db import now_iso
 

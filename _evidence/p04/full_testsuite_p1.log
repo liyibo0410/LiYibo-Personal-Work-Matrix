@@ -1,7 +1,7 @@
 ============================= test session starts =============================
-platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe
+platform win32 -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\.venv\Scripts\python.exe
 cachedir: .pytest_cache
-rootdir: D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base
+rootdir: D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base
 configfile: pyproject.toml
 plugins: anyio-4.15.1, langsmith-0.14.7
 collecting ... collected 23 items
@@ -32,39 +32,39 @@ tests/test_reranker.py::TestCliffCutoffIntegration::test_cliff_does_not_over_tru
 
 ============================== warnings summary ===============================
 tests\test_node_rerank_cliff.py:56
-  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:56: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+  D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:56: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
     @pytest.mark.needs_model
 
 tests\test_node_rerank_cliff.py:118
-  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:118: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+  D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:118: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
     @pytest.mark.needs_model
 
 tests\test_node_rerank_cliff.py:192
-  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:192: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+  D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:192: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
     @pytest.mark.needs_model
 
 tests\test_node_rerank_cliff.py:288
-  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:288: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+  D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\tests\test_node_rerank_cliff.py:288: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
     @pytest.mark.needs_model
 
 tests\test_reranker.py:90
-  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:90: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+  D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\tests\test_reranker.py:90: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
     @pytest.mark.needs_model
 
 tests\test_reranker.py:312
-  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:312: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+  D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\tests\test_reranker.py:312: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
     @pytest.mark.needs_model
 
 tests\test_reranker.py:437
-  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:437: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+  D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\tests\test_reranker.py:437: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
     @pytest.mark.needs_model
 
 tests\test_reranker.py:486
-  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\tests\test_reranker.py:486: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+  D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\tests\test_reranker.py:486: PytestUnknownMarkWarning: Unknown pytest.mark.needs_model - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
     @pytest.mark.needs_model
 
 tests/test_reranker.py::TestLocalToCloudDegradation::test_nonexistent_model_path_falls_back
-  D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base\.venv\Lib\site-packages\dashscope\__init__.py:63: DeprecationWarning: The Assistants API (dashscope.assistants) is deprecated and will be removed in a future release. Please migrate to the Responses API. See https://help.aliyun.com/zh/model-studio/synchronous-call-api-reference for migration details.
+  D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base\.venv\Lib\site-packages\dashscope\__init__.py:63: DeprecationWarning: The Assistants API (dashscope.assistants) is deprecated and will be removed in a future release. Please migrate to the Responses API. See https://help.aliyun.com/zh/model-studio/synchronous-call-api-reference for migration details.
     from dashscope.assistants import Assistant, AssistantList, Assistants
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html

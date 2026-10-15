@@ -366,7 +366,7 @@ wheels = [
 ]
 
 [[package]]
-name = "cloudpivot-config"
+name = "portfolio-config"
 version = "1.0.0"
 source = { editable = "../../../shared/config" }
 
@@ -449,7 +449,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "alembic" },
     { name = "celery", extra = ["redis"] },
-    { name = "cloudpivot-config" },
+    { name = "portfolio-config" },
     { name = "cryptography" },
     { name = "fastapi" },
     { name = "httpx" },
@@ -478,7 +478,7 @@ dev = [
 requires-dist = [
     { name = "alembic" },
     { name = "celery", extras = ["redis"] },
-    { name = "cloudpivot-config", editable = "../../../shared/config" },
+    { name = "portfolio-config", editable = "../../../shared/config" },
     { name = "cryptography" },
     { name = "fastapi" },
     { name = "httpx" },

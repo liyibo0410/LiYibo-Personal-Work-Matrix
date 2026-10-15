@@ -16,8 +16,8 @@ import os
 import shutil
 
 SRC = r"D:\software\PycharmProjects\knowledge_base"
-DST = r"D:\software\PycharmProjects\面试项目\projects\p04-rag-knowledge-base"
-REPORT = r"D:\software\PycharmProjects\面试项目\_evidence\p04\copy_report.json"
+DST = r"D:\software\PycharmProjects\作品矩阵\projects\p04-rag-knowledge-base"
+REPORT = r"D:\software\PycharmProjects\作品矩阵\_evidence\p04\copy_report.json"
 
 IGNORE_DIRS = {"__pycache__", ".venv", "venv", ".git", ".idea", "volumes",
                ".pytest_cache", ".mypy_cache", ".ruff_cache", "node_modules"}

@@ -1,7 +1,7 @@
 [project]
 name = "p01-ai-customer-service"
 version = "1.0.0"
-description = "P01 AI电商客服系统 - 云枢智能（CloudPivot）平台模块"
+description = "P01 AI电商客服系统 - 李奕波个人作品矩阵（Li Yibo's Personal Portfolio）平台模块"
 requires-python = ">=3.12"
 dependencies = [
     "aiomysql>=0.3.2",

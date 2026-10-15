@@ -3,9 +3,9 @@ requires = ["setuptools>=75.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cloudpivot-config"
+name = "portfolio-config"
 version = "1.0.0"
-description = "云枢智能统一平台 · 服务注册表（SERVICE_REGISTRY），端口的唯一真源，禁止硬编码端口"
+description = "李奕波个人作品矩阵统一平台 · 服务注册表（SERVICE_REGISTRY），端口的唯一真源，禁止硬编码端口"
 requires-python = ">=3.11"
 dependencies = []
 

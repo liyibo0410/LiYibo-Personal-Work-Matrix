@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img"
-     aria-label="云枢智能 CloudPivot · AI 电商运营中台 —— 十个 AI 能力模块，合并成一套统一系统。10 业务模块 / 4 层架构 · 6 条 ADR / 15 受管进程 / 731 pytest passed"
+     aria-label="李奕波个人作品矩阵 Li Yibo's Personal Portfolio · AI 电商运营中台 —— 十个 AI 能力模块，合并成一套统一系统。10 业务模块 / 4 层架构 · 6 条 ADR / 15 受管进程 / 731 pytest passed"
      font-family="'Microsoft YaHei','PingFang SC',Inter,-apple-system,'Segoe UI',sans-serif">
 
-  <title>云枢智能 CloudPivot · AI 电商运营中台（社交预览 1280×640）</title>
-  <desc>GitHub 社交预览图。左上为 CP 字母标与品牌名「云枢智能 CloudPivot」，其下为「AI 电商运营中台」；右上为本机 15 进程实跑与界面截图指引；第二行为 L0→L3 四层架构胶囊（L0 数据中台 #98A2B3、L1 模型微调 #85ACFF、L2 能力层 #5A8AFF、L3 应用层 #3370FF）；主标题「十个 AI 能力模块，合并成一套统一系统」；下方四个实测数字块 10 / 4 / 15 / 731；底部左侧为作者与求职方向，右侧为仓库地址。封面不含任何入口地址。</desc>
+  <title>李奕波个人作品矩阵 Li Yibo's Personal Portfolio · AI 电商运营中台（社交预览 1280×640）</title>
+  <desc>GitHub 社交预览图。左上为 CP 字母标与品牌名「李奕波个人作品矩阵 Li Yibo's Personal Portfolio」，其下为「AI 电商运营中台」；右上为本机 15 进程实跑与界面截图指引；第二行为 L0→L3 四层架构胶囊（L0 数据中台 #98A2B3、L1 模型微调 #85ACFF、L2 能力层 #5A8AFF、L3 应用层 #3370FF）；主标题「十个 AI 能力模块，合并成一套统一系统」；下方四个实测数字块 10 / 4 / 15 / 731；底部左侧为作者与定位，右侧为仓库地址。封面不含任何入口地址。</desc>
 
   <!-- 白底 -->
   <rect width="1280" height="640" fill="#FFFFFF"/>
@@ -18,7 +18,7 @@
   <!-- 品牌区：字母标 + 品牌名 + 一句话定位 -->
   <rect x="80" y="72" width="48" height="48" rx="12" fill="#3370FF"/>
   <text x="104" y="106" text-anchor="middle" font-size="20" font-weight="700" letter-spacing="0.5" fill="#FFFFFF">CP</text>
-  <text x="144" y="102" font-size="22" font-weight="700" fill="#1A1F2B">云枢智能 CloudPivot</text>
+  <text x="144" y="102" font-size="22" font-weight="700" fill="#1A1F2B">李奕波个人作品矩阵 Li Yibo's Personal Portfolio</text>
   <text x="144" y="127" font-size="14" fill="#8A94A3">AI 电商运营中台</text>
   <text x="1200" y="102" text-anchor="end" font-size="15" fill="#8A94A3">本机 15 进程实跑 · 界面截图见仓库 README</text>
 
@@ -55,8 +55,8 @@
   <text x="920" y="440" font-size="46" font-weight="700" fill="#3370FF">731</text>
   <text x="920" y="480" font-size="16" fill="#5A6472">pytest passed</text>
 
-  <!-- 页脚：作者与求职方向 + 仓库地址 -->
+  <!-- 页脚：作者与仓库地址 -->
   <line x1="80" y1="540" x2="1200" y2="540" stroke="#DDE2EA" stroke-width="1"/>
-  <text x="80" y="584" font-size="17" fill="#5A6472">李奕波 · 求职方向 AI-FDE / AI 应用开发</text>
+  <text x="80" y="584" font-size="17" fill="#5A6472">李奕波 · 独立开发 · 全栈工程</text>
   <text x="1200" y="584" text-anchor="end" font-size="17" fill="#8A94A3">github.com/liyibo0410/yunshu-ai-portfolio</text>
 </svg>

@@ -1,0 +1,561 @@
+{
+  "base": "http://39.96.200.45:8070",
+  "steps": [
+    {
+      "area": "nav-anchor",
+      "ctl": "十大模块",
+      "action": "click",
+      "before": {
+        "y": 0,
+        "hash": ""
+      },
+      "after": {
+        "y": 623,
+        "hash": "#lp-modules",
+        "secTop": 0,
+        "secVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:46.558Z"
+    },
+    {
+      "area": "nav-anchor",
+      "ctl": "架构与取舍",
+      "action": "click",
+      "before": {
+        "y": 623,
+        "hash": "#lp-modules"
+      },
+      "after": {
+        "y": 2577,
+        "hash": "#lp-arch",
+        "secTop": 0,
+        "secVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:47.940Z"
+    },
+    {
+      "area": "nav-anchor",
+      "ctl": "实测数据",
+      "action": "click",
+      "before": {
+        "y": 2577,
+        "hash": "#lp-arch"
+      },
+      "after": {
+        "y": 3128,
+        "hash": "#lp-evidence",
+        "secTop": 0,
+        "secVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:49.292Z"
+    },
+    {
+      "area": "nav-anchor",
+      "ctl": "真实边界",
+      "action": "click",
+      "before": {
+        "y": 3128,
+        "hash": "#lp-evidence"
+      },
+      "after": {
+        "y": 4306,
+        "hash": "#lp-boundary",
+        "secTop": 0,
+        "secVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:50.631Z"
+    },
+    {
+      "area": "nav-anchor",
+      "ctl": "关于我",
+      "action": "click",
+      "before": {
+        "y": 4306,
+        "hash": "#lp-boundary"
+      },
+      "after": {
+        "y": 4971,
+        "hash": "#lp-about",
+        "secTop": 0,
+        "secVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:51.973Z"
+    },
+    {
+      "area": "nav-anchor",
+      "ctl": "材料",
+      "action": "click",
+      "before": {
+        "y": 4971,
+        "hash": "#lp-about"
+      },
+      "after": {
+        "y": 5276,
+        "hash": "#lp-resume",
+        "secTop": 0,
+        "secVisible": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:53.312Z"
+    },
+    {
+      "area": "hero-cta",
+      "ctl": "进入在线演示/登录，进入演示 · 旗舰 P02",
+      "ctlText": "登录，进入演示 · 旗舰 P02",
+      "href": "#/workspace/ecommerce-ops",
+      "action": "click",
+      "after": {
+        "visible": true,
+        "reason": "五个演示账号对应五种业务角色（老板 / 运营 / 法务 / 销售 / 管理员）。登录后模块里的数据、拦截与降级标注都是本机真实行为，不是录屏。点下方账号即填充。",
+        "hash": "#lp-resume"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:54.831Z"
+    },
+    {
+      "area": "login-modal",
+      "ctl": "先随便看看(btn-login-close)",
+      "action": "click",
+      "after": {
+        "modalVisible": false,
+        "hash": "#lp-resume",
+        "appPublic": true
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:55.396Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P01 AI客服 进入演示",
+      "href": "#/workspace/customer-service",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「AI 电商客服」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:55.434Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P02 运营助手 进入演示",
+      "href": "#/workspace/ecommerce-ops",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「电商运营助手」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:55.927Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P05 合同审批 进入演示",
+      "href": "#/workspace/contract",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「合同审批系统」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:56.346Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P09 销售考核 进入演示",
+      "href": "#/workspace/sales-assessment",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「AI 销售考核」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:56.754Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P03 问数 进入演示",
+      "href": "#/workspace/research",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「NL2SQL 问数」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:57.164Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P04 知识库 进入演示",
+      "href": "#/workspace/knowledge",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「RAG 知识库」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:57.575Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P07 素材中心 进入演示",
+      "href": "#/workspace/asset-center",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「AI 素材中心」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:57.986Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P08 直播切片 进入演示",
+      "href": "#/workspace/live-clip",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「直播切片」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:58.405Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P10 微调平台 进入演示",
+      "href": "#/workspace/finetune",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「模型微调平台」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:58.817Z"
+    },
+    {
+      "area": "module-card",
+      "ctl": "P06 数据中台 进入演示",
+      "href": "#/workspace/data-platform",
+      "action": "click",
+      "after": {
+        "modalVisible": true,
+        "reasonSnippet": "「数据中台」是本机监听的真实服务，登录后即可动手操作；服务没起来会给你一条启动命令，而不是一个空白页。",
+        "hash": "#/"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:33:59.231Z"
+    },
+    {
+      "area": "theme",
+      "ctl": "◐ (btn-theme-public)",
+      "action": "click x2",
+      "before": {
+        "theme": "light",
+        "ls": [
+          "cp_theme_v2"
+        ]
+      },
+      "afterDark": {
+        "theme": "dark",
+        "ls": "{\"cp_theme_v2\":\"dark\"}"
+      },
+      "afterBack": {
+        "theme": "light"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:34:00.737Z"
+    },
+    {
+      "area": "resume",
+      "ctl": "PDF fetch check (dl+view)",
+      "action": "fetch",
+      "after": {
+        "rs-pdf-dl": {
+          "href": "/https://github.com/liyibo0410/yunshu-ai-portfolio",
+          "status": 200,
+          "type": "application/pdf",
+          "bytes": 465964
+        },
+        "rs-pdf-view": {
+          "href": "/https://github.com/liyibo0410/yunshu-ai-portfolio",
+          "status": 200,
+          "type": "application/pdf",
+          "bytes": 465964
+        }
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:34:01.109Z"
+    },
+    {
+      "area": "resume",
+      "ctl": "下载完整材料 PDF (rs-pdf-dl)",
+      "action": "click",
+      "after": {
+        "kind": "popup",
+        "url": "http://39.96.200.45:8070/https://github.com/liyibo0410/yunshu-ai-portfolio"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:34:01.161Z"
+    },
+    {
+      "area": "resume",
+      "ctl": "rs-pdf-view popup",
+      "action": "auto-check",
+      "after": {
+        "url": "http://39.96.200.45:8070/https://github.com/liyibo0410/yunshu-ai-portfolio"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:34:21.126Z"
+    },
+    {
+      "area": "login-modal",
+      "ctl": "演示账号 chips x5",
+      "action": "click",
+      "after": [
+        {
+          "label": "老板 · owner",
+          "u": "owner",
+          "p": "owner123"
+        },
+        {
+          "label": "运营 · ops",
+          "u": "ops",
+          "p": "ops123"
+        },
+        {
+          "label": "法务 · legal",
+          "u": "legal",
+          "p": "legal123"
+        },
+        {
+          "label": "销售 · sales",
+          "u": "sales",
+          "p": "sales123"
+        },
+        {
+          "label": "管理员 · admin",
+          "u": "admin",
+          "p": "admin123"
+        }
+      ],
+      "pass": true,
+      "ts": "2026-10-15T01:34:22.704Z"
+    },
+    {
+      "area": "login-modal",
+      "ctl": "错误口令提交",
+      "action": "submit owner/wrong-pass-123",
+      "after": {
+        "err": "用户名或密码错误",
+        "modalVisible": true,
+        "btn": "登录并进入演示"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:34:24.579Z"
+    },
+    {
+      "area": "login-modal",
+      "ctl": "正确口令提交 owner/owner123",
+      "action": "submit",
+      "after": {
+        "bodyPublic": false,
+        "landingHidden": true,
+        "appVisible": true,
+        "topbar": "作品集首页",
+        "badge": "张总 owner",
+        "hash": "#/",
+        "ss": [
+          "cp_token",
+          "cp_user"
+        ]
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:34:26.072Z"
+    },
+    {
+      "area": "login-modal",
+      "ctl": "demo-accounts 小字/默认 reason",
+      "action": "read",
+      "after": {
+        "reasonDefault": "五个演示账号对应五种业务角色（老板 / 运营 / 法务 / 销售 / 管理员）。登录后模块里的数据、拦截与降级标注都是本机真实行为，不是录屏。点下方账号即填充。"
+      },
+      "pass": true,
+      "ts": "2026-10-15T01:34:26.072Z"
+    }
+  ],
+  "logs": [
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://39.96.200.45:8070/"
+    },
+    {
+      "t": "console",
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://39.96.200.45:8070/"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://39.96.200.45:8070/favicon.ico"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Access to fetch at 'http://39.96.200.45:8800/api/brand' from origin 'http://39.96.200.45:8070' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "url": "http://39.96.200.45:8070/#lp-arch"
+    },
+    {
+      "t": "reqfail",
+      "url": "http://39.96.200.45:8800/api/brand",
+      "err": "net::ERR_FAILED"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_FAILED",
+      "url": "http://39.96.200.45:8800/api/brand"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    },
+    {
+      "t": "http401",
+      "url": "http://39.96.200.45:8070/api/auth/login"
+    },
+    {
+      "t": "console",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "url": "http://39.96.200.45:8070/api/auth/login"
+    },
+    {
+      "t": "console",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.",
+      "url": "about:blank"
+    }
+  ]
+}
