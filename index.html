@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>李奕波 · 云枢智能 — 十个 AI 能力模块，同一套电商运营中台</title>
+<meta name="description" content="AI 应用开发 / FDE 作品集：微前端外壳 + 十个 AI 能力模块，全部本机实跑，731 项 pytest 实测通过，指标逐条可复核。">
+<style>
+  :root{
+    --bg:#0d1117; --surface:#161b22; --elevated:#1c2129; --line:#30363d;
+    --ink:#e6edf3; --ink2:#9da7b3; --ink3:#6e7a89;
+    --accent:#58a6ff; --accent-dim:rgba(88,166,255,.12);
+    --ok:#3fb950; --warn:#d29922; --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  html[data-theme="light"]{
+    --bg:#f6f8fa; --surface:#ffffff; --elevated:#f0f3f6; --line:#d0d7de;
+    --ink:#1f2328; --ink2:#57606a; --ink3:#8c959f;
+    --accent:#0969da; --accent-dim:rgba(9,105,218,.08);
+    --ok:#1a7f37; --warn:#9a6700;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.7;font-size:15px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:var(--mono);font-size:.86em;background:var(--elevated);border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--accent)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* ── 导航 ── */
+  nav.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.top .wrap{display:flex;align-items:center;gap:16px;height:56px}
+  .brand{font-weight:700;color:var(--ink);white-space:nowrap}
+  .brand small{color:var(--ink2);font-weight:400;font-size:12px;margin-left:8px}
+  .top-links{display:flex;gap:18px;margin-left:auto;align-items:center}
+  .top-links a{color:var(--ink2);font-size:14px}
+  .top-links a:hover{color:var(--accent);text-decoration:none}
+  .icon-btn{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink2);cursor:pointer}
+  .icon-btn:hover{color:var(--accent);border-color:var(--accent)}
+  .icon-btn svg{fill:currentColor}
+
+  /* ── Hero ── */
+  .hero{padding:72px 0 40px;border-bottom:1px solid var(--line)}
+  .eyebrow{display:inline-block;font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-dim);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:99px;padding:3px 14px;margin-bottom:20px}
+  h1{font-size:clamp(26px,4.5vw,40px);line-height:1.3;letter-spacing:-.5px;max-width:820px}
+  h1 .accent{color:var(--accent)}
+  .lead{color:var(--ink2);max-width:760px;margin-top:16px;font-size:16px}
+  .lead b{color:var(--ink)}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:40px}
+  .metric{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px 20px}
+  .metric .num{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--accent);letter-spacing:-1px}
+  .metric .lbl{font-size:13px;color:var(--ink2);margin-top:4px}
+  .metric .src{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:8px;word-break:break-all}
+
+  /* ── 分区 ── */
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  .sec-tag{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.1em}
+  h2{font-size:24px;margin:6px 0 8px}
+  .sub{color:var(--ink2);font-size:14px;max-width:820px;margin-bottom:32px}
+  .sub b{color:var(--ink)}
+
+  /* ── 模块卡 ── */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  .card{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;transition:border-color .2s,transform .2s}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .card-head{display:flex;align-items:baseline;gap:10px}
+  .card-id{font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-dim);border-radius:4px;padding:1px 8px;flex-shrink:0}
+  .card-title{font-weight:700;font-size:16px}
+  .flag{font-family:var(--mono);font-size:11px;color:var(--ok);flex-shrink:0}
+  .card-desc{color:var(--ink2);font-size:14px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tags span{font-family:var(--mono);font-size:11px;color:var(--ink2);background:var(--elevated);border:1px solid var(--line);border-radius:99px;padding:1px 9px}
+  .card-metric{font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 12px}
+  .card-metric b{color:var(--accent)}
+  .card-mock{font-size:12px;color:var(--ink2);background:color-mix(in srgb,var(--warn) 8%,transparent);border-left:2px solid var(--warn);border-radius:4px;padding:8px 12px}
+  .card-mock b{color:var(--warn)}
+  .card-actions{margin-top:auto;padding-top:6px;display:flex;gap:10px}
+  .btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:13px;border:1px solid var(--line);border-radius:6px;padding:6px 14px;color:var(--ink2);background:var(--surface)}
+  .btn:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
+  .btn svg{fill:currentColor}
+
+  /* ── 在线实机 ── */
+  .live{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px}
+  .live-url{font-family:var(--mono);font-size:18px;color:var(--accent);word-break:break-all}
+  .live-note{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--warn);border:1px dashed var(--warn);border-radius:6px;padding:8px 14px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex-shrink:0;animation:blink 2s infinite}
+  @keyframes blink{50%{opacity:.35}}
+  .live-meta{margin-top:16px;font-size:13px;color:var(--ink2)}
+  .live-meta b{color:var(--ink)}
+
+  /* ── ADR ── */
+  .adr-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+  .adr{font-size:13px;color:var(--ink2);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:6px;padding:12px 16px;background:var(--surface)}
+  .adr b{color:var(--ink)}
+  .adr .no{font-family:var(--mono);font-size:11px;color:var(--accent)}
+
+  /* ── 页脚 ── */
+  footer{padding:40px 0 56px;text-align:center;font-size:13px;color:var(--ink2);line-height:2}
+  footer .mono{font-family:var(--mono);font-size:12px;color:var(--ink3)}
+
+  @media (max-width:640px){
+    .top-links a.hide-sm{display:none}
+    .hero{padding:48px 0 32px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <span class="brand">李奕波<small>AI 应用开发 / FDE</small></span>
+    <div class="top-links">
+      <a class="hide-sm" href="#modules">十大模块</a>
+      <a class="hide-sm" href="#live">在线实机</a>
+      <a class="hide-sm" href="#adr">工程决策</a>
+      <a href="https://github.com/liyibo0410/yunshu-ai-portfolio" target="_blank" rel="noopener" aria-label="GitHub 仓库" title="GitHub 仓库">
+        <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+      <button class="icon-btn" id="theme-toggle" type="button" title="切换深浅主题" aria-label="切换深浅主题">◐</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">AI-FDE 作品集 · 十个模块本机实跑 · 2026</span>
+    <h1>十个 AI 能力模块，跑在<span class="accent">同一套</span>电商运营中台里</h1>
+    <p class="lead">
+      做给品牌电商与 MCN：<b>数据中台定口径，能力层供弹药，四条业务线组装落地，低分样本回流微调层</b>。
+      十个模块共用一份服务注册（SERVICE_REGISTRY）、一套设计令牌、一个登录入口，可以在同一台机器上连着操作 —— 不是十个互不相干的 demo。
+      页面里的每个指标都能在仓库 <code>_evidence/</code> 目录找到对应的日志或评测报告；没测过的（并发 P95、覆盖率）明写「未测」。
+    </p>
+    <div class="metrics">
+      <div class="metric"><div class="num">731</div><div class="lbl">十个模块 pytest 实跑通过总数<br>P01 73 · P02 178 · P03 137 · P04 59 · P05 48 · P06 48 · P07 68 · P08 30 · P09 55 · P10 35</div><div class="src">_evidence/regression-20261014-pytest.log</div></div>
+      <div class="metric"><div class="num">L0–L3</div><div class="lbl">四层架构：数据层 / 模型层 / 能力层 / 应用层<br>微前端外壳 + iframe 挂载，不做单体合并</div><div class="src">docs/adr/0001</div></div>
+      <div class="metric"><div class="num">6</div><div class="lbl">已落地的工程决策 ADR<br>端口真源 · 统一认证 · 真实取数 · 设计令牌 · 零依赖例外</div><div class="src">docs/adr/</div></div>
+      <div class="metric"><div class="num">4 条</div><div class="lbl">跨模块真实 HTTP 取数链路<br>P02→P06 · P09→P01 等，降级态「少返回」不伪造</div><div class="src">docs/adr/0004</div></div>
+    </div>
+  </div>
+</header>
+
+<section id="modules">
+  <div class="wrap">
+    <span class="sec-tag">SECTION 01 / MODULES</span>
+    <h2>十大能力模块</h2>
+    <p class="sub">每张卡三行硬信息：<b>一句话定位、实测数字、Mock 边界</b>（真实到哪一步、哪里是模拟）。「源码仓库」直达该模块在 GitHub 上的目录，所有代码、测试与证据文件都在里面。</p>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P01</span><span class="card-title">AI 电商客服</span></div>
+        <p class="card-desc">意图识别 + 真实 LLM 生成回复 + FAQ/RAG 文本层检索，命中不足明确拒答；对话状态机支持中断压栈恢复。</p>
+        <div class="tags"><span>FastAPI</span><span>LangChain</span><span>MySQL</span><span>Vue 3</span></div>
+        <div class="card-metric"><b>73</b> 项单测 · 意图三轨道判定 · 幻觉流程名拦截</div>
+        <div class="card-mock"><b>Mock 边界</b> · 订单与商品数据来自随附的 mock 商城中台 :18081；负面情绪自动建单转人工未实现。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p01-ai-customer-service" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P02</span><span class="card-title">电商运营助手</span><span class="flag">★ 旗舰</span></div>
+        <p class="card-desc">文案生成 + 广告法合规检测 + 广告实验对比 + 四角色 RBAC，运营动作与数据看板闭环。</p>
+        <div class="tags"><span>FastAPI</span><span>LangGraph</span><span>SQLAlchemy</span><span>Next.js</span></div>
+        <div class="card-metric"><b>178</b> 项测试 · 合规高危召回 <b>18/18</b> · 误报 0/10 · 对抗绕过 0/6（36 用例 / 108 规则词库）</div>
+        <div class="card-mock"><b>Mock 边界</b> · 登录、合规、实验、跨模块取数全链路真实；无 LLM Key 时网关退回 mock 生成，前端标「演示」。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p02-ecommerce-ops-assistant" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P03</span><span class="card-title">NL2SQL 问数</span></div>
+        <p class="card-desc">自然语言 → SQL → 只读护栏（拦截 DROP/DELETE、行数钳制）→ 溯源卡与结果图表，只画后端真实回传的结果行。</p>
+        <div class="tags"><span>DeepAgents</span><span>LangChain</span><span>FastAPI</span><span>Vue 3</span><span>MySQL</span></div>
+        <div class="card-metric"><b>137</b> 项测试 · 护栏执行前拦下 DROP / DELETE / 多语句 / 注释绕过</div>
+        <div class="card-mock"><b>Mock 边界</b> · MySQL 问数主链路已真实接通（实测完整问答 6–7 分钟出结果）；联网搜索仍是 mock Key，问库里没有的数据会拒答而不是编。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p03-deep-research" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P04</span><span class="card-title">RAG 知识库</span></div>
+        <p class="card-desc">文档入库 → 检索问答带引用溯源 → 召回 / 精确 / 拒答 / 忠实度评测，嵌入与重排全链路可对照。</p>
+        <div class="tags"><span>LangGraph</span><span>Milvus</span><span>MongoDB</span><span>MinIO</span><span>BGE-M3</span></div>
+        <div class="card-metric"><b>59</b> 项测试 · <b>36</b> 题评测集（easy 22 / medium 11 / hard 3）跑 Ragas 五指标</div>
+        <div class="card-mock"><b>Mock 边界</b> · 入库、检索、重排、评测四段全真，BGE-M3 本地嵌入；云端重排需出网，私有化对照表见仓库评测报告。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p04-rag-knowledge-base" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P05</span><span class="card-title">合同审批系统 · 衡鉴</span></div>
+        <p class="card-desc">零第三方依赖（纯标准库）的确定性风险审查引擎：规则打分 → 审批流 → 报告出具，客户机 python run.py 即跑。</p>
+        <div class="tags"><span>纯标准库</span><span>ThreadingHTTPServer</span><span>SQLite</span></div>
+        <div class="card-metric"><b>66/66</b> 零依赖自检 + <b>48</b> 项 pytest · LLM 二阶段复核实测 confirm 2 / need_human 1 / false_positive 0</div>
+        <div class="card-mock"><b>Mock 边界</b> · 规则风险判定、审批流与报告真实；审批「模拟回写」为刻意设计，LLM 二阶段默认 enabled=false。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p05-contract-review" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P06</span><span class="card-title">数据中台</span></div>
+        <p class="card-desc">接入 → DuckDB 数仓分层（ODS/DWD/DWS/ADS）→ 指标口径统一 → ETL 血缘 → 质量校验抓脏数据，全平台「同一个 GMV」的口径来源。</p>
+        <div class="tags"><span>FastAPI</span><span>DuckDB</span><span>ECharts</span></div>
+        <div class="card-metric"><b>48</b> 项测试 · 分层 + 指标口径 + 血缘 + 质量校验</div>
+        <div class="card-mock"><b>Mock 边界</b> · 分层与指标计算真实；演示数据为自动 seed 的样例集，不是真实店铺流水。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p06-data-platform" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P07</span><span class="card-title">AI 素材中心</span></div>
+        <p class="card-desc">素材上传 → 自动打标 → 以文搜图 → 素材×投放效果关联报表。</p>
+        <div class="tags"><span>FastAPI</span><span>SQLite</span><span>ECharts</span></div>
+        <div class="card-metric"><b>68</b> 项测试 · 检索 Recall@5 从 0.05 提到 <b>1.0</b>（中文 n-gram + 同义归一 + 字段加权，带拒答）</div>
+        <div class="card-mock"><b>Mock 边界</b> · 打标、以文搜图、关联报表真实；生图是 Pillow 程序化规格卡（非 AI 出图），检索是文本层而非 CLIP 向量。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p07-ai-asset-center" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P08</span><span class="card-title">直播切片</span></div>
+        <p class="card-desc">直播回放打点与批量切片队列，四维得分每段给出构成（文本理由 + 同进程确定性），可解释优先。</p>
+        <div class="tags"><span>FastAPI</span><span>Pydantic v2</span></div>
+        <div class="card-metric"><b>30</b> 项测试 · 批量队列与进度、打点结果可解释</div>
+        <div class="card-mock"><b>Mock 边界</b> · 本模块为纯内存 mock：ASR 是模拟文本、评分为规则引擎，未接 ffmpeg，不产出真实切片文件（/health 自陈 mock_boundaries）。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p08-live-clip" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P09</span><span class="card-title">AI 销售考核</span></div>
+        <p class="card-desc">导入客服会话 → 自动评分 → 排行榜与个人报告，评分维度可解释；从 P01 真实拉取会话，不编样本。</p>
+        <div class="tags"><span>FastAPI</span><span>ECharts</span><span>LLM 结构化输出</span></div>
+        <div class="card-metric"><b>55</b> 项测试（含 P09→P01 集成 4 例）· 真实会话按 session 聚合评分 <b>65.5 / 70.5</b></div>
+        <div class="card-mock"><b>Mock 边界</b> · 会话导入、评分、排行与报告真实；评分器是规则引擎（Mock LLM）；人机一致性 Kappa 需真人评满 ≥5 条才出数，当前未出。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p09-ai-sales-assessment" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-id">P10</span><span class="card-title">模型微调平台</span></div>
+        <p class="card-desc">数据集 → 训练 → 评测 → 模型注册表的全生命周期编排与状态机，承接低分样本回流再训练的闭环位。</p>
+        <div class="tags"><span>FastAPI</span><span>LoRA 生命周期编排</span></div>
+        <div class="card-metric"><b>35</b> 项测试 · 全生命周期编排与状态机</div>
+        <div class="card-mock"><b>Mock 边界</b> · 训练门禁未闭环：未真实训练（本机无 GPU 余量），loss 曲线由公式生成；无可调用的 OpenAI 兼容端点（endpoint_url: null），无测量来源的延迟一律为 null。</div>
+        <div class="card-actions"><a class="btn" href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects/p10-model-finetune" target="_blank" rel="noopener">源码仓库 ↗</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="live">
+  <div class="wrap">
+    <span class="sec-tag">SECTION 02 / LIVE DEMO</span>
+    <h2>在线实机</h2>
+    <p class="sub">整平台通过 SSH 反向隧道 + nginx 路径分流对公网开放，十个模块与外壳网关在同一入口后面连着操作。</p>
+    <div class="live">
+      <div class="live-url">http://39.96.200.45:8070</div>
+      <div class="live-note"><span class="dot"></span>演示期临时开放，非 24h 在线 —— 访问前建议先联系确认隧道已开启；演示账号 owner / owner123</div>
+      <div class="live-meta">
+        架构：访客 → <b>nginx 路径分流</b>（/pXX/ 精确 location + Cookie 路由兜底）→ SSH 反向隧道回环端口 → 本地各模块。<br>
+        断线自愈：保活脚本 3s 重连 + sshd 死会话 30s 回收 + 看门狗 15 分钟巡检，单次掉线对访客的影响压到 <b>≤35 秒</b>。
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="adr">
+  <div class="wrap">
+    <span class="sec-tag">SECTION 03 / DECISIONS</span>
+    <h2>六个工程决策（ADR）</h2>
+    <p class="sub">每条都是<b>已落地</b>的决策，连同代价一起写 —— 完整版见仓库 <code>docs/adr/</code>。</p>
+    <div class="adr-list">
+      <div class="adr"><span class="no">ADR-0001</span><br><b>微前端外壳而非单体合并</b>：三类前端栈异构（Next.js / Vue 3 + Vite / FastAPI 直挂），合并等于重写四个前端；代价是主题与令牌只能运行时尽力同步。</div>
+      <div class="adr"><span class="no">ADR-0002</span><br><b>SERVICE_REGISTRY 端口单一真源</b>：跨模块调用禁止硬编码端口。起因是一次真实故障：P03 前端把后端写成 8000，实为 8030。</div>
+      <div class="adr"><span class="no">ADR-0003</span><br><b>统一认证与令牌下发</b>：外壳网关签发 HS256、postMessage 下发，模块只校验不重造登录；P02 保留自身 Cookie RBAC 是有意识的例外。</div>
+      <div class="adr"><span class="no">ADR-0004</span><br><b>跨模块真实调用与降级不伪造</b>：取数走真实 HTTP，降级态「少返回」而不是「编一个」—— degraded=True 时响应里直接不含 metrics 字段。</div>
+      <div class="adr"><span class="no">ADR-0005</span><br><b>设计令牌单一真源</b>：静态模块运行时挂 /shared，构建型模块构建期内联 + 主题桥；代价是改色后必须重新构建才生效。</div>
+      <div class="adr"><span class="no">ADR-0006</span><br><b>P05 零依赖例外</b>：合同审查只用标准库，客户机免装 Docker 即跑 —— 风险打分要的是确定性与可复现，比「栈统一」更重要。</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a href="https://github.com/liyibo0410/yunshu-ai-portfolio" target="_blank" rel="noopener">GitHub @liyibo0410</a>
+      · <a href="https://github.com/liyibo0410/yunshu-ai-portfolio" target="_blank" rel="noopener">yunshu-ai-portfolio 仓库</a>
+      · <a href="https://github.com/liyibo0410/yunshu-ai-portfolio/tree/main/projects" target="_blank" rel="noopener">十大模块源码</a>
+    </div>
+    <div class="mono">© 2026 李奕波 · 云枢智能 — AI 电商运营中台 · 十模块指标均可在仓库 _evidence/ 目录复核</div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var root = document.documentElement;
+    var saved = null;
+    try { saved = localStorage.getItem("gh-pages-theme"); } catch(e) {}
+    if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+    document.getElementById("theme-toggle").addEventListener("click", function(){
+      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      try { localStorage.setItem("gh-pages-theme", root.dataset.theme); } catch(e) {}
+    });
+  })();
+</script>
+</body>
+</html>
