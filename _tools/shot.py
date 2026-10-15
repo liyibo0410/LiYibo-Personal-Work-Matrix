@@ -175,7 +175,17 @@ def capture(url: str, out: str, wait: float, w: int, h: int, exec_js: str = "",
                  {"width": w, "height": h, "deviceScaleFactor": 1, "mobile": False})
         if exec_js:
             cdp.wait_load(20)
-            res = cdp.send("Runtime.evaluate", {"expression": exec_js, "returnByValue": True})
+            # 首载可能撞上网关 502 错误页，或 hash 路由初始化中文档被替换 ——
+            # 这两种情况下 evaluate 会抛 SecurityError（sessionStorage 被拒）。
+            # 失败就刷新再注入，最多 3 次；成功仍按原逻辑 reload 让注入态生效。
+            res = {}
+            for _attempt in range(3):
+                res = cdp.send("Runtime.evaluate",
+                               {"expression": exec_js, "returnByValue": True})
+                if not res.get("exceptionDetails"):
+                    break
+                cdp.send("Page.reload", {"ignoreCache": False})
+                cdp.wait_load(20)
             if probe_js:
                 err = res.get("exceptionDetails")
                 print("  inject ->", "EXC %s" % json.dumps(err, ensure_ascii=False)[:300]

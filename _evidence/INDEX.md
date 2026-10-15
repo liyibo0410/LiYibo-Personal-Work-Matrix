@@ -1894,7 +1894,7 @@ P02→P06 真实取数 `metrics_source="p06-live"`、`degraded=False`，gmv `359
 - 动效：40 个入场元素、37 个技术栈小块、5 个整数指标 count-up；`reduce=true`（本机）与 CDP 强制 `no-preference` **两条路径都实测**，JS 异常 0 条
 - 回归：**P07 68 passed**、**P09 55 passed**（改色后各复跑一次）
 - 详情：`_evidence/shell/D30-首页与全平台改色-图标-动效.md` · 效果汇总页：`_evidence/shell/showcase-20261015.html`
-- 三项裁决（用户答「以你为准，全部执行」）：A 简历区我维护并补回 ✔　B 动效**不再加**视差/波次（守「不大改」）✔　C 提交我那批 **`6bd6413`**（48 文件，+2678/−305，**未 push**，提交前 14/14 端口存活）✔
+- 三项裁决（用户答「以你为准，全部执行」）：A 简历区我维护并补回 ✔　B 动效**不再加**视差/波次（守「不大改」）✔　C 提交我那批 **`6bd6413`**（48 文件，+2678/−305，提交前 14/14 端口存活）✔ —— 当日下午已随 `ddf3199` 推送（`0a1bdef..ddf3199`），详见 **D40**
 
 ---
 
@@ -1929,3 +1929,21 @@ P02→P06 真实取数 `metrics_source="p06-live"`、`degraded=False`，gmv `359
 - **明细 + 残留 6 条**：`_evidence/D37-GitHub门面第二轮-全量清零.md`
 
 - **D38** · 公开仓库三处硬伤修复（手机号回流 / 死链按钮 / 简历 JSON 备份）→ _evidence/D38-公开仓库三处硬伤修复.md（2026-10-15 13:2x，用户裁决「只修两处硬伤」：删手机号行、PDF 死按钮改指源码与证据目录、删全量简历 JSON 备份；简历区本身保留）
+
+---
+
+## D40 · 上线（公网隧道）与推送 + 2 个公网真 bug 修复（2026-10-15，OpenCode）
+
+- **推送**：`0a1bdef..ddf3199` → `origin/main`；推前对 4137 行 diff 跑两类密钥正则（长 `sk-…`、硬编码凭证样式）**0 命中**
+- **上线**：隧道保活已常驻，`status` **11/11 中继口 OPEN**；访客入口逐条 HTTP **11/11 = 200**（`8070` + `8090/p01..p10`；`/p010/` 那条 404 为笔误）
+- **公网页断言**：`id="lp-resume"` ✔、`rs-techchips` ✔、防覆盖注释 ✔、`#3370FF` **0 处**、`#1D4ED8` 有、SVG 图标 4 个
+- **公网端到端**：首载 502 一次（重试即 200）→ 种子账号登录（管理员/admin）→ `#/workspace/data-platform` 深链接 → 10 个探活点全绿、`--cp-brand=#1D4ED8`；无头复刻截得 `online-p06-mount.png`（owner + P06 真渲染）
+- **Bug 1（已修+复验）**：公网深链接 iframe 指到裸 `web_port`（`…:8060`）白屏 —— `public_url` 只靠 `pollHealth()` 回填，首次 health 返回前就挂载、回填后不修已挂的 iframe → 回填后 `mountModule(currentId)` 重挂；复验 `frame.src=…:8090/p06/` ✔
+- **Bug 2（已修+复验）**：`shot.py --shell-login` 注入抛 `SecurityError` —— 注入时是 502 错误页 / hash 路由替换中的 detached document → `capture()` 注入失败刷新重试 ≤3 次（纯增量）；复验注入 ok、`tokLen=227` ✔
+- **动效复验**：连续滚动 `scroll_reveal_check.py` **PASS**（`revealIn=40/40`、`chipIn=37/37`、`statsCounted=5`、JS 异常 0）；`anim_check` 一跳到底得 `revealIn=1/40` 属**跳转口径**（IO 需相交），非动效失效
+- **本机回归**：`check_shell` 0 错误无重复 id、`probe_home` 断言全绿、14/14 端口存活
+- **并行变更（非本轮）**：13:36 另一角色按 D37 红线删简历手机号行、PDF 死链改指源码目录；全仓文本该号 `git grep` **0 命中**，本轮不回退
+- **运维提醒**：公网入口用本地种子弱口令、隧道**无自动超时**，演示完 `python _tools\tunnel_remote.py stop`
+- 详情：`_evidence/shell/D40-上线推送与公网复验.md`
+
+- **D39** · 简历区措辞中性化（保留结构只改词：求职方向→方向、一周内到岗→一周内可开始、简历→作者材料；本地 resume.json 删 phone 字段）→ _evidence/D39-简历区措辞中性化.md（2026-10-15 13:4x）

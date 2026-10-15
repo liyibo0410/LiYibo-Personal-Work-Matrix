@@ -324,5 +324,35 @@ P06 44→**48**、P09 41→**55**、P10 28→**35**；证据卡「另跑 46 项 
 
 **回归与提交**：P07 68 passed、P09 55 passed；提交前 14/14 端口 HTTP 存活。
 三项裁决已执行 —— A 简历区由我维护并补回 ✔　B 动效不再加视差/波次（守「不大改」）✔
-　C 提交我那批 **`6bd6413`**（48 文件，+2678/−305，**未 push**；含并行角色未提交的并行改动，快照实测可用）✔。
+　C 提交我那批 **`6bd6413`**（48 文件，+2678/−305；含并行角色未提交的并行改动，快照实测可用）✔ —— **已随 `ddf3199` 于当日下午推送**（`0a1bdef..ddf3199`）。
 详情：`D30-首页与全平台改色-图标-动效.md` · 效果页：`showcase-20261015.html`。
+
+---
+
+## 2026-10-15 · D40 上线（公网隧道）+ 推送 + 公网真 bug 修复
+
+**推送**：`0a1bdef..ddf3199` 上 `origin/main`；推前对 4137 行 diff 跑两类密钥正则（长 `sk-…`、硬编码凭证样式）**0 命中**，推后本地与远端同步。
+
+**上线**：隧道保活此前已常驻，`status` 11/11 中继口 OPEN；访客入口逐条 HTTP 实测 **11/11 = 200**（`8070` 外壳 + `8090/p01..p10`，其中 `/p010/` 那条 404 是我 URL 笔误）。
+公网页 HTML 断言：`id="lp-resume"` ✔、`rs-techchips` ✔、防覆盖注释 ✔、`#3370FF` **0 处**、`#1D4ED8` 有、SVG 图标 **4 个**。
+
+**公网端到端**：打开 →（首载 502 一次，重试即 200）→ 种子账号登录（头部变 管理员/admin）→ `#/workspace/data-platform` 深链接 → 侧栏 10 个探活点全绿、`--cp-brand=#1D4ED8`；
+无头复刻同路径截得 `online-p06-mount.png`（owner 登录态 + P06 真渲染 15 表 / 3.24 万行）。
+
+**两个真 bug（发现即修，均已复验）**：
+
+| # | 现象 | 根因 | 修复 |
+|---|---|---|---|
+| 1 | 公网深链接 iframe 指向 `39.96.200.45:8060`（裸 web_port）→ 白屏 | `s.public_url` 只靠 `pollHealth()` 回填，深链接在首次 health 返回前就 mount，且回填后不修已挂载的 iframe | `pollHealth` 成功分支：回填后若正挂模块 → `mountModule(currentId)` 重挂；复验 `frame.src=…:8090/p06/` ✔ |
+| 2 | `shot.py --shell-login` 注入抛 `SecurityError`（sessionStorage 被拒） | 注入时文档是 502 错误页 / hash 路由替换中的 detached document | `capture()` 注入失败即刷新重试 ≤3 次（纯增量）；复验注入 `ok`、`tokLen=227` ✔ |
+
+**动效复验**：连续滚动脚本 `scroll_reveal_check.py`（新）**PASS** —— `revealIn=40/40`、`chipIn=37/37`、`statsCounted=5`、JS 异常 0；
+`anim_check.py` 的 `scrollIntoView` 一跳到底会让 `revealIn=1/40`，是**跳转口径**下 IO 不相交所致，非动效失效。
+
+**本机回归**：`check_shell` 0 错误无重复 id；`probe_home` 断言全绿；14/14 端口 HTTP 存活。
+
+**并行变更（非本轮）**：13:36 另一角色按 D37 红线删掉简历手机号行、PDF 死链改指源码目录 —— 不回退，全仓文本 `git grep` 该号 **0 命中**。
+
+**截图**：`online-20261015-full.png` / `online-20261015-top.png` / `online-p06-mount.png` / `anim-scrollall.png`。
+**运维提醒**：公网入口用的是本地种子弱口令，隧道**无自动超时**，演示完 `python _tools\tunnel_remote.py stop`。
+详情：`D40-上线推送与公网复验.md`。
