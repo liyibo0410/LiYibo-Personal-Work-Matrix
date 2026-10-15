@@ -10,7 +10,9 @@ import csv
 import io
 import json
 import math
+import os
 import random
+import re
 import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -18,8 +20,9 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.staticfiles import StaticFiles as _BaseStaticFiles
 from pydantic import BaseModel, Field
 
 # P01 客服跨模块客户端（真实 HTTP 调用，地址从 SERVICE_REGISTRY 解析）。
@@ -36,14 +39,46 @@ except ImportError:  # pragma: no cover - 取决于启动方式
 app = FastAPI(title="P09 AI 销售考核 · 李奕波个人作品矩阵", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
+# 压缩：公网 SSH 隧道下未压缩体积直接决定首屏与接口延迟。Starlette 的 GZipMiddleware
+# 在客户端带 Accept-Encoding: gzip 且响应体 ≥ minimum_size 时压缩，并下发
+# Content-Encoding + Vary: Accept-Encoding；已压缩资源（png/jpg/woff2 等）阈值拦不住也
+# 无妨。阈值对齐 shell/serve.py（_GZIP_MIN_BYTES=1024）。
+# 该中间件同样覆盖 /shared 静态（含 1.0MB 的 echarts.min.js）与 JSON API，是首屏提速的主修复。
+app.add_middleware(GZipMiddleware, minimum_size=1024)
+
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 
 # 统一设计系统：把仓库根的 shared/ 挂到 /shared，使前端能引用
 # shared/ui-kit/tokens.css（配色/间距唯一真源）与 shared/ui-kit/ui-kit.js（主题桥接）。
 # 独立访问（:8090）与 shell iframe 挂载两种方式下路径一致。
+#
+# 缓存头：Starlette 1.7 的 StaticFiles 默认【不】下发 Cache-Control（只有 ETag/Last-Modified），
+# 公网访客每次刷新都对 /shared 反复请求。这里对齐 shell/serve.py 的静态策略——
+# 内容稳定的 vendor 库/JS/CSS 给有界 max-age（配合 ETag 做 304 重验证），
+# config 类 JSON 走 no-cache（品牌接口可能改写）。压缩由上面的 GZipMiddleware 统一处理。
+_SHARED_CACHE = {
+    ".js": "public, max-age=3600",
+    ".css": "public, max-age=3600",
+    ".svg": "public, max-age=3600",
+    ".woff2": "public, max-age=3600",
+    ".json": "no-cache",
+}
+
+
+class CachedStaticFiles(_BaseStaticFiles):
+    def file_response(self, full_path, stat_result, scope, status_code=200):
+        resp = super().file_response(full_path, stat_result, scope, status_code)
+        if isinstance(resp, FileResponse):
+            ext = os.path.splitext(str(full_path))[1].lower()
+            cc = _SHARED_CACHE.get(ext)
+            if cc:
+                resp.headers.setdefault("Cache-Control", cc)
+        return resp
+
+
 _SHARED_DIR = Path(__file__).resolve().parents[3] / "shared"
 if _SHARED_DIR.exists():
-    app.mount("/shared", StaticFiles(directory=str(_SHARED_DIR)), name="shared")
+    app.mount("/shared", CachedStaticFiles(directory=str(_SHARED_DIR)), name="shared")
 
 # ---------------------------------------------------------------------------
 # Data Models
@@ -100,6 +135,9 @@ class QualityRule(BaseModel):
     enabled: bool = True
     keywords: list[str] = []
     pattern: str = ""
+    # 该规则扣分/加分落在哪个评分维度；为空时按 category 默认映射。
+    # 引擎按此把「规则命中」与「五维得分」对齐，保证可追溯。
+    dimension: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -107,18 +145,22 @@ class QualityRule(BaseModel):
 # ---------------------------------------------------------------------------
 
 AGENTS: list[Agent] = [
-    Agent(id="agent-001", name="张伟", avatar_color="#3370FF", store="旗舰店 A", hire_date="2024-03-15"),
+    Agent(id="agent-001", name="张伟", avatar_color="#1D4ED8", store="旗舰店 A", hire_date="2024-03-15"),
     Agent(id="agent-002", name="李娜", avatar_color="#00B96B", store="旗舰店 A", hire_date="2024-01-10"),
     Agent(id="agent-003", name="王芳", avatar_color="#F53F3F", store="旗舰店 B", hire_date="2023-11-20"),
     Agent(id="agent-004", name="陈杰", avatar_color="#FF7D00", store="旗舰店 B", hire_date="2024-06-01"),
     Agent(id="agent-005", name="刘洋", avatar_color="#866BFF", store="海外店", hire_date="2024-02-28"),
 ]
 
+# 质检规则是评分引擎的**唯一词表与扣分来源**（此前引擎硬编码 FORBIDDEN_WORDS 等，
+# PUT /rules 改了 enabled/penalty 对评分零影响，属死配置 —— 红线 5）。
+# keywords 供 forbidden_word / compliance / tone 类规则做命中检测；
+# pattern 供 required_script 类话术检测（词表见引擎侧 _PATTERN_VOCAB，keywords 为补充词表）。
 QUALITY_RULES: list[QualityRule] = [
     QualityRule(id="rule-001", name="禁止：粗鲁推诿用语", category="forbidden_word",
                 description="坐席不得使用侮辱、敷衍、推诿式言辞", penalty=15,
-                keywords=["笨蛋", "白痴", "不关我的事", "自己处理", "随便"]),
-    QualityRule(id="rule-002", name="禁止：不实承诺", category="forbidden_word",
+                keywords=["笨蛋", "白痴", "不关我的事", "自己处理", "随便", "不知道", "看网站"]),
+    QualityRule(id="rule-002", name="禁止：不实承诺", category="forbidden_word", dimension="合规性",
                 description="坐席不得做出无法兑现的承诺", penalty=20,
                 keywords=["保证", "百分百", "一定能", "向您承诺"]),
     QualityRule(id="rule-003", name="必须：开场问候话术", category="required_script",
@@ -127,16 +169,16 @@ QUALITY_RULES: list[QualityRule] = [
     QualityRule(id="rule-004", name="必须：结束送别话术", category="required_script",
                 description="会话结束需有致谢与道别", penalty=5,
                 pattern="closing"),
-    QualityRule(id="rule-005", name="响应时长要求", category="response_time",
+    QualityRule(id="rule-005", name="响应时长要求", category="response_time", dimension="专业度",
                 description="平均响应时长须低于 30 秒", penalty=8,
                 pattern="response_time_30s"),
     QualityRule(id="rule-006", name="必须：共情安抚", category="tone",
                 description="客户投诉时坐席需表达理解与歉意", penalty=10,
-                keywords=["理解", "抱歉", "对不起", "帮您"]),
+                keywords=["理解", "抱歉", "对不起", "顾虑", "帮您"]),
     QualityRule(id="rule-007", name="禁止：正向提及竞品", category="compliance",
                 description="坐席不得正面推荐或引导客户选择竞品", penalty=15,
                 keywords=["别家更好", "去买别家", "选竞品更好"]),
-    QualityRule(id="rule-008", name="必须：连带/升单推荐", category="required_script",
+    QualityRule(id="rule-008", name="必须：连带/升单推荐", category="required_script", dimension="促成转化",
                 description="合适场景下坐席应做升单或连带推荐", penalty=5,
                 pattern="upsell"),
 ]
@@ -344,130 +386,166 @@ def _generate_conversations() -> list[Conversation]:
 # ---------------------------------------------------------------------------
 # Rule-based Mock Scoring Engine
 # ---------------------------------------------------------------------------
+# 引擎逐条读取 QUALITY_RULES 的 enabled / penalty / keywords（配置即评分口径），
+# 因此 `PUT /api/v1/rules/{id}` 改扣分或停用会**立即影响后续评分**；每次命中都以
+# rule_id / rule_name / penalty 记入 rule_violations，扣分理由写入对应维度
+# deduction_reasons —— 「可解释、可追溯」是本模块门禁卖点，不允许只给一个总分。
 
-FORBIDDEN_WORDS = [
-    "笨蛋", "白痴", "不关我的事", "自己处理", "随便",
-    "保证", "百分百", "一定能", "向您承诺",
-    "不知道", "看网站", "别家更好",
-]
+DIMENSION_NAMES = ("服务态度", "专业度", "需求挖掘", "促成转化", "合规性")
 
+# 命中即扣分的规则类别（禁用词/合规） vs 缺失才扣分的规则类别（必选话术/语气）
+FORBIDDEN_CATEGORIES = frozenset({"forbidden_word", "compliance"})
+REQUIRED_CATEGORIES = frozenset({"required_script", "tone"})
+
+# category → 默认落分维度（规则可用 dimension 字段显式覆盖）
+DEFAULT_DIMENSION_BY_CATEGORY = {
+    "forbidden_word": "服务态度",
+    "required_script": "服务态度",
+    "response_time": "专业度",
+    "tone": "服务态度",
+    "compliance": "合规性",
+}
+
+# pattern 类话术规则的检测词表（规则 keywords 为追加词表）
 GREETING_KEYWORDS = ["您好", "欢迎", "很高兴", "请问", "帮您"]
 CLOSING_KEYWORDS = ["感谢", "祝您", "愉快", "再见", "不客气", "期待"]
-EMPATHY_KEYWORDS = ["理解", "抱歉", "对不起", "顾虑", "帮您"]
 UPSELL_KEYWORDS = ["另外", "推荐", "新品", "搭配", "感兴趣", "顺便"]
+
+_PATTERN_VOCAB: dict[str, list[str]] = {
+    "greeting": GREETING_KEYWORDS,
+    "closing": CLOSING_KEYWORDS,
+    "upsell": UPSELL_KEYWORDS,
+}
+# 话术命中后的加分（口径固定）；扣分走规则 penalty，可配置。
+_PATTERN_BONUS = {"upsell": 15.0}
+_PATTERN_HIGHLIGHT = {
+    "greeting": "开场问候规范",
+    "closing": "结束送别规范",
+    "upsell": "做了升单/连带推荐",
+}
+
+
+def _rule_dimension(rule: QualityRule) -> str:
+    return rule.dimension or DEFAULT_DIMENSION_BY_CATEGORY.get(rule.category, "服务态度")
+
+
+def _response_threshold(pattern: str) -> float | None:
+    m = re.search(r"response_time_(\d+(?:\.\d+)?)s", pattern or "")
+    return float(m.group(1)) if m else None
+
+
+def _avg_agent_response_seconds(conv: Conversation) -> float | None:
+    """客户消息 → 下一条坐席消息的平均间隔（秒）。时间戳缺失/不可解析时返回 None，
+    响应时长规则对这条会话**跳过**而不是瞎猜。"""
+    gaps: list[float] = []
+    pending: datetime | None = None
+    for m in conv.messages:
+        try:
+            ts = datetime.fromisoformat(m.timestamp)
+        except (TypeError, ValueError):
+            return None
+        if m.role == "customer":
+            pending = ts
+        elif m.role == "agent" and pending is not None:
+            gaps.append((ts - pending).total_seconds())
+            pending = None
+    if not gaps:
+        return None
+    return sum(gaps) / len(gaps)
 
 
 def _rule_based_score(conv: Conversation) -> ConversationScore:
-    """Score a conversation using rule-based heuristics (mock LLM)."""
+    """Score a conversation against the *current* QUALITY_RULES config (mock LLM)."""
     agent_texts = " ".join(m.content.lower() for m in conv.messages if m.role == "agent")
-    all_text = " ".join(m.content.lower() for m in conv.messages)
     violations: list[dict] = []
-    deduction_reasons_by_dim: dict[str, list[str]] = {
-        "服务态度": [], "专业度": [], "需求挖掘": [],
-        "促成转化": [], "合规性": [],
-    }
-    highlights_by_dim: dict[str, list[str]] = {
-        "服务态度": [], "专业度": [], "需求挖掘": [],
-        "促成转化": [], "合规性": [],
-    }
+    deduction_reasons_by_dim: dict[str, list[str]] = {d: [] for d in DIMENSION_NAMES}
+    highlights_by_dim: dict[str, list[str]] = {d: [] for d in DIMENSION_NAMES}
+    base: dict[str, float] = {"服务态度": 80.0, "专业度": 70.0, "需求挖掘": 60.0,
+                              "促成转化": 65.0, "合规性": 90.0}
 
-    # --- 服务态度 (0-100) ---
-    attitude = 80.0
-    for word in FORBIDDEN_WORDS:
-        if word in agent_texts:
-            attitude -= 10
-            violations.append({"rule": "forbidden_word", "word": word, "penalty": 10})
-            deduction_reasons_by_dim["服务态度"].append(f"使用违规用语：'{word}'")
-    if any(kw in agent_texts for kw in GREETING_KEYWORDS):
-        attitude += 5
-        highlights_by_dim["服务态度"].append("开场问候规范")
-    if any(kw in agent_texts for kw in EMPATHY_KEYWORDS):
-        attitude += 5
-        highlights_by_dim["服务态度"].append("体现了共情安抚")
-    else:
-        attitude -= 5
-        deduction_reasons_by_dim["服务态度"].append("缺少共情安抚表达")
-    if any(kw in agent_texts for kw in CLOSING_KEYWORDS):
-        attitude += 5
-        highlights_by_dim["服务态度"].append("结束送别规范")
-    else:
-        attitude -= 10
-        deduction_reasons_by_dim["服务态度"].append("缺少规范结束语")
-    attitude = max(0, min(100, attitude))
+    def record(rule: QualityRule, kind: str, detail: str, reason: str) -> None:
+        """命中一条规则：按 penalty 扣分 + 记违规 + 留可追溯理由。"""
+        dim = _rule_dimension(rule)
+        base[dim] -= rule.penalty
+        violations.append({
+            "rule": rule.category, "rule_id": rule.id, "rule_name": rule.name,
+            "type": kind, "detail": detail,
+            # word 为旧字段名（命中词 / 缺失话术 / 时长明细），保留以兼容报表与测试
+            "word": detail, "penalty": float(rule.penalty),
+        })
+        deduction_reasons_by_dim[dim].append(reason)
 
-    # --- 专业度 (0-100) ---
-    expertise = 70.0
+    for rule in QUALITY_RULES:
+        if not rule.enabled:
+            continue
+        dim = _rule_dimension(rule)
+
+        if rule.category in FORBIDDEN_CATEGORIES:
+            # 禁用词/合规：命中关键词才扣分，每个命中词各扣一次 penalty
+            for word in rule.keywords:
+                if word and word in agent_texts:
+                    record(rule, "keyword", word,
+                           f"违反规则『{rule.name}』：使用违规用语：'{word}'，扣 {rule.penalty:g} 分")
+
+        elif rule.category in REQUIRED_CATEGORIES or rule.pattern in _PATTERN_VOCAB:
+            # 必选话术/语气：命中给亮点加分，缺失按规则 penalty 扣分
+            vocab = list(_PATTERN_VOCAB.get(rule.pattern, [])) + list(rule.keywords)
+            hit = next((kw for kw in vocab if kw and kw in agent_texts), None)
+            if hit is not None:
+                base[dim] += _PATTERN_BONUS.get(rule.pattern, 5.0)
+                highlights_by_dim[dim].append(
+                    _PATTERN_HIGHLIGHT.get(rule.pattern, f"符合规则『{rule.name}』要求"))
+            else:
+                record(rule, "missing_script", rule.pattern or rule.name,
+                       f"违反规则『{rule.name}』：{rule.description}，扣 {rule.penalty:g} 分")
+
+        elif rule.category == "response_time":
+            threshold = _response_threshold(rule.pattern)
+            if threshold is not None:
+                avg_gap = _avg_agent_response_seconds(conv)
+                if avg_gap is not None and avg_gap >= threshold:
+                    record(rule, "response_time", f"avg={avg_gap:.1f}s",
+                           f"违反规则『{rule.name}』：平均响应时长 {avg_gap:.1f}s，"
+                           f"未达低于 {threshold:g}s 的要求，扣 {rule.penalty:g} 分")
+
+    # --- 专业度（规则之外的通用启发式，保留） ---
     if len(agent_texts) > 100:
-        expertise += 10
+        base["专业度"] += 10
         highlights_by_dim["专业度"].append("回复详实充分")
     else:
         deduction_reasons_by_dim["专业度"].append("回复过于简略")
-        expertise -= 10
+        base["专业度"] -= 10
     if conv.duration_seconds < 60:
-        expertise -= 5
+        base["专业度"] -= 5
         deduction_reasons_by_dim["专业度"].append("会话时长偏短，可能存在服务不充分")
     if any(kw in agent_texts for kw in ["查一下", "核实", "详情"]):
-        expertise += 5
+        base["专业度"] += 5
         highlights_by_dim["专业度"].append("主动核查客户问题")
-    expertise = max(0, min(100, expertise))
 
-    # --- 需求挖掘 (0-100) ---
-    demand = 60.0
+    # --- 需求挖掘 ---
     customer_msgs = [m for m in conv.messages if m.role == "customer"]
     if len(customer_msgs) >= 3:
-        demand += 15
+        base["需求挖掘"] += 15
         highlights_by_dim["需求挖掘"].append("与客户形成多轮互动")
     else:
         deduction_reasons_by_dim["需求挖掘"].append("客户互动轮次不足")
     if any(kw in agent_texts for kw in ["还有其他", "其他", "更多"]):
-        demand += 10
+        base["需求挖掘"] += 10
         highlights_by_dim["需求挖掘"].append("主动挖掘延伸需求")
     else:
         deduction_reasons_by_dim["需求挖掘"].append("未挖掘延伸需求")
-    demand = max(0, min(100, demand))
 
-    # --- 促成转化 (0-100) ---
-    conversion = 65.0
-    if any(kw in agent_texts for kw in UPSELL_KEYWORDS):
-        conversion += 15
-        highlights_by_dim["促成转化"].append("做了升单/连带推荐")
-    else:
-        deduction_reasons_by_dim["促成转化"].append("未做升单或连带推荐")
+    # --- 促成转化（强化购买决策的加分项，非质检规则） ---
     if "感谢您" in agent_texts or "选择我们" in agent_texts:
-        conversion += 10
+        base["促成转化"] += 10
         highlights_by_dim["促成转化"].append("强化了购买决策")
-    conversion = max(0, min(100, conversion))
-
-    # --- 合规性 (0-100) ---
-    compliance = 90.0
-    compliance_violations = [v for v in violations if v["rule"] == "forbidden_word" and v["word"] in
-                             ["别家更好", "去买别家", "选竞品更好"]]
-    if compliance_violations:
-        compliance -= 20 * len(compliance_violations)
-        deduction_reasons_by_dim["合规性"].append("正面提及竞品")
-    false_promise = [v for v in violations if v["word"] in ["保证", "百分百", "一定能", "向您承诺"]]
-    if false_promise:
-        compliance -= 15 * len(false_promise)
-        deduction_reasons_by_dim["合规性"].append("做出不实承诺")
-    compliance = max(0, min(100, compliance))
 
     # Build dimension scores
     dimensions = [
-        DimensionScore(dimension="服务态度", score=round(attitude, 1),
-                       deduction_reasons=deduction_reasons_by_dim["服务态度"],
-                       highlights=highlights_by_dim["服务态度"]),
-        DimensionScore(dimension="专业度", score=round(expertise, 1),
-                       deduction_reasons=deduction_reasons_by_dim["专业度"],
-                       highlights=highlights_by_dim["专业度"]),
-        DimensionScore(dimension="需求挖掘", score=round(demand, 1),
-                       deduction_reasons=deduction_reasons_by_dim["需求挖掘"],
-                       highlights=highlights_by_dim["需求挖掘"]),
-        DimensionScore(dimension="促成转化", score=round(conversion, 1),
-                       deduction_reasons=deduction_reasons_by_dim["促成转化"],
-                       highlights=highlights_by_dim["促成转化"]),
-        DimensionScore(dimension="合规性", score=round(compliance, 1),
-                       deduction_reasons=deduction_reasons_by_dim["合规性"],
-                       highlights=highlights_by_dim["合规性"]),
+        DimensionScore(dimension=name, score=round(max(0.0, min(100.0, base[name])), 1),
+                       deduction_reasons=deduction_reasons_by_dim[name],
+                       highlights=highlights_by_dim[name])
+        for name in DIMENSION_NAMES
     ]
 
     # Weighted overall
@@ -508,6 +586,19 @@ HUMAN_WEIGHTS: dict[str, float] = {
 }
 LABELS_PATH = Path(__file__).resolve().parent.parent / "data" / "human_labels.json"
 
+# 真人署名是这份一致性报告成立的前提：无法追溯到具体评分者的「人工分」不是人工分，
+# 和早先「AI 分 + 噪声」冒充人工分是同一类造假。占位词一律拒收，历史遗留的
+# 「未署名」记录只计为 suspect（可疑），不回填 human_score、不进一致性统计。
+PLACEHOLDER_RATERS: frozenset[str] = frozenset({
+    "未署名", "匿名", "游客", "测试", "test", "anonymous", "anon", "unknown",
+    "n/a", "na", "none", "-", "—", "?", "？",
+})
+
+
+def _is_real_rater(rater: Any) -> bool:
+    text = str(rater or "").strip()
+    return bool(text) and text.lower() not in PLACEHOLDER_RATERS
+
 
 class HumanLabelIn(BaseModel):
     dimensions: dict[str, float] = Field(default_factory=dict)
@@ -540,16 +631,28 @@ def _human_overall(dimensions: dict[str, float]) -> float:
     return round(sum(dimensions[d] * HUMAN_WEIGHTS[d] for d in HUMAN_WEIGHTS), 1)
 
 
+def _trusted_label(conv_id: str) -> dict[str, Any] | None:
+    """只有带真实署名的真人评分才算数（其余为可疑遗留，绝不当人工分使用）。"""
+    label = HUMAN_LABELS.get(conv_id)
+    if not label or label.get("overall") is None:
+        return None
+    return label if _is_real_rater(label.get("rater")) else None
+
+
 def _apply_human_labels() -> int:
-    """把已落盘的真人评分回填到会话上，使重启后一致性报告依然成立。"""
+    """把已落盘的真人评分回填到会话上，使重启后一致性报告依然成立。
+
+    无真实署名的记录（如冒烟测试残留的「未署名」）一律**不回填**：
+    它们会原样留在磁盘上，但在接口层只以 suspect 身份出现。
+    """
     applied = 0
     for conv in CONVERSATIONS:
-        label = HUMAN_LABELS.get(conv.id)
-        if not label or label.get("overall") is None:
+        trusted = _trusted_label(conv.id)
+        if trusted:
+            conv.human_score = float(trusted["overall"])
+            applied += 1
+        else:
             conv.human_score = None
-            continue
-        conv.human_score = float(label["overall"])
-        applied += 1
     return applied
 
 
@@ -696,7 +799,10 @@ async def get_agent_report(agent_id: str):
     violation_counts: dict[str, int] = {}
     for c in agent_convs:
         for v in c.score.rule_violations:
-            key = v.get("word", v.get("rule", "unknown"))
+            if v.get("type") == "keyword":
+                key = v.get("detail", v.get("word", "unknown"))  # 逐词统计（旧口径）
+            else:
+                key = v.get("rule_name") or v.get("rule", "unknown")  # 缺失话术/超时按规则名统计
             violation_counts[key] = violation_counts.get(key, 0) + 1
     top_violations = sorted(violation_counts.items(), key=lambda x: x[1], reverse=True)[:5]
 
@@ -811,8 +917,17 @@ async def evaluate_conversation(
     agent_id: str = "agent-001",
     store: str = "旗舰店 A",
 ):
-    """Evaluate a new conversation (mock LLM scoring)."""
-    agent = next((a for a in AGENTS if a.id == agent_id), AGENTS[0])
+    """Evaluate a new conversation (mock LLM scoring).
+
+    agent_id 必须是已登记的坐席：未知坐席直接 404，**不再静默归到 AGENTS[0]**
+    （那会把别人的会话算到张伟头上，评分归属失真）。
+    """
+    agent = next((a for a in AGENTS if a.id == agent_id), None)
+    if agent is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"未找到坐席 {agent_id}，请先在坐席列表登记（现有：{[a.id for a in AGENTS]}）",
+        )
     parsed_msgs = []
     for m in messages:
         parsed_msgs.append(Message(
@@ -879,13 +994,21 @@ MIN_LABELS_FOR_AGREEMENT = 5
 
 
 def _label_status() -> dict[str, Any]:
-    labeled = [cid for cid in HUMAN_LABELS if HUMAN_LABELS[cid].get("overall") is not None]
-    raters = sorted({str(HUMAN_LABELS[cid].get("rater") or "未署名") for cid in labeled})
+    labeled: list[str] = []
+    suspect: list[str] = []
+    for cid, label in HUMAN_LABELS.items():
+        if label.get("overall") is None:
+            continue
+        (labeled if _is_real_rater(label.get("rater")) else suspect).append(cid)
+    raters = sorted({str(HUMAN_LABELS[cid].get("rater")) for cid in labeled})
     stamps = sorted(str(HUMAN_LABELS[cid].get("labeled_at") or "") for cid in labeled)
     return {
         "labeled_count": len(labeled),
+        # 可疑记录：有分数但署名是「未署名/匿名」等占位词。不计入一致性统计，只曝光。
+        "suspect_unattributed": sorted(suspect),
+        "suspect_count": len(suspect),
         "total_conversations": len(CONVERSATIONS),
-        "pending_count": len(CONVERSATIONS) - len(labeled),
+        "pending_count": len(CONVERSATIONS) - len(labeled) - len(suspect),
         "raters": raters,
         "first_labeled_at": stamps[0] if stamps else None,
         "last_labeled_at": stamps[-1] if stamps else None,
@@ -941,6 +1064,10 @@ async def labeling_submit(conv_id: str, body: HumanLabelIn):
     if not conv:
         raise HTTPException(status_code=404, detail="会话不存在")
 
+    # 真人署名是硬前提：一致性报告必须能追溯到具体评分者。
+    # 早先允许 rater="" 落成「未署名」，冒烟数据因此混进了「人工评分」。
+    rater = body.rater.strip()
+
     unknown = [d for d in body.dimensions if d not in HUMAN_WEIGHTS]
     if unknown:
         raise HTTPException(status_code=422, detail=f"未知评分维度：{unknown}")
@@ -951,13 +1078,27 @@ async def labeling_submit(conv_id: str, body: HumanLabelIn):
         if not 0 <= float(val) <= 100:
             raise HTTPException(status_code=422, detail=f"{dim} 分数须在 0~100 之间")
 
+    if not _is_real_rater(rater):
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "code": "rater_required",
+                "message": (
+                    "真人评分必须署名：rater 不能为空，也不能是『未署名/匿名/测试』等占位词。"
+                    "无法追溯到具体评分者的记录不进一致性统计。"
+                ),
+                "rejected": body.rater,
+                "placeholder_raters": sorted(PLACEHOLDER_RATERS),
+            },
+        )
+
     dimensions = {d: float(body.dimensions[d]) for d in HUMAN_WEIGHTS}
     overall = _human_overall(dimensions)
     HUMAN_LABELS[conv_id] = {
         "dimensions": dimensions,
         "overall": overall,
         "note": body.note.strip(),
-        "rater": (body.rater.strip() or "未署名"),
+        "rater": rater,
         "labeled_at": datetime.now(timezone.utc).isoformat(),
     }
     _save_human_labels(HUMAN_LABELS)
@@ -991,10 +1132,13 @@ async def labeling_delete(conv_id: str):
 async def get_agreement():
     """人工评分与 AI 评分的一致性：Cohen's Kappa + 混淆矩阵 + 皮尔逊相关。
 
-    只统计 `data/human_labels.json` 里真实存在的人工评分（由真人从评分台逐条盲评写入）。
+    只统计 `data/human_labels.json` 里真实存在、**且带真人署名**的人工评分
+    （由真人从评分台逐条盲评写入；「未署名」等占位署名的记录只曝光不计入）。
     样本不足 `MIN_LABELS_FOR_AGREEMENT` 条时不出数 —— 小样本 Kappa 极易失真，不能当结论讲。
     """
-    pairs = [(c.human_score, c.score.overall) for c in CONVERSATIONS if c.human_score is not None and c.score]
+    trusted_convs = [c for c in CONVERSATIONS if c.score and _trusted_label(c.id)]
+    pairs = [(float(_trusted_label(c.id)["overall"]), c.score.overall) for c in trusted_convs]
+    suspect = _label_status()["suspect_unattributed"]
     if len(pairs) < MIN_LABELS_FOR_AGREEMENT:
         return {
             "error": (
@@ -1003,6 +1147,7 @@ async def get_agreement():
             "kappa": None,
             "labeled_count": len(pairs),
             "min_labels_required": MIN_LABELS_FOR_AGREEMENT,
+            "suspect_unattributed": suspect,
             "how_to_label": "打开评分台 /label.html（或 POST /api/v1/labeling/{conversation_id}）逐条盲评",
         }
 
@@ -1065,7 +1210,7 @@ async def get_agreement():
                 "avg_diff": round(sum(abs(h - a) for h, a in cat_pairs) / len(cat_pairs), 1),
             }
 
-    labeled_ids = [c.id for c in CONVERSATIONS if c.human_score is not None]
+    labeled_ids = [c.id for c in trusted_convs]
     imported_labeled = sum(1 for cid in labeled_ids if cid not in _SEED_IDS)
     status = _label_status()
 
@@ -1082,6 +1227,8 @@ async def get_agreement():
         "pearson_correlation": round(pearson_r, 4),
         "mean_absolute_error": round(mae, 1),
         "sample_size": n,
+        # 有分数但署名是占位词的记录：曝光但不参与本报告
+        "suspect_unattributed": status["suspect_unattributed"],
         "confusion_matrix": matrix,
         "category_breakdown": cat_breakdown,
         "provenance": {
@@ -1191,6 +1338,14 @@ async def import_from_p01(body: P01ImportRequest):
     if not body.sender_ids:
         raise HTTPException(400, "sender_ids 不能为空")
 
+    # 与 /evaluate 同口径：未知坐席 404，不静默归到 AGENTS[0]（校验放在发请求之前）
+    agent = next((a for a in AGENTS if a.id == body.agent_id), None)
+    if agent is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"未找到坐席 {body.agent_id}，请先在坐席列表登记（现有：{[a.id for a in AGENTS]}）",
+        )
+
     result = p01_client.fetch_conversations(body.sender_ids)
     if not result.get("ok"):
         return JSONResponse(status_code=200, content={
@@ -1203,7 +1358,6 @@ async def import_from_p01(body: P01ImportRequest):
             "notice": "P01 客服不可达，未导入任何会话（降级不伪造数据）。",
         })
 
-    agent = next((a for a in AGENTS if a.id == body.agent_id), AGENTS[0])
     imported = 0
     ids: list[str] = []
     for conv_data in result["conversations"]:
@@ -1245,16 +1399,61 @@ async def import_from_p01(body: P01ImportRequest):
     }
 
 
+@app.get("/api/v1/export/low-score")
+async def export_low_score(threshold: float = 60.0, limit: int = 50):
+    """导出低分会话样本，供 P10 微调层回流（数据流闭环：P09 质检 → P10 微调）。
+
+    口径诚实：评分来自**规则引擎（mock LLM）**，导出结果自带 mock 声明；
+    只导出「已评分且 overall < threshold」的会话，无符合样本时如实返回空列表 —— 不硬凑。
+    """
+    if limit <= 0 or limit > 500:
+        raise HTTPException(400, "limit 需在 1..500 之间")
+
+    scored = [c for c in CONVERSATIONS if c.score is not None]
+    low = [c for c in scored if c.score.overall < threshold]
+    # 最差的排在前面：回流微调时优先喂「问题最大的样本」
+    low.sort(key=lambda c: c.score.overall)
+
+    samples = []
+    for c in low[:limit]:
+        samples.append({
+            "conversation_id": c.id,
+            "agent_id": c.agent_id,
+            "agent_name": c.agent_name,
+            "store": c.store,
+            "topic": c.topic,
+            "overall": round(c.score.overall, 2),
+            "dimensions": [d.model_dump() for d in c.score.dimensions],
+            "rule_violations": c.score.rule_violations,
+            "suggestions": c.score.suggestions,
+            "message_count": len(c.messages),
+            "created_at": c.created_at,
+        })
+
+    return {
+        "ok": True,
+        "threshold": threshold,
+        "scored_total": len(scored),
+        "low_total": len(low),
+        "exported": len(samples),
+        "samples": samples,
+        "scoring_engine": "rule-based(mock-llm)",
+        "notice": "评分为规则引擎产出（mock LLM），可用于回流实验，引用时须保留此口径。",
+    }
+
+
 # Serve frontend
+# HTML 用 no-cache（每次协商缓存）：配合 FileResponse 自带的 ETag/Last-Modified，
+# 未变更时走 304 空响应体，不跨隧道重传 42KB 整页；变更后立即生效，不存在陈旧 HTML。
 @app.get("/")
 async def serve_index():
-    return FileResponse(WEB_DIR / "index.html")
+    return FileResponse(WEB_DIR / "index.html", headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/label.html")
 async def serve_label():
     """人工质检评分台（盲评）。一致性报告依赖这里产生的真人评分。"""
-    return FileResponse(WEB_DIR / "label.html")
+    return FileResponse(WEB_DIR / "label.html", headers={"Cache-Control": "no-cache"})
 
 
 # ---------------------------------------------------------------------------

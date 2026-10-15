@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RAG 知识库 · 统一控制台</title>
     <!-- Chart.js 统计图表 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="/shared/vendor/chart.umd.min.js"></script>
     <!-- Markdown 渲染 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/shared/vendor/marked.min.js"></script>
     <!-- 代码高亮 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/bash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/json.min.js"></script>
+    <link rel="stylesheet" href="/shared/vendor/highlight/github-dark.min.css">
+    <script src="/shared/vendor/highlight/highlight.min.js"></script>
     <!-- 统一设计系统：tokens.css 是配色唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
     <link rel="stylesheet" href="/shared/ui-kit/tokens.css">
     <script src="/shared/config/services.js"></script>
@@ -620,7 +616,94 @@
             color: var(--text-secondary);
             margin-top: 6px;
         }
+
+        /* ── 依赖健康横幅：/health 现在会如实报 degraded，页面必须显出来，
+              否则又是「绿点说在线、核心功能全废」 ── */
+        .health-bar {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        .health-bar[data-state="ok"] { border-color: var(--success); }
+        .health-bar[data-state="degraded"] { border-color: var(--warning); }
+        .health-bar[data-state="core_blocked"] { border-color: var(--danger); }
+        .health-dot {
+            width: 9px; height: 9px; border-radius: 50%;
+            margin-top: 5px; flex: 0 0 auto;
+            background: var(--text-secondary);
+        }
+        .health-bar[data-state="ok"] .health-dot { background: var(--success); }
+        .health-bar[data-state="degraded"] .health-dot { background: var(--warning); }
+        .health-bar[data-state="core_blocked"] .health-dot { background: var(--danger); }
+        .health-deps { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .health-dep {
+            font-size: 11px; padding: 2px 8px; border-radius: 999px;
+            border: 1px solid var(--border); color: var(--text-secondary);
+        }
+        .health-dep.on { border-color: var(--success); color: var(--success); }
+        .health-dep.off { border-color: var(--danger); color: var(--danger); }
+
+        /* ── 切片预览 ── */
+        .btn-preview {
+            padding: 4px 10px; font-size: 12px; border-radius: 6px;
+            border: 1px solid var(--primary); background: transparent;
+            color: var(--primary); cursor: pointer; margin-right: 6px;
+        }
+        .btn-preview:hover { background: var(--primary); color: #FFFFFF; }
+        .preview-note {
+            font-size: 12px; color: var(--text-secondary);
+            padding: 8px 10px; border-left: 3px solid var(--primary);
+            background: var(--bg); border-radius: 0 6px 6px 0; margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .preview-note.warn { border-left-color: var(--warning); }
+        .chunk-card {
+            border: 1px solid var(--border); border-radius: 8px;
+            padding: 12px 14px; margin-bottom: 10px; background: var(--surface);
+        }
+        .chunk-head {
+            display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+            font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;
+        }
+        .chunk-idx { color: var(--primary); font-weight: 600; }
+        .chunk-title { color: var(--text); font-weight: 500; }
+        .chunk-body {
+            font-size: 13px; line-height: 1.7; color: var(--text);
+            white-space: pre-wrap; word-break: break-word;
+            max-height: 220px; overflow: auto;
+        }
+        .preview-pager { display: flex; gap: 8px; align-items: center; margin-top: 10px; font-size: 12px; }
+
+        /* 窄屏适配：原先 .sidebar 是 position:fixed + 240px，.main 又 margin-left:240px + padding:32px，
+           在 318px 视口下正文只剩 14px 可用宽（实测页面横向溢出 173px）。改为侧栏变顶部横向导航。 */
+        @media (max-width: 860px) {
+            /* .layout 原本是 flex（侧栏 position:fixed 时不参与排版）；侧栏改成 static 后必须换成纵向堆叠，
+               否则侧栏与正文并排，正文会从 x=视口宽 处起步 */
+            .layout { display: block; }
+            .sidebar {
+                position: static;
+                width: auto;
+                height: auto;
+                padding: 12px 0;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                overflow-y: visible;
+            }
+            .sidebar-header { display: flex; align-items: center; gap: 10px; padding: 0 16px 10px; }
+            .nav-menu { display: flex; gap: 6px; padding: 0 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100vw; }
+            .nav-item { flex: 0 0 auto; margin-bottom: 0; white-space: nowrap; padding: 8px 12px; }
+            .main { margin-left: 0; padding: 16px; max-width: 100vw; }
+        }
     </style>
+<link rel="icon" type="image/svg+xml" href="/shared/ui-kit/favicon.svg">
 </head>
 <body class="cp-app" data-cp-module="p04" data-cp-brand-src="/shared/config/brand.json">
 
@@ -679,6 +762,17 @@
     
     <!-- 主内容 -->
     <main class="main">
+        <!-- 依赖健康横幅：/health 现在如实探测 Milvus / MongoDB / MinIO / 嵌入模型 / LLM 凭据。
+             以前这里什么都看不出来 —— 接口回 {"ok":true}，而问答实际全失败。 -->
+        <div class="health-bar" id="healthBar" data-state="unknown">
+            <span class="health-dot"></span>
+            <div style="flex:1;">
+                <div id="healthSummary">正在检查依赖状态…</div>
+                <div class="health-deps" id="healthDeps"></div>
+            </div>
+            <button class="btn-ghost" type="button" onclick="refreshHealth()">重新检查</button>
+        </div>
+
         <!-- 上传导入 -->
         <div class="tab-panel active" id="tab-upload">
             <div class="page-header">
@@ -733,12 +827,26 @@
                             <th>主体名称</th>
                             <th>创建时间</th>
                             <th>状态</th>
-                            <th style="width:88px;">操作</th>
+                            <th style="width:150px;">操作</th>
                         </tr>
                     </thead>
                     <tbody id="docTableBody"></tbody>
                 </table>
-                
+
+                <!-- 切片预览：GET /documents/{id}/preview 返回该文档的 chunk 列表（分页）。
+                     PDF/DOCX 以前必定 500（按 utf-8 整份读二进制），现在读的是切片。 -->
+                <div id="previewPanel" hidden>
+                    <div class="section-title" id="previewTitle">切片预览</div>
+                    <div class="preview-note" id="previewNote"></div>
+                    <div id="previewList"></div>
+                    <div class="preview-pager">
+                        <button class="btn-preview" type="button" onclick="previewPrev()">上一批</button>
+                        <button class="btn-preview" type="button" onclick="previewNext()">下一批</button>
+                        <span id="previewPos"></span>
+                        <button class="btn-ghost" type="button" onclick="closePreview()">收起</button>
+                    </div>
+                </div>
+
                 <div class="section-title">全部导入任务</div>
                 <table>
                     <thead>
@@ -964,7 +1072,7 @@
                 datasets: [{
                     label: '上传数量',
                     data: data,
-                    borderColor: '#3370FF',
+                    borderColor: '#1D4ED8',
                     backgroundColor: 'rgba(51,112,255,0.15)',
                     tension: 0.4,
                     fill: true
@@ -1242,6 +1350,27 @@
         }
     }
     
+    // 文档搜索：GET /search?keyword= 这个接口一直有，但「搜索」按钮从没接上函数
+    // （onclick 指向未定义的 searchDocuments，点一下就是 ReferenceError）。这里补上。
+    async function searchDocuments() {
+        const kw = (document.getElementById('docSearchInput').value || '').trim();
+        if (!kw) { refreshDocs(); return; }
+        try {
+            const res = await fetch('/search?keyword=' + encodeURIComponent(kw) + '&owner=public');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            const docs = data.documents || [];
+            renderDocTable(docs);
+            const note = document.getElementById('docStatsNote');
+            if (note) {
+                note.textContent = '搜索「' + kw + '」命中 ' + (data.total === undefined ? docs.length : data.total)
+                    + ' 条（按文件名/主体名称匹配；清空关键词点刷新可回到全量）';
+            }
+        } catch (e) {
+            alert('搜索失败：' + e.message);
+        }
+    }
+
     // 文件名等来自上传内容，拼进 DOM 前必须转义
     function escapeHtml(text) {
         return String(text === undefined || text === null ? '' : text)
@@ -1282,6 +1411,12 @@
                 <td></td>
             `;
             const cell = tr.lastElementChild;
+            const previewBtn = document.createElement('button');
+            previewBtn.className = 'btn-preview';
+            previewBtn.type = 'button';
+            previewBtn.textContent = '预览切片';
+            previewBtn.addEventListener('click', () => openPreview(doc, previewBtn));
+            cell.appendChild(previewBtn);
             const btn = document.createElement('button');
             btn.className = 'btn-danger';
             btn.type = 'button';
@@ -1479,7 +1614,11 @@
                 settle();
             };
         } catch (e) {
-            failQA(bubble, '请求失败：' + (e.message || String(e)));
+            const raw = e && e.message ? String(e.message) : String(e);
+            // 502 时 nginx 回整页 HTML —— 不要把 HTML 原文贴进气泡（2026-10-15 实测）
+            const clean = /<\s*html|<!doctype/i.test(raw)
+                ? '服务暂时不可用（后端进程未启动或正在重启）' : raw;
+            failQA(bubble, '请求失败：' + clean);
             collapseQAProgress(bubble);
             settle();
         }
@@ -1590,6 +1729,139 @@
         } catch (e) { console.warn('清空服务端历史失败', e); }
         qaThread.innerHTML = QA_WELCOME_HTML;
     }
+
+    // ── 切片预览（文档管理 Tab）──
+    // 接口只返回切片（chunk），offset/limit 分页；PDF/DOCX 以前按 utf-8 读原始二进制必 500。
+    let previewDoc = null;
+    let previewOffset = 0;
+    let previewTotal = 0;   // 该文档的切片总数（renderPreview 回填，用于翻页封顶）
+    const PREVIEW_LIMIT = 5;
+
+    async function openPreview(doc, btn) {
+        previewDoc = doc;
+        previewOffset = 0;
+        document.getElementById('previewPanel').hidden = false;
+        if (btn) btn.disabled = true;
+        await loadPreview();
+        if (btn) btn.disabled = false;
+        document.getElementById('previewPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    async function loadPreview() {
+        if (!previewDoc) return;
+        const note = document.getElementById('previewNote');
+        const list = document.getElementById('previewList');
+        document.getElementById('previewTitle').textContent =
+            '切片预览 · ' + (previewDoc.filename || '') + '（Mongo 记录的切片数：'
+            + (previewDoc.chunk_count === undefined || previewDoc.chunk_count === null ? '未知' : previewDoc.chunk_count) + '）';
+        note.className = 'preview-note';
+        note.textContent = '正在读取切片…';
+        list.innerHTML = '';
+        try {
+            const res = await fetch('/documents/' + encodeURIComponent(previewDoc.task_id)
+                + '/preview?offset=' + previewOffset + '&limit=' + PREVIEW_LIMIT);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            renderPreview(data);
+        } catch (e) {
+            note.classList.add('warn');
+            note.textContent = '切片预览失败：' + e.message
+                + '（接口 GET /documents/{task_id}/preview；向量库离线时会退回本地切分备份，仍失败说明该文档没有可读切片）';
+            document.getElementById('previewPos').textContent = '';
+        }
+    }
+
+    function renderPreview(data) {
+        const note = document.getElementById('previewNote');
+        const list = document.getElementById('previewList');
+        const total = data.total_chunks || 0;
+        previewTotal = total;   // 回填总数，供「下一批」封顶判断
+
+        const sourceLabel = {
+            milvus: '数据源：Milvus 向量库（与检索问答同一口径）',
+            local_chunks_backup: '数据源：本地切分备份 chunks.json（切分节点的落盘结果，未经向量库回读校验）',
+            raw_text: '数据源：原始文本文件（该文档只有原文，没有可读取的切片）',
+            none: '数据源：无（没有任何切片可预览）'
+        }[data.chunk_source] || ('数据源：' + data.chunk_source);
+
+        note.className = 'preview-note' + (data.chunk_source === 'milvus' ? '' : ' warn');
+        note.textContent = sourceLabel
+            + (data.source_detail ? ' · ' + data.source_detail : '')
+            + (data.degraded_reason ? ' · ' + data.degraded_reason : '')
+            + ' · 向量库离线属本机现状（/health 已如实标注 degraded），预览功能本身可用。';
+
+        if (total === 0) {
+            list.innerHTML = '<div class="note">无可预览切片。</div>';
+            document.getElementById('previewPos').textContent = '共 0 块';
+            return;
+        }
+
+        list.innerHTML = (data.chunks || []).map(c => `
+            <div class="chunk-card">
+                <div class="chunk-head">
+                    <span class="chunk-idx">第 ${escapeHtml(c.chunk_no)} / ${total} 块</span>
+                    <span class="chunk-title">${escapeHtml(c.title || c.parent_title || '（无标题）')}</span>
+                    <span>${escapeHtml(c.char_count || 0)} 字</span>
+                    ${c.chunk_id ? '<span>chunk_id ' + escapeHtml(c.chunk_id) + '</span>' : '<span>无 chunk_id（备份来源）</span>'}
+                    ${c.item_name ? '<span>主体 ' + escapeHtml(c.item_name) + '</span>' : ''}
+                </div>
+                <div class="chunk-body">${escapeHtml(c.content || '')}</div>
+            </div>`).join('');
+
+        const start = (data.offset || 0) + 1;
+        document.getElementById('previewPos').textContent =
+            '共 ' + total + ' 块，当前第 ' + start + '~' + ((data.offset || 0) + (data.returned || 0)) + ' 块';
+    }
+
+    function previewPrev() {
+        if (!previewDoc) return;
+        previewOffset = Math.max(0, previewOffset - PREVIEW_LIMIT);
+        loadPreview();
+    }
+
+    function previewNext() {
+        if (!previewDoc) return;
+        // 到边界不再翻页（此前 1 块文档点「下一批」会显示「共 1 块，当前第 6~5 块」且列表空白）
+        if (previewTotal > 0 && previewOffset + PREVIEW_LIMIT >= previewTotal) return;
+        previewOffset += PREVIEW_LIMIT;
+        loadPreview();
+    }
+
+    function closePreview() {
+        previewDoc = null;
+        document.getElementById('previewPanel').hidden = true;
+    }
+
+    // ── 依赖健康横幅 ──
+    // /health 不再无条件返回 {"ok":true}：它会真去 TCP 探测 Milvus / MongoDB / MinIO，
+    // 并检查本地嵌入模型目录与 LLM 凭据。缺硬依赖时 query_ready=false，问答链路是跑不通的，
+    // 页面上必须让人看见，而不是等 POST /query 失败才发现。
+    async function refreshHealth() {
+        const bar = document.getElementById('healthBar');
+        const summary = document.getElementById('healthSummary');
+        const depsBox = document.getElementById('healthDeps');
+        try {
+            const res = await fetch('/health');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            const state = data.status === 'ok' ? 'ok' : (data.impact === 'core_blocked' ? 'core_blocked' : 'degraded');
+            bar.dataset.state = state;
+            const prefix = state === 'ok' ? '依赖正常：' : (state === 'core_blocked' ? '核心链路受阻：' : '部分依赖离线：');
+            summary.textContent = prefix + (data.conclusion || '')
+                + '（检索问答' + (data.query_ready ? '可用' : '当前不可用') + '）';
+            depsBox.innerHTML = (data.dependencies || []).map(d =>
+                '<span class="health-dep ' + (d.available ? 'on' : 'off') + '" title="'
+                + escapeHtml((d.endpoint || '') + (d.error ? ' · ' + d.error : '')) + '">'
+                + escapeHtml(d.name) + '：' + (d.available ? '在线' : '离线')
+                + (d.required_for_query ? ' · 硬依赖' : '') + '</span>').join('');
+        } catch (e) {
+            bar.dataset.state = 'core_blocked';
+            summary.textContent = '健康检查失败：' + e.message + '（无法确认依赖状态，不按「正常」显示）';
+            depsBox.innerHTML = '';
+        }
+    }
+
+    refreshHealth();
 
 </script>
 

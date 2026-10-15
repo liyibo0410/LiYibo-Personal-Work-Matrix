@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>首页与全平台改版效果 · 2026-10-15</title>
+<style>
+  :root{
+    --ink:#0E1526; --ink2:#46536B; --ink3:#6B7787;
+    --bg:#F4F6FA; --surface:#fff; --line:#D7DEEA;
+    --brand:#1D4ED8; --brand-bg:#E4EAFB; --brand-hv:#1A45BF;
+    --warn:#B4690E; --warn-bg:#FFF4E5; --bad:#B42318; --bad-bg:#FEECEB;
+    --ok:#16A34A; --ok-bg:#E7F6EC;
+    --mono:ui-monospace,"Cascadia Mono",Consolas,"SFMono-Regular",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 24px 96px}
+  header{border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:36px}
+  h1{font-size:30px;letter-spacing:-.5px;margin:0 0 8px}
+  .sub{color:var(--ink2);margin:0}
+  h2{font-size:20px;margin:56px 0 6px;padding-top:20px;border-top:2px solid var(--brand)}
+  h2 span{font-family:var(--mono);font-size:12px;color:#fff;background:var(--brand);
+    border-radius:99px;padding:2px 9px;margin-right:10px;vertical-align:3px}
+  h3{font-size:15px;margin:26px 0 8px;color:var(--ink)}
+  p{color:var(--ink2)}
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(420px,1fr))}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:16px 16px 12px;box-shadow:0 1px 2px rgba(14,21,38,.04)}
+  .card img{width:100%;display:block;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .cap{font-family:var(--mono);font-size:12px;color:var(--ink3);margin:10px 0 0}
+  .cap b{color:var(--brand);font-weight:600}
+  table{width:100%;border-collapse:collapse;background:var(--surface);
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+  th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:#EEF1F6;font-weight:600;font-size:13px;color:var(--ink2)}
+  tr:last-child td{border-bottom:0}
+  code{font-family:var(--mono);font-size:13px;background:var(--brand-bg);
+    color:var(--brand);padding:1px 6px;border-radius:5px}
+  .pill{display:inline-block;font-family:var(--mono);font-size:12px;border-radius:99px;
+    padding:2px 10px;background:var(--ok-bg);color:var(--ok);border:1px solid #B7E3C6}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border-color:#F5D9AE}
+  .pill.bad{background:var(--bad-bg);color:var(--bad);border-color:#F5C2C0}
+  .note{border-left:3px solid var(--brand);background:var(--brand-bg);
+    padding:12px 16px;border-radius:0 10px 10px 0;margin:18px 0;color:var(--ink)}
+  .note.warn{border-color:var(--warn);background:var(--warn-bg)}
+  .note.bad{border-color:var(--bad);background:var(--bad-bg)}
+  .swatches{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+  .sw{width:150px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+  .sw i{display:block;height:56px}
+  .sw div{font-family:var(--mono);font-size:11px;color:var(--ink3);padding:7px 9px;line-height:1.5}
+  .sw b{display:block;color:var(--ink);font-size:13px}
+  ol.tl{list-style:none;margin:14px 0 0;padding:0}
+  ol.tl li{position:relative;padding:0 0 16px 26px;border-left:2px solid var(--line);
+    margin-left:8px;color:var(--ink2);font-size:14px}
+  ol.tl li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;
+    border-radius:50%;background:var(--brand);border:2px solid #fff}
+  ol.tl li.bad::before{background:var(--bad)}
+  ol.tl time{font-family:var(--mono);font-size:12px;color:var(--ink3);margin-right:8px}
+  .kvs{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:16px 0}
+  .kv{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .kv b{display:block;font-family:var(--mono);font-size:22px;color:var(--brand);
+    font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+  .kv span{font-size:12px;color:var(--ink3)}
+  footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--ink3)}
+  @media (max-width:760px){.g2{grid-template-columns:1fr}.wrap{padding:32px 16px 64px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>首页与全平台改版效果 · 一版给你看</h1>
+  <p class="sub">2026-10-15 · OpenCode · 四项要求：① 换 Navy Steel　② 十个模块统一到这个蓝　③ 顶部文本图标换 SVG　⑤ 加动效 + 简历区完整排版（技术栈小块带动效）</p>
+</header>
+
+<h2><span>01</span>Navy Steel 配色</h2>
+<div class="swatches">
+  <div class="sw"><i style="background:#1D4ED8"></i><div><b>#1D4ED8</b>brand · 浅色<br>白底 6.70:1</div></div>
+  <div class="sw"><i style="background:#5B8DEF"></i><div><b>#5B8DEF</b>brand · 深色<br>深底 ≈6.0:1</div></div>
+  <div class="sw"><i style="background:#1A45BF"></i><div><b>#1A45BF</b>hover · 浅色</div></div>
+  <div class="sw"><i style="background:#E4EAFB;border-bottom:1px solid #DDE2EA"></i><div><b>#E4EAFB</b>brand-bg · 弱底</div></div>
+  <div class="sw"><i style="background:#6B7787"></i><div><b>#6B7787</b>ink3 · 弱文本<br>原 2.77:1 → 5.1:1</div></div>
+</div>
+<div class="note">
+  原强调色 <code>#3370FF</code> 对白底只有 <b>4.28:1</b>，不满足 WCAG AA 正文门槛；换 <code>#1D4ED8</code> 后
+  <b>6.70:1</b>（白字压在它上面同样是 6.70:1）。这次不是「换个好看的颜色」，是把不达标的蓝顺手修成达标的蓝。
+</div>
+
+<h2><span>02</span>十个模块是否统一？—— 15 个入口逐一读 <code>--cp-brand</code> 计算值</h2>
+<table>
+  <tr><th>入口</th><th>状态</th><th>--cp-brand</th><th>--cp-ink3</th></tr>
+  <tr><td>shell 外壳 8800</td><td>complete</td><td><code>#1D4ED8</code></td><td><code>#6B7787</code></td></tr>
+  <tr><td>P01 客服前端 5173</td><td>complete</td><td><code>#1D4ED8</code></td><td><code>#6B7787</code></td></tr>
+  <tr><td>P02 运营前端 3001</td><td>complete</td><td><code>#1d4ed8</code></td><td><code>#6b7787</code></td></tr>
+  <tr><td>P03 问数前端 5174</td><td>complete</td><td><code>#1D4ED8</code></td><td><code>#6B7787</code></td></tr>
+  <tr><td>P04 / P05 / P06 / P07 / P08 / P09 / P10</td><td>complete</td><td><code>#1D4ED8</code></td><td><code>#6B7787</code></td></tr>
+</table>
+<p><span class="pill">11 / 11 已统一</span>　<span class="pill">0 个仍是旧蓝</span>
+第一轮只有 <b>P02</b> 还是旧蓝 —— 它用的是自己那份「构建期令牌副本」（ADR-0005），已把副本一并对齐，dev server 热重载后复测通过。</p>
+
+<h3>改了什么</h3>
+<table>
+  <tr><th>范围</th><th>文件</th><th>改动</th></tr>
+  <tr><td>共享令牌</td><td><code>shared/ui-kit/tokens.css</code></td><td>brand 家族浅/深色 + <code>--cp-chart-1</code> + 弱文本 <code>ink3</code></td></tr>
+  <tr><td>P02 构建期副本</td><td><code>p02/web/src/app/tokens.css</code></td><td>与共享令牌镜像对齐（6 条，带命中数断言）</td></tr>
+  <tr><td>各模块图表/回退色</td><td>13 个前端文件</td><td><b>34 处</b> <code>#3370FF</code> → <code>#1D4ED8</code>，另有 <b>10 处</b> <code>rgba(51,112,255,…)</code> → <code>rgba(29,78,216,…)</code></td></tr>
+  <tr><td>界面可见的品牌色</td><td>P09 头像色、P07 生成卡底色 / 种子数据</td><td>各 1 处</td></tr>
+</table>
+
+<div class="grid g2">
+  <div class="card">
+    <img src="navy-p06.png" alt="P06 数据中台">
+    <p class="cap"><b>P06 数据中台</b> · 侧栏选中态与品牌蓝（运行时读共享令牌，改完即生效）</p>
+  </div>
+  <div class="card">
+    <img src="navy-p09-new.png" alt="P09 销售考核">
+    <p class="cap"><b>P09 销售考核</b> · 图表线/散点/雷达已从 <code>#3370FF</code> 换到 <code>#1D4ED8</code></p>
+  </div>
+  <div class="card">
+    <img src="navy-p04.png" alt="P04 知识库">
+    <p class="cap"><b>P04 知识库</b> · 气泡与主色走 <code>var(--cp-brand)</code> 回退值</p>
+  </div>
+  <div class="card">
+    <img src="navy-p02-new.png" alt="P02 运营前端">
+    <p class="cap"><b>P02 运营前端</b> · 对齐副本令牌后的登录页（改前为旧蓝）</p>
+  </div>
+</div>
+
+<div class="note warn">
+<b>刻意没动的</b>：P03 的 <code>test/*.html</code> 内部测试页、P07 测试自造图片的底色（与断言无关）、
+README / GitHub banner / 幻灯片 / <code>_evidence/</code> 里的历史记录 —— 前两者不是给用户看的界面，后几者属于历史留痕，不该改写。
+</div>
+
+<h2><span>03</span>顶部图标：文本符号 → SVG</h2>
+<div class="grid g2">
+  <div class="card">
+    <img src="home-v3-top.png" alt="外壳首屏 · 浅色">
+    <p class="cap"><b>浅色</b> · 右上角主题切换已是内联 SVG（对比度半圆）；另 3 个按钮（菜单/退出/游客态主题）同样是 18px、<code>stroke=currentColor</code> 的 SVG，并补了 <code>aria-label</code>。</p>
+  </div>
+  <div class="card">
+    <img src="home-v3-dark-top.png" alt="外壳首屏 · 深色">
+    <p class="cap"><b>深色</b> · <code>theme=dark</code>、<code>--cp-brand=#5B8DEF</code>（CDP 实测）</p>
+  </div>
+</div>
+<p>原先的 <code>☰ ◐ ⎋</code> 是文字符号，换字体/缩放时宽高不可控，也没法跟随颜色系统；SVG 用 <code>currentColor</code> 后自动继承主题色。</p>
+
+<h2><span>04</span>动效细节层</h2>
+<div class="kvs">
+  <div class="kv"><b>40</b><span>滚动入场元素（进场错峰 60ms/组）</span></div>
+  <div class="kv"><b>37</b><span>技术栈小块 · 滚动后 37/37 弹入</span></div>
+  <div class="kv"><b>5</b><span>count-up 触发的纯整数指标</span></div>
+  <div class="kv"><b>0</b><span>JS 运行期异常条数</span></div>
+</div>
+<div class="note">
+<b>按 <code>prefers-reduced-motion</code> 分档，两种状态都实测过：</b><br>
+· 本机无头浏览器上报 <code>reduce=true</code> → 40/40 元素<b>立即静止显示</b>、count-up 跳过（无障碍路径正确）；<br>
+· 用 CDP 强制 <code>no-preference</code> → <code>statsCounted=5</code>、滚动到简历区后 <code>chipIn=37/37</code>、JS 异常 0 条（动效路径正确）。
+</div>
+<div class="grid g2">
+  <div class="card">
+    <img src="anim-mid.png" alt="动效进行中">
+    <p class="cap"><b>t=0.35s</b> · 允许动效时，指标数字正在 count-up、入场元素逐个亮起</p>
+  </div>
+  <div class="card">
+    <img src="anim-resume.png" alt="滚动到简历区">
+    <p class="cap"><b>滚动到简历区</b> · 技术栈小块错峰弹入完成（37/37）</p>
+  </div>
+</div>
+
+<h2><span>05</span>简历区：完整信息 + 技术栈小块（<span class="pill bad">被并行角色删掉 4 次</span>）</h2>
+<div class="note bad">
+<b>先说结论：这一项我现在<b>没有</b>留在页面上。</b>
+<code>shell/index.html</code> 同时被另一个 AI 角色编辑，我补回去的「作者简历」整段（标记 + 样式 + 小块脚本）被对方的写入覆盖了 4 次。
+按「不越界干扰其他软件工作」的约定，我停止了重补，把状态如实交给你决定。
+</div>
+<ol class="tl">
+  <li><time>11:0x</time>第一版简历标记 + CSS 写入，随后被覆盖（样式仍在、标记消失）</li>
+  <li><time>11:2x</time>补回整段，取证通过（923KB 整页图），结构校验 0 错误</li>
+  <li><time>11:37</time>第二次补回 + 截图，<code>home-v3</code> 之前的 <code>hrv-*</code> 系列即这版</li>
+  <li class="bad"><time>11:44:32</time>对方重写文件，把<b>标记、导航「简历」链接、简历样式、技术栈小块脚本</b>一并移除（88,417 → 83,981 字节）</li>
+  <li><time>之后</time>我只做取证，未再重补 —— 避免和对方互相覆盖</li>
+</ol>
+<div class="card" style="margin-top:18px">
+  <img src="hrv-resume-light.png" alt="简历区效果">
+  <p class="cap"><b>当时的效果</b> · 左卡（姓名/职位/4 个摘要小条/联系方式/简历 PDF 两个按钮）＋ 右侧技术栈关键词 37 个小块、核心技术能力 5 条、项目经验 3 条带指标小块、教育背景</p>
+</div>
+
+<h2><span>06</span>待你拍板</h2>
+<table>
+  <tr><th>#</th><th>事项</th><th>代价 / 风险</th></tr>
+  <tr><td>A</td><td>谁来维护 <code>shell/index.html</code> —— 由我把简历区第 5 次补回，还是请对方停手</td><td>不约定就会一直互相覆盖</td></tr>
+  <tr><td>B</td><td>动效是否再加「数字滚动 + 卡片 hover 抬升」以外的东西（视差 / 入场波次）</td><td>加得越多越吃性能，也越偏离「不大改」</td></tr>
+  <tr><td>C</td><td>本次改动是否 git commit（目前<b>全部未提交</b>）</td><td>提交会和 workbuddy / Qoder 的改动搅在一起</td></tr>
+</table>
+
+<footer>
+  取证：无头 Edge + CDP（<code>_tools/shot.py</code>），断言脚本 <code>probe_all_brand.py</code> / <code>anim_check.py</code>。
+  本页图片均为本机 <code>127.0.0.1:8800</code> 实拍，未做任何后期。
+</footer>
+
+</div>
+</body>
+</html>

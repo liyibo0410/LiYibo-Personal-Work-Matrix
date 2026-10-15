@@ -8,8 +8,9 @@
      才注入脚本，避免 1MB 全量包阻塞首屏解析与渲染（实测为最大单一阻塞项）。见 ensureEcharts()。 -->
 <!-- 统一设计系统：tokens.css 是配色/间距/字体唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
 <link rel="stylesheet" href="/shared/ui-kit/tokens.css">
-<script src="/shared/config/services.js"></script>
-<script src="/shared/ui-kit/ui-kit.js"></script>
+<!-- 设计系统脚本非首屏必需，加 defer 转非阻塞，HTML 解析完后按序执行 -->
+<script defer src="/shared/config/services.js"></script>
+<script defer src="/shared/ui-kit/ui-kit.js"></script>
 <style>
 /* ── Reset & Base ─────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -64,6 +65,19 @@ a:hover{color:var(--accent-hover)}
 .grid-5{grid-template-columns:repeat(5,1fr)}
 @media(max-width:1200px){.grid-4,.grid-5{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:800px){.grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr}}
+/* 窄屏（手机）：原先只有网格断点，侧栏仍是 position:fixed + 220px、.main 仍 margin-left:220px，
+   实测 318px 视口下内容溢出 186px；而 body 上有 overflow-x:hidden，多出来的部分是被裁掉且无法横滚看到的。
+   这里把侧栏转成顶部横滑导航（不是隐藏掉——那样手机上就没有导航了），并让表格自身可横滚。 */
+@media(max-width:800px){
+  .app{display:block}
+  .sidebar{position:static;width:auto;height:auto;top:auto;bottom:auto;left:auto;border-right:none;border-bottom:1px solid var(--border);padding:0}
+  .sidebar-header{padding:14px 16px 10px;border-bottom:none}
+  .sidebar-nav{display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto;max-width:100vw;-webkit-overflow-scrolling:touch}
+  .nav-item{flex:0 0 auto;margin-bottom:0;white-space:nowrap}
+  .sidebar-footer{display:none}
+  .main{margin-left:0;padding:16px;min-width:0;max-width:100vw}
+  .data-table{display:block;overflow-x:auto}
+}
 
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px}
 .stat-card .label{font-size:12px;color:var(--text3);margin-bottom:6px}
@@ -134,6 +148,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .toast-info{background:var(--accent);color:#fff}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 </style>
+<link rel="icon" type="image/svg+xml" href="/shared/ui-kit/favicon.svg">
 </head>
 <body class="cp-app" data-cp-module="p06" data-cp-brand-src="/shared/config/brand.json">
 <div class="app">
@@ -410,10 +425,17 @@ function fmtPct(n) {
   return (n * 100).toFixed(2) + '%';
 }
 
-function trendHtml(v) {
+// 指标极性：后端 METRIC_REGISTRY（app/metrics.py）只有 name/key/unit，没有方向字段，
+// 所以「越低越好」的清单先落在前端。原先配色只看正负号，导致「退货率 ▲53.67%」显示成绿色。
+// 新增负向指标时必须同步这个集合，否则涨跌配色仍然是反的。
+const LOWER_IS_BETTER = new Set(['退货率']);
+
+function trendHtml(v, name) {
   if (v == null || v === 0) return '<span style="color:var(--text3)">-</span>';
-  const cls = v > 0 ? 'trend-up' : 'trend-down';
-  const arrow = v > 0 ? '&#9650;' : '&#9660;';
+  const rising = v > 0;
+  const good = LOWER_IS_BETTER.has(name) ? !rising : rising;
+  const cls = good ? 'trend-up' : 'trend-down';
+  const arrow = rising ? '&#9650;' : '&#9660;';
   return `<span class="${cls}">${arrow} ${fmtPct(Math.abs(v))}</span>`;
 }
 
@@ -442,7 +464,7 @@ async function loadDashboard() {
     `;
 
     // Layers
-    const layerColors = { ODS: '#3370FF', DWD: '#16A34A', DWS: '#B4690E', ADS: '#7B5CFA' };
+    const layerColors = { ODS: '#1D4ED8', DWD: '#16A34A', DWS: '#B4690E', ADS: '#7B5CFA' };
     const layerNames = { ODS: '原始层 ODS', DWD: '明细层 DWD', DWS: '汇总层 DWS', ADS: '应用层 ADS' };
     document.getElementById('dash-layers').innerHTML = Object.entries(data.layers).map(([k, v]) =>
       `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
@@ -457,7 +479,7 @@ async function loadDashboard() {
       `<div class="stat-card">
         <div class="label">${m.name}</div>
         <div class="value" style="font-size:20px">${m.unit === '%' ? fmtPct(m.latest) : fmtNum(m.latest)}</div>
-        <div class="trend">${trendHtml(m.trend)}</div>
+        <div class="trend">${trendHtml(m.trend, m.name)}</div>
       </div>`
     ).join('');
 
@@ -596,7 +618,9 @@ async function queryMetric() {
       { label: '平均值', value: unit === '%' ? fmtPct(s.avg) : fmtNum(s.avg) },
       { label: '最大值', value: unit === '%' ? fmtPct(s.max) : fmtNum(s.max) },
       { label: '最小值', value: unit === '%' ? fmtPct(s.min) : fmtNum(s.min) },
-    ].map(c => `<div class="stat-card"><div class="label">${c.label}</div><div class="value" style="font-size:20px">${c.value}</div></div>`).join('');
+    ].map(c => `<div class="stat-card"><div class="label">${c.label}</div><div class="value" style="font-size:20px">${c.value}</div></div>`).join('')
+      // 2026-10-15（D2）：口径此前只在接口里，页面不展示 —— 补一行说明
+      + `<div style="grid-column:1/-1;font-size:12px;color:var(--text3)">口径：${data.metric.description || '未提供'}（单位 ${unit || '-'}）</div>`;
 
     // Chart
     renderMetricChart(data);
@@ -605,8 +629,40 @@ async function queryMetric() {
   }
 }
 
-function renderMetricChart(data) {
+// echarts 懒加载：仅在指标图表真正要渲染时才注入脚本，首屏不再下载 1MB 全量包。
+let _echartsLoading = null;
+function ensureEcharts() {
+  if (window.echarts) return Promise.resolve(window.echarts);
+  if (_echartsLoading) return _echartsLoading;
+  _echartsLoading = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = '/shared/vendor/echarts.min.js';
+    s.async = true;
+    s.onload = () => (window.echarts ? resolve(window.echarts) : reject(new Error('echarts 未定义')));
+    s.onerror = () => reject(new Error('echarts.min.js 加载失败（网络/隧道）'));
+    document.head.appendChild(s);
+  });
+  return _echartsLoading;
+}
+
+async function renderMetricChart(data) {
   const container = document.getElementById('metric-chart');
+  // 2026-10-15（D3）：echarts 懒加载（约 1MB）期间先给占位，别让首查的图区空白一片。
+  if (!window.echarts && !document.getElementById('metric-chart-placeholder')) {
+    const ph = document.createElement('div');
+    ph.id = 'metric-chart-placeholder';
+    ph.style.cssText = 'display:flex;align-items:center;justify-content:center;height:100%;color:#8A94A6;font-size:13px';
+    ph.textContent = '图表加载中…（首次加载 echarts 约 1MB）';
+    container.appendChild(ph);
+  }
+  try {
+    await ensureEcharts();
+  } catch (e) {
+    toast('图表库加载失败: ' + e.message, 'error');
+    return;
+  }
+  const ph2 = document.getElementById('metric-chart-placeholder');
+  if (ph2) { ph2.remove(); }
   if (!metricChart) {
     metricChart = echarts.init(container, null);
     window.addEventListener('resize', () => metricChart.resize());
@@ -643,7 +699,7 @@ function renderMetricChart(data) {
     },
     series: [{
       type: 'line', data: values, smooth: true, symbol: 'none',
-      lineStyle: { color: '#3370FF', width: 2 },
+      lineStyle: { color: '#1D4ED8', width: 2 },
       areaStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
           { offset: 0, color: 'rgba(51,112,255,0.3)' },
@@ -716,7 +772,7 @@ async function loadLineage() {
 function renderLineageSVG(data) {
   const svg = document.getElementById('lineage-svg');
   const layerX = { ODS: 80, DWD: 300, DWS: 520, ADS: 740 };
-  const layerColors = { ODS: '#3370FF', DWD: '#16A34A', DWS: '#B4690E', ADS: '#7B5CFA' };
+  const layerColors = { ODS: '#1D4ED8', DWD: '#16A34A', DWS: '#B4690E', ADS: '#7B5CFA' };
 
   // Group nodes by layer
   const layerNodes = { ODS: [], DWD: [], DWS: [], ADS: [] };

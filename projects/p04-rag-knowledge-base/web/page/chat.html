@@ -9,14 +9,14 @@
   <script src="/shared/config/services.js"></script>
   <script src="/shared/ui-kit/ui-kit.js"></script>
   <!-- Markdown 渲染 -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <!-- 代码高亮 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/bash.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/json.min.js"></script>
+  <!-- 第三方库一律走本机 /shared/vendor：外链 CDN 实测首屏要等 3~9 秒，断网即白屏 -->
+  <script src="/shared/vendor/marked.min.js"></script>
+  <!-- 代码高亮：CSS 改为非渲染阻塞（media=print 加载完切回 all），JS 加 defer；
+       二者都非首屏必需，且有 typeof hljs 守卫，延迟加载不影响功能，仅首屏更快。
+       注：marked（Markdown）与 ui-kit 维持解析阻塞，因其首屏即被使用且体积极小。 -->
+  <link rel="stylesheet" href="/shared/vendor/highlight/github-dark.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/shared/vendor/highlight/github-dark.min.css"></noscript>
+  <script src="/shared/vendor/highlight/highlight.min.js" defer></script>
   <style>
     :root{
       --bg:var(--cp-bg, #F5F7FA);
@@ -25,9 +25,9 @@
       --text:var(--cp-ink1, #1A1F2B);
       --muted:var(--cp-ink2, #5A6472);
       --text-muted:var(--cp-ink3, #8A94A3);
-      --brand:var(--cp-brand, #3370FF);
-      --brand2:var(--cp-brand, #3370FF);
-      --bubble-user:var(--cp-brand, #3370FF);
+      --brand:var(--cp-brand, #1D4ED8);
+      --brand2:var(--cp-brand, #1D4ED8);
+      --bubble-user:var(--cp-brand, #1D4ED8);
       --bubble-bot:var(--cp-elevated, #EEF1F6);
       --border:var(--cp-line, #DDE2EA);
       --primary-bg:var(--cp-brand-bg, #E8F0FF);
@@ -73,13 +73,14 @@
       gap:12px;
       padding:14px 18px;
       border-bottom:1px solid var(--border);
-      background:linear-gradient(90deg, rgba(51,112,255,0.1), rgba(91,141,255,0.06));
+      /* 规范禁止渐变装饰底（02-技术规范·前端侧），改用扁平品牌弱底 */
+      background:var(--primary-bg);
     }
     .brand{
       display:flex;
       align-items:center;
       gap:10px;
-      min-width:240px;
+      min-width:0;
     }
     .logo{
       width:36px;height:36px;border-radius:10px;
@@ -105,6 +106,12 @@
       padding:6px 10px;
       border-radius:999px;
       background:var(--panel);
+    }
+    /* 依赖降级（例如向量库没起、问答链路实际不可用）必须显出来，不能只报「已连接」 */
+    .pill-warn{
+      color:var(--danger);
+      border-color:var(--danger);
+      background:var(--danger-bg);
     }
     .btn{
       border:none;
@@ -276,27 +283,36 @@
 
     .answer-images{
       margin-top:10px;
-      display:flex;
-      flex-direction:column;
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
       gap:10px;
     }
-    .answer-images img{
-      display: block;
-      max-width: min(100%, 600px);
-      max-height: 600px;
-      width: auto;
-      height: auto;
-      border-radius:12px;
-      border:1px solid var(--border);
-      box-shadow:0 10px 24px rgba(16,24,40,0.12);
-      background:var(--panel);
-    }
-    .answer-images a{
-      font-size:12px;
-      color:var(--muted);
+    .answer-image{
+      display:block;
       text-decoration:none;
-      word-break:break-all;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:var(--panel);
+      padding:6px;
     }
+    .answer-image:hover{border-color:var(--brand);}
+    .answer-image img{
+      display:block;
+      width:100%;
+      height:110px;
+      object-fit:contain;
+      border-radius:6px;
+      background:var(--elevated);
+    }
+    .answer-image-cap{
+      display:block;
+      margin-top:4px;
+      font-size:12px;
+      line-height:1.35;
+      color:var(--muted);
+    }
+    .answer-image.is-broken img{display:none;}
+    .answer-image.is-broken .answer-image-cap{color:var(--text);}
 
     .typing{
       display:inline-flex;gap:6px;align-items:center;
@@ -365,6 +381,11 @@
     .sources-bar{margin-top:10px;padding:8px 12px;background:var(--elevated);border:1px solid var(--border);border-radius:8px;font-size:13px;}
     .sources-bar summary{cursor:pointer;font-weight:600;color:var(--brand);list-style:none;display:flex;align-items:center;gap:6px;}
     .sources-bar summary::before{content:'📄';font-size:14px;}
+    /* 拒答态：系统如实拒绝作答时给出原因与下一步，文字用 --text 保证在弱底上对比度达标，
+       琥珀色只作左边框与标签点，不承担文字色 */
+    .refusal-note{margin-top:10px;padding:8px 12px;background:var(--warning-bg);border-left:3px solid var(--warning);border-radius:6px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+    .refusal-tag{font-size:12px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:2px 10px;}
+    .refusal-tip{font-size:12.5px;color:var(--text);}
     .source-item{padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
     .source-item:last-child{border-bottom:none;}
     .source-title{color:var(--text);font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -376,7 +397,23 @@
     .feedback-btn.active-up{background:var(--success-bg);border-color:var(--success);color:var(--success);}
     .feedback-btn.active-down{background:var(--danger-bg);border-color:var(--danger);color:var(--danger);}
     .feedback-label{font-size:12px;color:var(--muted);}
+
+    /* 窄屏（手机 / 侧栏 iframe）适配：原先 .brand 写死 min-width:240px、机器人消息骨架写死
+       min-width:180px（内联样式会盖掉 .msg>div 的 min-width:0），在 ~320px 视口下会把
+       「流式输出」「李奕波个人作品矩阵」挤成逐字竖排。这里改为头部换行 + 让列宽可收缩。 */
+    @media (max-width:640px){
+      body{padding:0;align-items:stretch;height:100dvh}
+      .app{max-width:none;height:100dvh;border:none;border-radius:0;box-shadow:none}
+      .topbar{flex-wrap:wrap;gap:8px 12px;padding:10px 12px}
+      .top-actions{margin-left:0;width:100%;flex-wrap:wrap;gap:8px}
+      .chat{padding:12px 10px 8px}
+      .msg{gap:8px}
+      .avatar{width:30px;height:30px;font-size:10px;line-height:1.05;text-align:center;overflow:hidden}
+      .source-preview{max-width:100%}
+      .answer-images{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+    }
   </style>
+<link rel="icon" type="image/svg+xml" href="/shared/ui-kit/favicon.svg">
 </head>
 <body class="cp-app" data-cp-module="p04" data-cp-brand-src="/shared/config/brand.json">
   <div class="app">
@@ -582,27 +619,84 @@
         textEl.textContent = '（已完成，但未返回答案）';
         containerEl.appendChild(textEl);
       }
-      if(images && images.length > 0){
+      // 拒答时不渲染配图：image_urls 来自召回切片，既然已如实回答「文档里没有这条信息」，
+      // 再端一排图等于把证据又摆回去了，视觉上自相矛盾。
+      if(images && images.length > 0 && !detectRefusal(text)){
         const imgWrap = document.createElement('div');
         imgWrap.className = 'answer-images';
-        for(const url of images){
+        images.forEach(function(url, i){
           const safeUrl = normalizeUrl(url);
+          const fig = document.createElement('a');
+          fig.className = 'answer-image';
+          fig.href = safeUrl;
+          fig.target = '_blank';
+          fig.rel = 'noopener noreferrer';
+          fig.title = safeUrl;
           const img = document.createElement('img');
           img.loading = 'lazy';
           img.src = safeUrl;
-          img.alt = '参考图片';
+          img.alt = '参考图片 ' + (i + 1);
           img.referrerPolicy = 'no-referrer';
-          img.addEventListener('error', () => { img.style.display = 'none'; });
-          imgWrap.appendChild(img);
-          const link = document.createElement('a');
-          link.href = safeUrl;
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-          link.textContent = url;
-          imgWrap.appendChild(link);
-        }
+          const cap = document.createElement('span');
+          cap.className = 'answer-image-cap';
+          cap.textContent = '图 ' + (i + 1);
+          // 图片地址指向 MinIO（localhost:9000），换机/远程访问会取不到；
+          // 失败时不静默隐藏，改成说明文字 + 仍可点开原图，避免「答案里有图但用户什么都没看见」。
+          img.addEventListener('error', () => {
+            fig.classList.add('is-broken');
+            cap.textContent = '图 ' + (i + 1) + ' · 原图不可达（图片存于 MinIO，点击可重试）';
+          });
+          fig.appendChild(img);
+          fig.appendChild(cap);
+          imgWrap.appendChild(fig);
+        });
         containerEl.appendChild(imgWrap);
       }
+    }
+
+    // 拒答态识别。后端口径的唯一实现在 utils/refusal_utils.py（实体层 / 证据层 / 生成层三层），
+    // 这里只镜像它的两条固定句式与一个固定标记；对开放式措辞（「并未提及」等）额外要求同一句里
+    // 出现「参考内容 / 文中 / 手册 / 文档 / 知识库」这类依据词，免得把正常答案里顺带的「未说明」标成拒答。
+    const REFUSAL_EVIDENCE_TEXT = '未检索到与该问题相关的内容';
+    const REFUSAL_ENTITY_TEXT = '未找到相关产品';
+    const REFUSAL_MARKER = '【知识库未记载】';
+    function detectRefusal(answer){
+      const text = (answer || '').trim();
+      if(!text) return null;
+      if(text.indexOf(REFUSAL_EVIDENCE_TEXT) !== -1){
+        return {tag:'未找到依据', tip:'知识库里没有召回到相关内容，换个说法或补上产品型号再问一次。'};
+      }
+      if(text.indexOf(REFUSAL_ENTITY_TEXT) !== -1){
+        return {tag:'库内无此产品', tip:'当前知识库没有该产品的文档，可在「上传导入」里先把手册入库。'};
+      }
+      if(text.indexOf(REFUSAL_MARKER) !== -1){
+        return {tag:'手册未记载', tip:'文档里没有这条信息，系统不作推测。'};
+      }
+      const head = text.slice(0, 120);
+      if(/(未提及|未记载|未包含|未说明|未给出|没有提及|没有包含)/.test(head)
+        && /(参考内容|文中|手册|文档|知识库)/.test(head)){
+        return {tag:'手册未记载', tip:'文档里没有这条信息，系统不作推测。'};
+      }
+      return null;
+    }
+
+    function appendRefusalNote(botMsgEl, answer){
+      const bubble = botMsgEl.querySelector('.bubble');
+      if(!bubble) return;
+      bubble.querySelector('.refusal-note') && bubble.querySelector('.refusal-note').remove();
+      const refusal = detectRefusal(answer);
+      if(!refusal) return;
+      const note = document.createElement('div');
+      note.className = 'refusal-note';
+      const tag = document.createElement('span');
+      tag.className = 'refusal-tag';
+      tag.textContent = refusal.tag;
+      const tip = document.createElement('span');
+      tip.className = 'refusal-tip';
+      tip.textContent = refusal.tip;
+      note.appendChild(tag);
+      note.appendChild(tip);
+      bubble.appendChild(note);
     }
 
     function renderSources(botMsgEl, sources) {
@@ -675,13 +769,14 @@
       if(el){
         const answerEl = el.querySelector('.answer');
         renderAnswerWithImages(answerEl, text || '', imageUrls || []);
+        appendRefusalNote(el, text);
       }
       scrollToBottom();
     }
 
     function addBotMsgSkeleton(){
       const id = 'bot-' + Math.random().toString(36).slice(2);
-      const html = `<div class="msg bot" id="${id}"><div class="avatar bot">RAG 知识库</div><div style="min-width: 180px;"><div class="bubble"><span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><details class="progress" open><summary>阶段进度（等待中）</summary><ul></ul></details></div><div class="meta">${nowTime()}</div></div></div>`;
+      const html = `<div class="msg bot" id="${id}"><div class="avatar bot">RAG 知识库</div><div><div class="bubble"><span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><details class="progress" open><summary>阶段进度（等待中）</summary><ul></ul></details></div><div class="meta">${nowTime()}</div></div></div>`;
       chatEl.insertAdjacentHTML('beforeend', html);
       scrollToBottom();
       return document.getElementById(id);
@@ -724,15 +819,26 @@
       answerEl.className = 'answer';
       bubble.appendChild(answerEl);
       renderAnswerWithImages(answerEl, answer || '', imageUrls || []);
+      appendRefusalNote(botMsgEl, answer);
       if(progress) bubble.appendChild(progress);
     }
 
     async function apiHealth(){
+      // /health 现在会如实回报依赖状态：进程活着但 Milvus 离线时，问答是跑不通的，
+      // 不能再显示成「已连接」。降级信息来自响应的 query_ready / conclusion。
       try{
         const res = await fetch(`${API_BASE}/health`);
         if(!res.ok) throw new Error('health not ok');
+        const data = await res.json().catch(() => ({}));
+        if(data.query_ready === false){
+          const missing = Array.isArray(data.missing_for_query) ? data.missing_for_query.join('/') : '';
+          apiPill.textContent = `API: 已连接，依赖缺失(${missing || '未知'}) → 问答不可用`;
+          apiPill.classList.add('pill-warn');
+          return;
+        }
         apiPill.textContent = `API: 已连接`;
-      }catch(e){ apiPill.textContent = `API: 未连接`; }
+        apiPill.classList.remove('pill-warn');
+      }catch(e){ apiPill.textContent = `API: 未连接`; apiPill.classList.add('pill-warn'); }
     }
 
     async function loadHistory(){
@@ -759,7 +865,14 @@
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ query: text, session_id: sessionId, is_stream: isStream })
       });
-      if(!res.ok){ const msg = await res.text(); throw new Error(msg || '请求失败'); }
+      if(!res.ok){
+        const msg = await res.text();
+        // 502 时 nginx 会回整页 HTML —— 直接抛给气泡会把整段 HTML 贴出来（2026-10-15 实测）
+        const clean = /<\s*html|<!doctype/i.test(msg)
+          ? ('服务暂时不可用（HTTP ' + res.status + '）')
+          : (msg || '请求失败');
+        throw new Error(clean);
+      }
       return await res.json();
     }
 
@@ -792,6 +905,16 @@
       addUserMsg(text);
       const botMsgEl = addBotMsgSkeleton();
       sendBtn.disabled = true;
+      // 冷启动 UX 缓解：首次（或长时间空闲后）检索需加载本地嵌入/重排模型，首条响应明显变慢。
+      // 若 4 秒内仍停在「等待中」无阶段进度事件，提示访客模型预热中，避免误以为卡死；
+      // 一旦进度事件到达，renderProgress 会改写 summary 文本，提示自然消失。
+      const coldHint = setTimeout(() => {
+        const det = botMsgEl.querySelector('details.progress');
+        const sum = det && det.querySelector('summary');
+        if (sum && /等待中/.test(sum.textContent) && !/预热/.test(sum.textContent)) {
+          sum.textContent += '（首次检索需加载本地嵌入/重排模型，实测最长约 40 秒，请稍候）';
+        }
+      }, 4000);
       try{
         const isStream = streamToggle.checked;
         const data = await submitQuery(text);
@@ -814,9 +937,13 @@
         }
         const es = new EventSource(`${API_BASE}/stream/${session_id}`);
         let rawAnswerText = '';
+        // 最后一次 progress 事件里的已完成阶段：收尾时用它把「状态：处理中」改成已完成，
+        // 否则答案都出来了进度条还挂着 ⏳ 某阶段（后端不会再为收尾补发 progress 事件）。
+        let lastDoneList = [];
         es.addEventListener('progress', (e) => {
           try{
             const d = JSON.parse(e.data || '{}');
+            if(Array.isArray(d.done_list)) lastDoneList = d.done_list;
             renderProgress(botMsgEl, d.done_list, d.running_list, d.status);
             if(d && d.status === 'completed'){
               const typing = botMsgEl.querySelector('.typing');
@@ -845,9 +972,11 @@
             const d = JSON.parse(e.data || '{}');
             const finalText = (d && typeof d.answer === 'string' && d.answer.trim().length > 0) ? d.answer : (rawAnswerText || answerEl.textContent || '');
             renderAnswerWithImages(answerEl, finalText, d.image_urls || []);
+            appendRefusalNote(botMsgEl, finalText);
             renderSources(botMsgEl, d.sources || []);
             renderFeedback(botMsgEl, session_id);
           }catch(_){}
+          renderProgress(botMsgEl, lastDoneList, [], 'completed');
           es.close();
           sendBtn.disabled = false;
         });
@@ -860,9 +989,11 @@
             const d = JSON.parse(e.data || '{}');
             const finalText = (d && typeof d.answer === 'string' && d.answer.trim().length > 0) ? d.answer : (rawAnswerText || answerEl.textContent || '');
             renderAnswerWithImages(answerEl, finalText, d.image_urls || []);
+            appendRefusalNote(botMsgEl, finalText);
             renderSources(botMsgEl, d.sources || []);
             renderFeedback(botMsgEl, session_id);
           }catch(_){}
+          renderProgress(botMsgEl, lastDoneList, [], 'completed');
           es.close();
           sendBtn.disabled = false;
         });
@@ -879,6 +1010,7 @@
             rawAnswerText += `\n\n（错误：SSE 连接中断/失败）`;
             renderAnswerWithImages(answerEl, rawAnswerText, []);
           }
+          renderProgress(botMsgEl, lastDoneList, [], 'failed');
           es.close();
           sendBtn.disabled = false;
         });
@@ -887,6 +1019,7 @@
         const progress = botMsgEl.querySelector('details.progress');
         const typing = botMsgEl.querySelector('.typing');
         if(typing) typing.remove();
+        clearTimeout(coldHint);
         bubble.innerHTML = `请求失败：${escapeHtml(e.message || e)}\n\n` + progress.outerHTML;
         sendBtn.disabled = false;
       }

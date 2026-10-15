@@ -147,9 +147,44 @@ async function safeParseJson(response) {
 // 60s 仍超时说明后端真的卡了，前端不再僵等
 const CHAT_REQUEST_TIMEOUT_MS = 60 * 1000
 
+// 公网演示走 http（非安全上下文），crypto.randomUUID 在部分浏览器不可用；
+// 统一走 genId()，降级到手工实现，避免「crypto.randomUUID is not a function」。
+function genId() {
+  try {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID()
+  } catch (e) {}
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
+// 复制文本：优先 navigator.clipboard（需安全上下文），失败回落 execCommand，
+// 公网 http 下也能复制，而不是静默失败。
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
+  } catch (e) {}
+  try {
+    const ta = document.createElement('textarea')
+    ta.value = text
+    ta.style.position = 'fixed'
+    ta.style.opacity = '0'
+    document.body.appendChild(ta)
+    ta.select()
+    const ok = document.execCommand && document.execCommand('copy')
+    ta.remove()
+    return !!ok
+  } catch (e2) { return false }
+}
+
 function createBaseMessage(role) {
   return {
-    id: crypto.randomUUID(),
+    id: genId(),
     role,
     buttons: [],
   }
@@ -574,22 +609,27 @@ async function playTts(botMsg) {
     currentAudio = new Audio(url)
     ttsState.value[msgId] = 'playing'
     currentAudio.onended = () => { ttsState.value[msgId] = 'idle'; URL.revokeObjectURL(url); currentAudio = null }
-    currentAudio.onerror = () => { ttsState.value[msgId] = 'idle'; URL.revokeObjectURL(url); currentAudio = null }
+    currentAudio.onerror = () => { ttsState.value[msgId] = 'error'; URL.revokeObjectURL(url); currentAudio = null; setTimeout(() => { if (ttsState.value[msgId] === 'error') ttsState.value[msgId] = 'idle' }, 4000) }
     await currentAudio.play()
   } catch (error) {
-    ttsState.value[msgId] = 'idle'
+    // 失败必须让用户看见（2026-10-15 按钮实测：原先只 console.error，界面零反馈，
+    // 用户只看到喇叭转一下回到原样）。error 态红字提示 4s 自动归位，期间可点击重试。
+    ttsState.value[msgId] = 'error'
     console.error('TTS error:', error)
+    setTimeout(() => {
+      if (ttsState.value[msgId] === 'error') ttsState.value[msgId] = 'idle'
+    }, 4000)
   }
 }
 
 async function copyBotText(botMsg) {
   const msgId = botMsg.id
-  try {
-    await navigator.clipboard.writeText(botMsg.text)
+  const ok = await copyText(botMsg.text)
+  if (ok) {
     copyState.value[msgId] = true
     setTimeout(() => { copyState.value[msgId] = false }, 1800)
-  } catch (error) {
-    console.error('Copy failed:', error)
+  } else {
+    console.warn('Copy failed: clipboard unavailable and execCommand fallback failed')
   }
 }
 
@@ -1005,9 +1045,9 @@ function speakBotReply(botMessages) {
                         <p>{{ botMsg.text }}</p>
                         <div class="bot-actions">
                           <button type="button" class="tts-button"
-                            :class="{ 'tts-loading': ttsState[botMsg.id] === 'loading', 'tts-playing': ttsState[botMsg.id] === 'playing' }"
+                            :class="{ 'tts-loading': ttsState[botMsg.id] === 'loading', 'tts-playing': ttsState[botMsg.id] === 'playing', 'tts-error': ttsState[botMsg.id] === 'error' }"
                             :disabled="ttsState[botMsg.id] === 'loading'"
-                            :title="ttsState[botMsg.id] === 'playing' ? '正在播放...' : '语音播报'"
+                            :title="ttsState[botMsg.id] === 'playing' ? '正在播放...' : (ttsState[botMsg.id] === 'error' ? '语音播报失败，点击重试' : '语音播报')"
                             @click.stop="playTts(botMsg)">
                             <span v-if="ttsState[botMsg.id] === 'loading'" class="tts-spinner"></span>
                             <span v-else-if="ttsState[botMsg.id] === 'playing'" class="tts-bars">
@@ -1018,6 +1058,7 @@ function speakBotReply(botMessages) {
                               <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                             </svg>
                           </button>
+                          <span v-if="ttsState[botMsg.id] === 'error'" class="tts-error-hint">播报失败</span>
                           <button type="button" class="copy-button"
                             :class="{ 'copy-done': copyState[botMsg.id] }"
                             :title="copyState[botMsg.id] ? '已复制' : '复制文字'"
@@ -1187,7 +1228,7 @@ function speakBotReply(botMessages) {
    ──────────────────────────────────────────────────────────────────────
    设计原则：
      1. 深灰底 + 层次分明，靠「边框 + 微投影」分层
-     2. 主色 #3370FF（蓝），暖色仅用于价格/待办语义
+     2. 主色 #1D4ED8（蓝），暖色仅用于价格/待办语义
      3. 动效克制：只保留必要的进入动画与状态指示
      4. 数字人竖版舞台比例仍由 .digital-human-card 的 --dh-stage-ratio 统一控制
    ══════════════════════════════════════════════════════════════════════ */
@@ -2512,6 +2553,18 @@ function speakBotReply(botMessages) {
   background: var(--color-accent-soft);
   color: var(--color-accent);
 }
+.tts-button.tts-error {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+.tts-error-hint {
+  flex-shrink: 0;
+  align-self: center;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--color-danger);
+  user-select: none;
+}
 .tts-bars {
   display: inline-flex;
   align-items: flex-end;
@@ -2746,7 +2799,7 @@ function speakBotReply(botMessages) {
   right: 0;
   top: 0;
   height: 3px;
-  background: linear-gradient(90deg, #1a3a7a, #3370FF 55%, #60a5fa);
+  background: linear-gradient(90deg, #1a3a7a, #1D4ED8 55%, #60a5fa);
 }
 :global(body.biz-skin) .send-button,
 :global(body.biz-skin) .chat-input-submit {

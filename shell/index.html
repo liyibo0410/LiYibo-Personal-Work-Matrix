@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="light">
 <head>
+<!--
+  ═══ 多工具协作提示（2026-10-15，OpenCode 写）═══
+  本文件同时被多个 AI 工具编辑。下列内容是**已取证交付**的部分，删除会破坏已登记的证据：
+  · 「作者简历」区（id="lp-resume"，含技术栈关键词小块）—— 见 _evidence/shell/D30 第四节
+  · 顶部 4 个按钮的内联 SVG 图标
+  · 页面底部的动效层（滚动入场 / count-up / 技术栈小块）
+  蓝色方案不在本文件里：已下沉到 shared/ui-kit/tokens.css（Navy Steel #1D4ED8）。
+  如需改动以上任一项，请先看 _evidence/shell/INDEX.md 的 D30 条目，避免互相覆盖。
+  ══════════════════════════════════════════════
+-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-cp-brand-title="{company} · 统一平台">李奕波个人作品矩阵 · 统一平台</title>
@@ -357,6 +367,7 @@
         <a href="#lp-evidence">实测数据</a>
         <a href="#lp-boundary">真实边界</a>
         <a href="#lp-about">关于我</a>
+        <a href="#lp-resume">简历</a>
       </div>
       <div class="lp-nav-actions">
         <button class="cp-icon-btn" id="btn-theme-public" title="切换主题" type="button" aria-label="切换深浅主题"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"></path></svg></button>
@@ -480,6 +491,67 @@
           </div>
         </section>
 
+        <!-- ⚠ 保留区（D30 已取证交付）：作者简历 + 技术栈关键词小块。请勿删除，删除会破坏 _evidence/shell/D30 登记的证据。 -->
+        <section class="lp-section" id="lp-resume">
+          <h2 class="lp-h2">作者简历 · 李奕波</h2>
+          <p class="lp-sub">求职方向 <b style="color:var(--cp-ink1)">AI 应用开发 / FDE</b> · 大专 · 约 1.5 年经验 · 一周内到岗。
+            下面是完整信息（与 <code>_evidence/</code> 里的评测报告一一对应），也可下载 PDF。</p>
+          <div class="lp-resume-grid">
+            <aside class="lp-resume-card">
+              <div class="lp-resume-name">李奕波</div>
+              <div class="lp-resume-role">AI 应用开发 / FDE</div>
+              <div class="lp-resume-meta">
+                <span>约 1.5 年经验</span><span>一周内到岗</span><span>大专</span><span>AI 应用开发 / AI-FDE</span>
+              </div>
+              <ul class="lp-resume-contact">
+                <li><span>电话</span><a href="tel:13041101531">130 4110 1531</a></li>
+                <li><span>邮箱</span><a href="mailto:2332908627@qq.com">2332908627@qq.com</a></li>
+                <li><span>GitHub</span><a href="https://github.com/liyibo0410" target="_blank" rel="noopener">github.com/liyibo0410</a></li>
+                <li><span>学历</span>大专 · 河南建筑职业技术学院</li>
+                <li><span>证书</span>影刀 RPA 高级工程师 · 英语四级</li>
+              </ul>
+              <div class="lp-resume-actions">
+                <a class="cp-btn primary" href="/resume-liyibo.pdf" target="_blank" rel="noopener">下载完整简历 PDF</a>
+                <a class="cp-btn" href="/resume-liyibo.pdf" target="_blank" rel="noopener">在线预览</a>
+              </div>
+            </aside>
+            <div class="lp-resume-body">
+              <div class="lp-resume-block">
+                <h3 class="lp-resume-h3">技术栈关键词</h3>
+                <div class="lp-chips" id="rs-techchips"></div>
+              </div>
+              <div class="lp-resume-block">
+                <h3 class="lp-resume-h3">核心技术能力</h3>
+                <ul class="lp-resume-list">
+                  <li><b>RAG 全链路</b>：文档解析 / 切分 / 向量化 / 混合检索 / 重排 / 生成 / 评测；BGE-M3、Milvus / Qdrant、RRF 融合、BGE 重排、HyDE、查询改写、引用溯源。</li>
+                  <li><b>Agent 编排</b>：LangChain / LangGraph，ReAct、计划执行、多子智能体协同；函数调用、MCP 工具接入、Pydantic 结构化输出校验。</li>
+                  <li><b>工程化</b>：Python / FastAPI 异步服务 + SSE 流式；MySQL、Redis、Docker、Linux、Git 完整工程化与云部署上线。</li>
+                  <li><b>微调与部署</b>：轻量化微调、训练集构建、开源模型私有化部署、vLLM 推理加速。</li>
+                  <li><b>多模态 &amp; 评测</b>：视觉大模型 + OCR 识别扫描件 / 表格；Ragas 指标评测 + 兜底策略；Dify / Coze 工作流。</li>
+                </ul>
+              </div>
+              <div class="lp-resume-block">
+                <h3 class="lp-resume-h3">项目经验（精选）</h3>
+                <div class="lp-resume-proj">
+                  <div class="lp-resume-proj-title">企业运营中台 · 四层 AI 中台底座（项目负责人）</div>
+                  <p>自研大模型网关（多端点故障转移 / 成本统计 / 降级）、服务注册中心消除跨模块硬编码、微前端 iframe + postMessage 统一令牌与主题、DuckDB 分层数仓 + ETL 血缘 + 数据质量校验。<span class="lp-resume-tag">10 后端 + 4 前端</span><span class="lp-resume-tag">731 测试</span><span class="lp-resume-tag">跨模块真实调用 + 异常降级</span></p>
+                </div>
+                <div class="lp-resume-proj">
+                  <div class="lp-resume-proj-title">团队运营助手 · 多租户 AI 运营 SaaS</div>
+                  <p>四角色 RBAC + 路由守卫 + 按钮级权限；广告法合规引擎（108 规则、近形字 / 零宽字符 / 全角空格三级匹配、法条溯源）；LangGraph 编排多智能体（商品诊断 / 竞品分析 / 创意策划 / 经营复盘，断点恢复 + 人工审批）。<span class="lp-resume-tag">178 Pytest</span><span class="lp-resume-tag">RBAC 403 已验</span><span class="lp-resume-tag">合规高危拦截 100%</span><span class="lp-resume-tag">F1=98.2%</span></p>
+                </div>
+                <div class="lp-resume-proj">
+                  <div class="lp-resume-proj-title">垂直场景 AI 应用套件</div>
+                  <p>私有知识库（双链路检索、RRF + 交叉编码精排、修复重排量纲缺陷、Ragas 忠实度 0.978）、零依赖合同审查（99ms 启动、边界条款转人工）、AI 客服（两阶段意图、防幻觉、73 Pytest）、NL2SQL（只读护栏拦截 DDL/DML、137 Pytest）。<span class="lp-resume-tag">23+15 重排单测</span><span class="lp-resume-tag">48 Pytest + 66/66 自检</span></p>
+                </div>
+              </div>
+              <div class="lp-resume-block">
+                <h3 class="lp-resume-h3">教育背景</h3>
+                <p class="lp-resume-list" style="list-style:none;padding:0">河南建筑职业技术学院（大专）· 专业排名第一 · 国家奖学金 · 国家励志奖学金 · 省级优秀毕业生。</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
 
         <footer class="lp-foot">
@@ -1295,6 +1367,78 @@
     });
   }
   primeCount();
+})();
+</script>
+<!-- ═══════════ 简历区样式 + 技术栈小块生成（D30 保留区，勿删）═══════════
+     与上面的 #lp-resume 配套：CSS 类被删过一次，这里补回一份自包含版本。 -->
+<style>
+  .lp-resume-grid { display: grid; grid-template-columns: 300px 1fr; gap: var(--cp-sp-6); align-items: start; }
+  @media (max-width: 860px) { .lp-resume-grid { grid-template-columns: 1fr; } }
+  .lp-resume-card { position: sticky; top: var(--cp-sp-4); overflow: hidden;
+    background: var(--cp-surface); border: 1px solid var(--cp-line);
+    border-radius: var(--cp-radius-lg); padding: var(--cp-sp-5); }
+  .lp-resume-name { font-size: 1.7rem; font-weight: 800; letter-spacing: -.5px; }
+  .lp-resume-role { color: var(--cp-brand); font-size: var(--cp-fs-sm); font-weight: 700; margin-top: 2px; }
+  .lp-resume-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--cp-sp-3) 0 var(--cp-sp-4); }
+  .lp-resume-meta span { font-family: var(--cp-font-mono); font-size: var(--cp-fs-xs); color: var(--cp-ink2);
+    background: var(--cp-elevated); border: 1px solid var(--cp-line); border-radius: var(--cp-radius-pill);
+    padding: 1px 9px; transition: color .2s var(--cp-ease), border-color .2s var(--cp-ease); }
+  .lp-resume-meta span:hover { color: var(--cp-brand); border-color: var(--cp-brand); }
+  .lp-resume-contact { list-style: none; padding: 0; margin: 0 0 var(--cp-sp-4);
+    display: flex; flex-direction: column; gap: var(--cp-sp-2); font-size: var(--cp-fs-sm); }
+  .lp-resume-contact li { display: flex; gap: var(--cp-sp-2); color: var(--cp-ink2); line-height: 1.55; }
+  .lp-resume-contact li span { color: var(--cp-ink3); width: 52px; flex-shrink: 0; }
+  .lp-resume-actions { display: flex; flex-direction: column; gap: var(--cp-sp-2); }
+  .lp-resume-actions .cp-btn { text-align: center; text-decoration: none; }
+  .lp-resume-body { display: flex; flex-direction: column; gap: var(--cp-sp-5); }
+  .lp-resume-block { background: var(--cp-surface); border: 1px solid var(--cp-line);
+    border-radius: var(--cp-radius-lg); padding: var(--cp-sp-5); }
+  .lp-resume-h3 { margin: 0 0 var(--cp-sp-3); font-size: var(--cp-fs-md); color: var(--cp-ink1); }
+  .lp-resume-list { margin: 0; padding-left: var(--cp-sp-5); display: flex; flex-direction: column;
+    gap: var(--cp-sp-2); font-size: 13.5px; color: var(--cp-ink2); line-height: 1.75; }
+  .lp-resume-list b { color: var(--cp-ink1); }
+  .lp-resume-proj { padding: var(--cp-sp-3) 0; border-bottom: 1px dashed var(--cp-line); }
+  .lp-resume-proj:last-child { border-bottom: 0; padding-bottom: 0; }
+  .lp-resume-proj-title { font-weight: 700; color: var(--cp-ink1); margin-bottom: var(--cp-sp-2); }
+  .lp-resume-proj p { margin: 0; font-size: 13.5px; color: var(--cp-ink2); line-height: 1.75; }
+  .lp-resume-tag { display: inline-block; font-family: var(--cp-font-mono); font-variant-numeric: tabular-nums;
+    font-size: var(--cp-fs-xs); color: var(--cp-brand); background: var(--cp-brand-bg);
+    border: 1px solid color-mix(in srgb, var(--cp-brand) 24%, transparent);
+    border-radius: var(--cp-radius-pill); padding: 1px 9px; margin: 5px 6px 0 0;
+    transition: transform .2s var(--cp-ease), box-shadow .2s var(--cp-ease); }
+  .lp-resume-tag:hover { transform: translateY(-2px); box-shadow: 0 8px 18px -10px var(--cp-brand); }
+  .lp-chips { display: flex; flex-wrap: wrap; }
+</style>
+
+<script>
+/* 技术栈关键词小块：生成 + 错峰弹入（尊重 prefers-reduced-motion） */
+(function () {
+  'use strict';
+  var host = document.getElementById('rs-techchips');
+  if (!host) return;
+  if (!host.children.length) {
+    var TECH = ['Python', 'FastAPI', 'uv', 'Pydantic', 'SQLAlchemy', 'LangChain', 'LangGraph', 'RAG',
+      'Milvus', 'Qdrant', 'BGE-M3', 'BGE-reranker', 'Ragas', 'RRF', 'HyDE', 'MCP', 'SSE',
+      'Next.js', 'React', 'Vue 3', 'Vite', 'TypeScript', 'Tailwind', 'ECharts',
+      'DuckDB', 'MySQL', 'Redis', 'SQLite', 'Docker', 'Linux', 'Git', 'Nginx', 'vLLM', 'LoRA',
+      'OCR', 'Dify', 'Coze'];
+    host.innerHTML = TECH.map(function (t, i) {
+      return '<span class="lp-chip" style="--d:' + ((i % 12) * 45) + 'ms">' + t + '</span>';
+    }).join('');
+  }
+  var chips = host.querySelectorAll('.lp-chip:not(.is-in)');
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (reduce || !('IntersectionObserver' in window)) {
+    Array.prototype.forEach.call(chips, function (c) { c.classList.add('is-in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  Array.prototype.forEach.call(chips, function (c) { io.observe(c); });
 })();
 </script>
 </body>

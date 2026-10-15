@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS assets (
     height INTEGER,
     source TEXT DEFAULT 'upload',
     status TEXT DEFAULT 'active',
+    origin_id TEXT DEFAULT '',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
@@ -56,6 +57,8 @@ _ADDED_COLUMNS = {
     "mime_type": "TEXT DEFAULT ''",
     "tag_source": "TEXT DEFAULT 'manual'",
     "content": "TEXT DEFAULT ''",
+    # 跨模块推送的来源标识（如 P02 的 `p02-ga-<asset_id>`）：用于闭环可追溯与去重
+    "origin_id": "TEXT DEFAULT ''",
 }
 
 DEMO_SEED_DATE = datetime(2026, 10, 12, 10, 0, 0)
@@ -133,7 +136,7 @@ def init_db() -> None:
 
 # (asset_id, 名称, 类型, 标签, 描述, 宽, 高, 演示图主色)
 _DEMO_ASSETS = [
-    ("AST-001", "春季护肤主图A", "image", ["护肤", "春季", "主图", "清爽"], "春季主推护肤品主图方案A", 800, 800, "#3370FF"),
+    ("AST-001", "春季护肤主图A", "image", ["护肤", "春季", "主图", "清爽"], "春季主推护肤品主图方案A", 800, 800, "#1D4ED8"),
     ("AST-002", "口红试色短视频脚本", "video", ["口红", "试色", "短视频", "种草"], "口红试色种草视频脚本", 1080, 1920, "#E4474B"),
     ("AST-003", "618大促Banner", "image", ["618", "大促", "Banner", "红色"], "618年中大促活动Banner", 1200, 400, "#D92D20"),
     ("AST-004", "运动鞋详情页长图", "image", ["运动鞋", "详情页", "长图", "科技"], "运动鞋科技卖点详情页", 750, 1400, "#475467"),

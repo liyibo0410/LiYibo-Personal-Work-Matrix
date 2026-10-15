@@ -9,8 +9,8 @@
      echarts（~1MB）不再在首屏加载：改为用户点击「损失曲线 / 对比」时按需懒加载（见 ensureEcharts），
      这样首屏解析与可见骨架渲染不再被这个大库卡住。后端已对 /shared 开启 gzip + 缓存。 -->
 <link rel="stylesheet" href="/shared/ui-kit/tokens.css">
-<script src="/shared/config/services.js"></script>
-<script src="/shared/ui-kit/ui-kit.js"></script>
+<script defer src="/shared/config/services.js"></script>
+<script defer src="/shared/ui-kit/ui-kit.js"></script>
 <style>
 :root {
   /* 颜色统一引用 shared/ui-kit/tokens.css 的 --cp-* 令牌（改一处，全平台生效） */
@@ -123,11 +123,20 @@ tr:hover td { background: var(--accent-dim); }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .sidebar { display: none; }
-  .main { margin-left: 0; padding: 16px; }
+  /* 同 P09：原先 .sidebar{display:none} 会在手机上删掉导航。改为顶部横滑条；
+     .main 是 flex 项且 min-width:auto，实测 318px 下内容溢出 91px，需显式允许收缩；
+     本模块 5 张表格没有 .table-wrap 包裹（P09 有），故让表格自身可横滚。 */
+  .app { display: block; }
+  .sidebar { position: static; width: auto; height: auto; padding: 10px 12px; border-right: none;
+             border-bottom: 1px solid var(--border); overflow-y: visible;
+             display: flex; align-items: center; gap: 6px; overflow-x: auto; max-width: 100vw; -webkit-overflow-scrolling: touch; }
+  .logo { flex: 0 0 auto; padding: 0 8px 0 0; border-bottom: none; margin: 0; }
+  .nav-item { flex: 0 0 auto; white-space: nowrap; padding: 8px 12px; border-left: none; }
+  .main { margin-left: 0; padding: 16px; min-width: 0; max-width: 100vw; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .form-row { grid-template-columns: 1fr; }
   .model-grid { grid-template-columns: 1fr; }
+  table { display: block; overflow-x: auto; }
 }
 
 /* Scrollbar */
@@ -135,6 +144,7 @@ tr:hover td { background: var(--accent-dim); }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 </style>
+<link rel="icon" type="image/svg+xml" href="/shared/ui-kit/favicon.svg">
 </head>
 <body class="cp-app" data-cp-module="p10" data-cp-brand-src="/shared/config/brand.json">
 <div class="app">
@@ -201,7 +211,10 @@ tr:hover td { background: var(--accent-dim); }
       <div class="card">
         <div class="card-header">
           <span class="card-title">全部数据集</span>
-          <span class="badge badge-info" id="dataset-count"></span>
+          <span style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-ghost btn-sm" onclick="pullFromP09()">从 P09 拉取低分样本</button>
+            <span class="badge badge-info" id="dataset-count"></span>
+          </span>
         </div>
         <table>
           <thead><tr><th>名称</th><th>格式</th><th>样本数</th><th>平均 Token</th><th>大小</th><th>状态</th><th>操作</th></tr></thead>
@@ -221,6 +234,9 @@ tr:hover td { background: var(--accent-dim); }
     <!-- Training -->
     <div class="page" id="page-training">
       <h2 class="page-title">训练</h2>
+      <div class="mock-banner">
+        &#9888; 演示模式：训练为模拟（未占 GPU）；损失曲线由模拟生成器产出，不是训练日志。
+      </div>
       <div class="card" style="margin-bottom:20px">
         <div class="card-header"><span class="card-title">开始新训练</span></div>
         <div class="form-row">
@@ -291,14 +307,17 @@ tr:hover td { background: var(--accent-dim); }
           <tbody id="training-table"></tbody>
         </table>
       </div>
-      <!-- Loss curve -->
-      <div class="card" id="loss-card" style="display:none">
-        <div class="card-header">
-          <span class="card-title" id="loss-title">损失曲线</span>
-          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('loss-card').style.display='none'">关闭</button>
-        </div>
-        <div class="chart-container" id="loss-chart"></div>
+    </div>
+
+    <!-- Loss curve（2026-10-15 修复 M1：移出训练页容器 —— 此前在模型仓库点「训练曲线」，
+         卡片被 .page:not(.active) 隐藏，只有切到训练页才突然出现） -->
+    <div class="card" id="loss-card" style="display:none;margin-top:20px">
+      <div class="card-header">
+        <span class="card-title" id="loss-title">损失曲线</span>
+        <span class="tag" title="曲线由模拟生成器产出，不是真实训练日志">模拟曲线 · 非训练日志</span>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('loss-card').style.display='none'">关闭</button>
       </div>
+      <div class="chart-container" id="loss-chart"></div>
     </div>
 
     <!-- Evaluation -->
@@ -348,6 +367,23 @@ tr:hover td { background: var(--accent-dim); }
 
 <script>
 const API = '';
+
+// 按需懒加载 echarts：首屏不拉这个 ~1MB 的库，只在真正要画图表时才注入并等待。
+// 注入的是同源 /shared 资源（P10 后端已对其开启 gzip + 缓存），重复调用复用同一 Promise。
+let _echartsLoading = null;
+function ensureEcharts() {
+  if (window.echarts) return Promise.resolve(window.echarts);
+  if (!_echartsLoading) {
+    _echartsLoading = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = '/shared/vendor/echarts.min.js';
+      s.onload = () => resolve(window.echarts);
+      s.onerror = () => reject(new Error('echarts 加载失败'));
+      document.head.appendChild(s);
+    });
+  }
+  return _echartsLoading;
+}
 
 // ---- Navigation ----
 function navigate(page) {
@@ -401,7 +437,11 @@ function statusBadge(s) {
 
 // ---- Dashboard ----
 async function loadDashboard() {
-  const stats = await fetch(API + '/api/v1/stats').then(r => r.json());
+  // 三条请求彼此独立，合并成一次并发，把「隧道下 3 个 RTT」压成「1 个 RTT」再渲染统计与最近训练。
+  const [stats, trainingList] = await Promise.all([
+    fetch(API + '/api/v1/stats').then(r => r.json()),
+    fetch(API + '/api/v1/training').then(r => r.json()).catch(() => []),
+  ]);
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card accent"><div class="stat-value">${stats.datasets}</div><div class="stat-label">数据集</div></div>
     <div class="stat-card accent"><div class="stat-value">${stats.training_runs}</div><div class="stat-label">训练任务</div></div>
@@ -411,9 +451,7 @@ async function loadDashboard() {
     <div class="stat-card"><div class="stat-value">${stats.deployed_models}</div><div class="stat-label">已部署</div></div>
   `;
 
-  const trainings = await fetch(API + '/api/v1/training/train-001').then(r => r.json()).catch(() => null);
-  const trainings2 = await fetch(API + '/api/v1/training/train-002').then(r => r.json()).catch(() => null);
-  const list = [trainings, trainings2].filter(Boolean);
+  const list = (Array.isArray(trainingList) ? trainingList : []).slice(0, 2);
   document.getElementById('recent-trainings').innerHTML = list.map(t => `
     <tr>
       <td>${t.name}</td>
@@ -433,7 +471,7 @@ async function loadDatasets() {
     <tr>
       <td><strong>${d.name}</strong><br><span style="font-size:11px;color:var(--text3)">${d.description.substring(0,60)}...</span></td>
       <td><span class="tag">${d.format.toUpperCase()}</span></td>
-      <td>${d.sample_count.toLocaleString()}${d.provenance === 'measured-from-upload' ? '' : ' <span class="tag" title="预置演示数据，不是实测样本数">预置</span>'}</td>
+      <td>${d.sample_count.toLocaleString()}${(d.measured_fields || []).includes('sample_count') ? '' : ' <span class="tag" title="样本数非实测（seed_demo 预置等），不是测量值">非实测</span>'}</td>
       <td>${d.avg_tokens === null || d.avg_tokens === undefined ? '未测量' : d.avg_tokens}</td>
       <td>${d.file_size_bytes === null || d.file_size_bytes === undefined ? '未测量' : fmtBytes(d.file_size_bytes)}</td>
       <td>${statusBadge(d.validation_status)}</td>
@@ -452,8 +490,9 @@ async function showDatasetDetail(id) {
   const labelDist = ds.label_distribution || null;
   const lenHist = ds.char_length_percentiles || null;
   const unmeasured = ds.unmeasured || [];
-  // 预置演示数据集的数字不是测量值，统一加 * 并在下方给出图例
-  const seedMark = ds.provenance === 'measured-from-upload' ? '' : '*';
+  // 2026-10-15 修复（M4）：星号口径按 measured_fields 判定 —— p09-export 的数据集是
+  // 真实拉取的 22 条样本，此前被沿用 seed_demo 口径误标成「预置演示数据」。
+  const seedMark = (ds.measured_fields || []).includes('sample_count') ? '' : '*';
   document.getElementById('detail-ds-content').innerHTML = `
     <p style="color:var(--text2);margin-bottom:12px">${ds.description}</p>
     <div class="stats-grid" style="margin-bottom:16px">
@@ -467,7 +506,7 @@ async function showDatasetDetail(id) {
     <h4 style="margin-bottom:8px;color:var(--text2)">长度分位（字符）</h4>
     <div>${lenHist ? Object.entries(lenHist).map(([k,v]) => `<span class="tag">${k.toUpperCase()}: ${v}</span>`).join(' ') : '<span style="color:var(--text3)">未测量</span>'}
       <span style="color:var(--text3);font-size:12px">（未接 tokenizer，故只报字符长度分位，不报 Token 分位）</span></div>
-    ${unmeasured.length ? `<div style="margin-top:12px;padding:8px 10px;background:var(--cp-warning-bg,#FFF7E6);border-radius:6px;font-size:12px;color:var(--text2)">未测量项：${unmeasured.join('；')}${seedMark ? '<br>* 带星号的数字是预置演示数据（provenance=seed_demo），不是对该数据集的测量结果。' : ''}</div>` : ''}
+    ${unmeasured.length ? `<div style="margin-top:12px;padding:8px 10px;background:var(--cp-warning-bg,#FFF7E6);border-radius:6px;font-size:12px;color:var(--text2)">未测量项：${unmeasured.join('；')}${seedMark ? '<br>* 带星号的数字没有实测口径（如 seed_demo 预置），不是对该数据集的测量结果。' : ''}</div>` : ''}
     <div style="margin-top:12px">
       <span class="tag">语言：${ds.language || '未标注'}</span>
       <span class="tag">编码：${ds.format_validation?.encoding || '未标注'}</span>
@@ -485,7 +524,7 @@ async function handleUpload(input) {
   formData.append('name', file.name);
   const resp = await fetch(API + '/api/v1/datasets?name=' + encodeURIComponent(file.name) + '&format=jsonl', { method: 'POST', body: formData });
   if (resp.ok) {
-    alert('数据集已上传（已生成演示统计数据）');
+    alert('数据集已上传：行数/字节/重复行为真实统计（Token 未测量，见详情）。');
     loadDatasets();
   }
   input.value = '';
@@ -493,12 +532,9 @@ async function handleUpload(input) {
 
 // ---- Training ----
 async function loadTraining() {
-  // Load all trainings
-  const ids = ['train-001', 'train-002'];
-  const trainings = [];
-  for (const id of ids) {
-    try { const t = await fetch(API + '/api/v1/training/' + id).then(r => r.json()); trainings.push(t); } catch(e) {}
-  }
+  // 2026-10-15 修复（M2）：改读列表端点 —— 此前把 train-001/002 写死，
+  // 新建的训练永远不出现在「训练历史」里。
+  const trainings = await fetch(API + '/api/v1/training').then(r => r.json()).catch(() => []);
   renderTrainingTable(trainings);
 }
 
@@ -518,7 +554,12 @@ function renderTrainingTable(trainings) {
 
 async function startTraining() {
   const name = document.getElementById('train-name').value || '微调任务-' + Date.now();
-  const datasetId = document.getElementById('train-dataset').value;
+  // 2026-10-15 修复（M3）：训练页首访时下拉可能为空（此前只有数据集页填充过它）——
+  // 直接提交会 404 且零提示。现在先补拉一次，仍为空就给出可读提示。
+  const sel = document.getElementById('train-dataset');
+  if (!sel.value) { await loadDatasets(); }
+  const datasetId = sel.value;
+  if (!datasetId) { alert('没有可用数据集：请先在「数据集管理」上传文件，或用「从 P09 拉取低分样本」。'); return; }
   const config = {
     base_model: document.getElementById('train-base-model').value,
     method: document.getElementById('train-method').value,
@@ -543,6 +584,12 @@ async function startTraining() {
     alert(`训练已完成（模拟演示，未真实训练）！任务 ID：${result.id}，最终损失：${result.final_loss?.toFixed(4)}`);
     loadTraining();
     showLossCurve(result.id, result.name);
+  } else {
+    // 2026-10-15 修复：此前失败分支为空 —— 端点 500（如小数据集除零）时页面
+    // 完全无反馈，看起来像按钮坏了。现在把 HTTP 状态与后端 detail 透出。
+    let detail = '';
+    try { const j = await resp.json(); detail = String(j.detail ?? j.error ?? ''); } catch (_) {}
+    alert('创建训练任务失败（HTTP ' + resp.status + '）' + (detail ? '：' + detail : ''));
   }
 }
 
@@ -551,7 +598,13 @@ async function showLossCurve(trainingId, name) {
   document.getElementById('loss-title').textContent = '损失曲线 - ' + name;
   document.getElementById('loss-card').style.display = 'block';
 
-  const chart = echarts.init(document.getElementById('loss-chart'), null);
+  // echarts 是 ~1MB 的重型库：走 ensureEcharts() 按需加载（首屏不拉），加载完再画。
+  const echarts = await ensureEcharts();
+  const chartEl = document.getElementById('loss-chart');
+  // 重复打开曲线时先销毁旧实例，避免 echarts 对同一 DOM 重复 init 的警告与状态残留
+  const existing = echarts.getInstanceByDom(chartEl);
+  if (existing) existing.dispose();
+  const chart = echarts.init(chartEl, null);
   const steps = data.points.map(p => p.step);
   const losses = data.points.map(p => p.loss);
   const evalSteps = data.points.filter(p => p.eval_loss).map(p => p.step);
@@ -568,7 +621,7 @@ async function showLossCurve(trainingId, name) {
       { type: 'value', name: '学习率', axisLine: { lineStyle: { color: '#DDE2EA' } }, axisLabel: { color: '#5A6472' }, splitLine: { show: false } },
     ],
     series: [
-      { name: '训练损失', type: 'line', data: losses, smooth: true, lineStyle: { color: '#3370FF', width: 2 }, itemStyle: { color: '#3370FF' }, showSymbol: false, areaStyle: { color: 'rgba(51,112,255,0.08)' } },
+      { name: '训练损失', type: 'line', data: losses, smooth: true, lineStyle: { color: '#1D4ED8', width: 2 }, itemStyle: { color: '#1D4ED8' }, showSymbol: false, areaStyle: { color: 'rgba(29,78,216,0.08)' } },
       { name: '验证损失', type: 'scatter', data: evalLosses, symbolSize: 8, itemStyle: { color: '#B4690E' }, yAxisIndex: 0 },
     ],
   });
@@ -611,14 +664,18 @@ async function compareEvals() {
   const data = await resp.json();
   document.getElementById('compare-result').style.display = 'block';
 
-  // Chart
-  const chart = echarts.init(document.getElementById('compare-chart'), null);
+  // 同 showLossCurve：echarts 按需懒加载后再画对比图
+  const echarts = await ensureEcharts();
+  const chartEl = document.getElementById('compare-chart');
+  const existing = echarts.getInstanceByDom(chartEl);
+  if (existing) existing.dispose();
+  const chart = echarts.init(chartEl, null);
   const metrics = ['accuracy', 'format_compliance', 'llm_judge_score', 'avg_response_quality'];
   const labels = ['准确率', '格式分', 'LLM 评审（×0.2）', '综合质量'];
   const beforeVals = data.before ? metrics.map(m => m === 'llm_judge_score' ? data.before[m] * 20 : data.before[m] * 100) : null;
   const afterVals = metrics.map(m => m === 'llm_judge_score' ? data.after[m] * 20 : data.after[m] * 100);
 
-  const series = [{ name: '微调后', type: 'bar', data: afterVals, itemStyle: { color: '#3370FF' }, barWidth: 30 }];
+  const series = [{ name: '微调后', type: 'bar', data: afterVals, itemStyle: { color: '#1D4ED8' }, barWidth: 30 }];
   if (beforeVals) {
     series.push({ name: '微调前', type: 'bar', data: beforeVals, itemStyle: { color: '#6B7280' }, barWidth: 30 });
   }
@@ -668,6 +725,7 @@ async function loadModels() {
         <div class="model-metric"><div class="model-metric-value">${(m.metrics.format_compliance * 100).toFixed(1)}%</div><div class="model-metric-label">格式分</div></div>
         <div class="model-metric"><div class="model-metric-value">${m.metrics.llm_judge_score.toFixed(2)}</div><div class="model-metric-label">LLM 评审</div></div>
       </div>
+      <div style="font-size:11px;color:var(--text3);margin:-4px 0 10px">&#9888; ${m.metrics_note || 'metrics 为模拟评测值（本模块无真实训练/推理）'}</div>
       <div style="margin-bottom:12px">
         <span class="tag">${m.config.method.toUpperCase()}</span>
         <span class="tag">LoRA 秩=${m.config.lora_rank}</span>
@@ -689,6 +747,18 @@ async function deployModel(id) {
   const data = await resp.json();
   alert(data.message);
   loadModels();
+}
+
+async function pullFromP09() {
+  // 2026-10-15 新增：P09 质检 → P10 微调的闭环入口按钮（接口早已就绪，此前只到接口层）。
+  const resp = await fetch(API + '/api/v1/datasets/from-p09', { method: 'POST' });
+  const data = await resp.json().catch(() => ({}));
+  if (data && data.id) {
+    alert('已从 P09 拉取低分样本：' + data.name + '（' + data.sample_count + ' 条）');
+    loadDatasets();
+  } else {
+    alert('未创建数据集：' + (data.notice || data.message || data.detail || 'P09 不可达或没有低分样本（降级不伪造）'));
+  }
 }
 
 // ---- Init ----

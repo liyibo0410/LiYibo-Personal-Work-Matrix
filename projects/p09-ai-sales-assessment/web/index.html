@@ -9,8 +9,8 @@
 <script defer src="/shared/vendor/echarts.min.js"></script><!-- 本机 vendor：外链 CDN 实测要等 7 秒以上 -->
 <!-- 统一设计系统：tokens.css 是配色/间距/字体的唯一真源；services.js + ui-kit.js 提供注册表与主题桥接 -->
 <link rel="stylesheet" href="/shared/ui-kit/tokens.css">
-<script src="/shared/config/services.js"></script>
-<script src="/shared/ui-kit/ui-kit.js"></script>
+<script defer src="/shared/config/services.js"></script>
+<script defer src="/shared/ui-kit/ui-kit.js"></script>
 <style>
 :root {
   /* 颜色统一引用 shared/ui-kit/tokens.css 的 --cp-* 令牌（改一处，全平台生效） */
@@ -140,8 +140,16 @@ tr:hover td { background:var(--surface2); }
 
 /* Responsive */
 @media(max-width:768px) {
-  .sidebar { display:none; }
-  .main { margin-left:0; padding:16px; }
+  /* 原先这里写的是 .sidebar{display:none} —— 手机上等于把导航整个删掉，只能看首页那一屏。
+     改成：侧栏整体变成顶部横滑条（logo + 导航项同排），正文解除 margin-left 并允许收缩。
+     实测 318px 视口下改前内容溢出 89px（.main 是 flex 项、min-width:auto 不肯收缩）。 */
+  .app { display:block; }
+  .sidebar { position:static; width:auto; height:auto; top:auto; left:auto; bottom:auto; padding:10px 12px;
+             border-right:none; border-bottom:1px solid var(--border); overflow-y:visible;
+             display:flex; align-items:center; gap:6px; overflow-x:auto; max-width:100vw; -webkit-overflow-scrolling:touch; }
+  .sidebar-logo { flex:0 0 auto; padding:0 8px 0 0; }
+  .nav-item { flex:0 0 auto; white-space:nowrap; padding:8px 12px; border-right:none; }
+  .main { margin-left:0; padding:16px; min-width:0; max-width:100vw; }
   .chart-row { grid-template-columns:1fr; }
   .stats-grid { grid-template-columns:repeat(2,1fr); }
 }
@@ -176,6 +184,7 @@ tr:hover td { background:var(--surface2); }
 .conf-cell { padding:8px; text-align:center; background:var(--surface2); border-radius:4px; }
 .conf-header { font-weight:600; color:var(--text2); font-size:11px; }
 </style>
+<link rel="icon" type="image/svg+xml" href="/shared/ui-kit/favicon.svg">
 </head>
 <body class="cp-app" data-cp-module="p09" data-cp-brand-src="/shared/config/brand.json">
 <div class="app">
@@ -211,6 +220,11 @@ tr:hover td { background:var(--surface2); }
       <div class="page-header">
         <h2>考核看板</h2>
         <p>2025 年 3 月客服质量指标概览</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+          <button onclick="importFromP01()" style="background:var(--accent-dim);border:none;color:var(--accent);padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;">从 P01 导入会话</button>
+          <button onclick="runEvaluate()" style="background:var(--accent-dim);border:none;color:var(--accent);padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;">发起评分</button>
+          <button onclick="exportLowScore()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;">导出低分样本</button>
+        </div>
       </div>
       <div class="mock-notice">
         &#9888; 演示说明：LLM 评分使用基于规则的启发式算法，而非真实 LLM 调用。所有数据均为演示数据。
@@ -359,6 +373,64 @@ async function api(path) {
   return r.json();
 }
 
+// --- 2026-10-15 新增：数据闭环入口按钮（接口早已就绪，此前只到接口层）---
+async function importFromP01() {
+  const senders = prompt('输入要导入的 P01 用户标识（逗号分隔）', 'u1001');
+  if (!senders) return;
+  const resp = await fetch(API + '/api/v1/import/from-p01', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sender_ids: senders.split(',').map(s => s.trim()).filter(Boolean),
+      agent_id: 'agent-001',
+      store: '旗舰店 A',
+    }),
+  });
+  const data = await resp.json().catch(() => ({}));
+  if (data.ok) {
+    alert(`从 P01 真实导入 ${data.imported} 段会话并完成评分（source=${data.source}）`);
+    loadDashboard();
+  } else {
+    alert('未导入任何会话：' + (data.notice || data.error || 'P01 不可达') + '（降级不伪造数据）');
+  }
+}
+
+async function runEvaluate() {
+  const reply = prompt('输入坐席的一段回复文本，将对「客户：我要退款」+ 该回复进行一次评分', '您好，您的退款申请已提交，48 小时内处理完成。');
+  if (!reply) return;
+  const resp = await fetch(API + '/api/v1/evaluate?agent_id=agent-001&store=' + encodeURIComponent('旗舰店 A'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify([
+      { role: 'customer', content: '我要退款' },
+      { role: 'agent', content: reply },
+    ]),
+  });
+  const data = await resp.json().catch(() => ({}));
+  if (data.score) {
+    alert(`评分完成：综合 ${data.score.overall} 分（会话 ${data.conversation_id}）。\n${data.mock_notice || ''}`);
+    loadDashboard();
+  } else {
+    alert('评分失败：' + (data.detail || '未知错误'));
+  }
+}
+
+async function exportLowScore() {
+  const resp = await fetch(API + '/api/v1/export/low-score?threshold=60&limit=50');
+  const data = await resp.json().catch(() => ({}));
+  if (!data.ok) { alert('导出失败'); return; }
+  if (!data.exported) { alert('没有低于阈值的样本（如实返回空列表，不硬凑）。'); return; }
+  const header = 'conversation_id,agent_name,store,overall,message_count,created_at';
+  const lines = data.samples.map(s => [s.conversation_id, s.agent_name, s.store, s.overall, s.message_count, s.created_at].map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
+  const blob = new Blob(['\ufeff' + header + '\n' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `p09-low-score-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  alert(`已导出 ${data.exported} 条低分样本（引擎口径：${data.scoring_engine}）。\n引用时须保留口径说明：${data.notice}`);
+}
+
 // --- Score badge ---
 function scoreBadge(score) {
   const cls = score >= 85 ? 'excellent' : score >= 70 ? 'good' : score >= 55 ? 'average' : 'poor';
@@ -367,14 +439,31 @@ function scoreBadge(score) {
 
 function scoreColor(score) {
   if (score >= 85) return '#16A34A';
-  if (score >= 70) return '#3370FF';
+  if (score >= 70) return '#1D4ED8';
   if (score >= 55) return '#B4690E';
   return '#D92D20';
 }
 
+// --- Chart helper ---
+// 图表实例复用：每次导航回看板时不再对同一 DOM 重复 echarts.init
+// （重复 init 会泄漏旧实例并在控制台告警），容器尺寸变化时 resize 一次即可。
+function getChart(el) {
+  return echarts.getInstanceByDom(el) || echarts.init(el);
+}
+let _chartsResizeBound = false;
+function bindChartsResize(charts) {
+  if (_chartsResizeBound) return;
+  _chartsResizeBound = true;
+  window.addEventListener('resize', () => charts.forEach(c => c.resize()));
+}
+
 // --- Dashboard ---
 async function loadDashboard() {
-  const stats = await api('/api/v1/stats');
+  // 首屏两路 API 并行：串行时等待 = 两跳 RTT 之和，公网隧道下多花一倍接口延迟。
+  const [stats, convos] = await Promise.all([
+    api('/api/v1/stats'),
+    api('/api/v1/conversations?page_size=5'),
+  ]);
 
   // Stat cards
   document.getElementById('stats-cards').innerHTML = `
@@ -397,7 +486,7 @@ async function loadDashboard() {
   `;
 
   // Distribution chart
-  const distChart = echarts.init(document.getElementById('chart-distribution'));
+  const distChart = getChart(document.getElementById('chart-distribution'));
   const distData = stats.score_distribution;
   distChart.setOption({
     tooltip: { trigger:'axis' },
@@ -406,14 +495,14 @@ async function loadDashboard() {
     series: [{
       type:'bar', data:Object.values(distData), barWidth:'50%',
       itemStyle: { borderRadius:[4,4,0,0], color: function(p) {
-        return ['#D92D20','#B4690E','#FABB06','#3370FF','#16A34A'][p.dataIndex];
+        return ['#D92D20','#B4690E','#FABB06','#1D4ED8','#16A34A'][p.dataIndex];
       }}
     }],
     grid: { left:40, right:20, top:20, bottom:40 }
   });
 
   // Dimension radar
-  const dimChart = echarts.init(document.getElementById('chart-dimensions'));
+  const dimChart = getChart(document.getElementById('chart-dimensions'));
   const dims = stats.dimension_averages;
   dimChart.setOption({
     tooltip: {},
@@ -421,19 +510,19 @@ async function loadDashboard() {
       indicator: Object.keys(dims).map(k => ({name:k, max:100})),
       shape:'polygon',
       axisName: { color:'#5A6472', fontSize:11 },
-      splitArea: { areaStyle:{color:['rgba(51,112,255,0.05)','rgba(51,112,255,0.1)']} },
+      splitArea: { areaStyle:{color:['rgba(29,78,216,0.05)','rgba(29,78,216,0.1)']} },
       splitLine: { lineStyle:{color:'#DDE2EA'} },
       axisLine: { lineStyle:{color:'#DDE2EA'} }
     },
     series: [{
       type:'radar',
-      data: [{ value:Object.values(dims), name:'均值', areaStyle:{color:'rgba(51,112,255,0.2)'}, lineStyle:{color:'#3370FF'} }],
-      itemStyle: { color:'#3370FF' }
+      data: [{ value:Object.values(dims), name:'均值', areaStyle:{color:'rgba(29,78,216,0.2)'}, lineStyle:{color:'#1D4ED8'} }],
+      itemStyle: { color:'#1D4ED8' }
     }]
   });
 
   // Store comparison
-  const storeChart = echarts.init(document.getElementById('chart-stores'));
+  const storeChart = getChart(document.getElementById('chart-stores'));
   const storeData = stats.store_averages;
   storeChart.setOption({
     tooltip: { trigger:'axis' },
@@ -447,8 +536,7 @@ async function loadDashboard() {
     grid: { left:50, right:20, top:20, bottom:40 }
   });
 
-  // 最近会话
-  const convos = await api('/api/v1/conversations?page_size=5');
+  // 最近会话（数据已在顶部与 stats 并行取回，这里只做渲染）
   let html = '<table><thead><tr><th>坐席</th><th>议题</th><th>评分</th><th>日期</th></tr></thead><tbody>';
   for (const c of convos.items) {
     html += `<tr class="conv-row" onclick="showConvDetail('${c.id}')">
@@ -461,7 +549,7 @@ async function loadDashboard() {
   html += '</tbody></table>';
   document.getElementById('recent-convos').innerHTML = html;
 
-  window.addEventListener('resize', () => { distChart.resize(); dimChart.resize(); storeChart.resize(); });
+  bindChartsResize([distChart, dimChart, storeChart]);
 }
 
 // --- Leaderboard ---
@@ -487,17 +575,7 @@ async function loadLeaderboard() {
 
 // --- Conversations ---
 async function loadConversations() {
-  // Populate agent filter
   const agentSel = document.getElementById('filter-agent');
-  if (agentSel.options.length <= 1) {
-    const lb = await api('/api/v1/leaderboard');
-    for (const a of lb.leaderboard) {
-      const opt = document.createElement('option');
-      opt.value = a.agent_id; opt.textContent = a.agent_name;
-      agentSel.appendChild(opt);
-    }
-  }
-
   const agentId = agentSel.value;
   const store = document.getElementById('filter-store').value;
   const scoreFilter = document.getElementById('filter-score').value;
@@ -510,10 +588,12 @@ async function loadConversations() {
   else if (scoreFilter === 'avg') { url += '&min_score=55&max_score=69.9'; }
   else if (scoreFilter === 'low') url += '&max_score=54.9';
 
-  const data = await api(url);
-  let html = '<table><thead><tr><th>会话ID</th><th>坐席</th><th>客户</th><th>议题</th><th>AI 评分</th><th>人工评分</th><th>日期</th></tr></thead><tbody>';
-  for (const c of data.items) {
-    html += `<tr class="conv-row" onclick="showConvDetail('${c.id}')">
+  // 过滤器填充（leaderboard 请求）与列表请求并行，不再串行等两跳
+  await Promise.all([
+    api(url).then(data => {
+      let html = '<table><thead><tr><th>会话ID</th><th>坐席</th><th>客户</th><th>议题</th><th>AI 评分</th><th>人工评分</th><th>日期</th></tr></thead><tbody>';
+      for (const c of data.items) {
+        html += `<tr class="conv-row" onclick="showConvDetail('${c.id}')">
       <td style="color:var(--text3);font-size:11px;">${c.id}</td>
       <td>${c.agent_name}</td>
       <td>${c.customer_name}</td>
@@ -522,17 +602,28 @@ async function loadConversations() {
       <td>${c.human_score !== null && c.human_score !== undefined ? c.human_score.toFixed(1) : '-'}</td>
       <td style="color:var(--text2)">${c.created_at}</td>
     </tr>`;
-  }
-  html += '</tbody></table>';
-  document.getElementById('conversations-table').innerHTML = html;
+      }
+      html += '</tbody></table>';
+      document.getElementById('conversations-table').innerHTML = html;
 
-  // Pagination
-  const totalPages = Math.ceil(data.total / 10);
-  let pagHtml = '';
-  for (let i = 1; i <= totalPages; i++) {
-    pagHtml += `<button onclick="currentPage=${i};loadConversations()" style="background:${i===currentPage?'var(--accent)':'var(--surface2)'};border:1px solid var(--border);color:${i===currentPage?'#fff':'var(--text2)'};padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">${i}</button>`;
-  }
-  document.getElementById('convo-pagination').innerHTML = pagHtml;
+      // Pagination
+      const totalPages = Math.ceil(data.total / 10);
+      let pagHtml = '';
+      for (let i = 1; i <= totalPages; i++) {
+        pagHtml += `<button onclick="currentPage=${i};loadConversations()" style="background:${i===currentPage?'var(--accent)':'var(--surface2)'};border:1px solid var(--border);color:${i===currentPage?'#fff':'var(--text2)'};padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">${i}</button>`;
+      }
+      document.getElementById('convo-pagination').innerHTML = pagHtml;
+    }),
+    (agentSel.options.length <= 1
+      ? api('/api/v1/leaderboard').then(lb => {
+          for (const a of lb.leaderboard) {
+            const opt = document.createElement('option');
+            opt.value = a.agent_id; opt.textContent = a.agent_name;
+            agentSel.appendChild(opt);
+          }
+        })
+      : Promise.resolve()),
+  ]);
 }
 
 // --- Conversation Detail ---
@@ -666,11 +757,11 @@ async function showAgentReport(agentId) {
         indicator: data.radar.map(r => ({name:r.dimension, max:100})),
         shape:'polygon',
         axisName:{color:'#5A6472',fontSize:11},
-        splitArea:{areaStyle:{color:['rgba(51,112,255,0.05)','rgba(51,112,255,0.1)']}},
+        splitArea:{areaStyle:{color:['rgba(29,78,216,0.05)','rgba(29,78,216,0.1)']}},
         splitLine:{lineStyle:{color:'#DDE2EA'}},
         axisLine:{lineStyle:{color:'#DDE2EA'}}
       },
-      series:[{type:'radar',data:[{value:data.radar.map(r=>r.score),areaStyle:{color:'rgba(51,112,255,0.2)'},lineStyle:{color:'#3370FF'}}],itemStyle:{color:'#3370FF'}}]
+      series:[{type:'radar',data:[{value:data.radar.map(r=>r.score),areaStyle:{color:'rgba(29,78,216,0.2)'},lineStyle:{color:'#1D4ED8'}}],itemStyle:{color:'#1D4ED8'}}]
     });
 
     // Trend
@@ -679,7 +770,7 @@ async function showAgentReport(agentId) {
       tooltip:{trigger:'axis'},
       xAxis:{type:'category',data:data.score_trend.map(t=>t.date),axisLabel:{color:'#5A6472',fontSize:10},axisLine:{lineStyle:{color:'#DDE2EA'}}},
       yAxis:{type:'value',min:30,max:100,axisLabel:{color:'#5A6472'},splitLine:{lineStyle:{color:'#DDE2EA'}}},
-      series:[{type:'line',data:data.score_trend.map(t=>t.score),smooth:true,lineStyle:{color:'#3370FF'},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(51,112,255,0.3)'},{offset:1,color:'rgba(51,112,255,0)'}]}},itemStyle:{color:'#3370FF'}}],
+      series:[{type:'line',data:data.score_trend.map(t=>t.score),smooth:true,lineStyle:{color:'#1D4ED8'},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(29,78,216,0.3)'},{offset:1,color:'rgba(29,78,216,0)'}]}},itemStyle:{color:'#1D4ED8'}}],
       grid:{left:40,right:20,top:20,bottom:40}
     });
 
@@ -729,7 +820,8 @@ async function loadAgreement() {
       <div class="card-title">暂无人机一致性报告</div>
       <p style="color:var(--cp-ink2);margin:8px 0 12px;">${data.error || '尚未录入真人评分'}</p>
       <p style="color:var(--cp-ink2);font-size:13px;">${data.how_to_label || ''}</p>
-      <a class="btn btn-primary" href="/label.html" style="margin-top:12px;display:inline-block;">去人工评分台</a>
+      <!-- index.html 未定义 .btn/.btn-primary（那是 label.html 的样式），这里用内联样式保证 CTA 可见 -->
+      <a href="/label.html" style="margin-top:12px;display:inline-block;background:var(--accent);color:#fff;padding:8px 14px;border-radius:8px;font-weight:600;">去人工评分台 →</a>
     </div>`;
     return;
   }
@@ -771,7 +863,7 @@ async function loadAgreement() {
     for (const a of cats) {
       const val = data.confusion_matrix[h]?.[a] || 0;
       const intensity = Math.min(val / 5, 1);
-      const bg = val > 0 ? `rgba(51,112,255,${0.1 + intensity * 0.4})` : 'var(--surface2)';
+      const bg = val > 0 ? `rgba(29,78,216,${0.1 + intensity * 0.4})` : 'var(--surface2)';
       html += `<div class="conf-cell" style="background:${bg};${h===a?'font-weight:700;color:var(--accent);':''}">${val}</div>`;
     }
   }
@@ -822,8 +914,8 @@ async function loadAgreement() {
       xAxis:{name:'人工评分',nameTextStyle:{color:'#5A6472'},type:'value',min:30,max:100,axisLabel:{color:'#5A6472'},splitLine:{lineStyle:{color:'#DDE2EA'}},axisLine:{lineStyle:{color:'#DDE2EA'}}},
       yAxis:{name:'AI 评分',nameTextStyle:{color:'#5A6472'},type:'value',min:30,max:100,axisLabel:{color:'#5A6472'},splitLine:{lineStyle:{color:'#DDE2EA'}},axisLine:{lineStyle:{color:'#DDE2EA'}}},
       series:[
-        {type:'scatter',data:pairs.map(c=>[c.human_score,c.score]),symbolSize:10,itemStyle:{color:'#3370FF',opacity:0.7}},
-        {type:'line',data:[[30,30],[100,100]],lineStyle:{color:'var(--text3)',type:'dashed',width:1},symbol:'none',tooltip:{show:false}}
+        {type:'scatter',data:pairs.map(c=>[c.human_score,c.score]),symbolSize:10,itemStyle:{color:'#1D4ED8',opacity:0.7}},
+        {type:'line',data:[[30,30],[100,100]],lineStyle:{color:'#98A2B3',type:'dashed',width:1},symbol:'none',tooltip:{show:false}}
       ],
       grid:{left:60,right:20,top:30,bottom:50}
     });
@@ -833,8 +925,8 @@ async function loadAgreement() {
 
 // --- Helpers ---
 function getAgentColor(id) {
-  const map = {'agent-001':'#3370FF','agent-002':'#16A34A','agent-003':'#D92D20','agent-004':'#B4690E','agent-005':'#7B5CFA'};
-  return map[id] || '#3370FF';
+  const map = {'agent-001':'#1D4ED8','agent-002':'#16A34A','agent-003':'#D92D20','agent-004':'#B4690E','agent-005':'#7B5CFA'};
+  return map[id] || '#1D4ED8';
 }
 
 // Close modals on backdrop click
@@ -842,7 +934,14 @@ document.getElementById('conv-detail-modal').addEventListener('click', function(
 document.getElementById('agent-modal').addEventListener('click', function(e) { if (e.target === this) closeAgentModal(); });
 
 // Init
-loadDashboard();
+// echarts/services/ui-kit 三个 defer 脚本保证在 DOMContentLoaded 前执行完毕；
+// 内联脚本本身先于 defer 执行，若在快速响应（304 命中/本机）下 fetch 先返回，
+// echarts 可能尚未就绪导致首屏图表渲染抛错。门控到 DOMContentLoaded 消除竞态。
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => { loadDashboard(); });
+} else {
+  loadDashboard();
+}
 </script>
 </body>
 </html>

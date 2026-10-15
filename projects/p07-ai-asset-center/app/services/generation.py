@@ -17,7 +17,7 @@ from app.services import llm, media
 
 # 各类型的投放规格（宽, 高）与卡片主色
 _SPEC = {
-    "image": (800, 800, "#3370FF"),
+    "image": (800, 800, "#1D4ED8"),
     "video": (1080, 1920, "#7B5CFA"),
     "copy": (1200, 400, "#16A34A"),
 }

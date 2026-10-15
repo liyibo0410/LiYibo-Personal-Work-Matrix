@@ -11,7 +11,7 @@ export type NameValue = { name: string; value: number };
 
 /** 白底调色板：品牌蓝为主，辅以绿/橙/红/灰（与 echart.tsx 的 cp-light 主题同源）。 */
 const palette = [
-  "#3370FF",
+  "#1D4ED8",
   "#12B76A",
   "#F79009",
   "#E4474B",
@@ -71,7 +71,7 @@ function hBarOption(data: NameValue[]): EChartsOption {
         type: "bar",
         data: sorted.map((d) => d.value),
         barWidth: 14,
-        itemStyle: { color: "#3370FF", borderRadius: [0, 4, 4, 0] },
+        itemStyle: { color: "#1D4ED8", borderRadius: [0, 4, 4, 0] },
         label: { show: true, position: "right", color: axisText, fontSize: 12 },
       },
     ],
@@ -99,7 +99,7 @@ function vBarOption(data: NameValue[]): EChartsOption {
         type: "bar",
         data: data.map((d) => d.value),
         barWidth: "46%",
-        itemStyle: { color: "#3370FF", borderRadius: [4, 4, 0, 0] },
+        itemStyle: { color: "#1D4ED8", borderRadius: [4, 4, 0, 0] },
         label: { show: true, position: "top", color: axisText, fontSize: 12 },
       },
     ],

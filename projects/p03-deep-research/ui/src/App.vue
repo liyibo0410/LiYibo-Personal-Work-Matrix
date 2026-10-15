@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick, computed } from 'vue'
+import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import axios from 'axios'
 import { marked } from 'marked'
 
@@ -25,6 +25,19 @@ interface FileItem {
   url: string
 }
 
+// 公网演示走 http（非安全上下文），crypto.randomUUID 在部分浏览器不可用；
+// genId() 统一降级到手工实现，避免「crypto.randomUUID is not a function」。
+function genId(): string {
+  try {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID()
+  } catch (e) {}
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c: string): string => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
 // State
 const inputQuery = ref('')
 const messages = ref<Message[]>([])
@@ -37,7 +50,37 @@ const isWelcomeScreen = computed(() => messages.value.length === 0)
 const isSidebarOpen = ref(false)
 const fileList = ref<any[]>([])
 // 生成一个持久的会话ID，如果页面不刷新，ID不变
-const currentThreadId = ref(crypto.randomUUID())
+const currentThreadId = ref(genId())
+
+// ── 会话持久化（2026-10-15，agent3 按钮实测 2.12）：Vite HMR 热更新会重跑 setup，
+//    把正在进行的对话整段清空（当轮实测被打断一次）。messages + thread_id 落
+//    sessionStorage，重新挂载/刷新时恢复 —— 顺带让 F5 也不丢会话。
+//    只存本标签页（sessionStorage 不跨标签）、不落 localStorage；损坏数据按空会话启动。
+const CHAT_STORE_KEY = 'p03-chat-session-v1'
+function persistChatSession() {
+  try {
+    sessionStorage.setItem(CHAT_STORE_KEY, JSON.stringify({
+      messages: messages.value,
+      threadId: currentThreadId.value,
+    }))
+  } catch { /* 存储满/隐私模式：放弃持久化，不影响主功能 */ }
+}
+function restoreChatSession() {
+  try {
+    const raw = sessionStorage.getItem(CHAT_STORE_KEY)
+    if (!raw) return
+    const data = JSON.parse(raw)
+    if (Array.isArray(data?.messages) && data.messages.length > 0) {
+      messages.value = data.messages
+    }
+    if (typeof data?.threadId === 'string' && data.threadId) {
+      currentThreadId.value = data.threadId
+    }
+  } catch { /* 损坏数据：忽略 */ }
+}
+restoreChatSession()
+watch(messages, persistChatSession, { deep: true })
+watch(currentThreadId, persistChatSession)
 
 // ── API 基址：一律同源相对路径，由 Vite dev server 把 /api、/ws、/outputs 代理到后端
 //    （见 vite.config.ts）。彻底移除原先硬编码的 localhost:8000 —— 后端实际监听 8030，
@@ -340,8 +383,55 @@ const renderMarkdown = (text: string) => {
   return marked(text)
 }
 
+// ── 数据源健康徽标（2026-10-15，agent3 按钮实测 2.10）：后端 /api/health 早就带了
+//    mysql / sql_guard / degraded_reasons，前端此前完全没接。右上角常驻一枚徽标，
+//    title 展开明细，每 60s 刷新。任何失败都如实显示"不可用/未知"，不美化。
+const healthState = ref<'ok' | 'degraded' | 'down' | 'unknown'>('unknown')
+const healthDetail = ref('')
+const healthBadge = computed(() => {
+  if (healthState.value === 'ok') {
+    return { cls: 'ok', text: '● 数据源就绪', title: healthDetail.value || 'GET /api/health 通过' }
+  }
+  if (healthState.value === 'degraded') {
+    return { cls: 'degraded', text: '● 降级', title: healthDetail.value || '部分依赖不可用（详见 /api/health）' }
+  }
+  if (healthState.value === 'down') {
+    return { cls: 'down', text: '● 后端不可用', title: healthDetail.value || 'GET /api/health 失败' }
+  }
+  return { cls: 'unknown', text: '○ 状态未知', title: '健康检查尚未返回' }
+})
+async function fetchHealth() {
+  try {
+    const res = await axios.get(`${apiBase}/api/health`, { timeout: 4000 })
+    const d = res.data || {}
+    const degraded: string[] = d.degraded_reasons || []
+    const mysqlOk = d.mysql?.reachable ? 'MySQL 已连接' : 'MySQL 不可达'
+    const guard = `SQL护栏 ${d.sql_guard?.status || '未知'}`
+    const e2e = `端到端 ${d.end_to_end?.sql_execute || '未知'}`
+    if (d.status === 'ok' && degraded.length === 0) {
+      healthState.value = 'ok'
+      healthDetail.value = `${mysqlOk} · ${guard} · ${e2e}`
+    } else if (d.status === 'ok') {
+      healthState.value = 'degraded'
+      healthDetail.value = `${mysqlOk} · ${guard} · 降级原因：${degraded.join('；')}`
+    } else {
+      healthState.value = 'degraded'
+      healthDetail.value = `status=${d.status} · ${mysqlOk} · 降级原因：${degraded.join('；') || '无'}`
+    }
+  } catch (e: any) {
+    healthState.value = 'down'
+    healthDetail.value = 'GET /api/health 失败：' + (e?.message || String(e))
+  }
+}
+
+// 首屏性能：WebSocket 非渲染阻塞，但 onMounted 立即建连会抢在首屏资源瀑布之前
+// 占一条公网 socket，且后端 WS 不可达时每 3s 重连。延后到首屏空闲后再连，
+// 结果推送在用户首次发问时早已就绪（连接是异步的）。不改动收发逻辑。
 onMounted(() => {
-  connectWebSocket()
+  fetchHealth()
+  setInterval(fetchHealth, 60000)
+  const idle = (window as any).requestIdleCallback || ((cb: () => void) => setTimeout(cb, 200))
+  idle(() => connectWebSocket())
 })
 </script>
 
@@ -361,6 +451,9 @@ onMounted(() => {
           <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
+
+      <!-- 数据源健康徽标（2026-10-15，2.10）：/api/health 的 mysql/sql_guard/降级原因 就地可视化 -->
+      <div class="health-badge" :class="healthBadge.cls" :title="healthBadge.title">{{ healthBadge.text }}</div>
 
       <!-- Welcome Screen -->
       <div v-if="isWelcomeScreen" class="welcome-screen">
@@ -392,7 +485,7 @@ onMounted(() => {
                   <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="url(#grad1)"/>
                   <defs>
                     <linearGradient id="grad1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="#3370FF"/>
+                      <stop stop-color="#1D4ED8"/>
                       <stop offset="1" stop-color="#245AE0"/>
                     </linearGradient>
                   </defs>
@@ -484,7 +577,7 @@ onMounted(() => {
           </button>
         </div>
         <div class="footer-text">
-          AI 生成的问数结果可能存在偏差，请以下方溯源报告为准。
+          AI 生成的问数结果可能存在偏差；结果基于库内只读 SQL，可在「查看思考过程」中核对全部语句与数据来源。
         </div>
       </footer>
     </main>
@@ -556,6 +649,26 @@ body {
   background-color: var(--bg-dark);
   min-width: 0; /* Prevent flex overflow */
 }
+
+/* 数据源健康徽标（2.10）：常驻右上、贴侧栏按钮左侧；基础配色走 cp 令牌随主题 */
+.health-badge {
+  position: absolute;
+  top: 1rem;
+  right: 4rem;
+  z-index: 9;
+  font-size: 12px;
+  line-height: 1;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+  color: var(--text-secondary);
+  user-select: none;
+  white-space: nowrap;
+}
+.health-badge.ok { color: #16794a; border-color: #b7e4cd; background: #ecfdf5; }
+.health-badge.degraded { color: #8a5a00; border-color: #f2e2b0; background: #fffbeb; }
+.health-badge.down { color: #b42318; border-color: #f4c2bd; background: #fef1f0; }
 
 .sidebar-toggle-btn {
   position: absolute;

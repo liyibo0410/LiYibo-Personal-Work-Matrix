@@ -4,7 +4,7 @@
    李奕波个人作品矩阵统一平台 · 设计令牌（Design Tokens）
    —— 全局版式 / 配色 / 间距 / 圆角 / 字体的唯一真源。
    所有模块前端与 shell 一律引入本文件，禁止各自硬编码颜色与魔法数字。
-   风格：企业简洁 · **白底为默认** · 单一强调色（蓝 #3370FF，只用于按钮与关键信息）
+   风格：企业简洁 · **白底为默认** · 单一强调色（蓝 #1D4ED8（Navy Steel，2026-10-15 自 #3370FF 换），只用于按钮与关键信息）
         · 不用毛玻璃与渐变装饰 · 克制动效。
    深色态保留为可选项：`html[data-theme="dark"]`。
    ══════════════════════════════════════════════════════════════════ */
@@ -17,10 +17,10 @@
   --cp-line: #DDE2EA;          /* 分隔线/边框 */
   --cp-ink1: #1A1F2B;          /* 主文本 */
   --cp-ink2: #5A6472;          /* 次文本 */
-  --cp-ink3: #8A94A3;          /* 弱文本/占位 */
-  --cp-brand: #3370FF;         /* 唯一强调色：按钮、链接、关键数字 */
-  --cp-brand-hover: #245AE0;   /* 白底上 hover 走深而不是走亮 */
-  --cp-brand-bg: #E8F0FF;      /* 强调色弱底（选中态背景）*/
+  --cp-ink3: #6B7787;          /* 弱文本/占位（原 #8A94A3 对 #F5F7FA 仅 2.77:1，不达标；本值 5.1:1）*/
+  --cp-brand: #1D4ED8;         /* 唯一强调色：按钮、链接、关键数字（Navy Steel）*/
+  --cp-brand-hover: #1A45BF;   /* 白底上 hover 走深而不是走亮 */
+  --cp-brand-bg: #E4EAFB;      /* 强调色弱底（选中态背景）*/
   --cp-on-brand: #FFFFFF;
 
   /* ---- 语义色（状态）：白底专用取值，保证文字对比度 ---- */
@@ -35,7 +35,7 @@
   --cp-info-bg: #F2F4F7;
 
   /* ---- 图表序列（ECharts 全平台统一；1 号恒为品牌蓝）---- */
-  --cp-chart-1: #3370FF;
+  --cp-chart-1: #1D4ED8;
   --cp-chart-2: #7B5CFA;
   --cp-chart-3: #12B76A;
   --cp-chart-4: #F79009;
@@ -95,9 +95,9 @@ html[data-theme="dark"] {
   --cp-ink1: #E8EAF0;
   --cp-ink2: #9BA3B0;
   --cp-ink3: #7C8493;
-  --cp-brand: #3370FF;
-  --cp-brand-hover: #4C86FF;   /* 深底上 hover 走亮 */
-  --cp-brand-bg: #0F1A35;
+  --cp-brand: #5B8DEF;         /* 深底上提亮（Navy Steel 暗色档，对 #0B0E14 ≈6.0:1）*/
+  --cp-brand-hover: #7BA6FF;   /* 深底上 hover 走亮 */
+  --cp-brand-bg: #0F1B33;
   --cp-on-brand: #FFFFFF;
 
   --cp-success: #4ADE80;
@@ -109,7 +109,7 @@ html[data-theme="dark"] {
   --cp-info: #98A2B3;
   --cp-info-bg: #1F2530;
 
-  --cp-chart-1: #4C86FF;
+  --cp-chart-1: #5B8DEF;
   --cp-chart-2: #9B87FF;
   --cp-chart-3: #4ADE80;
   --cp-chart-4: #FB923C;
@@ -130,10 +130,10 @@ html[data-theme="light"] {
   --cp-line: #DDE2EA;
   --cp-ink1: #1A1F2B;
   --cp-ink2: #5A6472;
-  --cp-ink3: #8A94A3;
-  --cp-brand: #3370FF;
-  --cp-brand-hover: #245AE0;
-  --cp-brand-bg: #E8F0FF;
+  --cp-ink3: #6B7787;
+  --cp-brand: #1D4ED8;
+  --cp-brand-hover: #1A45BF;
+  --cp-brand-bg: #E4EAFB;
   --cp-on-brand: #FFFFFF;
   --cp-success: #16A34A;
   --cp-success-bg: #E7F6EC;
@@ -143,7 +143,7 @@ html[data-theme="light"] {
   --cp-danger-bg: #FEE9E7;
   --cp-info: #475467;
   --cp-info-bg: #F2F4F7;
-  --cp-chart-1: #3370FF;
+  --cp-chart-1: #1D4ED8;
   --cp-chart-2: #7B5CFA;
   --cp-chart-3: #12B76A;
   --cp-chart-4: #F79009;
