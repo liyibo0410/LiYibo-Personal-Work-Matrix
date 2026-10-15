@@ -60,12 +60,36 @@
 
 见 `docs/assets/github/README.md`（视觉资产）、`docs/profile-readme/如何使用.md`（个人主页）、`docs/github-repo-metadata.md`（门面元数据）、`docs/assets/github/SCREENSHOTS.md` + `online-demo.md`（截图与入口实测）。
 
-## 4. 尚未做的事（不要当成已完成）
+## 4. 执行记录（2026-10-15 已做）
 
-1. **未 `git commit` / 未 `git push`** —— 等机主审阅通过。
-2. **个人主页仓库 `liyibo0410/liyibo0410` 未创建**，`docs/profile-readme/README.md` 仍是本地文件（需机主最终点头）。
-3. **仓库 About / Topics / Homepage 仍是空的** —— `_tools/set_repo_metadata.py` 默认 dry-run，未带 `--yes` 实跑。
+1. **已提交并推送**：`fd2239b docs(github): 仓库门面美化 —— 头图 / 截图墙 / 门面元数据，并补齐被引用的证据日志`（36 个文件）。远端复核：`git ls-remote origin refs/heads/main` = `fd2239b4534097f39e6a74dae72ffeea19041154` = 本地 HEAD。
+   - 推送方式：本机 Git Credential Manager 的既有凭据（机主给的 fine-grained PAT **权限不足，403**，见第 5 节）。
+   - 本次提交**只含美化相关文件 + 6 份被点名的证据**；工作区里 D24/D25 那批（167 项）与另一路并行会话今天在 `projects/p03`、`p04`、`p06` 上改的代码，一律未纳入。
+2. **GitHub 真站渲染已复核**（这是本轮唯一能证明「美化真的生效」的证据）：用桌面浏览器打开 `https://github.com/liyibo0410/yunshu-ai-portfolio`，查询 README 容器内 10 张 `<img>` 的实际加载结果 —— 全部 `complete=true` 且 `naturalWidth > 0`：
+   - `banner-dark.svg` **1280×320**（暗色主题下自动切到深色版，说明 `<picture>` + `prefers-color-scheme` 生效）
+   - 8 张 shields.io 徽章经 camo 代理正常出图
+   - `shell-home.png` 1212×1310、`modules-wall.png` 1876×980 —— 两张实拍图都渲染成功
+   - 页面顶部的 About 框实测仍是 `No description, website, or topics provided.`（→ 第 5 节）
+
+## 5. 阻塞项：机主给的 Token 权限不足（未完成的部分）
+
+对本机实测结果（`api.github.com` 响应头，逐条可复现）：
+
+| 尝试 | 结果 | 响应头 `x-accepted-github-permissions` |
+|---|---|---|
+| `GET /user` | 200 · login=liyibo0410 | `allows_permissionless_access=true` |
+| `PATCH /repos/liyibo0410/yunshu-ai-portfolio`（设 description/topics/homepage） | **403** | `administration=write` |
+| `POST /user/repos`（创建个人主页仓库） | **403** | `administration=write; repository_creation=write` |
+| `git push`（用该 Token 走 extraheader） | **403** | `Permission to liyibo0410/yunshu-ai-portfolio.git denied to liyibo0410` |
+
+该 Token 是 **fine-grained PAT**（`x-oauth-scopes` 为空），只读。结论：**建仓与门面元数据需要更高权限的凭据，或由机主在网页上点两下**。仓库推送不受影响（走本机凭据管理器已成功）。
+
+## 6. 尚未做的事（不要当成已完成）
+
+1. **个人主页仓库 `liyibo0410/liyibo0410` 未创建**（Token 权限不足，见第 5 节）；`docs/profile-readme/README.md` + 两张横幅仍是本地文件。机主在网页建好空仓库后，主控可立即推送（走本机凭据管理器，已验证可推）。
+2. **仓库 About / Topics / Homepage 仍是空的**（`No description, website, or topics provided.` 实测）—— `_tools/set_repo_metadata.py` 默认 dry-run，**未带 `--yes` 实跑**；About 文本（候选 A，217 字符）与 20 个 Topics 已备好，存在 `docs/github-repo-metadata.md`，可网页粘贴或等有权限的 Token。
+3. **`homepage` 有意留空**：机主已决定封面不放公网演示地址（该入口按需开启、非常态在线），Website 字段同属门面醒目位，故一并留空；要填只需 `python -X utf8 _tools\set_repo_metadata.py --yes`（默认值是 `http://39.96.200.45:8070`），演示结束再 `--homepage ""` 清空。
 4. **社交预览图需在网页上传**（`Settings → General → Social preview`），REST API 不支持；图已生成好放在 `docs/assets/github/social-preview.png`。
-5. **README 尚未在 GitHub 真站渲染复核**（`<picture>` 深浅切换、手机端宽度、SVG 经 camo 代理后是否正常）—— 需要 push 之后才能看。
-6. 头部横幅与社交预览卡上各有一处 `39.96.200.45:8070`（在线演示地址）：**该入口 09:54 实测 502**，是否保留在封面上待机主决定。
+5. ~~README 尚未在 GitHub 真站渲染复核~~ **已复核（2026-10-15）**：`<picture>` 深浅切换生效（暗色主题取到 `banner-dark.svg`）、10 张图全部加载成功（尺寸见第 4 节第 2 条）。**仍未验证的**只有手机端窄屏排布（本次用 1400px 视口截的桌面宽度）。
+6. ~~头图与社交预览卡上各有一处演示地址，是否保留待定~~ **已执行机主决定：封面删掉地址**。三张 SVG 现在**没有任何 IP / 端口 / 演示 URL**（`_tools/make_github_assets.py` 的 `ENTRY_PATTERNS` 把它设成常驻红线，自检 42 项 / FAIL 0），个人主页 README 里的 4 处也一并去掉（现在只剩 github.com 与 shields.io 两类外链）。
 7. 个人主页 README **未放手机号**（正文只有 GitHub / 邮箱 / 城市 / 到岗时间），机主可在文末 HTML 注释处自行决定。
