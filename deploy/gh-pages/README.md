@@ -1,8 +1,10 @@
 # GitHub Pages 静态版作品集 · 部署说明
 
-本目录（`deploy/gh-pages/`）是一个**单文件、零外部依赖**的静态作品集页：`index.html`（内联样式 + 十几行主题切换脚本）。部署目标地址：
+本目录（`deploy/gh-pages/`）是作品集的**统一入口页**：`index.html` 现在是一个**纯跳转页**——打开即重定向到实机演示 `http://39.96.200.45:8070/`，不再停留中间页。部署目标地址：
 
-> https://liyibo0410.github.io/yunshu-ai-portfolio/
+> https://liyibo0410.github.io/yunshu-ai-portfolio/  →  立即跳转到  http://39.96.200.45:8070/
+
+> 注意：实机演示依赖本机隧道常驻（看门狗 `CloudPivotTunnelWatchdog` 保活）。若电脑关机 / 隧道未起，跳转会失败——页面会显示一行兜底提示并给出「开源代码」链接。完整静态作品集内容已保留在 `gh-pages` 分支历史中，需要时可还原。
 
 ---
 
@@ -71,9 +73,9 @@ git push origin main
 
 ## 3. 部署后自检
 
-1. 打开 https://liyibo0410.github.io/yunshu-ai-portfolio/ 能看到深色首页与十张模块卡
-2. 右上角 GitHub 图标、每张卡「源码仓库」按钮、页脚三个链接均能打开且非 404
-3. 点右上角 ◐ 能切换明暗主题（localStorage 记忆）
+1. 打开 https://liyibo0410.github.io/yunshu-ai-portfolio/ 会**立即跳转到** `http://39.96.200.45:8070/`（实机演示外壳）
+2. 若演示服务器在线，跳转后能看到微前端外壳与十张模块卡
+3. 若演示服务器离线，页面显示一行兜底提示，含「进入演示」「开源代码」两个链接（均非 404）
 
 ## 4. 内容事实来源
 
