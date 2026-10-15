@@ -1,0 +1,11 @@
+﻿........................................................................ [ 40%]
+........................................................................ [ 80%]
+..................................                                       [100%]
+============================== warnings summary ===============================
+tests/test_compliance.py::test_high_risk_copy_is_rejected_before_it_reaches_the_db
+tests/test_compliance.py::test_patch_cannot_smuggle_in_a_bypass_after_a_clean_create
+  D:\software\PycharmProjects\面试项目\projects\p02-ecommerce-ops-assistant\api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:1100: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    result = context.run(func, *args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+178 passed, 2 warnings in 19.79s

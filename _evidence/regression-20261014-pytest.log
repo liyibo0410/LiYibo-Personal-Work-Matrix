@@ -1,0 +1,33 @@
+# 全平台 pytest 回归 · 2026-10-14 17:09~17:20（D24）
+# 每模块用各自 .venv：cd <模块> && .venv/Scripts/python.exe -m pytest -q
+# P02 套件根在 api/；P04 只跑 tests/（test/ 是学习脚本，不属套件）
+# P05 的 -q 汇总行未被采到，另用不带 -q 的跑法复核定为 48 passed
+
+p01-ai-customer-service                62 passed
+p02-ecommerce-ops-assistant (api/tests) 171 passed        # 从 api 根跑 = 175 passed（多收 4 条根目录用例）
+p03-deep-research                      137 passed
+p04-rag-knowledge-base (tests)          59 passed
+p05-contract-review                     48 passed        # 另 selftest.py 66/66 通过，耗时 18720 ms
+p06-data-platform                       48 passed
+p07-ai-asset-center                     68 passed
+p08-live-clip                           30 passed
+p09-ai-sales-assessment                 51 passed
+p10-model-finetune                      31 passed
+
+合计 705 passed / 0 failed
+
+# 修前对照（同目录同跑法）
+#   p02 166 · p03 61 · p04 23 · p05 46 · p06 44 · p09 39 passed + 2 FAILED · p10 28
+#   p01 62 / p07 68 / p08 30 未变
+# 增量全部是本轮所修缺陷的防回归用例：
+#   p02 +5  (users 枚举不变式 / viewer 行可列出 / 高危文案拦截 / PATCH 绕过 / 低危放行带判定)
+#   p03 +76 (sql_guard 加固正反例 46 + 工具层 5 + /health 4 + 原 61 保持)
+#   p04 +36 (切片预览数据源与降级链 / health 依赖探测 / 配置缺变量不崩)
+#   p05 +2  (absence 无坐标不再崩 / 异常必落终态并留审计)
+#   p06 +4  (多语句夹带写 / 任意本地文件读 / 字面量内分号不误伤 / replace 类正当函数不误伤)
+#   p09 +10 (占位署名拒收 / 未署名不进一致性 / 规则真影响评分 / 未知 agent 404)
+#   p10 +3  (训练响应自证 simulated+provenance / seed 无裸时长 / 语言实测或 null)
+#   p04 +36 —— 该模块的修复代理撞到回合上限、未交回报告，因此这条增量只是
+#            23→59 的实测差值，逐条用例内容未经我复核；行为层面我另在三处独立复验过
+#            （切片预览 200 带 chunk_source/degraded_reason、/health 如实 degraded、tests 全绿）
+

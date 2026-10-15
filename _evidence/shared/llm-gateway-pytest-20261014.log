@@ -1,0 +1,21 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.14, pytest-9.1.1, pluggy-1.6.0 -- D:\software\PycharmProjects\面试项目\projects\p02-ecommerce-ops-assistant\api\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\software\PycharmProjects\面试项目\shared\llm-gateway
+configfile: pyproject.toml
+plugins: anyio-4.15.1, langsmith-0.14.1
+collecting ... collected 11 items
+
+tests/test_gateway.py::test_not_configured_returns_mock PASSED           [  9%]
+tests/test_gateway.py::test_failover_to_fallback PASSED                  [ 18%]
+tests/test_gateway.py::test_all_endpoints_failed_returns_mock PASSED     [ 27%]
+tests/test_gateway.py::test_non_json_content_transfers_to_fallback PASSED [ 36%]
+tests/test_gateway.py::test_endpoints_reuse_primary_key_when_fallback_key_absent PASSED [ 45%]
+tests/test_gateway.py::test_endpoints_use_own_fallback_key_when_given PASSED [ 54%]
+tests/test_gateway.py::test_build_config_reads_fallback_from_env PASSED  [ 63%]
+tests/test_gateway.py::test_chat_completion_url_normalization PASSED     [ 72%]
+tests/test_gateway.py::test_build_payload_disables_thinking_for_deepseek_v4 PASSED [ 81%]
+tests/test_gateway.py::test_extract_content_rejects_missing_and_empty PASSED [ 90%]
+tests/test_gateway.py::test_cost_tracker_records_and_snapshots PASSED    [100%]
+
+============================= 11 passed in 0.04s ==============================
