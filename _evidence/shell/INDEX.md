@@ -298,6 +298,9 @@ P06 44→**48**、P09 41→**55**、P10 28→**35**；证据卡「另跑 46 项 
 
 ## 2026-10-15 · D30 首页与全平台改色 / SVG 图标 / 动效层 / 简历区
 
+> 编号说明：本条的 D30 与顶层 `_evidence/INDEX.md` 里 Qoder 的 D30（P04 `/search` 正则注入）**撞号**（D31 同样撞）。
+> 双方都已有外部引用，不重排 —— 消歧与续编规则统一写在顶层 INDEX 的 D30 段首，本处只指路。
+
 **完成**：
 - ① + ② **Navy Steel 统一**：外壳那段「本页覆盖」令牌块已删除，改为统一继承共享令牌；
   15 个入口逐一读 `--cp-brand` 计算值 → **11/11 = `#1D4ED8`**（P02 对齐其构建期副本后从 `#3370ff` 变为 `#1d4ed8`）
@@ -355,4 +358,13 @@ P06 44→**48**、P09 41→**55**、P10 28→**35**；证据卡「另跑 46 项 
 
 **截图**：`online-20261015-full.png` / `online-20261015-top.png` / `online-p06-mount.png` / `anim-scrollall.png`。
 **运维提醒**：公网入口用的是本地种子弱口令，隧道**无自动超时**，演示完 `python _tools\tunnel_remote.py stop`。
-详情：`D40-上线推送与公网复验.md`。
+本轮提交 **`fd1788b`** 已推送（`f181f35..fd1788b`；schannel 握手失败，换 `http.sslBackend=openssl` 通过）。`shell/index.html` 的 Bug 1 修复在对方暂存区、随其提交入库。详情：`D40-上线推送与公网复验.md`。
+
+---
+
+## 2026-10-15 · D41 主题残留补齐 / D40 证据可复现性 / 公网档案 PDF 处置
+
+详情：`D41-主题残留与证据可复现性收口.md`。要点：公网 `/resume-liyibo.pdf` 由 200 改 403（未跟踪文件被网关静态根发出，
+`git grep` 类复核抓不到）；D40 引用的四个校验脚本补齐并复跑（全部 PASS）；`--cp-brand-rgb` 入 `tokens.css` 作单一真源、
+迁移 61 处旧蓝/青；GitHub 三张 SVG 与生成器常量对齐 Navy Steel 并重跑 42 项自检 0 FAIL。
+取证图：`theme-p05-20261015.png`、`theme-p06-20261015.png`、`theme-p07-20261015.png`、`theme-p08-20261015.png`、`anim-jump.png`、`anim-scrollall.png`。

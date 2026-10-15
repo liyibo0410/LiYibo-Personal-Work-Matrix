@@ -1886,6 +1886,13 @@ P02→P06 真实取数 `metrics_source="p06-live"`、`degraded=False`，gmv `359
 
 ## D30 · 首页与全平台改色（Navy Steel）/ SVG 图标 / 动效层（2026-10-15，OpenCode）
 
+> **编号撞车说明（不重排，避免打断已推送的引用）**：本条与上文 1688 行 Qoder 的 D30（P04 `/search` 正则注入）、
+> 以及本条之后 1901 行的 D31（监督窗口第三波）与上文 1719 行 Qoder 的 D31（P04 `/statistics` 口径），
+> 是两条会话线各自独立占用了同一编号 —— 双方都已被外部引用（Qoder 侧：`button-sweep-20261015/INDEX.md:35`、
+> `_evidence/p04/statistics-scope-20261015.md:53`；OpenCode 侧：`_evidence/D38-*.md:7`、`_evidence/D39-*.md:21/22/42`、
+> `shell/INDEX.md:299`），改号会把这些链接一起打断，故只做消歧：**引用时一律带主题或作者**（「D30 改色」/「D30 P04 正则」）。
+> 后续新记录请从 **D41** 起续编，不要再复用。
+
 - 用户四项要求：① 换成 Navy Steel ② 十个模块也统一到这个蓝 ③ 顶部 `☰ ◐ ⎋` 换 SVG ⑤ 全部加动效 + 简历区完整排版（技术栈小块带动效）
 - **结果：①②③⑤（含动效）与④简历区全部完成**；简历区曾被并行角色的写入覆盖 4 次，用户授权「以你为准」后**第 5 次补回**（13:08，结构 0 错误、37 小块在位，并加「勿删」协作注释） —— 详见 D30 第四、六节与效果页第 05/06 节
 - 换色理由不是审美：原 `#3370FF` 对白底 **4.28:1** 不达 AA，`#1D4ED8` 为 **6.70:1**；弱文本 `ink3` 2.77:1 → 5.1:1
@@ -1909,7 +1916,8 @@ P02→P06 真实取数 `metrics_source="p06-live"`、`degraded=False`，gmv `359
   ⑤ P01 TTS 失败可见提示（Playwright 拦截 `/api/chat/tts` 模拟厂商故障 → 红字「播报失败」+ 可重试实测通过）
 - 附带发现：P03 的 MySQL(3306) 数据源已在线（`sql_guard active` / `sql_execute verified`）—— AGENTS「已知未闭环 ①」的"数据源未启动"已过时
 - 子智能体：token-plan 月配额耗尽（2026-10-21 16:00 UTC 重置），agent3 交付物完整落盘；此后由本窗口直测直修
-- **仍未做**：2.14 P03 图表+溯源（大前端）、2.2 P02 合规面板（大前端）、2.4/2.5/2.7（P02 组件深处）、nginx 服务器侧两项（等本人确认）；**本轮未 git commit**（多窗口并行，避免裹挟他人半成品）
+- **仍未做**：2.14 P03 图表+溯源（大前端）、2.2 P02 合规面板（大前端）、2.4/2.5/2.7（P02 组件深处）；**本轮未 git commit**（多窗口并行，避免裹挟他人半成品）
+- **更正（10-15 14:3x）**：上一条原列「nginx 服务器侧两项（等本人确认）」—— 服务器 nginx **已于 13:43 部署上线**（13:41 首部署被 `nginx -t` 拒后自动回滚：`proxy_redirect default` 须排在 `proxy_pass` 之后），复验 `button-sweep-20261015/nginx-deploy-verify-20261015.json` **all_pass=true（T1–T8）** 与 `prefix-flow-public.json`（P02/P04/P05 公网端到端 PASS）；`cp_mod` 改 per-module cookie 那半项仍未做
 
 ---
 
@@ -1942,8 +1950,49 @@ P02→P06 真实取数 `metrics_source="p06-live"`、`degraded=False`，gmv `359
 - **Bug 2（已修+复验）**：`shot.py --shell-login` 注入抛 `SecurityError` —— 注入时是 502 错误页 / hash 路由替换中的 detached document → `capture()` 注入失败刷新重试 ≤3 次（纯增量）；复验注入 ok、`tokLen=227` ✔
 - **动效复验**：连续滚动 `scroll_reveal_check.py` **PASS**（`revealIn=40/40`、`chipIn=37/37`、`statsCounted=5`、JS 异常 0）；`anim_check` 一跳到底得 `revealIn=1/40` 属**跳转口径**（IO 需相交），非动效失效
 - **本机回归**：`check_shell` 0 错误无重复 id、`probe_home` 断言全绿、14/14 端口存活
-- **并行变更（非本轮）**：13:36 另一角色按 D37 红线删简历手机号行、PDF 死链改指源码目录；全仓文本该号 `git grep` **0 命中**，本轮不回退
+- **并行变更（非本轮）**：13:36 另一角色按 D37 红线删简历手机号行、PDF 死链改指源码目录；本轮不回退
+  > **更正（D41）**：原记「全仓文本该号 `git grep` **0 命中**」**不成立** —— 断言这句话本身的那一行就带着真实号码，
+  > 并随 `fd1788b` 进了公网仓库（`git grep` HEAD 实测唯一命中处就是 D40 文档自己）。字面量已从文档删除，
+  > 复核方式改为本机自行 grep、号码不入仓库。
 - **运维提醒**：公网入口用本地种子弱口令、隧道**无自动超时**，演示完 `python _tools\tunnel_remote.py stop`
+- 本轮自己的提交 **`fd1788b`**（`_tools/shot.py` 注入重试 + D40 证据 + 4 张新图 + 两份 INDEX）已推送 `f181f35..fd1788b`；推前两次 `schannel: failed to receive handshake`（系统代理 `127.0.0.1:7890` + schannel 后端），换 `git -c http.sslBackend=openssl push` 一次成功
 - 详情：`_evidence/shell/D40-上线推送与公网复验.md`
 
 - **D39** · 材料区措辞中性化（保留结构只改词：找工作场景四组措辞 → 中性表述，词表不复述；本地 resume.json 删 phone 字段）→ _evidence/D39-材料区措辞中性化.md（2026-10-15 13:4x）
+
+---
+
+## D41 · 主题残留补齐 + D40 证据可复现性收口 + 公网档案泄露处置（2026-10-15，Qoder）
+
+- **公网档案 PDF（最紧急，已处置）**：`http://39.96.200.45:8070/resume-liyibo.pdf` 曾 **200 / 465,964 B** —— 网关静态根就是 `shell/` 且白名单含 `.pdf`，
+  该文件**未跟踪**，所以历次「`git grep` 已跟踪文件 0 命中」类复核在原理上抓不到它。白名单去掉 `.pdf` 后复验：8800 与 8070 均 **403**，
+  `8070/` 200（95,746 B）、`/shared/ui-kit/tokens.css` 200、`/api/health` 200。代价：网关重启重生成会话密钥，已登录访客需重登一次
+- **手机号字面量清除**：`git grep` HEAD 实测全仓已跟踪文件唯一命中处 = D40 文档自己那行「复核 0 命中」的断言（见上一条更正）。字面量已删，复核改为本机 grep
+- **D40 引用却不存在的四个脚本已补齐并复跑**：`_tools/check_shell.py`（未闭合栈 `[]`/重复 id `[]`/残留占位 `[]`）、`probe_home.py`（9/9 ✔）、
+  `anim_check.py`、`scroll_reveal_check.py`（连续滚 `reveal 40/40`、`chips 37/37`、`stats 5/6`）—— 全部 PASS，数字当场可复算
+- **踩坑并纠正口径**：无头 Edge 默认报 `prefers-reduced-motion: reduce` → 页面走静态回退，第一版复跑量出「全亮但 `statsCounted=0`」的假象；
+  `Emulation.setEmulatedMedia` **必须在 `Page.navigate` 之前**。硬门禁改为「视口内不得有 `opacity:0` 的块」（实测 0），不再看 `revealIn` 绝对数
+- **Navy Steel 残留 62 处 → 迁移 61 处**（留 1 处为 P01 `App.vue:1275` 说明注释）：`tokens.css` 新增 `--cp-brand-rgb`
+  单一真源（浅 `29,78,216` / 暗档 `91,141,239`，暗档必须单独给，否则深底描边看不见）；P01 按自身风格走 `color-mix`，
+  静态页走 `rgba(var(--cp-brand-rgb), α)`；顺带清掉 `p05/fx.css` 4 处青色（违反「禁止青/蓝混用」）。计算值与截图双验
+- **GitHub 门面资产**：三张 SVG 16 处旧蓝替换（`banner-dark.svg` 用暗档 `#5B8DEF` 而非 navy，它压在 `#1E2430` 上）；
+  生成器常量对齐单一真源，并把**文字色** `C_INK3` 从 `#8A94A3`（白底 2.77:1，不达 AA）改到 `#6B7787`；重跑 **42 项自检 FAIL 0**
+- **仍未处理（如实）**：P05 登录页 `ui/login.html:108` 明文印演示种子口令（与已承认的弱口令同类风险，删它伤「一键进入」，等本人定）；
+  `01-portfolio/dist`、`p03/ui/dist`、`p01/.../dist` 仍含旧蓝但**不在服务路径**（p01→5173、p03→5174 均为 vite dev）；
+  **本轮改动全部未 commit/未 push**（工作区另有 214 处并行角色改动 + 红线 6）；OpenCode 自列待修清单（P02 合规面板 / 推送到素材中心 /
+  `127.0.0.1:8000` 绝对地址、P03 图表+溯源、P04 脏行、P09/P10 四按钮）仍在，其中 P09/P10 它标给 WorkBuddy，不越界代做
+- 详情：`_evidence/shell/D41-主题残留与证据可复现性收口.md`
+
+- **D42** · P02 媒体改走同源代理 → _evidence/p02-ecommerce-ops-assistant/D42-P02-媒体同源代理.md（2026-10-15，Qoder）
+  监督窗口把 `dashboard/page.tsx:12` 一起算进「硬编码 127.0.0.1:8000」是**误判**（服务端 fetch，本就该对）；
+  真正坏的是渲染进 `src`/`href` 的三处 —— 公网访客浏览器里的 `127.0.0.1:8000` 是访客自己的机器，主图/视频全裂。
+  新增 `web/src/app/uploads/[...path]/route.ts` 服务端转发，前端只拿相对路径；不碰并行角色正在改的 `next.config.ts`，
+  不读 Next 16 已成 Promise 的 `context.params`。**四路复验**同一真实 PNG 均 200 / image/png / 1,133,121 B
+  （8000 直连、3001 同源、8090 根相对带 `cp_mod`、8090/p02 带前缀）—— 后两条若不通本次改动反而会弄裂公网图。未重启服务。
+
+- **D43** · 四路并行收口 OpenCode 前端遗留项（P02 三件 / P03 溯源卡+图表 / P04 两处 / P06+P08 诚实标注）+ 证据死链普查 → _evidence/shell/D43-四路并行收口与证据死链普查.md（2026-10-15，Qoder 调度）
+  交工后逐条核验不采信自述。**界面级验收（点击/截图/真数据出图）本轮全部未做** —— 实测空闲物理内存 0.4 GB，
+  起无头浏览器与跑含 torch 的测试都不安全，三个代理被「Model response interrupted」掐断大概率也是这个原因。
+  普查结论是阴性的：890 条引用里 136 条「缺失」绝大多数是**合法引用已删除文件**（`main_graph_v2.py` 正是被当作死代码点名），
+  本轮真正的死引用只有 D40 那四个脚本（已在 D41 补齐复跑）。新发现隐患：`p04/utils/refusal_utils.py` 未跟踪却被跟踪代码 import，
+  干净克隆后 P04 问答链路会 ImportError。
