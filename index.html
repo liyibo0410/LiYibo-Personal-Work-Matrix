@@ -3,23 +3,703 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- 进入即跳转到实机演示，不滞留中间页 -->
-<meta http-equiv="refresh" content="0; url=http://39.96.200.45:8070/">
 <title>李奕波个人作品矩阵 · 作品集</title>
-<script>
-  // 优先用 replace，避免在历史记录里留下这一跳
-  try { window.location.replace("http://39.96.200.45:8070/"); }
-  catch (e) { window.location.href = "http://39.96.200.45:8070/"; }
-</script>
+<meta name="description" content="李奕波（AI 应用开发 / FDE 方向）个人作品集：十个 AI 能力模块组成的统一作品矩阵，含实测指标与真实 / 模拟边界诚实声明。">
+<style>
+  :root{
+    --bg:#fafafa; --surface:#ffffff; --elevated:#f3f5f9; --line:#e8e9ee;
+    --ink1:#14161a; --ink2:#565d6b; --ink3:#8a91a0;
+    --brand:#1D4ED8; --brand-strong:#1747c4; --brand-soft:#eef3fe; --on-brand:#ffffff;
+    --success:#15a34a; --warn:#d97706; --danger:#e11d48;
+    --radius:16px; --maxw:1120px;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--ink1);font-family:var(--sans);line-height:1.65;
+    -webkit-font-smoothing:antialiased;font-size:15px;}
+  a{color:var(--brand);text-decoration:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;}
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);font-weight:600;}
+  code{font-family:var(--mono);background:var(--elevated);padding:1px 6px;border-radius:5px;font-size:12.5px;color:var(--ink1);}
+
+  /* ═══ Hero ═══ */
+  .hero{position:relative;padding:clamp(76px,10vw,112px) 0 clamp(56px,7vw,84px);overflow:hidden;text-align:center;
+    background:radial-gradient(900px 380px at 50% -180px, rgba(29,78,216,.12), transparent 70%);}
+  .hero-inner{display:flex;flex-direction:column;align-items:center;max-width:860px;margin:0 auto;gap:0;}
+  .hero h1{font-size:clamp(2.4rem,6vw,4rem);line-height:1.04;font-weight:780;letter-spacing:-.035em;margin:16px 0 14px;}
+  .hero h1 .accent{color:var(--brand);}
+  .hero .lead{color:var(--ink2);max-width:560px;font-size:16px;}
+  .hero .tagline{font-size:clamp(1.5rem,3.4vw,2.15rem);font-weight:750;color:var(--brand);margin:8px 0 18px;letter-spacing:-.02em;line-height:1.25;}
+  .hero .intro{font-size:15px;color:var(--ink2);max-width:640px;line-height:1.9;margin:0 auto 4px;}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 26px;}
+  .tag{font-size:12.5px;color:var(--ink2);background:var(--surface);border:1px solid var(--line);
+    padding:5px 12px;border-radius:999px;}
+  .cta{display:flex;flex-wrap:wrap;gap:12px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:11px;font-weight:600;font-size:14.5px;
+    border:1px solid transparent;transition:.18s;}
+  .btn--solid{background:var(--brand);color:var(--on-brand);box-shadow:0 12px 28px -14px rgba(29,78,216,.85);}
+  .btn--solid:hover{background:var(--brand-strong);transform:translateY(-1px);box-shadow:0 16px 34px -14px rgba(29,78,216,.9);}
+  .btn--ghost{background:var(--surface);color:var(--ink1);border-color:var(--line);}
+  .btn--ghost:hover{border-color:var(--brand);color:var(--brand);}
+
+  /* hero 形象照卡 */
+  .portrait{position:relative;background:#fff;border-radius:22px;padding:6px;}
+  .portrait .glow{position:absolute;inset:-14px -14px auto auto;width:78%;height:78%;
+    background:linear-gradient(135deg,var(--brand-soft),transparent);border-radius:24px;z-index:0;}
+  .portrait img{position:relative;z-index:1;width:100%;height:auto;display:block;border-radius:16px;
+    box-shadow:0 28px 60px -28px rgba(20,22,26,.4);}
+  .portrait .badge-float{position:absolute;z-index:2;left:14px;bottom:14px;background:rgba(255,255,255,.94);
+    backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:13px;padding:10px 14px;
+    box-shadow:0 12px 28px -16px rgba(20,22,26,.45);}
+  .portrait .badge-float b{display:block;font-size:15px;font-weight:700;}
+  .portrait .badge-float span{font-size:12.5px;color:var(--ink3);}
+  .portrait--wide img{aspect-ratio:3/2;}
+  .about-honors{margin-top:14px;font-size:13.5px;color:var(--ink2);}
+  .about-honors b{color:var(--ink1);}
+
+  /* 本机演示在线状态 */
+  .demo-status{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:16px;font-size:13px;color:var(--ink2);}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--ink3);flex:none;transition:.3s;}
+  .demo-status.online{color:var(--success);}
+  .demo-status.online .dot{background:var(--success);box-shadow:0 0 8px rgba(21,163,74,.8);}
+  .demo-status.offline{color:var(--warn);}
+  .demo-status.offline .dot{background:var(--warn);}
+
+  /* ═══ Sections ═══ */
+  section{padding:64px 0;border-top:1px solid var(--line);}
+  .sechead{margin-bottom:32px;}
+  .sechead .eyebrow::before{content:"› ";color:var(--brand);}
+  .sechead h2{font-size:clamp(1.6rem,3vw,2.1rem);font-weight:730;margin:8px 0 10px;letter-spacing:-.02em;}
+  .sechead p{color:var(--ink2);max-width:760px;}
+
+  /* Layers */
+  .layers{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  .layer-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;}
+  .layer-card .lid{font-size:12px;font-weight:700;color:var(--brand);letter-spacing:.04em;}
+  .layer-card h3{font-size:16px;margin:7px 0 9px;}
+  .layer-card p{font-size:13px;color:var(--ink2);}
+
+  /* Matrix */
+  .matrix{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+  .mod{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+    display:flex;flex-direction:column;gap:12px;transition:.18s;border-top:3px solid var(--line);}
+  .mod:hover{border-color:var(--brand);border-top-color:var(--brand);transform:translateY(-3px);
+    box-shadow:0 18px 36px -22px rgba(29,78,216,.5);}
+  .mod__top{display:flex;align-items:center;justify-content:space-between;}
+  .layer{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.04em;}
+  .layer--l0{background:#eceafe;color:#5b46e0;}
+  .layer--l1{background:#e4f8ec;color:#15924a;}
+  .layer--l2{background:#e7f0fe;color:var(--brand);}
+  .layer--l3{background:#fef0e2;color:#c2680a;}
+  .mod__id{font-size:12px;color:var(--ink3);font-weight:600;font-variant-numeric:tabular-nums;}
+  .mod__name{font-size:17px;font-weight:700;letter-spacing:-.01em;}
+  .mod__name .star{color:#e0a00a;font-size:13px;margin-left:4px;}
+  .mod__role{font-size:13px;color:var(--ink2);line-height:1.55;}
+  .mod__metric{font-size:13px;color:var(--ink2);}
+  .mod__metric b{color:var(--brand);font-size:18px;font-weight:760;font-variant-numeric:tabular-nums;}
+  .mod__mock{font-size:12px;color:var(--ink3);line-height:1.55;border-top:1px dashed var(--line);padding-top:10px;margin-top:2px;}
+  /* 卡片截屏 */
+  .mod__shot{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:16/9;
+    background:linear-gradient(135deg,#eef1f6,#e6eaf2);border:1px solid var(--line);margin-bottom:12px;}
+  .mod__shot img{width:100%;height:100%;object-fit:cover;display:block;}
+  .mod__shot--empty{display:flex;align-items:center;justify-content:center;}
+  .mod__shot--empty span{display:block;color:var(--ink3);font-size:12px;text-align:center;padding:0 10px;line-height:1.5;}
+  .mod__shot-cap{display:none;}
+  .badge{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;vertical-align:middle;letter-spacing:.02em;}
+  .badge--ok{background:#e4f8ec;color:#15924a;}
+  .badge--warn{background:#fef0e2;color:#c2680a;}
+  .badge--danger{background:#fde7ec;color:#d11d48;}
+
+  /* Flow */
+  .flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+  .flow-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;}
+  .flow-card h3{font-size:16px;margin-bottom:9px;}
+  .flow-card p{font-size:13.5px;color:var(--ink2);}
+
+  /* ADR */
+  .adr-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;}
+  .adr{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;}
+  .adr .aid{font-size:12px;font-weight:700;color:var(--brand);letter-spacing:.05em;}
+  .adr h3{font-size:15px;margin:6px 0 8px;}
+  .adr p{font-size:13px;color:var(--ink2);line-height:1.55;}
+
+  /* Honesty */
+  .notice{background:var(--brand-soft);border:1px solid rgba(29,78,216,.28);border-radius:var(--radius);padding:22px 24px;}
+  .notice h3{font-size:16px;margin-bottom:12px;color:var(--brand-strong);}
+  .notice ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .notice li{font-size:13.5px;color:var(--ink1);padding-left:20px;position:relative;line-height:1.55;}
+  .notice li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;border-radius:50%;background:var(--brand);}
+
+  /* About + Contact */
+  .about-grid{display:grid;grid-template-columns:1fr;gap:0;max-width:920px;align-items:start;}
+  .about-text h3{font-size:18px;margin-bottom:10px;}
+  .about-text p{font-size:14.5px;color:var(--ink2);margin-bottom:14px;line-height:1.7;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-family:var(--mono);font-size:12px;color:var(--brand);background:var(--brand-soft);
+    border:1px solid rgba(29,78,216,.22);border-radius:999px;padding:4px 12px;}
+  .contact{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px;text-align:center;}
+  .contact h3{font-size:20px;margin-bottom:8px;letter-spacing:-.01em;}
+  .contact p{color:var(--ink2);font-size:14px;margin-bottom:18px;}
+  .contact .cta{justify-content:center;}
+
+  /* Demo */
+  .demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+  .demo-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;}
+  .demo-card h3{font-size:16px;margin-bottom:9px;}
+  .demo-card p{font-size:13.5px;color:var(--ink2);margin-bottom:10px;}
+  .demo-card .note{font-size:12px;color:var(--warn);margin-top:8px;}
+
+  footer{padding:38px 0 60px;color:var(--ink3);font-size:13px;}
+  footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:center;}
+  footer a{color:var(--ink2);}
+  footer a:hover{color:var(--brand);}
+
+  /* 入场动效 */
+  .reveal{opacity:0;transform:translateY(16px);}
+  .reveal.is-in{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease;}
+
+  @media(max-width:900px){
+    .hero-inner{grid-template-columns:1fr;gap:34px;}
+    .portrait{max-width:340px;}
+    .layers{grid-template-columns:repeat(2,1fr);}
+    .about-grid{grid-template-columns:1fr;gap:22px;}
+  }
+  @media(max-width:560px){.layers{grid-template-columns:1fr;}}
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1!important;transform:none!important;}
+    .btn,.mod{transition:none!important;}
+  }
+
+  /* ═══ 专家打磨层（文案 / 排版 / 视觉 / 动画）═══ */
+  :root{
+    --ink3:#6b7280; --line:#e9eaef;
+    --ease-soft:cubic-bezier(.22,.61,.36,1);
+    --rd:0ms;
+  }
+  /* 排版：字号梯度 + 章节呼吸感 */
+  body{font-size:clamp(14px,1.05vw,15px);}
+  section{padding:clamp(64px,8vw,104px) 0;}
+  /* 排版：模块栅格两列放大 */
+  .matrix{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;}
+  .mod{padding:30px;gap:16px;}
+  .mod__shot{margin-bottom:14px;}
+  @media(max-width:720px){.matrix{grid-template-columns:1fr;}}
+  /* 视觉：形象照细描边 */
+  .portrait img{border:1px solid var(--line);}
+  /* 视觉：模块卡顶部渐变亮线（hover 高亮）*/
+  .mod{position:relative;overflow:hidden;}
+  .mod::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--brand),rgba(29,78,216,.25));
+    opacity:.22;transition:opacity .25s var(--ease-soft);}
+  .mod:hover::before{opacity:1;}
+  /* 视觉：通用卡极轻阴影 + 徽章同色细描边 */
+  .layer-card,.flow-card,.adr,.demo-card{box-shadow:0 1px 2px rgba(20,22,26,.05);}
+  .badge{border:1px solid currentColor;}
+  .layer{border:1px solid currentColor;}
+  /* 视觉：章节编号 tabular-nums */
+  .mod__id,.aid,.sechead .eyebrow{font-variant-numeric:tabular-nums;letter-spacing:.06em;}
+  /* 视觉：离线态 pulse */
+  .demo-status.offline .dot{animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  /* 视觉：浮层头像（圆形） */
+  .badge-float{display:flex;align-items:center;gap:11px;}
+  .badge-float>div{min-width:0;}
+  .badge-ava{width:42px;height:42px;border-radius:50%;flex:none;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--brand),var(--brand-strong));color:#fff;font-weight:800;font-size:17px;
+    box-shadow:0 6px 16px -8px rgba(29,78,216,.9);}
+  /* 动画：Hero 错峰入场 */
+  .hero .eyebrow,.hero h1,.hero .tagline,.hero .intro,.hero .tags,.hero .cta,.hero .demo-status,.hero-stats{
+    opacity:0;transform:translateY(14px);animation:fade-up .7s var(--ease-soft) forwards;}
+  .hero .eyebrow{animation-delay:0s}.hero h1{animation-delay:.08s}.hero .tagline{animation-delay:.16s}
+  .hero .intro{animation-delay:.24s}.hero .tags{animation-delay:.32s}.hero .cta{animation-delay:.4s}
+  .hero .demo-status{animation-delay:.48s}.hero-stats{animation-delay:.56s}
+  @keyframes fade-up{to{opacity:1;transform:none}}
+  /* 动画：光晕漂移 */
+  .portrait .glow{animation:glow-drift 16s ease-in-out infinite alternate;}
+  @keyframes glow-drift{from{transform:translate(0,0)}to{transform:translate(10px,-12px)}}
+  /* 动画：reveal 错峰（JS 注入 --rd） */
+  .reveal.is-in{transition:opacity .6s var(--ease-soft) var(--rd),transform .6s var(--ease-soft) var(--rd);}
+  /* 动画：主按钮光晕 / 芯片上浮 */
+  .btn--solid{position:relative;overflow:hidden;}
+  .btn--solid::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 120%,rgba(255,255,255,.35),transparent 60%);
+    opacity:0;transition:.25s var(--ease-soft);}
+  .btn--solid:hover::after{opacity:1;}
+  .chip{transition:.18s var(--ease-soft);}
+  .chip:hover{transform:translateY(-2px);box-shadow:0 6px 16px -10px rgba(29,78,216,.6);}
+  /* 视觉：联系卡收口居中 */
+  .contact{max-width:640px;margin:0 auto;}
+  /* 视觉：封面数据条 */
+  .hero-stats{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(24px,5vw,52px);
+    margin-top:44px;padding-top:36px;border-top:1px solid var(--line);width:100%;}
+  .hero-stat{display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .hero-stat b{font-size:clamp(1.9rem,4vw,2.5rem);font-weight:780;color:var(--ink1);
+    font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1;}
+  .hero-stat span{font-size:12.5px;color:var(--ink3);letter-spacing:.04em;}
+  /* 视觉：封面极淡点阵背景 */
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:radial-gradient(rgba(29,78,216,.06) 1px,transparent 1px);background-size:22px 22px;
+    -webkit-mask-image:radial-gradient(680px 360px at 50% 0,#000,transparent 72%);
+    mask-image:radial-gradient(680px 360px at 50% 0,#000,transparent 72%);opacity:.8;}
+  /* 排版：封面内元素居中 */
+  .hero .tags{justify-content:center;margin:26px 0 30px;}
+  .hero .cta{justify-content:center;}
+  /* 动画：reduced-motion 关闭新增动画 */
+  @media(prefers-reduced-motion:reduce){
+    .hero .eyebrow,.hero h1,.hero .tagline,.hero .intro,.hero .tags,.hero .cta,.hero .demo-status,.hero-stats{opacity:1!important;transform:none!important;animation:none!important;}
+  }
+  /* ══ 文字编辑器（仅作用于带 data-edit 的文案，不影响项目卡片 .mod） ══ */
+  .cp-editbar{position:fixed;right:18px;bottom:18px;z-index:9999;display:flex;gap:8px;
+    background:var(--surface,#fff);border:1px solid var(--line,#e9eaef);border-radius:12px;
+    padding:8px;box-shadow:0 12px 30px -16px rgba(29,78,216,.6);font-family:inherit;}
+  .cp-editbar button{font:600 13px/1 inherit;border:1px solid var(--line,#e9eaef);background:var(--bg,#fafafa);
+    color:var(--ink1,#111);padding:9px 13px;border-radius:9px;cursor:pointer;transition:.15s var(--ease-soft,ease);}
+  .cp-editbar button:hover{border-color:var(--brand,#1D4ED8);color:var(--brand,#1D4ED8);}
+  .cp-editbar button.cp-primary{background:var(--brand,#1D4ED8);color:#fff;border-color:var(--brand,#1D4ED8);}
+  .cp-editbar button.cp-primary:hover{filter:brightness(1.06);color:#fff;}
+  .cp-toast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:#111;color:#fff;padding:10px 16px;border-radius:10px;font:600 13px/1 inherit;z-index:10000;
+    transition:.25s;pointer-events:none;white-space:nowrap;}
+  .cp-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  body.cp-editing [data-edit]{outline:2px dashed rgba(29,78,216,.45);outline-offset:4px;border-radius:8px;cursor:text;}
+  body.cp-editing [data-edit]:hover{outline-color:var(--brand,#1D4ED8);background:rgba(29,78,216,.04);}
+</style>
 </head>
-<body style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;display:flex;align-items:center;justify-content:center;height:100vh;">
-  <div style="text-align:center;line-height:1.9;">
-    <p style="font-size:15px;">正在跳转到作品集实机演示…</p>
-    <p style="font-size:13px;color:#9da7b3;">若未自动跳转，请
-      <a style="color:#58a6ff;text-decoration:none;" href="http://39.96.200.45:8070/">点击进入演示</a>
-      ，或查看
-      <a style="color:#58a6ff;text-decoration:none;" href="https://github.com/liyibo0410/yunshu-ai-portfolio">开源代码</a>。
-    </p>
+<body>
+
+<!-- ═══ Hero ═══ -->
+<header class="hero">
+  <div class="wrap hero-inner">
+    <p class="eyebrow" data-edit="hero-eyebrow">李奕波 · 个人作品集 · AI 应用开发 / FDE 方向</p>
+    <h1 data-edit="hero-h1">李奕波个人作品矩阵</h1>
+    <p class="tagline" data-edit="hero-tagline">把前沿 AI 落到能跑通的业务里</p>
+    <p class="intro" data-edit="hero-intro">我是李奕波，1.5 年 AI 应用开发实战经验，深耕 RAG、Multi‑Agent 智能体、大模型服务工程化领域。拥有大模型应用开发与政企项目交付经验,熟练掌握检索增强生成架构设计､提示词工程､智能体开发､向量数据库､模型微调与效果评测;精通 Python､FastAPI､LangChain､Dify､Docker､Linux 等技术栈,具备完整的后端接口开发､流式输出､私有化部署能力。擅长将模糊业务需求拆解为可落地 AI 方案,能够独立完成从原型 Demo､研发调试到生产上线的端到端项目交付;具备驻场对接客户､多方跨团队协同能力,善于识别模型幻觉､推理延迟等风险,设计人工兜底与安全护栏机制。结果导向,重视项目指标迭代与方案沉淀,持续复盘坏案例优化系统效果,兼具工程开发能力与客户现场落地思维,致力于落地稳定､高可用的企业级大模型应用。</p>
+    <div class="tags" data-edit="hero-tags">
+      <span class="tag">微前端外壳 + 10 模块</span>
+      <span class="tag">统一网关 8800</span>
+      <span class="tag">跨模块真实调用</span>
+      <span class="tag">6 条 ADR</span>
+      <span class="tag">真实 / 模拟边界诚实标注</span>
+    </div>
+    <div class="cta">
+      <a class="btn btn--solid" href="http://127.0.0.1:8800/" target="_blank" rel="noopener">进入实机演示 →</a>
+      <a class="btn btn--ghost" href="https://github.com/liyibo0410/LiYibo-Personal-Work-Matrix" target="_blank" rel="noopener">查看源码仓库 →</a>
+      <a class="btn btn--ghost" href="#demo">如何运行实机演示</a>
+    </div>
+    <p class="demo-status" id="demo-status"><span class="dot"></span><span id="demo-text">正在检测本机演示状态…</span></p>
+    <div class="hero-stats" data-edit="hero-stats">
+      <div class="hero-stat"><b>10</b><span>AI 能力模块</span></div>
+      <div class="hero-stat"><b>4</b><span>套前端</span></div>
+      <div class="hero-stat"><b>1.5</b><span>年实战经验</span></div>
+      <div class="hero-stat"><b>6</b><span>条架构决策</span></div>
+    </div>
   </div>
+</header>
+
+<!-- ═══ 架构四层 ═══ -->
+<section id="arch">
+  <div class="wrap">
+    <div class="sechead reveal" data-edit="sechead-arch">
+      <p class="eyebrow">01 — 架构</p>
+      <h2>四层架构，自下而上读</h2>
+      <p>L0 定口径，L1 沉淀模型，L2 把能力做成可调用的服务，L3 组装成业务线。每一层都为上层提供稳定接口与统一数据口径。</p>
+    </div>
+    <div class="layers reveal">
+      <div class="layer-card"><div class="lid">L0 · 数据</div><h3>数据中台</h3><p>统一指标口径、分层建模与血缘，是整套系统的数据底座。</p></div>
+      <div class="layer-card"><div class="lid">L1 · 模型</div><h3>模型微调平台</h3><p>数据集→训练→评测→注册表，沉淀可复用的模型能力。</p></div>
+      <div class="layer-card"><div class="lid">L2 · 能力</div><h3>问数 / 知识 / 素材 / 切片</h3><p>四类可调用的 AI 能力服务，供应用层组合调用。</p></div>
+      <div class="layer-card"><div class="lid">L3 · 应用</div><h3>客服 / 运营 / 合同 / 考核</h3><p>四条业务线，把能力组装成可交付的产品。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 十模块矩阵 ═══ -->
+<section id="matrix">
+  <div class="wrap">
+    <div class="sechead reveal" data-edit="sechead-matrix">
+      <p class="eyebrow">02 — 模块矩阵</p>
+      <h2>十个模块，四层架构</h2>
+      <p>每张卡三行硬信息——实测测试数、真实 / Mock 边界、关键能力。徽章含义：<span class="badge badge--ok">真实</span> 已实跑通 · <span class="badge badge--warn">边界 / 未实现 / 待评</span> 部分受限 · <span class="badge badge--danger">纯 mock / 模拟</span> 未接真实链路。</p>
+    </div>
+    <div class="matrix">
+
+      <!-- L3 -->
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p01.png" alt="P01 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l3">L3 应用</span><span class="mod__id">P01</span></div>
+        <h3 class="mod__name">AI 电商客服</h3>
+        <p class="mod__role">意图三轨道 → 知识检索 → 生成回复；对话状态机可中断 / 恢复。</p>
+        <p class="mod__metric"><b>73</b> 项 pytest 通过</p>
+        <p class="mod__mock"><span class="badge badge--ok">真实</span> FAQ/RAG 文本层检索（命中不足即拒答）<span class="badge badge--warn">未实现</span> 负面情绪自动建单转人工</p>
+      </article>
+
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p02.png" alt="P02 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l3">L3 应用</span><span class="mod__id">P02</span></div>
+        <h3 class="mod__name">电商运营助手<span class="star" title="旗舰模块">★</span></h3>
+        <p class="mod__role">登录 → 选店 → 文案生成 → 合规拦截 → 广告实验 → 对比数据；四角色 RBAC。</p>
+        <p class="mod__metric"><b>178</b> 项 pytest 通过</p>
+        <p class="mod__mock"><span class="badge badge--ok">真实</span> 全链路 + 广告法合规（高危召回 18/18、误报 0/10）</p>
+      </article>
+
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p05.png" alt="P05 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l3">L3 应用</span><span class="mod__id">P05</span></div>
+        <h3 class="mod__name">合同审批 · 衡鉴</h3>
+        <p class="mod__role">上传 → 条款抽取 → 规则风险打分 → LLM 二阶段复核 → 报告与审批留痕。</p>
+        <p class="mod__metric"><b>48</b> 项 pytest · 自检 <b>66/66</b></p>
+        <p class="mod__mock"><span class="badge badge--ok">真实</span> 零第三方依赖：纯标准库 + SQLite，<code>python run.py</code> 即跑</p>
+      </article>
+
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p09.png" alt="P09 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l3">L3 应用</span><span class="mod__id">P09</span></div>
+        <h3 class="mod__name">AI 销售考核</h3>
+        <p class="mod__role">导入会话 → 五维规则评分 → 排行榜 + 个人报告；真人盲评台与 Kappa 口径。</p>
+        <p class="mod__metric"><b>55</b> 项 pytest 通过</p>
+        <p class="mod__mock"><span class="badge badge--ok">真实</span> 真实 HTTP 拉取 P01 会话（65.5 / 70.5）<span class="badge badge--warn">待评</span> 人机一致性 Kappa</p>
+      </article>
+
+      <!-- L2 -->
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p03.png" alt="P03 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l2">L2 能力</span><span class="mod__id">P03</span></div>
+        <h3 class="mod__name">NL2SQL 问数</h3>
+        <p class="mod__role">自然语言 → SQL → 执行 → 图表 → 溯源报告；只读护栏执行前拦截。</p>
+        <p class="mod__metric"><b>137</b> 项 pytest 通过</p>
+        <p class="mod__mock"><span class="badge badge--ok">真实</span> 模型层接通 + 图表 / 溯源端到端 + 只读护栏全拦<span class="badge badge--warn">受限</span> Tavily 联网仍 mock、RAGFlow 未启动</p>
+      </article>
+
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p04.png" alt="P04 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l2">L2 能力</span><span class="mod__id">P04</span></div>
+        <h3 class="mod__name">RAG 知识库</h3>
+        <p class="mod__role">文档入库 → 检索问答带引用；36 题评测集跑 Ragas 五指标。</p>
+        <p class="mod__metric"><b>59</b> 项 pytest 通过</p>
+        <p class="mod__mock"><span class="badge badge--ok">真实</span> BGE-M3 本地嵌入 + 本地 / 云端重排双后端对照</p>
+      </article>
+
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p07.png" alt="P07 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l2">L2 能力</span><span class="mod__id">P07</span></div>
+        <h3 class="mod__name">AI 素材中心</h3>
+        <p class="mod__role">上传 → 打标 → 以文搜图 → 与投放效果关联；接收 P02 推送。</p>
+        <p class="mod__metric"><b>68</b> 项 pytest 通过</p>
+        <p class="mod__mock"><span class="badge badge--warn">边界</span> 生图=程序化规格卡（非 AI 出图）；检索=文本层（非 CLIP 向量）</p>
+      </article>
+
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p08.png" alt="P08 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l2">L2 能力</span><span class="mod__id">P08</span></div>
+        <h3 class="mod__name">直播切片</h3>
+        <p class="mod__role">长直播 → 分段打点（每段给出得分构成）→ 批量队列与进度。</p>
+        <p class="mod__metric"><b>30</b> 项 pytest 通过</p>
+        <p class="mod__mock"><span class="badge badge--danger">纯 mock</span> 全程内存模拟，ffmpeg 未调用、不产出切片文件</p>
+      </article>
+
+      <!-- L1 -->
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p10.png" alt="P10 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l1">L1 模型</span><span class="mod__id">P10</span></div>
+        <h3 class="mod__name">模型微调平台</h3>
+        <p class="mod__role">数据集 → 训练 → 评测 → 模型注册表；生命周期编排与状态机。</p>
+        <p class="mod__metric"><b>35</b> 项 pytest 通过</p>
+        <p class="mod__mock"><span class="badge badge--danger">模拟</span> 未真实训练；无可调用端点，无测量来源数字一律为 null</p>
+      </article>
+
+      <!-- L0 -->
+      <article class="mod reveal">
+        <div class="mod__shot"><img src="img/p06.png" alt="P06 页面预览" loading="lazy" onerror="this.closest('.mod__shot').classList.add('mod__shot--empty'); this.remove();"><span class="mod__shot-cap">截图缺失</span></div>
+        <div class="mod__top"><span class="layer layer--l0">L0 数据</span><span class="mod__id">P06</span></div>
+        <h3 class="mod__name">数据中台</h3>
+        <p class="mod__role">接入 → ODS/DWD/DWS/ADS 分层 → 指标口径 → 血缘 → 质量校验。</p>
+        <p class="mod__metric"><b>48</b> 项 pytest 通过</p>
+        <p class="mod__mock"><span class="badge badge--ok">真实</span> DuckDB 分层与指标计算 + 查询白名单护栏（拦真实攻击载荷）<span class="badge badge--warn">演示集</span> 自动 seed</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 调用闭环 ═══ -->
+<section id="flow">
+  <div class="wrap">
+    <div class="sechead reveal" data-edit="sechead-flow">
+      <p class="eyebrow">03 — 调用闭环</p>
+      <h2>口径只有一份，数据真的在模块之间流动</h2>
+      <p>跨模块取数走真实调用，降级态用「少返回」而不是「编一个」——响应里直接不含该字段，绝不伪造。以下为已实测的真实调用链路。</p>
+    </div>
+    <div class="flow-grid reveal">
+      <div class="flow-card">
+        <h3>P02 → P06 实时指标</h3>
+        <p>运营助手向数据中台取实时大盘指标，正常路径真实调用；上游不可达时降级返回，不补全假数据。</p>
+      </div>
+      <div class="flow-card">
+        <h3>P09 → P01 真实会话</h3>
+        <p>销售考核通过 HTTP 真实拉取客服模块的会话记录（实测分值 65.5 / 70.5），而非读本地快照。</p>
+      </div>
+      <div class="flow-card">
+        <h3>P02 → P07 素材推送</h3>
+        <p>运营生成的素材经 <code>POST /api/v1/ingest</code> 真实推送到素材中心入库，形成能力层回流。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ADR ═══ -->
+<section id="adr">
+  <div class="wrap">
+    <div class="sechead reveal" data-edit="sechead-adr">
+      <p class="eyebrow">04 — 决策记录</p>
+      <h2>六条架构决策（ADR）</h2>
+      <p>关键选型均有据可查，避免「能跑就行」式的隐性债。</p>
+    </div>
+    <div class="adr-list reveal">
+      <div class="adr"><span class="aid">0001</span><h3>微前端外壳而非单体合并</h3><p>三类前端栈异构（Next.js / Vue+Vite / FastAPI 直挂），合并等于重写四个前端；代价是主题与令牌只能运行时同步。</p></div>
+      <div class="adr"><span class="aid">0002</span><h3>服务注册表＝端口单一真源</h3><p>起因是一次真实故障：前端把后端写成 8000（实为 8030）。跨模块调用禁止硬编码端口。</p></div>
+      <div class="adr"><span class="aid">0003</span><h3>统一认证与令牌下发</h3><p>外壳签发 HS256、postMessage 下发；P02 保留自身 Cookie RBAC——有意识的例外。</p></div>
+      <div class="adr"><span class="aid">0004</span><h3>跨模块真实调用，降级不伪造</h3><p>降级态用「少返回」而非「编一个」：<code>degraded=true</code> 且响应里直接不含该字段。</p></div>
+      <div class="adr"><span class="aid">0005</span><h3>设计令牌单一真源</h3><p>静态模块运行时挂 <code>/shared</code>，构建型模块构建期内联 + 主题桥；代价是改色后必须重新构建。</p></div>
+      <div class="adr"><span class="aid">0006</span><h3>P05 零依赖例外</h3><p>客户机 <code>python run.py</code> 即跑，不必先装 Docker。风险打分要的是确定性与可复现。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 真实/模拟边界 ═══ -->
+<section id="honesty">
+  <div class="wrap">
+    <div class="sechead reveal" data-edit="sechead-honesty">
+      <p class="eyebrow">05 — 诚实声明</p>
+      <h2>真实与模拟的边界，写在这里</h2>
+    </div>
+    <div class="notice reveal">
+      <h3>本作品集的已知未闭环（截至 2026-10）</h3>
+      <ul>
+        <li><b>P08 直播切片</b>：纯内存模拟，ffmpeg 一次都未调用，不产出任何切片文件。</li>
+        <li><b>P10 微调平台</b>：未真实训练；无可调用端点，无测量来源的数字一律为 null。</li>
+        <li><b>P03 问数</b>：Tavily 联网仍 mock、RAGFlow 未启动；数据类查询已设闸门，100% 不出网。</li>
+        <li><b>P09 销售考核</b>：人机一致性 Kappa 报告待真人盲评满 ≥5 条后出具（假人工分已删除）。</li>
+        <li><b>全平台</b>：未做并发压测，无 P95 / 错误率；四统一只落地一半（认证 / LLM 网关 / 日志未全模块打通）。</li>
+        <li><b>公网演示</b>：使用本地种子弱口令账号，仅临时开启，演示结束即停。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 关于我 ═══ -->
+<section id="about">
+  <div class="wrap">
+    <div class="sechead reveal" data-edit="sechead-about">
+      <p class="eyebrow">06 — 关于我</p>
+      <h2>先立人，再讲作品</h2>
+    </div>
+    <div class="about-grid reveal">
+      <div class="about-text" data-edit="about-text">
+        <h3>李奕波 · AI 应用开发 / FDE</h3>
+        <p>1.5 年 AI 应用开发实战经验。作为项目负责人，从 0 搭建四层 AI 中台底座（L0 数据 → L1 模型 → L2 能力 → L3 应用），整合零散单点 AI 系统，提供统一模型网关、认证权限、服务注册与微前端能力；交付 <b>10 个后端服务 + 4 套前端</b>，跨模块 HTTP 真实调用、上游异常自动降级，不伪造业务数据。</p>
+        <p>在同一底座上孵化多租户 AI 运营 SaaS，以及私有知识库、合同审查、AI 客服、自然语言问数、业绩考核、直播切片等垂直应用。我相信「真跑通 > 好看，不造假，工程化优先」——本页每个指标都能回溯到仓库日志或截图，没测过的就明写「未测」。求职 <b>AI 应用开发 / FDE</b>，一周内到岗。</p>
+        <div class="chips">
+          <span class="chip">Python</span>
+          <span class="chip">SQL</span>
+          <span class="chip">FastAPI</span>
+          <span class="chip">LangChain</span>
+          <span class="chip">LangGraph</span>
+          <span class="chip">DeepAgents</span>
+          <span class="chip">Next.js</span>
+          <span class="chip">Vue3</span>
+          <span class="chip">MySQL</span>
+          <span class="chip">Redis</span>
+          <span class="chip">Milvus</span>
+          <span class="chip">Qdrant</span>
+          <span class="chip">DuckDB</span>
+          <span class="chip">Elasticsearch</span>
+          <span class="chip">Ragas</span>
+          <span class="chip">BGE-M3</span>
+          <span class="chip">vLLM</span>
+          <span class="chip">MCP</span>
+          <span class="chip">Docker</span>
+          <span class="chip">影刀 RPA</span>
+        </div>
+        <p class="about-honors" data-edit="about-honors"><b>荣誉：</b>国家奖学金 · 国家励志奖学金 · 省级优秀毕业生</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 联系 + 实机演示 ═══ -->
+<section id="demo">
+  <div class="wrap">
+    <div class="sechead reveal" data-edit="sechead-demo">
+      <p class="eyebrow">07 — 运行实机演示</p>
+      <h2>本机运行，或按需开启公网入口</h2>
+      <p>实机演示需在作者本机启动 15 个服务进程。本页为纯静态作品集，不依赖服务器，永久可访问。</p>
+    </div>
+    <div class="demo-grid reveal">
+      <div class="demo-card">
+        <h3>本机入口（推荐）</h3>
+        <p>双击桌面「作品集启动器」（或运行 <code>start-all.bat</code>）拉起 15 个服务进程，打开 <a href="http://127.0.0.1:8800/" target="_blank" rel="noopener"><code>http://127.0.0.1:8800</code></a> 即进入微前端外壳与十模块。也可直接点本页顶部「进入实机演示」按钮。</p>
+        <p class="note" id="demo-note">↑ 顶部状态灯实时显示本机演示是否在线；若提示未检测到，请先启动程序再刷新本页。</p>
+      </div>
+      <div class="demo-card">
+        <h3>公网入口（按需开启）</h3>
+        <p>访客入口 <code>http://39.96.200.45:8070</code>（外壳首页），由 SSH 反向隧道经阿里云 nginx 分发。</p>
+        <p class="note">⚠ 该入口并非 7×24 在线：演示前需拉起隧道，演示结束即停。当前若返回 502，即表示隧道未开启——属正常，不代表项目故障。公网演示使用本地种子弱口令账号，仅临时开启。</p>
+      </div>
+    </div>
+    <div class="contact reveal" data-edit="contact">
+      <h3>想看实机演示或聊聊岗位？</h3>
+      <p>邮箱 <a href="mailto:2332908627@qq.com">2332908627@qq.com</a> · GitHub <a href="https://github.com/liyibo0410" target="_blank" rel="noopener">@liyibo0410</a> · 源码、演示账号与启动方式见仓库 README。</p>
+      <div class="cta">
+        <a class="btn btn--solid" href="http://127.0.0.1:8800/" target="_blank" rel="noopener">进入实机演示 →</a>
+        <a class="btn btn--ghost" href="https://github.com/liyibo0410/LiYibo-Personal-Work-Matrix" target="_blank" rel="noopener">GitHub @liyibo0410</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer>
+  <div class="wrap">
+    <div>
+      <strong style="color:var(--ink1)">李奕波个人作品矩阵</strong> · 纯静态作品集 · 所有指标来自仓库实测证据
+    </div>
+    <div>
+      <a href="https://github.com/liyibo0410/LiYibo-Personal-Work-Matrix" target="_blank" rel="noopener">GitHub 仓库</a>
+      &nbsp;·&nbsp;
+      <a href="#matrix">模块矩阵</a>
+      &nbsp;·&nbsp;
+      <a href="#honesty">边界声明</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* 滚动入场 */
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    els.forEach(function(e){e.classList.add('is-in');});return;
+  }
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('is-in');io.unobserve(en.target);}});
+  },{threshold:.12});
+  els.forEach(function(e){io.observe(e);});
+})();
+
+/* 本机演示在线状态探测 */
+(function(){
+  var st=document.getElementById('demo-status');
+  var tx=document.getElementById('demo-text');
+  var note=document.getElementById('demo-note');
+  if(!st||!tx)return;
+  var settled=false;
+  function markOnline(){
+    if(settled)return; settled=true;
+    st.classList.remove('offline'); st.classList.add('online');
+    tx.textContent='本机演示运行中 · 点击上方「进入实机演示」直达 http://127.0.0.1:8800';
+    if(note)note.textContent='↑ 状态灯为绿色即演示在线，点击顶部按钮直达；演示由桌面「作品集启动器」拉起。';
+  }
+  function markOffline(){
+    if(settled)return; settled=true;
+    st.classList.remove('online'); st.classList.add('offline');
+    tx.textContent='未检测到本机演示 —— 请双击桌面「作品集启动器」，启动后刷新本页';
+  }
+  var ctrl=('AbortController' in window)?new AbortController():null;
+  var timer=setTimeout(markOffline,3000);
+  var opts={mode:'no-cors',cache:'no-store'};
+  if(ctrl){opts.signal=ctrl.signal;}
+  fetch('http://127.0.0.1:8800/favicon.ico',opts)
+    .then(markOnline)
+    .catch(function(){clearTimeout(timer);markOffline();});
+  if(ctrl){setTimeout(function(){try{ctrl.abort();}catch(e){}},3000);}
+})();
+
+/* 动画：网格子卡错峰延迟（reveal 入场更自然，1.4s 后清零保 hover 灵敏） */
+(function(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var grids=document.querySelectorAll('.matrix,.layers,.flow-grid,.adr-list,.demo-grid');
+  Array.prototype.forEach.call(grids,function(g){
+    Array.prototype.forEach.call(g.children,function(c,i){
+      c.style.setProperty('--rd',(Math.min(i,8)*70)+'ms');
+    });
+  });
+  setTimeout(function(){
+    Array.prototype.forEach.call(grids,function(g){
+      Array.prototype.forEach.call(g.children,function(c){c.style.removeProperty('--rd');});
+    });
+  },1400);
+})();
+</script>
+
+<script>
+/* ═══ 文字编辑器：作品集首页文案可编辑 + 保存到本机 + 导出 HTML ═══ */
+(function(){
+  var KEY='ghpages_text_overrides_v1';
+  var nodes=Array.prototype.slice.call(document.querySelectorAll('[data-edit]'));
+  if(!nodes.length)return;
+  var originals={};
+  nodes.forEach(function(n){originals[n.getAttribute('data-edit')]=n.innerHTML;});
+  function loadOverrides(){
+    try{
+      var raw=localStorage.getItem(KEY); if(!raw)return;
+      var map=JSON.parse(raw);
+      nodes.forEach(function(n){var k=n.getAttribute('data-edit'); if(map[k]!=null)n.innerHTML=map[k];});
+    }catch(e){}
+  }
+  loadOverrides();
+  var editing=false;
+  var btnEdit,toastEl,toastTimer;
+  function toast(msg){toastEl.textContent=msg;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){toastEl.classList.remove('show');},1800);}
+  function save(){
+    var map={};
+    nodes.forEach(function(n){map[n.getAttribute('data-edit')]=n.innerHTML;});
+    try{localStorage.setItem(KEY,JSON.stringify(map));toast('已保存到本机浏览器 ✓');}
+    catch(e){toast('保存失败：'+(e&&e.message||e));}
+  }
+  function reset(){
+    nodes.forEach(function(n){n.innerHTML=originals[n.getAttribute('data-edit')];});
+    try{localStorage.removeItem(KEY);}catch(e){}
+    toast('已还原为默认文案');
+  }
+  function exportHtml(){
+    var clone=document.documentElement.cloneNode(true);
+    var bar=clone.querySelector('.cp-editbar'); if(bar)bar.remove();
+    var tv=clone.querySelector('.cp-toast'); if(tv)tv.remove();
+    var bd=clone.querySelector('body'); if(bd)bd.classList.remove('cp-editing');
+    Array.prototype.forEach.call(clone.querySelectorAll('[data-edit]'),function(n){n.removeAttribute('data-edit');n.removeAttribute('contenteditable');});
+    Array.prototype.forEach.call(clone.querySelectorAll('script'),function(s){if(s.textContent&&s.textContent.indexOf('ghpages_text_overrides_v1')>=0)s.remove();});
+    var html='<!DOCTYPE html>\n'+clone.outerHTML;
+    var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='index.html';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){try{URL.revokeObjectURL(a.href);}catch(e){}},2000);
+    toast('已导出 index.html（含当前文案）');
+  }
+  function setEditing(on){
+    editing=on;
+    document.body.classList.toggle('cp-editing',on);
+    nodes.forEach(function(n){n.setAttribute('contenteditable',on?'true':'false');});
+    if(btnEdit){btnEdit.textContent=on?'完成编辑':'✎ 编辑文字';}
+    if(!on)save();
+  }
+  /* 工具栏 */
+  var bar=document.createElement('div'); bar.className='cp-editbar';
+  btnEdit=document.createElement('button'); btnEdit.textContent='✎ 编辑文字'; btnEdit.className='cp-primary';
+  var btnReset=document.createElement('button'); btnReset.textContent='↺ 还原';
+  var btnExport=document.createElement('button'); btnExport.textContent='⬇ 导出 HTML';
+  btnEdit.onclick=function(){setEditing(!editing);};
+  btnReset.onclick=function(){if(!editing){toast('请先点「编辑文字」');return;}reset();};
+  btnExport.onclick=exportHtml;
+  bar.appendChild(btnEdit); bar.appendChild(btnReset); bar.appendChild(btnExport);
+  document.body.appendChild(bar);
+  toastEl=document.createElement('div'); toastEl.className='cp-toast'; document.body.appendChild(toastEl);
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey||e.metaKey)&&(e.key==='s'||e.key==='S')){e.preventDefault(); if(editing)save(); else toast('请先点「编辑文字」开启编辑');}
+  });
+})();
+</script>
+
 </body>
 </html>
